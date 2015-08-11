@@ -216,7 +216,7 @@ if __name__=='__main__':
     parser.add_argument("--fi_prox", type=float, help="inhibitory synaptic frequency in proximal compartment", default=20.)
     parser.add_argument("--fe_dist", type=float, help="excitatory synaptic frequency in distal compartment", default=5.)
     parser.add_argument("--fi_dist", type=float, help="inhibitory synaptic frequency in distal compartment", default=20.)
-    parser.add_argument("--fe_soma", type=float, help="excitatory synaptic frequency at soma compartment", default=.1)
+    parser.add_argument("--fe_soma", type=float, help="excitatory synaptic frequency at soma compartment", default=.0001)
     parser.add_argument("--fi_soma", type=float, help="inhibitory synaptic frequency at soma compartment", default=20.)
     parser.add_argument("--discret_sim", type=int,
                         help="space discretization for numerical simulation",
@@ -230,7 +230,7 @@ if __name__=='__main__':
     # ball and stick properties
     parser.add_argument("--L_stick", type=float, help="Length of the stick in micrometer", default=2000.)
     parser.add_argument("--D_stick", type=float, help="Diameter of the stick", default=2.)
-    parser.add_argument("--L_proximal", type=float, help="Length of the proximal compartment", default=1000.)
+    parser.add_argument("--L_proximal", type=float, help="Length of the proximal compartment", default=0.)
     # synaptic properties
     parser.add_argument("--Qe", type=float, help="Excitatory synaptic weight (nS)", default=1.)
     parser.add_argument("--Qi", type=float, help="Inhibitory synaptic weight (nS)", default=3.)
