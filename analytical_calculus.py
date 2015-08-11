@@ -14,7 +14,9 @@ def params_for_cable_theory(cable, Params):
     cable['cm'] = Params['cm']*np.pi*D # [F/m] """" NEURON 1e-2 !!!! """"
 
 
-def calculate_mean_conductances(fe, fi, soma, cable, Params):
+def calculate_mean_conductances(\
+                                fi_soma, fe_prox, fi_prox, fe_dist, fi_dist,\
+                                soma, cable, Params):
     """
     this calculates the conductances that needs to plugged in into the
     linear cable equation
@@ -23,56 +25,82 @@ def calculate_mean_conductances(fe, fi, soma, cable, Params):
     inhibition along the cable)
     the third one is an ABSOLUTE conductance !
     """
-    L, D = cable['L'], cable['D']
-    area = L*D*np.pi
-
-    # radial density of excitatory conductance
+    L, D, Lp = cable['L'], cable['D'], cable['L_prox']
     Te, Qe = Params['Te'], Params['Qe']
-    Ke_tot = area/cable['exc_density']
-    # print 'excitatory synapses on cable : ', Ke_tot
-    ge = Qe*Ke_tot*fe*Te/L
-    
-    # radial density of inhibitory conductance
     Ti, Qi = Params['Ti'], Params['Qi']
-    Ki_tot = area/cable['inh_density']
-    # print 'inhibitory synapses on cable : ', Ki_tot
-    gi = Qi*Ki_tot*fi*Ti/L
 
-    # radial density of inhibitory conductance
+    ge_prox = Qe*fe_prox*Te*D*np.pi/cable['exc_density']
+    gi_prox = Qi*fi_prox*Ti*D*np.pi/cable['inh_density']
+    ge_dist = Qe*fe_dist*Te*D*np.pi/cable['exc_density']
+    gi_dist = Qi*fi_dist*Ti*D*np.pi/cable['inh_density']
+
+    # somatic inhibitory conductance
     Ls, Ds = soma['L'], soma['D']
     Kis = np.pi*Ls*Ds/soma['inh_density']
-    Gi = Qi*Kis*fi*Ti
+    Gi_soma = Qi*Kis*fi_soma*Ti
     # print 'Gi soma (nS) : ', 1e9*Gi
     
-    return ge, gi, Gi
+    return Gi_soma, ge_prox, gi_prox, ge_dist, gi_dist
 
     
-def parameters_for_mean(ge0, gi0, Gi0, soma, stick, Params):
+def stat_pot_function(x, fi_soma, fe_prox, fi_prox, fe_dist, fi_dist,
+                      soma, stick, Params):
+
     params_for_cable_theory(stick, Params)
-    
+
+    Gi_soma, ge_prox, gi_prox, ge_dist, gi_dist = \
+                calculate_mean_conductances(fi_soma, fe_prox, fi_prox,\
+                                            fe_dist, fi_dist,\
+                                            soma, stick, Params)
+
     [Ls, Ds] = soma['L'], soma['D']
-    [L, D] = stick['L'], stick['D']
+    [L, Lp, D] = stick['L'], stick['L_prox'], stick['D']
     Gl = np.pi*Ls*Ds*Params['g_pas']
     Cm = np.pi*Ls*Ds*Params['cm']
     [El, Ei, Ee] = Params['El'], Params['Ei'], Params['Ee']
     [rm, cm, ri] = stick['rm'], stick['cm'], stick['ri']
-    tau = rm*cm/(1+rm*ge0+rm*gi0)
-    Tau = Cm/(Gl+Gi0)
-    lbd = np.sqrt(rm/ri/(1+rm*ge0+rm*gi0))
-    v0 = (El+rm*ge0*Ee+rm*gi0*Ei)/(1+rm*ge0+rm*gi0)
-    V0 = (Gl*El+Gi0*Ei)/(Gl+Gi0)
-    return np.array([tau, Tau, lbd, v0, V0])
+
+    # proximal params
+    tauP = rm*cm/(1+rm*ge_prox+rm*gi_prox)
+    lbdP = np.sqrt(rm/ri/(1+rm*ge_prox+rm*gi_prox))
+    v0P = (El+rm*ge_prox*Ee+rm*gi_prox*Ei)/(1+rm*ge_prox+rm*gi_prox)
+
+    # distal params
+    tauD = rm*cm/(1+rm*ge_dist+rm*gi_dist)
+    lbdD = np.sqrt(rm/ri/(1+rm*ge_dist+rm*gi_dist))
+    v0D = (El+rm*ge_dist*Ee+rm*gi_dist*Ei)/(1+rm*ge_dist+rm*gi_dist)
+
+    # somatic params
+    TauS = Cm/(Gl+Gi_soma)
+    V0 = (Gl*El+Gi_soma*Ei)/(Gl+Gi_soma)
+
+    A = Cm*ri*lbdP/TauS # alpha factor in notebook derivation
+    B = (np.cosh(Lp/lbdP)+A*np.sinh(Lp/lbdP))/(np.sinh(Lp/lbdP)+A*np.cosh(Lp/lbdP))
+
+    # v1D  = v0P-v0D+A/(1.-A)*(1-B)*(v0P-V0)*np.exp(Lp/lbdP)
+    # v1D /= np.cosh((Lp-L)/lbdD)-lbdP/lbdD*B*np.sinh((Lp-L)/lbdD)
+    v1D  = (V0-v0D)/np.sinh(L/lbdD)/(1./A+1./np.tanh(L/lbdD))
+
+    v1P = v0D-v0P+v1D*np.cosh((Lp-L)/lbdD)
+    v2P = lbdP/lbdD*v1D*np.sinh((Lp-L)/lbdD)
+
+    def vP(x): # proximal potential
+        return v0P+v1P*np.cosh((x-Lp)/lbdP)+v2P*np.sinh((x-Lp)/lbdP)
+    def vD(x): # proximal potential
+        return v0D+v1D*np.cosh((x-L)/lbdD)
+
+    return np.array([vP(xx) if xx<Lp else vD(xx) for xx in x])
 
 
-def stat_pot_function(x, Garray, soma, stick, Params):
-    ge0, gi0, Gi0 = Garray # mean conductance input
-    [tau, Tau, lbd, v0, V0] = parameters_for_mean(ge0, gi0, Gi0,\
-                        soma, stick, Params)
-    [ri, L] = stick['ri'], stick['L']
-    [Ls, Ds] = soma['L'], soma['D']
-    Cm = np.pi*Ls*Ds*Params['cm']
-    denom = 1/np.tanh(L/lbd)+(Tau)/(ri*Cm*lbd)
-    return v0+(V0-v0)/denom*np.cosh((x-L)/lbd)/np.sinh(L/lbd)
+# def stat_pot_function(x, Garray, soma, stick, Params):
+#     ge0, gi0, Gi0 = Garray # mean conductance input
+#     [tau, Tau, lbd, v0, V0] = parameters_for_mean(ge0, gi0, Gi0,\
+#                         soma, stick, Params)
+#     [ri, L] = stick['ri'], stick['L']
+#     [Ls, Ds] = soma['L'], soma['D']
+#     Cm = np.pi*Ls*Ds*Params['cm']
+#     denom = 1/np.tanh(L/lbd)+(Tau)/(ri*Cm*lbd)
+#     return v0+(V0-v0)/denom*np.cosh((x-L)/lbd)/np.sinh(L/lbd)
 
 def parameters_for_mean_BRT(fe, fi, cables, Params):
 
@@ -283,74 +311,61 @@ def psp_norm_square_integral_per_dend_synapse_type(x, X, f, Gf2,\
     
     return factor*get_fourier_transform_integral(x, X, f, Gf2, L, lbd, tau, Tau, Cm, ri)
 
-def get_the_theoretical_sV_and_Tv(fe, fi, f, x, params, soma, stick,\
+def get_the_theoretical_sV_and_Tv(FE, FI, f, x, params, soma, stick,\
                                   precision=50):
     sv2 = np.zeros(len(x))
     Tv = np.zeros(len(x))
-    Garray = calculate_mean_conductances(fe, fi, soma, stick, params)
+    Garray = calculate_mean_conductances(FE, FI, soma, stick, params)
     muV = stat_pot_function(x, Garray, soma, stick, params)
 
-    Source_Array = np.linspace(0, stick['L'], precision)
-    DX = Source_Array[1]-Source_Array[0]
+    Source_Array = np.linspace(0, stick['L'], precision+1)
+    Source_Array = .5*(Source_Array[1:]+Source_Array[:-1])
+
+    DX = Source_Array[1]-Source_Array[0] # space interval
     norm_for_Tv = 0*Tv
     for ix_dest in range(len(x)):
 
         #### DENDRITIC SYNAPSES
-        for X_source in Source_Array[:-1]: # less intervals than points
+        for ix_source in range(len(Source_Array)): # less intervals than points
+
+            X_source = Source_Array[ix_source]
+            fe = FE[1][ix_source]
+            fi = FI[1][ix_source]
 
             # excitatory synapse at dendrites
             Gf2 = exp_FT_mod(f, params['Qe'], params['Te'])
             psp2 = psp_norm_square_integral_per_dend_synapse_type(\
-                            x[ix_dest], X_source+DX/2.,\
+                            x[ix_dest], X_source,\
                             f, Gf2, params['Ee'],\
                             Garray, soma, stick, params,
                             precision=precision)
             psp0 = psp_0_freq_per_dend_synapse_type(\
-                            x[ix_dest], X_source+DX/2.,\
+                            x[ix_dest], X_source,\
                             params['Qe']*params['Te'], params['Ee'],\
                             Garray, soma, stick, params,
                             precision=precision)
             sv2[ix_dest] += 2.*np.pi*fe*DX*stick['D']/stick['exc_density']*psp2
-            # Tv[ix_dest] += 2.*np.pi*fe*DX*stick['D']/stick['exc_density']*psp0**3/4./psp2
-            # norm_for_Tv[ix_dest] += 2.*np.pi*fe*DX*stick['D']/stick['exc_density']*psp0
-            Tv[ix_dest] += psp0**2/4./psp2
-            norm_for_Tv[ix_dest] += 1
+            Tv[ix_dest] += 2.*np.pi*fe*DX*stick['D']/stick['exc_density']*psp0**3/4./psp2
+            norm_for_Tv[ix_dest] += 2.*np.pi*fe*DX*stick['D']/stick['exc_density']*psp0
 
             # inhibitory synapse at dendrites
             Gf2 = exp_FT_mod(f, params['Qi'], params['Ti'])
             psp2 = psp_norm_square_integral_per_dend_synapse_type(\
-                            x[ix_dest], X_source+DX/2.,\
+                            x[ix_dest], X_source,\
                             f, Gf2, params['Ei'],\
                             Garray, soma, stick, params,
                             precision=precision)
             psp0 = psp_0_freq_per_dend_synapse_type(\
-                            x[ix_dest], X_source+DX/2.,\
+                            x[ix_dest], X_source,\
                             params['Qi']*params['Ti'], params['Ei'],\
                             Garray, soma, stick, params,
                             precision=precision)
             sv2[ix_dest] += 2.*np.pi*fi*DX*stick['D']/stick['inh_density']*psp2
-            # Tv[ix_dest] += 2.*np.pi*fi*DX*stick['D']/stick['inh_density']*psp0**3/4./psp2
-            # norm_for_Tv[ix_dest] += 2.*np.pi*fi*DX*stick['D']/stick['inh_density']*psp0
-            Tv[ix_dest] += psp0**2/4./psp2
-            norm_for_Tv[ix_dest] += 1
+            Tv[ix_dest] += 2.*np.pi*fi*DX*stick['D']/stick['inh_density']*psp0**3/4./psp2
+            norm_for_Tv[ix_dest] += 2.*np.pi*fi*DX*stick['D']/stick['inh_density']*psp0
 
         #### SOMATIC SYNAPSES, discret summation
-
-        # excitatory synapse at soma
-        Gf2 = exp_FT_mod(f, params['Qe'], params['Te'])
-        psp2 = psp_norm_square_integral_per_dend_synapse_type(\
-                        x[ix_dest], 0.,\
-                        f, Gf2, params['Ee'],\
-                        Garray, soma, stick, params,
-                        precision=precision)
-        psp0 = psp_0_freq_per_dend_synapse_type(\
-                        x[ix_dest], 0.,\
-                        params['Qe']*params['Te'], params['Ee'],\
-                        Garray, soma, stick, params,
-                        precision=precision)
-        sv2[ix_dest] += 2.*np.pi*fe*soma['L']*soma['D']/soma['exc_density']*psp2
-        # Tv[ix_dest] += 2.*np.pi*fe*soma['L']*soma['D']/soma['exc_density']*psp0**3/4./psp2
-        # norm_for_Tv[ix_dest] += 2.*np.pi*fe*soma['L']*soma['D']/soma['exc_density']*psp0
+        fe, fi = FE[0][0], FI[0][0]
 
         # inhibitory synapse at soma
         Gf2 = exp_FT_mod(f, params['Qi'], params['Ti'])
@@ -365,8 +380,8 @@ def get_the_theoretical_sV_and_Tv(fe, fi, f, x, params, soma, stick,\
                         Garray, soma, stick, params,
                         precision=precision)
         sv2[ix_dest] += 2.*np.pi*fi*soma['L']*soma['D']/soma['inh_density']*psp2
-        # Tv[ix_dest] += 2.*np.pi*fi*soma['L']*soma['D']/soma['inh_density']*psp0**3/4./psp2
-        # norm_for_Tv[ix_dest] += 2.*np.pi*fi*soma['L']*soma['D']/soma['inh_density']*psp0
+        Tv[ix_dest] += 2.*np.pi*fi*soma['L']*soma['D']/soma['inh_density']*psp0**3/4./psp2
+        norm_for_Tv[ix_dest] += 2.*np.pi*fi*soma['L']*soma['D']/soma['inh_density']*psp0
         
     return np.sqrt(sv2), Tv/norm_for_Tv
 

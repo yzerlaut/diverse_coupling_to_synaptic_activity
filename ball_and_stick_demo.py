@@ -40,6 +40,7 @@ from analytical_calculus import *
 # we calculate the parameters to plug into cable theory
 
 def setup_model(soma, stick, params):
+    
     params_for_cable_theory(stick, params)
     cables = [soma, stick]
     # density of synapses in um2, one synapses per this area !
@@ -59,21 +60,27 @@ def setup_model(soma, stick, params):
 from numerical_simulations.nrn_simulations import *
 from scipy.optimize import curve_fit
 
-
-def run_simulation(fe, fi, cables, params):
+def run_simulation(fe, fi, cables, params, tstop=2.):
 
     exc_synapses, exc_netcons, exc_netstims,\
            inh_synapses, inh_netcons, inh_netstims,\
            area_lists, spkout =\
               Constructing_the_ball_and_tree(params, cables,
                                     spiking_mech=False)
+
     for i in range(len(cables)):
         for j in range(len(area_lists[i])):
             # excitation
             Ke = cables[i]['Ke_per_seg']
-            exc_netstims[i][j].interval = 1e3/fe/Ke
+            if fe[i][j]>0 and Ke>0:
+                exc_netstims[i][j].interval = 1e3/fe[i][j]/Ke
+            else:
+                exc_netstims[i][j].interval = 1e12
             Ki = cables[i]['Ki_per_seg']
-            inh_netstims[i][j].interval = 1e3/fi/Ki
+            if fi[i][j]>0 and Ki>0:
+                inh_netstims[i][j].interval = 1e3/fi[i][j]/Ki
+            else:
+                inh_netstims[i][j].interval = 1e12
 
     ## --- recording
     t_vec = nrn.Vector()
@@ -81,21 +88,24 @@ def run_simulation(fe, fi, cables, params):
     ## --- launching the simulation
     nrn.finitialize(params['El']*1e3)
     nrn.dt = sim_params['dt']
-    V = np.zeros((int(sim_params['tstop']/sim_params['dt']),cables[1]['NSEG']))
+    V = np.zeros((int(1e3*tstop/sim_params['dt']),1+cables[1]['NSEG']))
     i=0
-    while nrn.t<(sim_params['tstop']-sim_params['dt']):
-        j = 0
+    while nrn.t<(1e3*tstop-sim_params['dt']):
+        V[i,0] = nrn.cable_0_0(0.5)._ref_v[0]
+        j = 1
         for seg in nrn.cable_1_0:
             V[i,j] = nrn.cable_1_0(seg.x)._ref_v[0]
             j+=1
         i+=1
         nrn.fadvance()
 
-    return np.array(t_vec), V
+    return np.array(t_vec), np.array(V)
 
 def analyze_simulation(t_vec, V):
 
-    x = np.linspace(0, stick['L'], stick['NSEG'], endpoint=True)
+    x = np.linspace(0, stick['L'], stick['NSEG']+1)
+    x = .5*(x[1:]+x[:-1])
+    x = np.concatenate([[0],x])
 
     exp_f = lambda t, tau: np.exp(-t/tau)
     def find_acf_time(v_acf, t_shift, criteria=0.01):
@@ -115,24 +125,26 @@ def analyze_simulation(t_vec, V):
     return x, muV_exp, sV_exp, Tv_exp
 
 
-
-def get_analytical_estimate(fe, fi, soma, stick, params, discret=20):
+def get_analytical_estimate(fi_soma, fe_prox, fi_prox, fe_dist, fi_dist,
+                            soma, stick, params, discret=20):
 
     print '----------------------------------------------------'
     print ' Analytical calculus running [...]'
 
     x_th = np.linspace(0, stick['L'], discret)
 
-    Garray = calculate_mean_conductances(fe, fi, soma, stick, params)
-
     dt, tstop = 1e-5, 50e-3
     t = np.arange(int(tstop/dt))*dt
     f = rfft.time_to_freq(len(t), dt)
-    muV_th = stat_pot_function(x_th, Garray, soma, stick, params)
+
+    muV_th = stat_pot_function(x_th,
+                               fi_soma, fe_prox, fi_prox, fe_dist, fi_dist,
+                               soma, stick, params)
     # sV_th = np.sqrt(get_the_theoretical_variance(fe, fi, f, x_th, params, soma, stick, precision=discret))
     # Tv_th = 0*sV_th
-    sV_th, Tv_th = get_the_theoretical_sV_and_Tv(\
-            fe, fi, f, x_th, params, soma, stick, precision=discret)
+    sV_th, Tv_th = 0*muV_th, 0*muV_th
+    # get_the_theoretical_sV_and_Tv(\
+    #         fe, fi, f, x_th, params, soma, stick, precision=discret)
     # Rin, Rtf = get_the_input_and_transfer_resistance(fe, fi, f, x_th, params, soma, stick)
 
     print '----------------------------------------------------'
@@ -144,6 +156,7 @@ def get_analytical_estimate(fe, fi, soma, stick, params, discret=20):
 
 def plot_time_traces(t_vec, V, title=''):
     V = np.array(V)
+    print V.mean()
     t = np.array(t_vec)#[:-1]
     
     fig2 = plt.figure()
@@ -161,7 +174,7 @@ def plot_time_traces(t_vec, V, title=''):
 
     return fig2
 
-def make_comparison_plot(x_th, muV_th, sV_th, Tv_th,\
+def make_comparison_plot(x_th, fe_th, fi_th, muV_th, sV_th, Tv_th,\
                          x_exp, muV_exp, sV_exp, Tv_exp):
 
     # membrane pot 
@@ -199,18 +212,25 @@ if __name__=='__main__':
     parser.add_argument("-S", "--simulation",\
                         help="With numerical simulation (NEURON)",
                         action="store_true")
-    parser.add_argument("--fe", type=float,\
-                        help="excitatory synaptic frequency",
-                        default=5.)
-    parser.add_argument("--fi", type=float,\
-                        help="excitatory synaptic frequency",
-                        default=20.)
-    parser.add_argument("--discret", type=int,\
+    parser.add_argument("--fe_prox", type=float, help="excitatory synaptic frequency in proximal compartment", default=5.)
+    parser.add_argument("--fi_prox", type=float, help="inhibitory synaptic frequency in proximal compartment", default=20.)
+    parser.add_argument("--fe_dist", type=float, help="excitatory synaptic frequency in distal compartment", default=5.)
+    parser.add_argument("--fi_dist", type=float, help="inhibitory synaptic frequency in distal compartment", default=20.)
+    parser.add_argument("--fe_soma", type=float, help="excitatory synaptic frequency at soma compartment", default=.1)
+    parser.add_argument("--fi_soma", type=float, help="inhibitory synaptic frequency at soma compartment", default=20.)
+    parser.add_argument("--discret_sim", type=int,
+                        help="space discretization for numerical simulation",
+                        default=20)
+    parser.add_argument("--tstop_sim", type=float,
+                        help="max simulation time (s)",
+                        default=2.)
+    parser.add_argument("--discret_th", type=int,\
                         help="discretization for theoretical evaluation",
-                        default=20.)
+                        default=20)
     # ball and stick properties
-    parser.add_argument("--L_stick", type=float, help="Length of the stick in micrometer", default=500.)
+    parser.add_argument("--L_stick", type=float, help="Length of the stick in micrometer", default=2000.)
     parser.add_argument("--D_stick", type=float, help="Diameter of the stick", default=2.)
+    parser.add_argument("--L_proximal", type=float, help="Length of the proximal compartment", default=1000.)
     # synaptic properties
     parser.add_argument("--Qe", type=float, help="Excitatory synaptic weight (nS)", default=1.)
     parser.add_argument("--Qi", type=float, help="Inhibitory synaptic weight (nS)", default=3.)
@@ -219,30 +239,58 @@ if __name__=='__main__':
     # setting up the stick properties
     stick['L'] = args.L_stick*1e-6
     stick['D'] = args.D_stick*1e-6
+
     # settign up the synaptic properties
     params['Qe'] = args.Qe*1e-9
     params['Qi'] = args.Qi*1e-9
 
     print ' first we set up the model [...]'
     cables = setup_model(soma, stick, params)    
+    stick['NSEG'] = args.discret_sim
+
+    # we adjust L_proximal so that it falls inbetweee two segments
+    L_proximal = int(args.L_proximal/args.L_stick*args.discret_sim)*args.L_stick/args.discret_sim
+    x_stick = np.linspace(0,args.L_stick, args.discret_sim+1) # then :
+    x_stick = .5*(x_stick[1:]+x_stick[:-1])
+    # constructing the space-dependent shotnoise input for the simulation
+    fe, fi = [], []
+    fe.append([args.fe_soma])
+    fe.append([args.fe_prox if x<L_proximal else args.fe_dist for x in x_stick])
+    fi.append([args.fi_soma])
+    fi.append([args.fi_prox if x<L_proximal else args.fi_dist for x in x_stick])
 
     # then we run the simulation if needed
     if args.simulation:
         print 'Running simulation [...]'
-        t, V = run_simulation(args.fe, args.fi, cables, params)
+        t, V = run_simulation(fe, fi, cables, params, tstop=args.tstop_sim)
         x_exp, muV_exp, sV_exp, Tv_exp = analyze_simulation(t, V)
-        print 'saving the data as :', "data/fe_%1.2f_fi_%1.2f.npy" % (args.fe,args.fi)
-        np.save("data/fe_%1.2f_fi_%1.2f.npy" % (args.fe,args.fi),\
-                [x_exp, muV_exp, sV_exp, Tv_exp])
-        plot_time_traces(t, V, title='$\\nu_e$=  %1.2f Hz, $\\nu_i$= %1.2f Hz' % (args.fe,args.fi))
+        print 'saving the data as :', "data/fe_prox_%1.2f_fe_dist_%1.2f_fi_prox_%1.2f_fi_dist_%1.2f.npy" % (args.fe_prox,args.fe_dist,args.fi_prox,args.fi_prox)
+        np.save("data/fe_prox_%1.2f_fe_dist_%1.2f_fi_prox_%1.2f_fi_dist_%1.2f.npy" % (args.fe_prox,args.fe_dist,args.fi_prox,args.fi_prox),\
+                [x_exp, fe, fi, muV_exp, sV_exp, Tv_exp])
+        plot_time_traces(t, V, title='$\\nu_e^p$=  %1.2f Hz, $\\nu_e^d$=  %1.2f Hz, $\\nu^p_i$= %1.2f Hz, $\\nu^d_i$= %1.2f Hz' % (args.fe_prox,args.fe_dist,args.fi_prox,args.fi_prox))
         plt.show()
 
-    # now analytical calculus
-    x_th, muV_th, sV_th, Tv_th  = get_analytical_estimate(args.fe, args.fi,\
-                         soma, stick, params, discret=args.discret)
 
+    # ===== now analytical calculus ========
+
+    # constructing the space-dependent shotnoise input for the simulation
+    L_proximal = int(args.L_proximal/args.L_stick*args.discret_sim)*args.L_stick/args.discret_sim
+    stick['L_prox'] = L_proximal*1e-6
+
+    x_stick = np.linspace(0,args.L_stick, args.discret_th+1) # then :
+    x_stick = .5*(x_stick[1:]+x_stick[:-1])
+    # constructing the space-dependent shotnoise input for the simulation
+    fe_th, fi_th = [], []
+    fe_th.append(np.array([args.fe_soma]))
+    fe_th.append(np.array([args.fe_prox if x<L_proximal else args.fe_dist for x in x_stick]))
+    fi_th.append(np.array([args.fi_soma]))
+    fi_th.append(np.array([args.fi_prox if x<L_proximal else args.fi_dist for x in x_stick]))
+    x_th, muV_th, sV_th, Tv_th  = get_analytical_estimate(\
+        args.fi_soma, args.fe_prox, args.fi_prox, args.fe_dist, args.fi_dist,\
+        soma, stick, params, discret=args.discret_th)
+    
     try:
-        x_exp, muV_exp, sV_exp, Tv_exp = np.load("data/fe_%1.2f_fi_%1.2f.npy" % (args.fe,args.fi))
+        x_exp, fe_exp, fi_exp, muV_exp, sV_exp, Tv_exp = np.load("data/fe_prox_%1.2f_fe_dist_%1.2f_fi_prox_%1.2f_fi_dist_%1.2f.npy" %  (args.fe_prox,args.fe_dist,args.fi_prox,args.fi_prox))
     except IOError:
         print '======================================================'
         print 'no numerical data available !!!  '
@@ -251,6 +299,7 @@ if __name__=='__main__':
         x_exp, muV_exp, sV_exp, Tv_exp = x_th.mean()+0*x_th,\
           muV_th.mean()+0*x_th, sV_th.mean()+0*x_th, Tv_th.mean()+0*x_th
     
-    make_comparison_plot(x_th, muV_th, sV_th, Tv_th,\
+    make_comparison_plot(x_th, fe_th, fi_th, muV_th, sV_th, Tv_th,\
                          x_exp, muV_exp, sV_exp, Tv_exp)    
     plt.show()
+
