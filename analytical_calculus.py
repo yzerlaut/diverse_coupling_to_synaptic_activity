@@ -311,10 +311,8 @@ def get_the_theoretical_sV_and_Tv(fe, fi, f, x, params, soma, stick,\
                             Garray, soma, stick, params,
                             precision=precision)
             sv2[ix_dest] += 2.*np.pi*fe*DX*stick['D']/stick['exc_density']*psp2
-            # Tv[ix_dest] += 2.*np.pi*fe*DX*stick['D']/stick['exc_density']*psp0**3/4./psp2
-            # norm_for_Tv[ix_dest] += 2.*np.pi*fe*DX*stick['D']/stick['exc_density']*psp0
-            Tv[ix_dest] += psp0**2/4./psp2
-            norm_for_Tv[ix_dest] += 1
+            Tv[ix_dest] += 2.*np.pi*fe*DX*stick['D']/stick['exc_density']*psp0**3/4./psp2
+            norm_for_Tv[ix_dest] += 2.*np.pi*fe*DX*stick['D']/stick['exc_density']*psp0
 
             # inhibitory synapse at dendrites
             Gf2 = exp_FT_mod(f, params['Qi'], params['Ti'])
@@ -329,26 +327,24 @@ def get_the_theoretical_sV_and_Tv(fe, fi, f, x, params, soma, stick,\
                             Garray, soma, stick, params,
                             precision=precision)
             sv2[ix_dest] += 2.*np.pi*fi*DX*stick['D']/stick['inh_density']*psp2
-            # Tv[ix_dest] += 2.*np.pi*fi*DX*stick['D']/stick['inh_density']*psp0**3/4./psp2
-            # norm_for_Tv[ix_dest] += 2.*np.pi*fi*DX*stick['D']/stick['inh_density']*psp0
-            Tv[ix_dest] += psp0**2/4./psp2
-            norm_for_Tv[ix_dest] += 1
+            Tv[ix_dest] += 2.*np.pi*fi*DX*stick['D']/stick['inh_density']*psp0**3/4./psp2
+            norm_for_Tv[ix_dest] += 2.*np.pi*fi*DX*stick['D']/stick['inh_density']*psp0
 
         #### SOMATIC SYNAPSES, discret summation
 
         # excitatory synapse at soma
-        Gf2 = exp_FT_mod(f, params['Qe'], params['Te'])
-        psp2 = psp_norm_square_integral_per_dend_synapse_type(\
-                        x[ix_dest], 0.,\
-                        f, Gf2, params['Ee'],\
-                        Garray, soma, stick, params,
-                        precision=precision)
-        psp0 = psp_0_freq_per_dend_synapse_type(\
-                        x[ix_dest], 0.,\
-                        params['Qe']*params['Te'], params['Ee'],\
-                        Garray, soma, stick, params,
-                        precision=precision)
-        sv2[ix_dest] += 2.*np.pi*fe*soma['L']*soma['D']/soma['exc_density']*psp2
+        # Gf2 = exp_FT_mod(f, params['Qe'], params['Te'])
+        # psp2 = psp_norm_square_integral_per_dend_synapse_type(\
+        #                 x[ix_dest], 0.,\
+        #                 f, Gf2, params['Ee'],\
+        #                 Garray, soma, stick, params,
+        #                 precision=precision)
+        # psp0 = psp_0_freq_per_dend_synapse_type(\
+        #                 x[ix_dest], 0.,\
+        #                 params['Qe']*params['Te'], params['Ee'],\
+        #                 Garray, soma, stick, params,
+        #                 precision=precision)
+        # sv2[ix_dest] += 2.*np.pi*fe*soma['L']*soma['D']/soma['exc_density']*psp2
         # Tv[ix_dest] += 2.*np.pi*fe*soma['L']*soma['D']/soma['exc_density']*psp0**3/4./psp2
         # norm_for_Tv[ix_dest] += 2.*np.pi*fe*soma['L']*soma['D']/soma['exc_density']*psp0
 
@@ -365,8 +361,8 @@ def get_the_theoretical_sV_and_Tv(fe, fi, f, x, params, soma, stick,\
                         Garray, soma, stick, params,
                         precision=precision)
         sv2[ix_dest] += 2.*np.pi*fi*soma['L']*soma['D']/soma['inh_density']*psp2
-        # Tv[ix_dest] += 2.*np.pi*fi*soma['L']*soma['D']/soma['inh_density']*psp0**3/4./psp2
-        # norm_for_Tv[ix_dest] += 2.*np.pi*fi*soma['L']*soma['D']/soma['inh_density']*psp0
+        Tv[ix_dest] += 2.*np.pi*fi*soma['L']*soma['D']/soma['inh_density']*psp0**3/4./psp2
+        norm_for_Tv[ix_dest] += 2.*np.pi*fi*soma['L']*soma['D']/soma['inh_density']*psp0
         
     return np.sqrt(sv2), Tv/norm_for_Tv
 

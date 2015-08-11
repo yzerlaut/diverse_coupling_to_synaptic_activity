@@ -31,7 +31,7 @@ soma = {'L': 40*1e-6, 'D': 20*1e-6, 'NSEG': 1,
         'inh_density':FACTOR_FOR_DENSITY*25*1e-12,
         'Ke':1e-9, 'Ki':10., 'name':'soma'}
 # stick
-stick = {'L': 2000*1e-6, 'D': 4*1e-6, 'NSEG': 30,\
+stick = {'L': 2000*1e-6, 'D': 4*1e-6, 'NSEG': 40,\
          'exc_density':FACTOR_FOR_DENSITY*17*1e-12,
          'inh_density':FACTOR_FOR_DENSITY*100*1e-12,
          'Ke':100, 'Ki':100., 'name':'dend'}
@@ -205,8 +205,11 @@ if __name__=='__main__':
     parser.add_argument("--fi", type=float,\
                         help="excitatory synaptic frequency",
                         default=20.)
-    parser.add_argument("--discret", type=int,\
-                        help="discretization for theoretical evaluation",
+    parser.add_argument("--discret_th", type=int,\
+                        help="spatial discretization for theoretical evaluation",
+                        default=20.)
+    parser.add_argument("--discret_sim", type=int,\
+                        help="spatial discretization for numerical simulations",
                         default=20.)
     # ball and stick properties
     parser.add_argument("--L_stick", type=float, help="Length of the stick in micrometer", default=2000.)
@@ -239,7 +242,7 @@ if __name__=='__main__':
 
     # now analytical calculus
     x_th, muV_th, sV_th, Tv_th  = get_analytical_estimate(args.fe, args.fi,\
-                         soma, stick, params, discret=args.discret)
+                         soma, stick, params, discret=args.discret_th)
 
     try:
         x_exp, muV_exp, sV_exp, Tv_exp = np.load("data/fe_%1.2f_fi_%1.2f.npy" % (args.fe,args.fi))
