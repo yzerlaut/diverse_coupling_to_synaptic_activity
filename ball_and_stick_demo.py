@@ -18,7 +18,7 @@ sim_params = {#in ms
 'dt':0.025,
 'initial_discard':200.,
 'window_for_autocorrel':40.,
-'tstop':20000.
+'tstop':5000.
 }
 
 
@@ -209,7 +209,7 @@ if __name__=='__main__':
                         help="discretization for theoretical evaluation",
                         default=20.)
     # ball and stick properties
-    parser.add_argument("--L_stick", type=float, help="Length of the stick in micrometer", default=500.)
+    parser.add_argument("--L_stick", type=float, help="Length of the stick in micrometer", default=2000.)
     parser.add_argument("--D_stick", type=float, help="Diameter of the stick", default=2.)
     # synaptic properties
     parser.add_argument("--Qe", type=float, help="Excitatory synaptic weight (nS)", default=1.)
