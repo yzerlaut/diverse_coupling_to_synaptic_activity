@@ -245,8 +245,8 @@ if __name__=='__main__':
     params['Qi'] = args.Qi*1e-9
 
     print ' first we set up the model [...]'
-    cables = setup_model(soma, stick, params)    
     stick['NSEG'] = args.discret_sim
+    cables = setup_model(soma, stick, params)    
 
     # we adjust L_proximal so that it falls inbetweee two segments
     L_proximal = int(args.L_proximal/args.L_stick*args.discret_sim)*args.L_stick/args.discret_sim

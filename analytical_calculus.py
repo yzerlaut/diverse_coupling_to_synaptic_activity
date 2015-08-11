@@ -77,9 +77,8 @@ def stat_pot_function(x, fi_soma, fe_prox, fi_prox, fe_dist, fi_dist,
     A = Cm*ri*lbdP/TauS # alpha factor in notebook derivation
     B = (np.cosh(Lp/lbdP)+A*np.sinh(Lp/lbdP))/(np.sinh(Lp/lbdP)+A*np.cosh(Lp/lbdP))
 
-    # v1D  = v0P-v0D+A/(1.-A)*(1-B)*(v0P-V0)*np.exp(Lp/lbdP)
-    # v1D /= np.cosh((Lp-L)/lbdD)-lbdP/lbdD*B*np.sinh((Lp-L)/lbdD)
-    v1D  = (V0-v0D)/np.sinh(L/lbdD)/(1./A+1./np.tanh(L/lbdD))
+    v1D  = v0P-v0D+A/(1.-A)*(1-B)*(v0P-V0)*np.exp(Lp/lbdP)
+    v1D /= np.cosh((Lp-L)/lbdD)-lbdP/lbdD*B*np.sinh((Lp-L)/lbdD)
 
     v1P = v0D-v0P+v1D*np.cosh((Lp-L)/lbdD)
     v2P = lbdP/lbdD*v1D*np.sinh((Lp-L)/lbdD)
