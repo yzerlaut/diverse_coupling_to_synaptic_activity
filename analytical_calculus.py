@@ -255,15 +255,25 @@ def get_fourier_transform_integral(x, X, f, Gf2, L, lbd, tau, Tau, Cm, ri):
     crucial function here, this would be nice to have analytically
     """
     af, bf = split_root_square_of_imaginary(f, tau)
-    Bf = lbd*Cm*ri*(1+2*1j*np.pi*f*Tau)/Tau/(af+1j*bf)
-
+    lbdf = lbd/np.sqrt(1+2*1j*np.pi*f*tau)
+    Bf = lbdf*Cm*ri*(1+2*1j*np.pi*f*Tau)/Tau
+    
     if X<x:
-        A = expr2(X/lbd, Bf, af, bf)
-        B = expr1((x-L)/lbd, af, bf)
+        B = np.abs(np.cosh((x-L)/lbdf))**2
+        A = np.abs(np.cosh(X/lbdf)+Bf*np.sinh(X/lbdf))**2
     else:
-        A = expr2(x/lbd, Bf, af, bf)
-        B = expr1((X-L)/lbd, af, bf)
-    Denom = expr0(L/lbd, Bf, af, bf)*np.sqrt(1.+(2.*np.pi*f*tau)**2)
+        A = np.abs(np.cosh(x/lbdf)+Bf*np.sinh(x/lbdf))**2
+        B = np.abs(np.cosh((X-L)/lbdf))**2
+    Denom = np.abs(np.sinh(L/lbdf) + Bf*np.cosh(L/lbdf))**2
+    Denom *=  np.abs(1+2*1j*np.pi*f*tau)**2
+
+    # if X<x:
+    #     A = expr2(X/lbd, Bf, af, bf)
+    #     B = expr1((x-L)/lbd, af, bf)
+    # else:
+    #     A = expr2(x/lbd, Bf, af, bf)
+    #     B = expr1((X-L)/lbd, af, bf)
+    # Denom = expr0(L/lbd, Bf, af, bf)*np.sqrt(1.+(2.*np.pi*f*tau)**2)
     return np.trapz(Gf2*A*B/Denom, f)
 
 def psp_norm_square_integral_per_dend_synapse_type(x, X, f, Gf2,\
@@ -271,18 +281,32 @@ def psp_norm_square_integral_per_dend_synapse_type(x, X, f, Gf2,\
                             soma, stick, params,
                             precision=1e2):
     [ri, L, D, cm] = stick['ri'], stick['L'], stick['D'], stick['cm']
+    rm = stick['rm']
     [Ls, Ds] = soma['L'], soma['D']
     Cm = np.pi*Ls*Ds*params['cm']
     ge0, gi0, Gi0 = Garray # mean conductance input
     [tau, Tau, lbd, v0, V0] = parameters_for_mean(ge0, gi0, Gi0,\
                                     soma, stick, params)
-    v1 = (V0-v0)/( 1/np.tanh(L/lbd)+(Tau)/(ri*Cm*lbd) )/np.sinh(L/lbd)
-    
-    # unitary input for the kernel
-    factor = ( (Erev-v0-v1*np.cosh((X-L)/lbd)) * tau/cm/lbd )**2
-    
-    return factor*get_fourier_transform_integral(x, X, f, Gf2, L, lbd, tau, Tau, Cm, ri)
 
+    lbdf = lbd/np.sqrt(1+2*1j*np.pi*f*tau)
+    gf = lbdf*Cm*ri*(1+2*1j*np.pi*f*Tau)/Tau
+
+    muV_X = stat_pot_function(x, Garray, soma, stick, params)
+
+    # ### unitary input for the kernel
+    # return ((Erev-muV_X)*tau/cm/lbd )**2*get_fourier_transform_integral(x, X, f, Gf2, L, lbd, tau, Tau, Cm, ri)
+
+    rf = rm/(1.+rm*ge0+rm*gi0)/(1+2*1j*np.pi*f*tau)
+
+    dv_xX = lambda x,X: (rf*(gf*np.sinh(x/lbdf) + np.cosh(x/lbdf))*np.cosh((L - X)/lbdf)/(lbdf*(gf*np.cosh(L/lbdf) + np.sinh(L/lbdf))))
+    dv_Xx = lambda x,X: (rf*(gf*np.sinh(X/lbdf) + np.cosh(X/lbdf))*np.cosh((L - x)/lbdf)/(lbdf*(gf*np.cosh(L/lbdf) + np.sinh(L/lbdf))))
+    if x<X:
+        PSP = dv_xX(x,X) 
+    else:
+        PSP = dv_Xx(x,X)
+        
+    return (Erev-muV_X)**2*np.trapz(Gf2*np.abs(PSP)**2, f)
+        
 def get_the_theoretical_sV_and_Tv(fe, fi, f, x, params, soma, stick,\
                                   precision=50):
     sv2 = np.zeros(len(x))
