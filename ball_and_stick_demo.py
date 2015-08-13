@@ -272,7 +272,7 @@ if __name__=='__main__':
 
     shotnoise_input = {'fi_soma':args.fi_soma,
                        'fe_prox':args.fe_prox,'fi_prox':args.fi_prox,
-                       'fe_dist':args.fe_dist,'fi_dist':args.fe_dist}
+                       'fe_dist':args.fe_dist,'fi_dist':args.fi_dist}
 
     # ===== now analytical calculus ========
 
@@ -285,7 +285,8 @@ if __name__=='__main__':
                 get_analytical_estimate(shotnoise_input,
                                         soma, stick, params,
                                         discret=args.discret_th)
-    
+
+    print shotnoise_input
     try:
         x_exp, fe_exp, fi_exp, muV_exp, sV_exp, Tv_exp = np.load("data/fe_prox_%1.2f_fe_dist_%1.2f_fi_prox_%1.2f_fi_dist_%1.2f.npy" %  (args.fe_prox,args.fe_dist,args.fi_prox,args.fi_prox))
     except IOError:
