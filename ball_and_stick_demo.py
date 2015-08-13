@@ -76,10 +76,12 @@ def run_simulation(fe, fi, cables, params, tstop=2.):
                 exc_netstims[i][j].interval = 1e3/fe[i][j]/Ke
             else:
                 exc_netstims[i][j].interval = 1e12
+                exc_netstims[i][j].start = 1e12
             Ki = cables[i]['Ki_per_seg']
             if fi[i][j]>0 and Ki>0:
                 inh_netstims[i][j].interval = 1e3/fi[i][j]/Ki
             else:
+                inh_netstims[i][j].start = 1e12
                 inh_netstims[i][j].interval = 1e12
 
     ## --- recording
@@ -125,7 +127,7 @@ def analyze_simulation(t_vec, V):
     return x, muV_exp, sV_exp, Tv_exp
 
 
-def get_analytical_estimate(fi_soma, fe_prox, fi_prox, fe_dist, fi_dist,
+def get_analytical_estimate(shotnoise_input,
                             soma, stick, params, discret=20):
 
     print '----------------------------------------------------'
@@ -137,14 +139,12 @@ def get_analytical_estimate(fi_soma, fe_prox, fi_prox, fe_dist, fi_dist,
     t = np.arange(int(tstop/dt))*dt
     f = rfft.time_to_freq(len(t), dt)
 
-    muV_th = stat_pot_function(x_th,
-                               fi_soma, fe_prox, fi_prox, fe_dist, fi_dist,
+    muV_th = stat_pot_function(x_th, shotnoise_input,
                                soma, stick, params)
-    # sV_th = np.sqrt(get_the_theoretical_variance(fe, fi, f, x_th, params, soma, stick, precision=discret))
-    # Tv_th = 0*sV_th
     sV_th, Tv_th = 0*muV_th, 0*muV_th
-    # get_the_theoretical_sV_and_Tv(\
-    #         fe, fi, f, x_th, params, soma, stick, precision=discret)
+    sV_th, Tv_th = get_the_theoretical_sV_and_Tv(shotnoise_input, f,\
+                                  x_th, params, soma, stick,
+                                  precision=discret)
     # Rin, Rtf = get_the_input_and_transfer_resistance(fe, fi, f, x_th, params, soma, stick)
 
     print '----------------------------------------------------'
@@ -174,8 +174,8 @@ def plot_time_traces(t_vec, V, title=''):
 
     return fig2
 
-def make_comparison_plot(x_th, fe_th, fi_th, muV_th, sV_th, Tv_th,\
-                         x_exp, muV_exp, sV_exp, Tv_exp):
+def make_comparison_plot(x_th, muV_th, sV_th, Tv_th,\
+                      x_exp, muV_exp, sV_exp, Tv_exp, shotnoise_input):
 
     # membrane pot 
     fig1, AX = plt.subplots(3,1, sharex=True, figsize=(5,8))
@@ -230,7 +230,7 @@ if __name__=='__main__':
     # ball and stick properties
     parser.add_argument("--L_stick", type=float, help="Length of the stick in micrometer", default=2000.)
     parser.add_argument("--D_stick", type=float, help="Diameter of the stick", default=2.)
-    parser.add_argument("--L_proximal", type=float, help="Length of the proximal compartment", default=0.)
+    parser.add_argument("--L_proximal", type=float, help="Length of the proximal compartment", default=2000.)
     # synaptic properties
     parser.add_argument("--Qe", type=float, help="Excitatory synaptic weight (nS)", default=1.)
     parser.add_argument("--Qi", type=float, help="Inhibitory synaptic weight (nS)", default=3.)
@@ -254,7 +254,7 @@ if __name__=='__main__':
     x_stick = .5*(x_stick[1:]+x_stick[:-1])
     # constructing the space-dependent shotnoise input for the simulation
     fe, fi = [], []
-    fe.append([args.fe_soma])
+    fe.append([0]) # no excitation on somatic compartment
     fe.append([args.fe_prox if x<L_proximal else args.fe_dist for x in x_stick])
     fi.append([args.fi_soma])
     fi.append([args.fi_prox if x<L_proximal else args.fi_dist for x in x_stick])
@@ -270,6 +270,9 @@ if __name__=='__main__':
         plot_time_traces(t, V, title='$\\nu_e^p$=  %1.2f Hz, $\\nu_e^d$=  %1.2f Hz, $\\nu^p_i$= %1.2f Hz, $\\nu^d_i$= %1.2f Hz' % (args.fe_prox,args.fe_dist,args.fi_prox,args.fi_prox))
         plt.show()
 
+    shotnoise_input = {'fi_soma':args.fi_soma,
+                       'fe_prox':args.fe_prox,'fi_prox':args.fi_prox,
+                       'fe_dist':args.fe_dist,'fi_dist':args.fe_dist}
 
     # ===== now analytical calculus ========
 
@@ -277,17 +280,11 @@ if __name__=='__main__':
     L_proximal = int(args.L_proximal/args.L_stick*args.discret_sim)*args.L_stick/args.discret_sim
     stick['L_prox'] = L_proximal*1e-6
 
-    x_stick = np.linspace(0,args.L_stick, args.discret_th+1) # then :
-    x_stick = .5*(x_stick[1:]+x_stick[:-1])
     # constructing the space-dependent shotnoise input for the simulation
-    fe_th, fi_th = [], []
-    fe_th.append(np.array([args.fe_soma]))
-    fe_th.append(np.array([args.fe_prox if x<L_proximal else args.fe_dist for x in x_stick]))
-    fi_th.append(np.array([args.fi_soma]))
-    fi_th.append(np.array([args.fi_prox if x<L_proximal else args.fi_dist for x in x_stick]))
-    x_th, muV_th, sV_th, Tv_th  = get_analytical_estimate(\
-        args.fi_soma, args.fe_prox, args.fi_prox, args.fe_dist, args.fi_dist,\
-        soma, stick, params, discret=args.discret_th)
+    x_th, muV_th, sV_th, Tv_th  = \
+                get_analytical_estimate(shotnoise_input,
+                                        soma, stick, params,
+                                        discret=args.discret_th)
     
     try:
         x_exp, fe_exp, fi_exp, muV_exp, sV_exp, Tv_exp = np.load("data/fe_prox_%1.2f_fe_dist_%1.2f_fi_prox_%1.2f_fi_dist_%1.2f.npy" %  (args.fe_prox,args.fe_dist,args.fi_prox,args.fi_prox))
@@ -299,7 +296,7 @@ if __name__=='__main__':
         x_exp, muV_exp, sV_exp, Tv_exp = x_th.mean()+0*x_th,\
           muV_th.mean()+0*x_th, sV_th.mean()+0*x_th, Tv_th.mean()+0*x_th
     
-    make_comparison_plot(x_th, fe_th, fi_th, muV_th, sV_th, Tv_th,\
-                         x_exp, muV_exp, sV_exp, Tv_exp)    
+    make_comparison_plot(x_th, muV_th, sV_th, Tv_th,\
+                         x_exp, muV_exp, sV_exp, Tv_exp, shotnoise_input)    
     plt.show()
 
