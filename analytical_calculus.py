@@ -43,12 +43,14 @@ def calculate_mean_conductances(shtn_input,\
     return Gi_soma, ge_prox, gi_prox, ge_dist, gi_dist
 
 def ball_and_stick_params(soma, stick, Params):
-    [Ls, Ds] = soma['L'], soma['D']
-    [L, Lp, D] = stick['L'], stick['L_prox'], stick['D']
+    Ls, Ds = soma['L'], soma['D']
+    L, Lp, D = stick['L'], stick['L_prox'], stick['D']
     Rm = 1./(np.pi*Ls*Ds*Params['g_pas'])
+    # print 'Rm (soma)', 1e-6*Rm, 'MOhm'
     Cm = np.pi*Ls*Ds*Params['cm']
-    [El, Ei, Ee] = Params['El'], Params['Ei'], Params['Ee']
-    [rm, cm, ri] = stick['rm'], stick['cm'], stick['ri']
+    # print 'Cm (soma)', 1e-12*Cm, 'pF'
+    El, Ei, Ee = Params['El'], Params['Ei'], Params['Ee']
+    rm, cm, ri = stick['rm'], stick['cm'], stick['ri']
     return Ls, Ds, L, D, Lp, Rm, Cm, El, Ee, Ei, rm, cm, ri
 
 def ball_and_stick_constants(shtn_input, soma, stick, Params):
@@ -63,6 +65,23 @@ def ball_and_stick_constants(shtn_input, soma, stick, Params):
     lbdD = np.sqrt(rm/ri/(1+rm*ge_dist+rm*gi_dist))
     tauS = Rm*Cm/(1+Rm*Gi_soma)
     return tauS, tauP, lbdP, tauD, lbdD
+
+############### INPUT FROM SYMPY ###################
+# --- muV
+muVP = lambda x,Lp,L,lbdD,lbdP,gP,v0D,v0P,V0: ((V0*gP*lbdD*np.cosh((L - Lp)/lbdD)*np.cosh((Lp - x)/lbdP) + V0*gP*lbdP*np.sinh((L - Lp)/lbdD)*np.sinh((Lp - x)/lbdP) + gP*lbdD*v0P*np.cosh(Lp/lbdP)*np.cosh((L - Lp)/lbdD) - gP*lbdD*v0P*np.cosh((L - Lp)/lbdD)*np.cosh((Lp - x)/lbdP) + gP*lbdP*v0D*np.sinh((L - Lp)/lbdD)*np.sinh(x/lbdP) + gP*lbdP*v0P*np.sinh(Lp/lbdP)*np.sinh((L - Lp)/lbdD) - gP*lbdP*v0P*np.sinh((L - Lp)/lbdD)*np.sinh(x/lbdP) - gP*lbdP*v0P*np.sinh((L - Lp)/lbdD)*np.sinh((Lp - x)/lbdP) + lbdD*v0P*np.sinh(Lp/lbdP)*np.cosh((L - Lp)/lbdD) + lbdP*v0D*np.sinh((L - Lp)/lbdD)*np.cosh(x/lbdP) + lbdP*v0P*np.sinh((L - Lp)/lbdD)*np.cosh(Lp/lbdP) - lbdP*v0P*np.sinh((L - Lp)/lbdD)*np.cosh(x/lbdP))/(gP*lbdD*np.cosh(Lp/lbdP)*np.cosh((L - Lp)/lbdD) + gP*lbdP*np.sinh(Lp/lbdP)*np.sinh((L - Lp)/lbdD) + lbdD*np.sinh(Lp/lbdP)*np.cosh((L - Lp)/lbdD) + lbdP*np.sinh((L - Lp)/lbdD)*np.cosh(Lp/lbdP)))
+muVD = lambda x,Lp,L,lbdD,lbdP,gP,v0D,v0P,V0: ((lbdD*(gP*(V0 - v0P)*(gP*np.sinh(Lp/lbdP) + np.cosh(Lp/lbdP))*np.cosh(Lp/lbdP) - (gP*np.cosh(Lp/lbdP) + np.sinh(Lp/lbdP))*(gP*(V0 - v0P)*np.sinh(Lp/lbdP) + v0D - v0P))*np.cosh((L - x)/lbdD) + v0D*(lbdD*(gP*np.cosh(Lp/lbdP) + np.sinh(Lp/lbdP))*np.cosh((L - Lp)/lbdD) + lbdP*(gP*np.sinh(Lp/lbdP) + np.cosh(Lp/lbdP))*np.sinh((L - Lp)/lbdD)))/(lbdD*(gP*np.cosh(Lp/lbdP) + np.sinh(Lp/lbdP))*np.cosh((L - Lp)/lbdD) + lbdP*(gP*np.sinh(Lp/lbdP) + np.cosh(Lp/lbdP))*np.sinh((L - Lp)/lbdD)))
+
+# --- dv
+dv_xXLp = lambda x,X,Lp,L,lbdDf,lbdPf,gPf,rPf,rDf: (rPf*(gPf*np.sinh(x/lbdPf) + np.cosh(x/lbdPf))*(lbdDf*np.cosh((lbdDf*(Lp - X) - lbdPf*(L - Lp))/(lbdDf*lbdPf)) + lbdDf*np.cosh((lbdDf*(Lp - X) + lbdPf*(L - Lp))/(lbdDf*lbdPf)) - lbdPf*np.cosh((lbdDf*(Lp - X) - lbdPf*(L - Lp))/(lbdDf*lbdPf)) + lbdPf*np.cosh((lbdDf*(Lp - X) + lbdPf*(L - Lp))/(lbdDf*lbdPf)))/(lbdPf*(gPf*lbdDf*np.cosh((Lp*lbdDf - lbdPf*(L - Lp))/(lbdDf*lbdPf)) + gPf*lbdDf*np.cosh((Lp*lbdDf + lbdPf*(L - Lp))/(lbdDf*lbdPf)) - gPf*lbdPf*np.cosh((Lp*lbdDf - lbdPf*(L - Lp))/(lbdDf*lbdPf)) + gPf*lbdPf*np.cosh((Lp*lbdDf + lbdPf*(L - Lp))/(lbdDf*lbdPf)) + lbdDf*np.sinh((Lp*lbdDf - lbdPf*(L - Lp))/(lbdDf*lbdPf)) + lbdDf*np.sinh((Lp*lbdDf + lbdPf*(L - Lp))/(lbdDf*lbdPf)) - lbdPf*np.sinh((Lp*lbdDf - lbdPf*(L - Lp))/(lbdDf*lbdPf)) + lbdPf*np.sinh((Lp*lbdDf + lbdPf*(L - Lp))/(lbdDf*lbdPf)))))
+dv_XxLp = lambda x,X,Lp,L,lbdDf,lbdPf,gPf,rPf,rDf: (rPf*(lbdDf*(gPf*np.sinh((X*lbdDf - lbdPf*(L - Lp))/(lbdDf*lbdPf)) + gPf*np.sinh((X*lbdDf + lbdPf*(L - Lp))/(lbdDf*lbdPf)) + np.cosh((X*lbdDf - lbdPf*(L - Lp))/(lbdDf*lbdPf)) + np.cosh((X*lbdDf + lbdPf*(L - Lp))/(lbdDf*lbdPf)))*np.cosh((Lp - x)/lbdPf) - lbdPf*(gPf*np.cosh((X*lbdDf - lbdPf*(L - Lp))/(lbdDf*lbdPf)) - gPf*np.cosh((X*lbdDf + lbdPf*(L - Lp))/(lbdDf*lbdPf)) + np.sinh((X*lbdDf - lbdPf*(L - Lp))/(lbdDf*lbdPf)) - np.sinh((X*lbdDf + lbdPf*(L - Lp))/(lbdDf*lbdPf)))*np.sinh((Lp - x)/lbdPf))/(lbdPf*(gPf*lbdDf*np.cosh((Lp*lbdDf - lbdPf*(L - Lp))/(lbdDf*lbdPf)) + gPf*lbdDf*np.cosh((Lp*lbdDf + lbdPf*(L - Lp))/(lbdDf*lbdPf)) - gPf*lbdPf*np.cosh((Lp*lbdDf - lbdPf*(L - Lp))/(lbdDf*lbdPf)) + gPf*lbdPf*np.cosh((Lp*lbdDf + lbdPf*(L - Lp))/(lbdDf*lbdPf)) + lbdDf*np.sinh((Lp*lbdDf - lbdPf*(L - Lp))/(lbdDf*lbdPf)) + lbdDf*np.sinh((Lp*lbdDf + lbdPf*(L - Lp))/(lbdDf*lbdPf)) - lbdPf*np.sinh((Lp*lbdDf - lbdPf*(L - Lp))/(lbdDf*lbdPf)) + lbdPf*np.sinh((Lp*lbdDf + lbdPf*(L - Lp))/(lbdDf*lbdPf)))))
+dv_XLpx = lambda x,X,Lp,L,lbdDf,lbdPf,gPf,rPf,rDf: (lbdDf*rPf*(gPf*np.sinh(X/lbdPf) + np.cosh(X/lbdPf))*np.cosh((L - x)/lbdDf)/(lbdPf*(gPf*lbdDf*np.cosh(Lp/lbdPf)*np.cosh((L - Lp)/lbdDf) + gPf*lbdPf*np.sinh(Lp/lbdPf)*np.sinh((L - Lp)/lbdDf) + lbdDf*np.sinh(Lp/lbdPf)*np.cosh((L - Lp)/lbdDf) + lbdPf*np.sinh((L - Lp)/lbdDf)*np.cosh(Lp/lbdPf))))
+
+dv_xLpX = lambda x,X,Lp,L,lbdDf,lbdPf,gPf,rPf,rDf: (-lbdPf*rDf*(gPf*np.sinh(x/lbdPf) + np.cosh(x/lbdPf))*np.exp(-(L - X)/lbdDf)*np.cosh((L - X)/lbdDf)/(lbdDf*(lbdDf*(gPf*np.cosh(Lp/lbdPf) + np.sinh(Lp/lbdPf))*np.sinh((Lp - X)/lbdDf) - lbdPf*(gPf*np.sinh(Lp/lbdPf) + np.cosh(Lp/lbdPf))*np.cosh((Lp - X)/lbdDf))))
+dv_LpxX = lambda x,X,Lp,L,lbdDf,lbdPf,gPf,rPf,rDf: (rDf*(lbdDf*(gPf*np.cosh(Lp/lbdPf) + np.sinh(Lp/lbdPf))*np.sinh((Lp - x)/lbdDf) - lbdPf*(gPf*np.sinh(Lp/lbdPf) + np.cosh(Lp/lbdPf))*np.cosh((Lp - x)/lbdDf))*np.exp(-(L - X)/lbdDf)*np.cosh((L - X)/lbdDf)/(lbdDf*(lbdDf*(gPf*np.cosh(Lp/lbdPf) + np.sinh(Lp/lbdPf))*np.sinh((Lp - X)/lbdDf) - lbdPf*(gPf*np.sinh(Lp/lbdPf) + np.cosh(Lp/lbdPf))*np.cosh((Lp - X)/lbdDf))))
+dv_LpXx = lambda x,X,Lp,L,lbdDf,lbdPf,gPf,rPf,rDf: (rDf*np.exp(-(L - X)/lbdDf)*np.cosh((L - x)/lbdDf)/lbdDf)
+
+
+
     
 def stat_pot_function(x, shtn_input, soma, stick, Params):
 
@@ -85,20 +104,9 @@ def stat_pot_function(x, shtn_input, soma, stick, Params):
     # somatic params
     V0 = (El+Rm*Gi_soma*Ei)/(1+Rm*Gi_soma)
 
-    # then from sympy !!
-    muVP = lambda x: (gP*(-V0 + v0P + (V0*gP*lbdD*np.cosh(Lp/lbdP)*np.cosh((L - Lp)/lbdD) + V0*gP*lbdP*np.sinh(Lp/lbdP)*np.sinh((L - Lp)/lbdD) - gP*lbdD*v0P*np.cosh(Lp/lbdP)*np.cosh((L - Lp)/lbdD) - gP*lbdP*v0P*np.sinh(Lp/lbdP)*np.sinh((L - Lp)/lbdD) + lbdP*v0D*np.sinh((L - Lp)/lbdD) - lbdP*v0P*np.sinh((L - Lp)/lbdD))/(gP*lbdD*np.cosh(Lp/lbdP)*np.cosh((L - Lp)/lbdD) + gP*lbdP*np.sinh(Lp/lbdP)*np.sinh((L - Lp)/lbdD) + lbdD*np.sinh(Lp/lbdP)*np.cosh((L - Lp)/lbdD) + lbdP*np.sinh((L - Lp)/lbdD)*np.cosh(Lp/lbdP)))*np.sinh(x/lbdP) + v0P + (V0*gP*lbdD*np.cosh(Lp/lbdP)*np.cosh((L - Lp)/lbdD) + V0*gP*lbdP*np.sinh(Lp/lbdP)*np.sinh((L - Lp)/lbdD) - gP*lbdD*v0P*np.cosh(Lp/lbdP)*np.cosh((L - Lp)/lbdD) - gP*lbdP*v0P*np.sinh(Lp/lbdP)*np.sinh((L - Lp)/lbdD) + lbdP*v0D*np.sinh((L - Lp)/lbdD) - lbdP*v0P*np.sinh((L - Lp)/lbdD))*np.cosh(x/lbdP)/(gP*lbdD*np.cosh(Lp/lbdP)*np.cosh((L - Lp)/lbdD) + gP*lbdP*np.sinh(Lp/lbdP)*np.sinh((L - Lp)/lbdD) + lbdD*np.sinh(Lp/lbdP)*np.cosh((L - Lp)/lbdD) + lbdP*np.sinh((L - Lp)/lbdD)*np.cosh(Lp/lbdP)))
-    muVD = lambda x: (lbdD*(gP*(V0 - v0P)*(gP*np.sinh(Lp/lbdP) + np.cosh(Lp/lbdP))*np.cosh(Lp/lbdP) - (gP*np.cosh(Lp/lbdP) + np.sinh(Lp/lbdP))*(gP*(V0 - v0P)*np.sinh(Lp/lbdP) + v0D - v0P))*np.cosh((-L + x)/lbdD)/(lbdD*(gP*np.cosh(Lp/lbdP) + np.sinh(Lp/lbdP))*np.cosh((L - Lp)/lbdD) + lbdP*(gP*np.sinh(Lp/lbdP) + np.cosh(Lp/lbdP))*np.sinh((L - Lp)/lbdD)) + v0D)
+    return np.array([muVP(xx,Lp,L,lbdD,lbdP,gP,v0D,v0P,V0) if xx<Lp\
+                     else muVD(xx,Lp,L,lbdD,lbdP,gP,v0D,v0P,V0) for xx in x])
 
-    return np.array([muVP(xx) if xx<Lp else muVD(xx) for xx in x])
-
-# def expr0(U, B, af, bf):      
-#     return np.abs( np.sinh(U*(af+1j*bf)) + B*np.cosh(U*(af+1j*bf)) )**2
-
-# def expr1(U, af, bf):
-#     return np.abs(np.cosh(U*(af+1j*bf)))**2
-    
-# def expr2(U, B, af, bf):      
-#     return np.abs( np.cosh(U*(af+1j*bf)) + B*np.sinh(U*(af+1j*bf)) )**2
 
 def exp_FT(f, Q, Tsyn, t0=0):
     return Q*np.exp(-1j*2*np.pi*t0*f)/(1j*2*np.pi*f+1./Tsyn)
@@ -113,42 +121,36 @@ def split_root_square_of_imaginary(f, tau):
     return af, bf
 
 def psp_0_freq_per_dend_synapse_type(x, X, Gf,\
-                            Erev, Garray,\
-                            soma, stick, params,
-                            precision=1e2):
-    [ri, L, D, cm] = stick['ri'], stick['L'], stick['D'], stick['cm']
-    [Ls, Ds] = soma['L'], soma['D']
-    Cm = np.pi*Ls*Ds*params['cm']
-    ge0, gi0, Gi0 = Garray # mean conductance input
-    [tau, Tau, lbd, v0, V0] = parameters_for_mean(ge0, gi0, Gi0,\
-                                    soma, stick, params)
-    v1 = (V0-v0)/( 1/np.tanh(L/lbd)+(Tau)/(ri*Cm*lbd) )/np.sinh(L/lbd)
-    B = lbd*Cm*ri/Tau
-    
-    # unitary input for the kernel
-    factor = ( (Erev-v0-v1*np.cosh((X-L)/lbd)) * tau/cm/lbd )/( np.sinh(L/lbd) + B*np.cosh(L/lbd) )
-    
-    if x<X:
-        func = (np.cosh(x/lbd) + B*np.sinh(x/lbd))*np.cosh((X-L)/lbd)
-    else:
-        func = (np.cosh(X/lbd) + B*np.sinh(X/lbd))*np.cosh((x-L)/lbd)
-    return np.abs(Gf*func*factor)
+                                     Erev, shtn_input,\
+                                     soma, stick, params,
+                                     precision=1e2):
+    Ls, Ds, L, D, Lp, Rm, Cm,\
+        El, Ee, Ei, rm, cm, ri = ball_and_stick_params(soma, stick, params)
 
-# def get_fourier_transform_integral(x, X, f, Gf2, L, lbd, tau, Tau, Cm, ri):
-#     """
-#     crucial function here, this would be nice to have analytically
-#     """
-#     af, bf = split_root_square_of_imaginary(f, tau)
-#     Bf = lbd*Cm*ri*(1+2*1j*np.pi*f*Tau)/Tau/(af+1j*bf)
+    tauS, tauP, lbdP, tauD, lbdD = \
+            ball_and_stick_constants(shtn_input, soma, stick, params)
+    rD, rP, gP = tauD/cm, tauP/cm, lbdP*ri*Cm/tauS
+    
+    # PSP with unitary current input
+    if X<=Lp:
+        if x<=X:
+            PSP = dv_xXLp(x,X,Lp,L,lbdD,lbdP,gP,rP,rD)
+        elif x>X and x<=Lp:
+            PSP = dv_XxLp(x,X,Lp,L,lbdD,lbdP,gP,rP,rD)
+        elif x>X and x>Lp:
+            PSP = dv_XLpx(x,X,Lp,L,lbdD,lbdP,gP,rP,rD)
+    elif X>Lp:
+        if x<=Lp:
+            PSP = dv_xLpX(x,X,Lp,L,lbdD,lbdP,gP,rP,rD)
+        elif x>Lp and x<=X:
+            PSP = dv_LpxX(x,X,Lp,L,lbdD,lbdP,gP,rP,rD)
+        elif x>X:
+            PSP = dv_LpXx(x,X,Lp,L,lbdD,lbdP,gP,rP,rD)
 
-#     if X<x:
-#         A = expr2(X/lbd, Bf, af, bf)
-#         B = expr1((x-L)/lbd, af, bf)
-#     else:
-#         A = expr2(x/lbd, Bf, af, bf)
-#         B = expr1((X-L)/lbd, af, bf)
-#     Denom = expr0(L/lbd, Bf, af, bf)*np.sqrt(1.+(2.*np.pi*f*tau)**2)
-#     return np.trapz(Gf2*A*B/Denom, f)
+    muV_X = stat_pot_function([X], shtn_input, soma, stick, params)[0]
+
+    return np.abs(Gf*PSP*(Erev-muV_X))
+
 
 def psp_norm_square_integral_per_dend_synapse_type(x, X, f, Gf2,\
                             Erev, shtn_input,\
@@ -162,32 +164,29 @@ def psp_norm_square_integral_per_dend_synapse_type(x, X, f, Gf2,\
             ball_and_stick_constants(shtn_input, soma, stick, params)
 
     # proximal params
-    aPf, bPf = split_root_square_of_imaginary(f, tauP)
-    lbdPf = lbdP/(aPf+1j*bPf)
-    gPf = lbdP*Cm*ri*(1+2.*1j*np.pi*f*tauS)/tauS/(aPf+1j*bPf)
-    rPf = rm/(1.+2.*1j*np.pi*f*tauP)
+    lbdPf = lbdP/np.sqrt(1+2*1j*np.pi*f*tauP)
+    gPf = lbdPf*Cm*ri*(1+2*1j*np.pi*f*tauS)/tauS
+    rPf = tauP/cm/(1+2*1j*np.pi*f*tauP)
 
     # distal params
-    aDf, bDf = split_root_square_of_imaginary(f, tauD)
-    lbdDf = lbdD/(aDf+1j*bDf)
-    rDf = rm/(1.+2.*1j*np.pi*f*tauD)
+    lbdDf = lbdD/np.sqrt(1+2*1j*np.pi*f*tauD)
+    rDf = tauD/cm/(1+2*1j*np.pi*f*tauD)
     
-    dv_xXLp = lambda x,X: (rPf*(gPf*np.sinh(x/lbdPf) + np.cosh(x/lbdPf))*(lbdDf*np.cosh((lbdDf*(Lp - X) - lbdPf*(L - Lp))/(lbdDf*lbdPf)) + lbdDf*np.cosh((lbdDf*(Lp - X) + lbdPf*(L - Lp))/(lbdDf*lbdPf)) - lbdPf*np.cosh((lbdDf*(Lp - X) - lbdPf*(L - Lp))/(lbdDf*lbdPf)) + lbdPf*np.cosh((lbdDf*(Lp - X) + lbdPf*(L - Lp))/(lbdDf*lbdPf)))/(lbdPf*(gPf*lbdDf*np.cosh((Lp*lbdDf - lbdPf*(L - Lp))/(lbdDf*lbdPf)) + gPf*lbdDf*np.cosh((Lp*lbdDf + lbdPf*(L - Lp))/(lbdDf*lbdPf)) - gPf*lbdPf*np.cosh((Lp*lbdDf - lbdPf*(L - Lp))/(lbdDf*lbdPf)) + gPf*lbdPf*np.cosh((Lp*lbdDf + lbdPf*(L - Lp))/(lbdDf*lbdPf)) + lbdDf*np.sinh((Lp*lbdDf - lbdPf*(L - Lp))/(lbdDf*lbdPf)) + lbdDf*np.sinh((Lp*lbdDf + lbdPf*(L - Lp))/(lbdDf*lbdPf)) - lbdPf*np.sinh((Lp*lbdDf - lbdPf*(L - Lp))/(lbdDf*lbdPf)) + lbdPf*np.sinh((Lp*lbdDf + lbdPf*(L - Lp))/(lbdDf*lbdPf)))))
-    dv_XxLp = lambda x,X: (rPf*(lbdDf*(gPf*np.sinh((X*lbdDf - lbdPf*(L - Lp))/(lbdDf*lbdPf)) + gPf*np.sinh((X*lbdDf + lbdPf*(L - Lp))/(lbdDf*lbdPf)) + np.cosh((X*lbdDf - lbdPf*(L - Lp))/(lbdDf*lbdPf)) + np.cosh((X*lbdDf + lbdPf*(L - Lp))/(lbdDf*lbdPf)))*np.cosh((Lp - x)/lbdPf) - lbdPf*(gPf*np.cosh((X*lbdDf - lbdPf*(L - Lp))/(lbdDf*lbdPf)) - gPf*np.cosh((X*lbdDf + lbdPf*(L - Lp))/(lbdDf*lbdPf)) + np.sinh((X*lbdDf - lbdPf*(L - Lp))/(lbdDf*lbdPf)) - np.sinh((X*lbdDf + lbdPf*(L - Lp))/(lbdDf*lbdPf)))*np.sinh((Lp - x)/lbdPf))/(lbdPf*(gPf*lbdDf*np.cosh((Lp*lbdDf - lbdPf*(L - Lp))/(lbdDf*lbdPf)) + gPf*lbdDf*np.cosh((Lp*lbdDf + lbdPf*(L - Lp))/(lbdDf*lbdPf)) - gPf*lbdPf*np.cosh((Lp*lbdDf - lbdPf*(L - Lp))/(lbdDf*lbdPf)) + gPf*lbdPf*np.cosh((Lp*lbdDf + lbdPf*(L - Lp))/(lbdDf*lbdPf)) + lbdDf*np.sinh((Lp*lbdDf - lbdPf*(L - Lp))/(lbdDf*lbdPf)) + lbdDf*np.sinh((Lp*lbdDf + lbdPf*(L - Lp))/(lbdDf*lbdPf)) - lbdPf*np.sinh((Lp*lbdDf - lbdPf*(L - Lp))/(lbdDf*lbdPf)) + lbdPf*np.sinh((Lp*lbdDf + lbdPf*(L - Lp))/(lbdDf*lbdPf)))))
-    dv_XLpx = lambda x,X: (lbdDf*rPf*(gPf*np.sinh(X/lbdPf) + np.cosh(X/lbdPf))*np.cosh((L - x)/lbdDf)/(lbdPf*(gPf*lbdDf*np.cosh(Lp/lbdPf)*np.cosh((L - Lp)/lbdDf) + gPf*lbdPf*np.sinh(Lp/lbdPf)*np.sinh((L - Lp)/lbdDf) + lbdDf*np.sinh(Lp/lbdPf)*np.cosh((L - Lp)/lbdDf) + lbdPf*np.sinh((L - Lp)/lbdDf)*np.cosh(Lp/lbdPf))))
-
     # PSP with unitary current input
     if X<=Lp:
         if x<=X:
-            PSP = dv_xXLp(x,X)
+            PSP = dv_xXLp(x,X,Lp,L,lbdDf,lbdPf,gPf,rPf,rDf)
         elif x>X and x<=Lp:
-            PSP = dv_XxLp(x,X)
-        else: # means x>X and x>Lp
-            PSP = dv_XLpx(x,X)
-            # print 'D -->', 1e6*x, 1e6*X, np.trapz(np.abs(coeff)**2, f), np.trapz(np.abs(func)**2, f)
-    else:
-        print 'case not considered yet !!'
-        print 1e6*x, 1e6*X, 1e6*Lp
+            PSP = dv_XxLp(x,X,Lp,L,lbdDf,lbdPf,gPf,rPf,rDf)
+        elif x>X and x>Lp:
+            PSP = dv_XLpx(x,X,Lp,L,lbdDf,lbdPf,gPf,rPf,rDf)
+    elif X>Lp:
+        if x<=Lp:
+            PSP = dv_xLpX(x,X,Lp,L,lbdDf,lbdPf,gPf,rPf,rDf)
+        elif x>Lp and x<=X:
+            PSP = dv_LpxX(x,X,Lp,L,lbdDf,lbdPf,gPf,rPf,rDf)
+        elif x>X:
+            PSP = dv_LpXx(x,X,Lp,L,lbdDf,lbdPf,gPf,rPf,rDf)
 
     muV_X = stat_pot_function([X], shtn_input, soma, stick, params)[0]
 
@@ -205,7 +204,7 @@ def get_the_theoretical_sV_and_Tv(shtn_input, f, x, params, soma, stick,\
     for ix_dest in range(len(x)):
 
         #### DENDRITIC SYNAPSES
-        for ix_source in range(len(Source_Array)): # less intervals than points
+        for ix_source in range(len(Source_Array)): 
 
             X_source = Source_Array[ix_source]
             if X_source<=stick['L_prox']:
@@ -221,14 +220,14 @@ def get_the_theoretical_sV_and_Tv(shtn_input, f, x, params, soma, stick,\
                             soma, stick, params,
                             precision=precision)
 
-            # psp0 = psp_0_freq_per_dend_synapse_type(\
-            #                 x[ix_dest], X_source,\
-            #                 params['Qe']*params['Te'], params['Ee'],\
-            #                 Garray, soma, stick, params,
-            #                 precision=precision)
+            psp0 = psp_0_freq_per_dend_synapse_type(\
+                            x[ix_dest], X_source,\
+                            params['Qe']*params['Te'], params['Ee'],\
+                            shtn_input, soma, stick, params,
+                            precision=precision)
             sv2[ix_dest] += 2.*np.pi*fe*DX*stick['D']/stick['exc_density']*psp2
-            # Tv[ix_dest] += 2.*np.pi*fe*DX*stick['D']/stick['exc_density']*psp0**3/4./psp2
-            # norm_for_Tv[ix_dest] += 2.*np.pi*fe*DX*stick['D']/stick['exc_density']*psp0
+            Tv[ix_dest] += 2.*np.pi*fe*DX*stick['D']/stick['exc_density']*psp0**3/4./psp2
+            norm_for_Tv[ix_dest] += 2.*np.pi*fe*DX*stick['D']/stick['exc_density']*psp0
 
             # inhibitory synapse at dendrites
             Gf2 = exp_FT_mod(f, params['Qi'], params['Ti'])
@@ -237,14 +236,14 @@ def get_the_theoretical_sV_and_Tv(shtn_input, f, x, params, soma, stick,\
                             f, Gf2, params['Ei'], shtn_input,\
                             soma, stick, params,
                             precision=precision)
-            # psp0 = psp_0_freq_per_dend_synapse_type(\
-            #                 x[ix_dest], X_source,\
-            #                 params['Qi']*params['Ti'], params['Ei'],\
-            #                 Garray, soma, stick, params,
-            #                 precision=precision)
+            psp0 = psp_0_freq_per_dend_synapse_type(\
+                            x[ix_dest], X_source,\
+                            params['Qi']*params['Ti'], params['Ei'],\
+                            shtn_input, soma, stick, params,
+                            precision=precision)
             sv2[ix_dest] += 2.*np.pi*fi*DX*stick['D']/stick['inh_density']*psp2
-            # Tv[ix_dest] += 2.*np.pi*fi*DX*stick['D']/stick['inh_density']*psp0**3/4./psp2
-            # norm_for_Tv[ix_dest] += 2.*np.pi*fi*DX*stick['D']/stick['inh_density']*psp0
+            Tv[ix_dest] += 2.*np.pi*fi*DX*stick['D']/stick['inh_density']*psp0**3/4./psp2
+            norm_for_Tv[ix_dest] += 2.*np.pi*fi*DX*stick['D']/stick['inh_density']*psp0
 
         # #### SOMATIC SYNAPSES, discret summation, only inhibition
         fi = shtn_input['fi_soma']
@@ -254,17 +253,16 @@ def get_the_theoretical_sV_and_Tv(shtn_input, f, x, params, soma, stick,\
                         f, Gf2, params['Ei'], shtn_input,\
                         soma, stick, params,
                         precision=precision)
-        # psp0 = psp_0_freq_per_dend_synapse_type(\
-        #                 x[ix_dest], 0.,\
-        #                 params['Qi']*params['Ti'], params['Ei'],\
-        #                 Garray, soma, stick, params,
-        #                 precision=precision)
+        psp0 = psp_0_freq_per_dend_synapse_type(\
+                        x[ix_dest], 0.,\
+                        params['Qi']*params['Ti'], params['Ei'],\
+                        shtn_input, soma, stick, params,
+                        precision=precision)
         sv2[ix_dest] += 2.*np.pi*fi*soma['L']*soma['D']/soma['inh_density']*psp2
-        # Tv[ix_dest] += 2.*np.pi*fi*soma['L']*soma['D']/soma['inh_density']*psp0**3/4./psp2
-        # norm_for_Tv[ix_dest] += 2.*np.pi*fi*soma['L']*soma['D']/soma['inh_density']*psp0
+        Tv[ix_dest] += 2.*np.pi*fi*soma['L']*soma['D']/soma['inh_density']*psp0**3/4./psp2
+        norm_for_Tv[ix_dest] += 2.*np.pi*fi*soma['L']*soma['D']/soma['inh_density']*psp0
         
-    # return np.sqrt(sv2), Tv/norm_for_Tv
-    return np.sqrt(sv2), 0*sv2
+    return np.sqrt(sv2), Tv/norm_for_Tv
 
 
 def get_the_input_and_transfer_resistance(fe, fi, f, x, params, soma, stick):

@@ -9,10 +9,10 @@ from signanalysis import autocorrel
 
 # ------- model parameters in SI units ------- # 
 params = {
-'g_pas': 1e-3*1e4, 'cm' : 1*1e-2, 'Ra' : 35.4*1e-2, 'El': -65e-3,\
-'Qe' : 1.e-9 , 'Te' : 5.e-3, 'Ee': 0e-3,\
-'Qi' : 1.5e-9 , 'Ti' : 5.e-3, 'Ei': -80e-3,\
-'seed' : 0}
+    'g_pas': 1e-4*1e4, 'cm' : 1*1e-2, 'Ra' : 35.4*1e-2, 'El': -65e-3,\
+    'Qe' : 1.e-9 , 'Te' : 5.e-3, 'Ee': 0e-3,\
+    'Qi' : 1.5e-9 , 'Ti' : 5.e-3, 'Ei': -80e-3,\
+    'seed' : 0}
 
 sim_params = {#in ms
 'dt':0.025,
@@ -39,92 +39,72 @@ stick = {'L': 2000*1e-6, 'D': 4*1e-6, 'NSEG': 30,\
 from analytical_calculus import *
 # we calculate the parameters to plug into cable theory
 
-def setup_model(soma, stick, params):
-    
-    params_for_cable_theory(stick, params)
-    cables = [soma, stick]
-    # density of synapses in um2, one synapses per this area !
-    # so calculate synapse number
+def setup_model(EqCylinder, soma, dend, Params):
+    """ returns the different diameters of the equivalent cylinder
+    given a number of branches point"""
+    cables, xtot = [], np.zeros(1)
+    cables.append(soma.copy())
+    cables[0]['inh_density'] = soma['inh_density']
+    cables[0]['exc_density'] = soma['exc_density']
     Ke_tot, Ki_tot = 0, 0
-    for i in range(len(cables)):
-        cables[i]['Ki_per_seg'] = cables[i]['L']*\
-              cables[i]['D']*np.pi/cables[i]['NSEG']/cables[i]['inh_density']
-        Ki_tot += cables[i]['Ki_per_seg']*cables[i]['NSEG']
-        cables[i]['Ke_per_seg'] = cables[i]['L']*\
-              cables[i]['D']*np.pi/cables[i]['NSEG']/cables[i]['exc_density']
-        Ke_tot += cables[i]['Ke_per_seg']*cables[i]['NSEG']
+    D = dend['D'] # mothers branch diameter
+    for i in range(1,len(EqCylinder)):
+        cable = dend.copy()
+        cable['x1'], cable['x2'] = EqCylinder[i-1], EqCylinder[i]
+        cable['L'] = cable['x2']-cable['x1']
+        dx = cable['L']/cable['NSEG']
+        cable['x'] = EqCylinder[i-1]+dx/2+np.arange(cable['NSEG'])*dx
+        print cable['x'], cable['NSEG']
+        xtot = np.concatenate([xtot, cable['x']])
+        cable['D'] = D*2**(-2*(i-1)/3.)
+        cable['inh_density'] = dend['inh_density']
+        cable['exc_density'] = dend['exc_density']
+        cables.append(cable)
+
+    Ke_tot, Ki_tot, jj = 0, 0, 0
+    for cable in cables:
+        cable['Ki_per_seg'] = cable['L']*\
+          cable['D']*np.pi/cable['NSEG']/cable['inh_density']
+        cable['Ke_per_seg'] = cable['L']*\
+          cable['D']*np.pi/cable['NSEG']/cable['exc_density']
+        # summing over duplicate of compartments
+        Ki_tot += 2**jj*cable['Ki_per_seg']*cable['NSEG']
+        Ke_tot += 2**jj*cable['Ke_per_seg']*cable['NSEG']
+        if cable['name']!='soma':
+            jj+=1
     print "Total number of EXCITATORY synapses : ", Ke_tot
     print "Total number of INHIBITORY synapses : ", Ki_tot
-    return cables
+    return xtot, cables
 
 from numerical_simulations.nrn_simulations import *
 from scipy.optimize import curve_fit
 
-def run_simulation(fe, fi, cables, params, tstop=2.):
+def analyze_simulation(xtot, t_vec, V):
 
-    exc_synapses, exc_netcons, exc_netstims,\
-           inh_synapses, inh_netcons, inh_netstims,\
-           area_lists, spkout =\
-              Constructing_the_ball_and_tree(params, cables,
-                                    spiking_mech=False)
+    muV_exp, sV_exp = np.zeros(len(xtot)), np.zeros(len(xtot))
+    ix = 0
+    for j in range(len(cables)):
+        dix = cables[j]['NSEG']
+        muV_exp[ix:dix+ix] = np.array([V[it][j].mean(axis=0) for it in range(int(.1*len(t)), len(t))]).mean(axis=0)
+        sV_exp[ix:dix+ix] = np.array([V[it][j] for it in range(int(.1*len(t)), len(t))]).std(axis=(0,1))
+        ix += dix
+    
+    Tv_exp = 0*muV_exp
 
-    for i in range(len(cables)):
-        for j in range(len(area_lists[i])):
-            # excitation
-            Ke = cables[i]['Ke_per_seg']
-            if fe[i][j]>0 and Ke>0:
-                exc_netstims[i][j].interval = 1e3/fe[i][j]/Ke
-            else:
-                exc_netstims[i][j].interval = 1e12
-                exc_netstims[i][j].start = 1e12
-            Ki = cables[i]['Ki_per_seg']
-            if fi[i][j]>0 and Ki>0:
-                inh_netstims[i][j].interval = 1e3/fi[i][j]/Ki
-            else:
-                inh_netstims[i][j].start = 1e12
-                inh_netstims[i][j].interval = 1e12
-
-    ## --- recording
-    t_vec = nrn.Vector()
-    t_vec.record(nrn._ref_t)
-    ## --- launching the simulation
-    nrn.finitialize(params['El']*1e3)
-    nrn.dt = sim_params['dt']
-    V = np.zeros((int(1e3*tstop/sim_params['dt']),1+cables[1]['NSEG']))
-    i=0
-    while nrn.t<(1e3*tstop-sim_params['dt']):
-        V[i,0] = nrn.cable_0_0(0.5)._ref_v[0]
-        j = 1
-        for seg in nrn.cable_1_0:
-            V[i,j] = nrn.cable_1_0(seg.x)._ref_v[0]
-            j+=1
-        i+=1
-        nrn.fadvance()
-
-    return np.array(t_vec), np.array(V)
-
-def analyze_simulation(t_vec, V):
-
-    x = np.linspace(0, stick['L'], stick['NSEG']+1)
-    x = .5*(x[1:]+x[:-1])
-    x = np.concatenate([[0],x])
-
+    # for autocorrelation analysis
     exp_f = lambda t, tau: np.exp(-t/tau)
     def find_acf_time(v_acf, t_shift, criteria=0.01):
         i_max = np.argmin(np.abs(v_acf-criteria))
         P, pcov = curve_fit(exp_f, t_shift[:i_max], v_acf[:i_max])
         return P[0]
 
-    muV_exp, sV_exp = V[1000:,:].mean(axis=0), V[1000:,:].std(axis=0)
-    Tv_exp = 0*muV_exp
+    # i0 = int(sim_params['initial_discard']/sim_params['dt']) # start for det of ACF
+    # for i in range(len(muV_exp)):
+    #     v_acf, t_shift = autocorrel(V[i0:,i],\
+    #         sim_params['window_for_autocorrel']*1e-3, 1e-3*sim_params['dt'])
+    #     Tv_exp[i] = find_acf_time(v_acf, t_shift, criteria=0.01)
 
-    i0 = int(sim_params['initial_discard']/sim_params['dt']) # start for det of ACF
-    for i in range(len(muV_exp)):
-        v_acf, t_shift = autocorrel(V[i0:,i],\
-            sim_params['window_for_autocorrel']*1e-3, 1e-3*sim_params['dt'])
-        Tv_exp[i] = find_acf_time(v_acf, t_shift, criteria=0.01)
-
-    return x, muV_exp, sV_exp, Tv_exp
+    return muV_exp, sV_exp, Tv_exp
 
 
 def get_analytical_estimate(shotnoise_input,
@@ -133,7 +113,8 @@ def get_analytical_estimate(shotnoise_input,
     print '----------------------------------------------------'
     print ' Analytical calculus running [...]'
 
-    x_th = np.linspace(0, stick['L'], discret)
+    x_th = np.linspace(0, stick['L'], discret+1)
+    x_th = np.concatenate([[0],.5*(x_th[1:]+x_th[:-1])])
 
     dt, tstop = 1e-5, 50e-3
     t = np.arange(int(tstop/dt))*dt
@@ -189,6 +170,7 @@ def make_comparison_plot(x_th, muV_th, sV_th, Tv_th,\
     AX[2].plot(1e6*x_th, 1e3*Tv_th, 'k-', lw=3, alpha=.5)
     AX[0].legend(loc='best', prop={'size':'small'})
     AX[2].set_xlabel('distance from soma ($\mu$m)')
+    AX[2].set_ylim([1e3*Tv_exp.min()-1, 1e3*Tv_exp.max()+1])
 
     YLABELS = ['$\mu_V$ (mV)', '$\sigma_V$ (mV)', '$\tau_V$ (ms)']
     # for ax, ylabel in zip([AX, YLABELS]):
@@ -230,6 +212,7 @@ if __name__=='__main__':
     # ball and stick properties
     parser.add_argument("--L_stick", type=float, help="Length of the stick in micrometer", default=2000.)
     parser.add_argument("--D_stick", type=float, help="Diameter of the stick", default=2.)
+    parser.add_argument("-B", "--branches", type=int, help="Number of branches (equally spaced)", default=1)
     parser.add_argument("--L_proximal", type=float, help="Length of the proximal compartment", default=2000.)
     # synaptic properties
     parser.add_argument("--Qe", type=float, help="Excitatory synaptic weight (nS)", default=1.)
@@ -239,6 +222,8 @@ if __name__=='__main__':
     # setting up the stick properties
     stick['L'] = args.L_stick*1e-6
     stick['D'] = args.D_stick*1e-6
+    params['B'] = args.branches
+    EqCylinder = np.linspace(0, 1, params['B']+1)*stick['L'] # equally space branches !
 
     # settign up the synaptic properties
     params['Qe'] = args.Qe*1e-9
@@ -246,7 +231,7 @@ if __name__=='__main__':
 
     print ' first we set up the model [...]'
     stick['NSEG'] = args.discret_sim
-    cables = setup_model(soma, stick, params)    
+    xtot, cables = setup_model(EqCylinder, soma, stick, params)    
 
     # we adjust L_proximal so that it falls inbetweee two segments
     L_proximal = int(args.L_proximal/args.L_stick*args.discret_sim)*args.L_stick/args.discret_sim
@@ -255,21 +240,23 @@ if __name__=='__main__':
     # constructing the space-dependent shotnoise input for the simulation
     fe, fi = [], []
     fe.append([0]) # no excitation on somatic compartment
-    fe.append([args.fe_prox if x<L_proximal else args.fe_dist for x in x_stick])
-    fi.append([args.fi_soma])
-    fi.append([args.fi_prox if x<L_proximal else args.fi_dist for x in x_stick])
-
+    fi.append([args.fi_soma]) # inhibition on somatic compartment
+    for cable in cables[1:]:
+        fe.append([args.fe_prox if x<L_proximal else args.fe_dist for x in cable['x']])
+        fi.append([args.fi_prox if x<L_proximal else args.fi_dist for x in cable['x']])
+    print fe
     # then we run the simulation if needed
     if args.simulation:
         print 'Running simulation [...]'
-        t, V = run_simulation(fe, fi, cables, params, tstop=args.tstop_sim)
-        x_exp, muV_exp, sV_exp, Tv_exp = analyze_simulation(t, V)
+        t, V = run_simulation(fe, fi, cables, params, tstop=args.tstop_sim*1e3, dt=0.025)
+        x_exp, muV_exp, sV_exp, Tv_exp = analyze_simulation(x_exp, t, V)
         print 'saving the data as :', "data/fe_prox_%1.2f_fe_dist_%1.2f_fi_prox_%1.2f_fi_dist_%1.2f.npy" % (args.fe_prox,args.fe_dist,args.fi_prox,args.fi_prox)
         np.save("data/fe_prox_%1.2f_fe_dist_%1.2f_fi_prox_%1.2f_fi_dist_%1.2f.npy" % (args.fe_prox,args.fe_dist,args.fi_prox,args.fi_prox),\
                 [x_exp, fe, fi, muV_exp, sV_exp, Tv_exp])
         plot_time_traces(t, V, title='$\\nu_e^p$=  %1.2f Hz, $\\nu_e^d$=  %1.2f Hz, $\\nu^p_i$= %1.2f Hz, $\\nu^d_i$= %1.2f Hz' % (args.fe_prox,args.fe_dist,args.fi_prox,args.fi_prox))
         plt.show()
 
+    """
     shotnoise_input = {'fi_soma':args.fi_soma,
                        'fe_prox':args.fe_prox,'fi_prox':args.fi_prox,
                        'fe_dist':args.fe_dist,'fi_dist':args.fi_dist}
@@ -300,4 +287,4 @@ if __name__=='__main__':
     make_comparison_plot(x_th, muV_th, sV_th, Tv_th,\
                          x_exp, muV_exp, sV_exp, Tv_exp, shotnoise_input)    
     plt.show()
-
+    """
