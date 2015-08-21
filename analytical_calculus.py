@@ -80,10 +80,12 @@ dv_xLpX = lambda x,X,Lp,L,lbdDf,lbdPf,gPf,rPf,rDf: (-lbdPf*rDf*(gPf*np.sinh(x/lb
 dv_LpxX = lambda x,X,Lp,L,lbdDf,lbdPf,gPf,rPf,rDf: (rDf*(lbdDf*(gPf*np.cosh(Lp/lbdPf) + np.sinh(Lp/lbdPf))*np.sinh((Lp - x)/lbdDf) - lbdPf*(gPf*np.sinh(Lp/lbdPf) + np.cosh(Lp/lbdPf))*np.cosh((Lp - x)/lbdDf))*np.exp(-(L - X)/lbdDf)*np.cosh((L - X)/lbdDf)/(lbdDf*(lbdDf*(gPf*np.cosh(Lp/lbdPf) + np.sinh(Lp/lbdPf))*np.sinh((Lp - X)/lbdDf) - lbdPf*(gPf*np.sinh(Lp/lbdPf) + np.cosh(Lp/lbdPf))*np.cosh((Lp - X)/lbdDf))))
 dv_LpXx = lambda x,X,Lp,L,lbdDf,lbdPf,gPf,rPf,rDf: (rDf*np.exp(-(L - X)/lbdDf)*np.cosh((L - x)/lbdDf)/lbdDf)
 
+def rescale_x(x, EqCylinder):
+    C = EqCylinder[EqCylinder<=x]
+    factor = np.power(2., 1./3.*np.arange(1, len(C)+1))
+    return np.sum(np.diff(C)*factor[:-1])+(x-C[-1])*factor[-1]
 
-
-    
-def stat_pot_function(x, shtn_input, soma, stick, Params):
+def stat_pot_function(x, shtn_input, soma, stick, EqCylinder, Params):
 
     params_for_cable_theory(stick, Params)
 
@@ -103,9 +105,10 @@ def stat_pot_function(x, shtn_input, soma, stick, Params):
     v0D = (El+rm*ge_dist*Ee+rm*gi_dist*Ei)/(1+rm*ge_dist+rm*gi_dist)
     # somatic params
     V0 = (El+Rm*Gi_soma*Ei)/(1+Rm*Gi_soma)
-
-    return np.array([muVP(xx,Lp,L,lbdD,lbdP,gP,v0D,v0P,V0) if xx<Lp\
-                     else muVD(xx,Lp,L,lbdD,lbdP,gP,v0D,v0P,V0) for xx in x])
+    
+    Lp, L = rescale_x(Lp, EqCylinder), rescale_x(L, EqCylinder)
+    return np.array([muVP(rescale_x(xx, EqCylinder),Lp,L,lbdD,lbdP,gP,v0D,v0P,V0) if xx<Lp\
+        else muVD(rescale_x(xx, EqCylinder),Lp,L,lbdD,lbdP,gP,v0D,v0P,V0) for xx in x])
 
 
 def exp_FT(f, Q, Tsyn, t0=0):

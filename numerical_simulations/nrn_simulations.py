@@ -214,6 +214,7 @@ def run_simulation(fe, fi, cables, params, tstop=2000., dt=0.025):
     print " --- checking if the neuron is detroyed"
     nrn.topology()
     print "======================================="
+    print np.array(V).shape
     return np.array(t_vec), np.array(V)
 
 """
