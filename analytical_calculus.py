@@ -14,7 +14,8 @@ def params_for_cable_theory(cable, Params):
     cable['cm'] = Params['cm']*np.pi*D # [F/m] """" NEURON 1e-2 !!!! """"
 
 
-def calculate_mean_conductances(fe, fi, soma, cable, Params):
+def calculate_mean_conductances(shtn_input,\
+                                soma, cable, Params):
     """
     this calculates the conductances that needs to plugged in into the
     linear cable equation
@@ -23,196 +24,91 @@ def calculate_mean_conductances(fe, fi, soma, cable, Params):
     inhibition along the cable)
     the third one is an ABSOLUTE conductance !
     """
-    L, D = cable['L'], cable['D']
-    area = L*D*np.pi
 
-    # radial density of excitatory conductance
+    L, D, Lp = cable['L'], cable['D'], cable['L_prox']
     Te, Qe = Params['Te'], Params['Qe']
-    Ke_tot = area/cable['exc_density']
-    # print 'excitatory synapses on cable : ', Ke_tot
-    ge = Qe*Ke_tot*fe*Te/L
-    
-    # radial density of inhibitory conductance
     Ti, Qi = Params['Ti'], Params['Qi']
-    Ki_tot = area/cable['inh_density']
-    # print 'inhibitory synapses on cable : ', Ki_tot
-    gi = Qi*Ki_tot*fi*Ti/L
 
-    # radial density of inhibitory conductance
+    ge_prox = Qe*shtn_input['fe_prox']*Te*D*np.pi/cable['exc_density']
+    gi_prox = Qi*shtn_input['fi_prox']*Ti*D*np.pi/cable['inh_density']
+    ge_dist = Qe*shtn_input['fe_dist']*Te*D*np.pi/cable['exc_density']
+    gi_dist = Qi*shtn_input['fi_dist']*Ti*D*np.pi/cable['inh_density']
+
+    # somatic inhibitory conductance
     Ls, Ds = soma['L'], soma['D']
     Kis = np.pi*Ls*Ds/soma['inh_density']
-    Gi = Qi*Kis*fi*Ti
+    Gi_soma = Qi*Kis*shtn_input['fi_soma']*Ti
     # print 'Gi soma (nS) : ', 1e9*Gi
     
-    return ge, gi, Gi
+    return Gi_soma, ge_prox, gi_prox, ge_dist, gi_dist
 
-    
-def parameters_for_mean(ge0, gi0, Gi0, soma, stick, Params):
+def ball_and_stick_params(soma, stick, Params):
+    Ls, Ds = soma['L'], soma['D']
+    L, Lp, D = stick['L'], stick['L_prox'], stick['D']
+    Rm = 1./(np.pi*Ls*Ds*Params['g_pas'])
+    # print 'Rm (soma)', 1e-6*Rm, 'MOhm'
+    Cm = np.pi*Ls*Ds*Params['cm']
+    # print 'Cm (soma)', 1e-12*Cm, 'pF'
+    El, Ei, Ee = Params['El'], Params['Ei'], Params['Ee']
+    rm, cm, ri = stick['rm'], stick['cm'], stick['ri']
+    return Ls, Ds, L, D, Lp, Rm, Cm, El, Ee, Ei, rm, cm, ri
+
+def ball_and_stick_constants(shtn_input, soma, stick, Params):
+    Ls, Ds, L, D, Lp, Rm, Cm, El, Ee, Ei, rm, cm, ri = \
+                    ball_and_stick_params(soma, stick, Params)
+    Gi_soma, ge_prox, gi_prox, ge_dist, gi_dist = \
+                calculate_mean_conductances(shtn_input,\
+                                            soma, stick, Params)
+    tauP = rm*cm/(1+rm*ge_prox+rm*gi_prox)
+    lbdP = np.sqrt(rm/ri/(1+rm*ge_prox+rm*gi_prox))
+    tauD = rm*cm/(1+rm*ge_dist+rm*gi_dist)
+    lbdD = np.sqrt(rm/ri/(1+rm*ge_dist+rm*gi_dist))
+    tauS = Rm*Cm/(1+Rm*Gi_soma)
+    return tauS, tauP, lbdP, tauD, lbdD
+
+############### INPUT FROM SYMPY ###################
+# --- muV
+muVP = lambda x,Lp,L,lbdD,lbdP,gP,v0D,v0P,V0: ((V0*gP*lbdD*np.cosh((L - Lp)/lbdD)*np.cosh((Lp - x)/lbdP) + V0*gP*lbdP*np.sinh((L - Lp)/lbdD)*np.sinh((Lp - x)/lbdP) + gP*lbdD*v0P*np.cosh(Lp/lbdP)*np.cosh((L - Lp)/lbdD) - gP*lbdD*v0P*np.cosh((L - Lp)/lbdD)*np.cosh((Lp - x)/lbdP) + gP*lbdP*v0D*np.sinh((L - Lp)/lbdD)*np.sinh(x/lbdP) + gP*lbdP*v0P*np.sinh(Lp/lbdP)*np.sinh((L - Lp)/lbdD) - gP*lbdP*v0P*np.sinh((L - Lp)/lbdD)*np.sinh(x/lbdP) - gP*lbdP*v0P*np.sinh((L - Lp)/lbdD)*np.sinh((Lp - x)/lbdP) + lbdD*v0P*np.sinh(Lp/lbdP)*np.cosh((L - Lp)/lbdD) + lbdP*v0D*np.sinh((L - Lp)/lbdD)*np.cosh(x/lbdP) + lbdP*v0P*np.sinh((L - Lp)/lbdD)*np.cosh(Lp/lbdP) - lbdP*v0P*np.sinh((L - Lp)/lbdD)*np.cosh(x/lbdP))/(gP*lbdD*np.cosh(Lp/lbdP)*np.cosh((L - Lp)/lbdD) + gP*lbdP*np.sinh(Lp/lbdP)*np.sinh((L - Lp)/lbdD) + lbdD*np.sinh(Lp/lbdP)*np.cosh((L - Lp)/lbdD) + lbdP*np.sinh((L - Lp)/lbdD)*np.cosh(Lp/lbdP)))
+muVD = lambda x,Lp,L,lbdD,lbdP,gP,v0D,v0P,V0: ((lbdD*(gP*(V0 - v0P)*(gP*np.sinh(Lp/lbdP) + np.cosh(Lp/lbdP))*np.cosh(Lp/lbdP) - (gP*np.cosh(Lp/lbdP) + np.sinh(Lp/lbdP))*(gP*(V0 - v0P)*np.sinh(Lp/lbdP) + v0D - v0P))*np.cosh((L - x)/lbdD) + v0D*(lbdD*(gP*np.cosh(Lp/lbdP) + np.sinh(Lp/lbdP))*np.cosh((L - Lp)/lbdD) + lbdP*(gP*np.sinh(Lp/lbdP) + np.cosh(Lp/lbdP))*np.sinh((L - Lp)/lbdD)))/(lbdD*(gP*np.cosh(Lp/lbdP) + np.sinh(Lp/lbdP))*np.cosh((L - Lp)/lbdD) + lbdP*(gP*np.sinh(Lp/lbdP) + np.cosh(Lp/lbdP))*np.sinh((L - Lp)/lbdD)))
+
+# --- dv
+dv_xXLp = lambda x,X,Lp,L,lbdDf,lbdPf,gPf,rPf,rDf: (rPf*(gPf*np.sinh(x/lbdPf) + np.cosh(x/lbdPf))*(lbdDf*np.cosh((lbdDf*(Lp - X) - lbdPf*(L - Lp))/(lbdDf*lbdPf)) + lbdDf*np.cosh((lbdDf*(Lp - X) + lbdPf*(L - Lp))/(lbdDf*lbdPf)) - lbdPf*np.cosh((lbdDf*(Lp - X) - lbdPf*(L - Lp))/(lbdDf*lbdPf)) + lbdPf*np.cosh((lbdDf*(Lp - X) + lbdPf*(L - Lp))/(lbdDf*lbdPf)))/(lbdPf*(gPf*lbdDf*np.cosh((Lp*lbdDf - lbdPf*(L - Lp))/(lbdDf*lbdPf)) + gPf*lbdDf*np.cosh((Lp*lbdDf + lbdPf*(L - Lp))/(lbdDf*lbdPf)) - gPf*lbdPf*np.cosh((Lp*lbdDf - lbdPf*(L - Lp))/(lbdDf*lbdPf)) + gPf*lbdPf*np.cosh((Lp*lbdDf + lbdPf*(L - Lp))/(lbdDf*lbdPf)) + lbdDf*np.sinh((Lp*lbdDf - lbdPf*(L - Lp))/(lbdDf*lbdPf)) + lbdDf*np.sinh((Lp*lbdDf + lbdPf*(L - Lp))/(lbdDf*lbdPf)) - lbdPf*np.sinh((Lp*lbdDf - lbdPf*(L - Lp))/(lbdDf*lbdPf)) + lbdPf*np.sinh((Lp*lbdDf + lbdPf*(L - Lp))/(lbdDf*lbdPf)))))
+dv_XxLp = lambda x,X,Lp,L,lbdDf,lbdPf,gPf,rPf,rDf: (rPf*(lbdDf*(gPf*np.sinh((X*lbdDf - lbdPf*(L - Lp))/(lbdDf*lbdPf)) + gPf*np.sinh((X*lbdDf + lbdPf*(L - Lp))/(lbdDf*lbdPf)) + np.cosh((X*lbdDf - lbdPf*(L - Lp))/(lbdDf*lbdPf)) + np.cosh((X*lbdDf + lbdPf*(L - Lp))/(lbdDf*lbdPf)))*np.cosh((Lp - x)/lbdPf) - lbdPf*(gPf*np.cosh((X*lbdDf - lbdPf*(L - Lp))/(lbdDf*lbdPf)) - gPf*np.cosh((X*lbdDf + lbdPf*(L - Lp))/(lbdDf*lbdPf)) + np.sinh((X*lbdDf - lbdPf*(L - Lp))/(lbdDf*lbdPf)) - np.sinh((X*lbdDf + lbdPf*(L - Lp))/(lbdDf*lbdPf)))*np.sinh((Lp - x)/lbdPf))/(lbdPf*(gPf*lbdDf*np.cosh((Lp*lbdDf - lbdPf*(L - Lp))/(lbdDf*lbdPf)) + gPf*lbdDf*np.cosh((Lp*lbdDf + lbdPf*(L - Lp))/(lbdDf*lbdPf)) - gPf*lbdPf*np.cosh((Lp*lbdDf - lbdPf*(L - Lp))/(lbdDf*lbdPf)) + gPf*lbdPf*np.cosh((Lp*lbdDf + lbdPf*(L - Lp))/(lbdDf*lbdPf)) + lbdDf*np.sinh((Lp*lbdDf - lbdPf*(L - Lp))/(lbdDf*lbdPf)) + lbdDf*np.sinh((Lp*lbdDf + lbdPf*(L - Lp))/(lbdDf*lbdPf)) - lbdPf*np.sinh((Lp*lbdDf - lbdPf*(L - Lp))/(lbdDf*lbdPf)) + lbdPf*np.sinh((Lp*lbdDf + lbdPf*(L - Lp))/(lbdDf*lbdPf)))))
+dv_XLpx = lambda x,X,Lp,L,lbdDf,lbdPf,gPf,rPf,rDf: (lbdDf*rPf*(gPf*np.sinh(X/lbdPf) + np.cosh(X/lbdPf))*np.cosh((L - x)/lbdDf)/(lbdPf*(gPf*lbdDf*np.cosh(Lp/lbdPf)*np.cosh((L - Lp)/lbdDf) + gPf*lbdPf*np.sinh(Lp/lbdPf)*np.sinh((L - Lp)/lbdDf) + lbdDf*np.sinh(Lp/lbdPf)*np.cosh((L - Lp)/lbdDf) + lbdPf*np.sinh((L - Lp)/lbdDf)*np.cosh(Lp/lbdPf))))
+
+dv_xLpX = lambda x,X,Lp,L,lbdDf,lbdPf,gPf,rPf,rDf: (-lbdPf*rDf*(gPf*np.sinh(x/lbdPf) + np.cosh(x/lbdPf))*np.exp(-(L - X)/lbdDf)*np.cosh((L - X)/lbdDf)/(lbdDf*(lbdDf*(gPf*np.cosh(Lp/lbdPf) + np.sinh(Lp/lbdPf))*np.sinh((Lp - X)/lbdDf) - lbdPf*(gPf*np.sinh(Lp/lbdPf) + np.cosh(Lp/lbdPf))*np.cosh((Lp - X)/lbdDf))))
+dv_LpxX = lambda x,X,Lp,L,lbdDf,lbdPf,gPf,rPf,rDf: (rDf*(lbdDf*(gPf*np.cosh(Lp/lbdPf) + np.sinh(Lp/lbdPf))*np.sinh((Lp - x)/lbdDf) - lbdPf*(gPf*np.sinh(Lp/lbdPf) + np.cosh(Lp/lbdPf))*np.cosh((Lp - x)/lbdDf))*np.exp(-(L - X)/lbdDf)*np.cosh((L - X)/lbdDf)/(lbdDf*(lbdDf*(gPf*np.cosh(Lp/lbdPf) + np.sinh(Lp/lbdPf))*np.sinh((Lp - X)/lbdDf) - lbdPf*(gPf*np.sinh(Lp/lbdPf) + np.cosh(Lp/lbdPf))*np.cosh((Lp - X)/lbdDf))))
+dv_LpXx = lambda x,X,Lp,L,lbdDf,lbdPf,gPf,rPf,rDf: (rDf*np.exp(-(L - X)/lbdDf)*np.cosh((L - x)/lbdDf)/lbdDf)
+
+def rescale_x(x, EqCylinder):
+    C = EqCylinder[EqCylinder<=x]
+    factor = np.power(2., 1./3.*np.arange(len(C)))
+    return np.sum(np.diff(C)*factor[:-1])+(x-C[-1])*factor[-1]
+
+def stat_pot_function(x, shtn_input, EqCylinder, soma, stick, Params):
+
     params_for_cable_theory(stick, Params)
+
+    Ls, Ds, L, D, Lp, Rm, Cm,\
+        El, Ee, Ei, rm, cm, ri = ball_and_stick_params(soma, stick, Params)
+
+    Gi_soma, ge_prox, gi_prox, ge_dist, gi_dist = \
+                calculate_mean_conductances(shtn_input,\
+                                            soma, stick, Params)
+    tauS, tauP, lbdP, tauD, lbdD = \
+            ball_and_stick_constants(shtn_input, soma, stick, Params)
+
+    # proximal params
+    v0P = (El+rm*ge_prox*Ee+rm*gi_prox*Ei)/(1+rm*ge_prox+rm*gi_prox)
+    gP = Cm*ri*lbdP/tauS
+    # distal params
+    v0D = (El+rm*ge_dist*Ee+rm*gi_dist*Ei)/(1+rm*ge_dist+rm*gi_dist)
+    # somatic params
+    V0 = (El+Rm*Gi_soma*Ei)/(1+Rm*Gi_soma)
     
-    [Ls, Ds] = soma['L'], soma['D']
-    [L, D] = stick['L'], stick['D']
-    Gl = np.pi*Ls*Ds*Params['g_pas']
-    Cm = np.pi*Ls*Ds*Params['cm']
-    [El, Ei, Ee] = Params['El'], Params['Ei'], Params['Ee']
-    [rm, cm, ri] = stick['rm'], stick['cm'], stick['ri']
-    tau = rm*cm/(1+rm*ge0+rm*gi0)
-    Tau = Cm/(Gl+Gi0)
-    lbd = np.sqrt(rm/ri/(1+rm*ge0+rm*gi0))
-    v0 = (El+rm*ge0*Ee+rm*gi0*Ei)/(1+rm*ge0+rm*gi0)
-    V0 = (Gl*El+Gi0*Ei)/(Gl+Gi0)
-    return np.array([tau, Tau, lbd, v0, V0])
-
-
-def stat_pot_function(x, Garray, soma, stick, Params):
-    ge0, gi0, Gi0 = Garray # mean conductance input
-    [tau, Tau, lbd, v0, V0] = parameters_for_mean(ge0, gi0, Gi0,\
-                        soma, stick, Params)
-    [ri, L] = stick['ri'], stick['L']
-    [Ls, Ds] = soma['L'], soma['D']
-    Cm = np.pi*Ls*Ds*Params['cm']
-    denom = 1/np.tanh(L/lbd)+(Tau)/(ri*Cm*lbd)
-    return v0+(V0-v0)/denom*np.cosh((x-L)/lbd)/np.sinh(L/lbd)
-
-def parameters_for_mean_BRT(fe, fi, cables, Params):
-
-    soma = cables[0]
-    [Ls, Ds] = soma['L'], soma['D']
-    Gl = np.pi*Ls*Ds*Params['g_pas']
-    print 'soma conductac', Gl*1e9
-    Cm = np.pi*Ls*Ds*Params['cm']
-    [El, Ei, Ee] = Params['El'], Params['Ei'], Params['Ee']
-    
-    # radial density of excitatory conductance
-    Te, Qe = Params['Te'], Params['Qe']
-    ge0_rm = Qe*fe*Te/Params['exc_density_dend']/Params['g_pas']
-    
-    # radial density of inhibitory conductance
-    Ti, Qi = Params['Ti'], Params['Qi']
-    gi0_rm = Qi*fi*Ti/Params['inh_density_dend']/Params['g_pas']
-    
-    # radial density of inhibitory conductance at soma
-    Gi0_Rm = Qi*fi*Ti/Params['inh_density_soma']/Params['g_pas']
-    
-    print 'Conductances ratio :', Gi0_Rm, gi0_rm, ge0_rm
-
-    
-    # potentials
-    v0 = (El+ge0_rm*Ee+gi0_rm*Ei)/(1+ge0_rm+gi0_rm)
-    V0 = (El+Gi0_Rm*Ei)/(1+Gi0_Rm)
-
-    print ' potentials :', 1e3*v0, 1e3*V0
-    # time constants (doesn't depends on the diameter)
-    Tau = Params['cm']/Params['g_pas']/(1+Gi0_Rm)
-    tau = Params['cm']/Params['g_pas']/(1+ge0_rm+gi0_rm)
-
-    # now the different lambda, as a power of the first lbd=lbd0
-    LBD, LL, Lmax = [], [], 0
-    D = cables[1]['D']
-    lbd0 = np.sqrt(D/4/Params['g_pas']/Params['Ra']/(1+ge0_rm+gi0_rm))
-    for i in range(1, len(cables)): # discard soma
-        lbd = lbd0*2**(-(i-1)/3.)
-        LBD.append(lbd)
-        LL.append(cables[i]['L'])
-        Lmax += cables[i]['L']/lbd
-    return [tau, Tau, np.array(LBD), np.array(LL), Lmax, v0, V0]
-
-def rescale_x_BRT(x, LL, LBD):
-    Lsum = np.cumsum(np.concatenate([[0],LL]))
-    i, X = 1, 0
-    while (x>Lsum[i]) :
-        X+=LL[i-1]/LBD[i-1]
-        i+=1
-    return X+(x-Lsum[i-1])/LBD[i-1]
-
-    
-def stat_pot_function_BRT(x, fe, fi, cables, Params):
-    
-    soma = cables[0]
-    [Ls, Ds] = soma['L'], soma['D']
-    Cm = np.pi*Ls*Ds*Params['cm']
-    
-    tau, Tau, LBD, LL, Lmax, v0, V0 = \
-      parameters_for_mean_BRT(fe, fi, cables, Params)
-
-    ri = Params['Ra']/(np.pi*cables[1]['D']**2/4) # [O/m]
-    denom = 1/np.tanh(Lmax)+(Tau)/(ri*Cm*LBD[0])
-    X = np.array([rescale_x_BRT(xx, LL, LBD) for xx in x])
-    print X.max(), Lmax
-    return v0+(V0-v0)/denom*np.cosh(X-Lmax)/np.sinh(Lmax)
-
-
-def dv_kernel_per_I(x, X, f, Garray, stick, soma, Params):
-    [ri, L, D, cm] = stick['ri'], stick['L'], stick['D'], stick['cm']
-    [Ls, Ds] = soma['L'], soma['D']
-    Cm = np.pi*Ls*Ds*Params['cm']
-    ge0, gi0, Gi0 = Garray # mean conductance input
-    [tau, Tau, lbd, v0, V0] = parameters_for_mean(ge0, gi0, Gi0,\
-                                    soma, stick, Params)
-    Af = 1./(1+2*1j*np.pi*f*tau) # unitary input for the kernel
-    lbdF = lbd/np.sqrt(1+2*1j*np.pi*f*tau)
-    Bf = lbdF*Cm*ri*(1+2*1j*np.pi*f*Tau)/Tau
-    factor = Af*tau/cm/lbdF/( np.sinh(L/lbdF) + Bf*np.cosh(L/lbdF) )
-    if x<X:
-        func = (np.cosh(x/lbdF) + Bf*np.sinh(x/lbdF))*np.cosh((X-L)/lbdF)
-    else:
-        func = (np.cosh(X/lbdF) + Bf*np.sinh(X/lbdF))*np.cosh((x-L)/lbdF)
-    return func*factor
-
-def expr0(U, B, af, bf):      
-    return np.abs( np.sinh(U*(af+1j*bf)) + B*np.cosh(U*(af+1j*bf)) )**2
-
-def expr1(U, af, bf):
-    return np.abs(np.cosh(U*(af+1j*bf)))**2
-    # return .5*(np.cosh(2*af*U)+np.cos(2*bf*U))
-    
-def expr2(U, B, af, bf):      
-    return np.abs( np.cosh(U*(af+1j*bf)) + B*np.sinh(U*(af+1j*bf)) )**2
-
-
-def dv_kernel_per_I_X_x2(x, X, f, Garray, Erev, muV,
-                    stick, soma, Params):
-    """
-    Kernel when X (the input location) is greater than the
-    location of the destination
-    e.g. to be used only for the soma !!
-    """
-    [ri, L, D, cm] = stick['ri'], stick['L'], stick['D'], stick['cm']
-    [Ls, Ds] = soma['L'], soma['D']
-    Cm = np.pi*Ls*Ds*Params['cm']
-    ge0, gi0, Gi0 = Garray # mean conductance input
-    [tau, Tau, lbd, v0, V0] = parameters_for_mean(ge0, gi0, Gi0,\
-                                    soma, stick, Params)
-    Af2 = 1./(1+(2*np.pi*f*tau)**2) # unitary input for the kernel
-    af, bf = split_root_square_of_imaginary(f, tau)
-    Bf = lbd*Cm*ri*(1+2*1j*np.pi*f*Tau)/Tau/(af+1j*bf)
-    factor = tau**2/cm**2/lbd**2*(af**2+bf**2)/\
-      expr0(L/lbd, Bf, af, bf)
-    ff = expr2(X/lbd, Bf, af, bf)
-    gg = expr1((x-L)/lbd, af, bf)
-    return Af2*factor*ff*gg*(Erev-muV)**2
-
-
-def dv_kernel_per_I_x_X2(x, X, f, Garray, Erev, muV,
-                    stick, soma, Params):
-    """
-    Kernel when X (the input location) is smaller than the
-    location of the destination
-    """
-    [ri, L, D, cm] = stick['ri'], stick['L'], stick['D'], stick['cm']
-    [Ls, Ds] = soma['L'], soma['D']
-    Cm = np.pi*Ls*Ds*Params['cm']
-    ge0, gi0, Gi0 = Garray # mean conductance input
-    [tau, Tau, lbd, v0, V0] = parameters_for_mean(ge0, gi0, Gi0,\
-                                    soma, stick, Params)
-    Af2 = 1./(1+(2*np.pi*f*tau)**2) # unitary input for the kernel
-    af, bf = split_root_square_of_imaginary(f, tau)
-    Bf = lbd*Cm*ri*(1+2*1j*np.pi*f*Tau)/Tau/(af+1j*bf)
-    factor = tau**2/cm**2/lbd**2*(af**2+bf**2)/\
-      expr0(L/lbd, Bf, af, bf)
-    ff = expr2(x/lbd, Bf, af, bf)
-    gg = expr1((X-L)/lbd, af, bf)
-    return Af2*factor*ff*gg*(Erev-muV)**2
+    Lp, L = rescale_x(Lp, EqCylinder), rescale_x(L, EqCylinder)
+    return np.array([muVP(rescale_x(xx, EqCylinder),Lp,L,lbdD,lbdP,gP,v0D,v0P,V0) if xx<Lp\
+        else muVD(rescale_x(xx, EqCylinder),Lp,L,lbdD,lbdP,gP,v0D,v0P,V0) for xx in x])
 
 
 def exp_FT(f, Q, Tsyn, t0=0):
@@ -228,161 +124,164 @@ def split_root_square_of_imaginary(f, tau):
     return af, bf
 
 def psp_0_freq_per_dend_synapse_type(x, X, Gf,\
-                            Erev, Garray,\
-                            soma, stick, params,
-                            precision=1e2):
-    [ri, L, D, cm] = stick['ri'], stick['L'], stick['D'], stick['cm']
-    [Ls, Ds] = soma['L'], soma['D']
-    Cm = np.pi*Ls*Ds*params['cm']
-    ge0, gi0, Gi0 = Garray # mean conductance input
-    [tau, Tau, lbd, v0, V0] = parameters_for_mean(ge0, gi0, Gi0,\
-                                    soma, stick, params)
-    v1 = (V0-v0)/( 1/np.tanh(L/lbd)+(Tau)/(ri*Cm*lbd) )/np.sinh(L/lbd)
-    B = lbd*Cm*ri/Tau
+                                     Erev, shtn_input, EqCylinder,\
+                                     soma, stick, params,
+                                     precision=1e2):
+    Ls, Ds, L, D, Lp, Rm, Cm,\
+        El, Ee, Ei, rm, cm, ri = ball_and_stick_params(soma, stick, params)
+
+    tauS, tauP, lbdP, tauD, lbdD = \
+            ball_and_stick_constants(shtn_input, soma, stick, params)
+    rD, rP, gP = tauD/cm, tauP/cm, lbdP*ri*Cm/tauS
     
-    # unitary input for the kernel
-    factor = ( (Erev-v0-v1*np.cosh((X-L)/lbd)) * tau/cm/lbd )/( np.sinh(L/lbd) + B*np.cosh(L/lbd) )
-    
-    if x<X:
-        func = (np.cosh(x/lbd) + B*np.sinh(x/lbd))*np.cosh((X-L)/lbd)
-    else:
-        func = (np.cosh(X/lbd) + B*np.sinh(X/lbd))*np.cosh((x-L)/lbd)
-    return np.abs(Gf*func*factor)
+    muV_X = stat_pot_function([X], shtn_input, EqCylinder,\
+                              soma, stick, params)[0]
+
+    # ball and tree rescaling
+    Lp, L = rescale_x(Lp, EqCylinder), rescale_x(L, EqCylinder)
+    x, X = rescale_x(x,EqCylinder), rescale_x(X,EqCylinder)
+
+    # PSP with unitary current input
+    if X<=Lp:
+        if x<=X:
+            PSP = dv_xXLp(x,X,Lp,L,lbdD,lbdP,gP,rP,rD)
+        elif x>X and x<=Lp:
+            PSP = dv_XxLp(x,X,Lp,L,lbdD,lbdP,gP,rP,rD)
+        elif x>X and x>Lp:
+            PSP = dv_XLpx(x,X,Lp,L,lbdD,lbdP,gP,rP,rD)
+    elif X>Lp:
+        if x<=Lp:
+            PSP = dv_xLpX(x,X,Lp,L,lbdD,lbdP,gP,rP,rD)
+        elif x>Lp and x<=X:
+            PSP = dv_LpxX(x,X,Lp,L,lbdD,lbdP,gP,rP,rD)
+        elif x>X:
+            PSP = dv_LpXx(x,X,Lp,L,lbdD,lbdP,gP,rP,rD)
 
 
-def get_fourier_transform_integral(x, X, f, Gf2, L, lbd, tau, Tau, Cm, ri):
-    """
-    crucial function here, this would be nice to have analytically
-    """
-    af, bf = split_root_square_of_imaginary(f, tau)
-    lbdf = lbd/np.sqrt(1+2*1j*np.pi*f*tau)
-    Bf = lbdf*Cm*ri*(1+2*1j*np.pi*f*Tau)/Tau
-    
-    if X<x:
-        B = np.abs(np.cosh((x-L)/lbdf))**2
-        A = np.abs(np.cosh(X/lbdf)+Bf*np.sinh(X/lbdf))**2
-    else:
-        A = np.abs(np.cosh(x/lbdf)+Bf*np.sinh(x/lbdf))**2
-        B = np.abs(np.cosh((X-L)/lbdf))**2
-    Denom = np.abs(np.sinh(L/lbdf) + Bf*np.cosh(L/lbdf))**2
-    Denom *=  np.abs(1+2*1j*np.pi*f*tau)**2
+    return np.abs(Gf*PSP*(Erev-muV_X))
 
-    # if X<x:
-    #     A = expr2(X/lbd, Bf, af, bf)
-    #     B = expr1((x-L)/lbd, af, bf)
-    # else:
-    #     A = expr2(x/lbd, Bf, af, bf)
-    #     B = expr1((X-L)/lbd, af, bf)
-    # Denom = expr0(L/lbd, Bf, af, bf)*np.sqrt(1.+(2.*np.pi*f*tau)**2)
-    return np.trapz(Gf2*A*B/Denom, f)
 
 def psp_norm_square_integral_per_dend_synapse_type(x, X, f, Gf2,\
-                            Erev, Garray,\
+                            Erev, shtn_input, EqCylinder,\
                             soma, stick, params,
                             precision=1e2):
-    [ri, L, D, cm] = stick['ri'], stick['L'], stick['D'], stick['cm']
-    rm = stick['rm']
-    [Ls, Ds] = soma['L'], soma['D']
-    Cm = np.pi*Ls*Ds*params['cm']
-    ge0, gi0, Gi0 = Garray # mean conductance input
-    [tau, Tau, lbd, v0, V0] = parameters_for_mean(ge0, gi0, Gi0,\
-                                    soma, stick, params)
 
-    lbdf = lbd/np.sqrt(1+2*1j*np.pi*f*tau)
-    gf = lbdf*Cm*ri*(1+2*1j*np.pi*f*Tau)/Tau
+    Ls, Ds, L, D, Lp, Rm, Cm,\
+        El, Ee, Ei, rm, cm, ri = ball_and_stick_params(soma, stick, params)
 
-    muV_X = stat_pot_function(x, Garray, soma, stick, params)
+    tauS, tauP, lbdP, tauD, lbdD = \
+            ball_and_stick_constants(shtn_input, soma, stick, params)
 
-    # ### unitary input for the kernel
-    # return ((Erev-muV_X)*tau/cm/lbd )**2*get_fourier_transform_integral(x, X, f, Gf2, L, lbd, tau, Tau, Cm, ri)
+    # proximal params
+    lbdPf = lbdP/np.sqrt(1+2*1j*np.pi*f*tauP)
+    gPf = lbdPf*Cm*ri*(1+2*1j*np.pi*f*tauS)/tauS
+    rPf = tauP/cm/(1+2*1j*np.pi*f*tauP)
 
-    rf = rm/(1.+rm*ge0+rm*gi0)/(1+2*1j*np.pi*f*tau)
+    # distal params
+    lbdDf = lbdD/np.sqrt(1+2*1j*np.pi*f*tauD)
+    rDf = tauD/cm/(1+2*1j*np.pi*f*tauD)
 
-    dv_xX = lambda x,X: (rf*(gf*np.sinh(x/lbdf) + np.cosh(x/lbdf))*np.cosh((L - X)/lbdf)/(lbdf*(gf*np.cosh(L/lbdf) + np.sinh(L/lbdf))))
-    dv_Xx = lambda x,X: (rf*(gf*np.sinh(X/lbdf) + np.cosh(X/lbdf))*np.cosh((L - x)/lbdf)/(lbdf*(gf*np.cosh(L/lbdf) + np.sinh(L/lbdf))))
-    if x<X:
-        PSP = dv_xX(x,X) 
-    else:
-        PSP = dv_Xx(x,X)
-        
-    return (Erev-muV_X)**2*np.trapz(Gf2*np.abs(PSP)**2, f)
-        
-def get_the_theoretical_sV_and_Tv(fe, fi, f, x, params, soma, stick,\
+    # muV for mean driving force
+    muV_X = stat_pot_function([X], shtn_input, EqCylinder,\
+                              soma, stick, params)[0]
+
+    # ball and tree rescaling
+    Lp, L = rescale_x(Lp, EqCylinder), rescale_x(L, EqCylinder)
+    x, X = rescale_x(x,EqCylinder), rescale_x(X,EqCylinder)
+
+    # PSP with unitary current input
+    if X<=Lp:
+        if x<=X:
+            PSP = dv_xXLp(x, X, Lp,L,lbdDf,lbdPf,gPf,rPf,rDf)
+        elif x>X and x<=Lp:
+            PSP = dv_XxLp(x,X,Lp,L,lbdDf,lbdPf,gPf,rPf,rDf)
+        elif x>X and x>Lp:
+            PSP = dv_XLpx(x,X,Lp,L,lbdDf,lbdPf,gPf,rPf,rDf)
+    elif X>Lp:
+        if x<=Lp:
+            PSP = dv_xLpX(x,X,Lp,L,lbdDf,lbdPf,gPf,rPf,rDf)
+        elif x>Lp and x<=X:
+            PSP = dv_LpxX(x,X,Lp,L,lbdDf,lbdPf,gPf,rPf,rDf)
+        elif x>X:
+            PSP = dv_LpXx(x,X,Lp,L,lbdDf,lbdPf,gPf,rPf,rDf)
+
+
+    return np.trapz(Gf2*np.abs(PSP)**2, f)*(Erev-muV_X)**2
+
+def get_the_theoretical_sV_and_Tv(shtn_input, EqCylinder,\
+                                  f, x, params, soma, stick,\
                                   precision=50):
     sv2 = np.zeros(len(x))
     Tv = np.zeros(len(x))
-    Garray = calculate_mean_conductances(fe, fi, soma, stick, params)
-    muV = stat_pot_function(x, Garray, soma, stick, params)
 
-    Source_Array = np.linspace(0, stick['L'], precision)
+    Source_Array = np.linspace(x.min(), x.max(), precision+1)
+    Source_Array = .5*(Source_Array[1:]+Source_Array[:-1]) # discarding the soma, treated below
     DX = Source_Array[1]-Source_Array[0]
+    Branch_weights = 0*Source_Array # initialized t0 0 !
+    for b in EqCylinder:
+        Branch_weights[np.where(Source_Array>=b)[0]] += 1
     norm_for_Tv = 0*Tv
+
     for ix_dest in range(len(x)):
 
         #### DENDRITIC SYNAPSES
-        for X_source in Source_Array[:-1]: # less intervals than points
+        for ix_source in range(len(Source_Array)): 
+
+            X_source = Source_Array[ix_source]
+            if X_source<=stick['L_prox']:
+                fe, fi = shtn_input['fe_prox'], shtn_input['fi_prox']
+            else:
+                fe, fi = shtn_input['fe_dist'], shtn_input['fi_dist']
+                
+            ## weighting due to branching !
+            fe, fi = fe*Branch_weights[ix_source], fi*Branch_weights[ix_source]
+            Qe, Qi = params['Qe']/Branch_weights[ix_source],\
+                     params['Qi']/Branch_weights[ix_source]
 
             # excitatory synapse at dendrites
-            Gf2 = exp_FT_mod(f, params['Qe'], params['Te'])
+            Gf2 = exp_FT_mod(f, Qe, params['Te'])
             psp2 = psp_norm_square_integral_per_dend_synapse_type(\
-                            x[ix_dest], X_source+DX/2.,\
-                            f, Gf2, params['Ee'],\
-                            Garray, soma, stick, params,
+                            x[ix_dest], X_source,\
+                            f, Gf2, params['Ee'], shtn_input, EqCylinder,\
+                            soma, stick, params,
                             precision=precision)
             psp0 = psp_0_freq_per_dend_synapse_type(\
-                            x[ix_dest], X_source+DX/2.,\
-                            params['Qe']*params['Te'], params['Ee'],\
-                            Garray, soma, stick, params,
+                            x[ix_dest], X_source,\
+                            Qe*params['Te'], params['Ee'],\
+                            shtn_input, EqCylinder, soma, stick, params,
                             precision=precision)
             sv2[ix_dest] += 2.*np.pi*fe*DX*stick['D']/stick['exc_density']*psp2
             Tv[ix_dest] += 2.*np.pi*fe*DX*stick['D']/stick['exc_density']*psp0**3/4./psp2
             norm_for_Tv[ix_dest] += 2.*np.pi*fe*DX*stick['D']/stick['exc_density']*psp0
 
             # inhibitory synapse at dendrites
-            Gf2 = exp_FT_mod(f, params['Qi'], params['Ti'])
+            Gf2 = exp_FT_mod(f, Qi, params['Ti'])
             psp2 = psp_norm_square_integral_per_dend_synapse_type(\
-                            x[ix_dest], X_source+DX/2.,\
-                            f, Gf2, params['Ei'],\
-                            Garray, soma, stick, params,
+                            x[ix_dest], X_source,\
+                            f, Gf2, params['Ei'], shtn_input, EqCylinder,\
+                            soma, stick, params,
                             precision=precision)
             psp0 = psp_0_freq_per_dend_synapse_type(\
-                            x[ix_dest], X_source+DX/2.,\
-                            params['Qi']*params['Ti'], params['Ei'],\
-                            Garray, soma, stick, params,
+                            x[ix_dest], X_source,\
+                            Qi*params['Ti'], params['Ei'],\
+                            shtn_input, EqCylinder, soma, stick, params,
                             precision=precision)
             sv2[ix_dest] += 2.*np.pi*fi*DX*stick['D']/stick['inh_density']*psp2
             Tv[ix_dest] += 2.*np.pi*fi*DX*stick['D']/stick['inh_density']*psp0**3/4./psp2
             norm_for_Tv[ix_dest] += 2.*np.pi*fi*DX*stick['D']/stick['inh_density']*psp0
 
-        #### SOMATIC SYNAPSES, discret summation
-
-        # excitatory synapse at soma
-        # Gf2 = exp_FT_mod(f, params['Qe'], params['Te'])
-        # psp2 = psp_norm_square_integral_per_dend_synapse_type(\
-        #                 x[ix_dest], 0.,\
-        #                 f, Gf2, params['Ee'],\
-        #                 Garray, soma, stick, params,
-        #                 precision=precision)
-        # psp0 = psp_0_freq_per_dend_synapse_type(\
-        #                 x[ix_dest], 0.,\
-        #                 params['Qe']*params['Te'], params['Ee'],\
-        #                 Garray, soma, stick, params,
-        #                 precision=precision)
-        # sv2[ix_dest] += 2.*np.pi*fe*soma['L']*soma['D']/soma['exc_density']*psp2
-        # Tv[ix_dest] += 2.*np.pi*fe*soma['L']*soma['D']/soma['exc_density']*psp0**3/4./psp2
-        # norm_for_Tv[ix_dest] += 2.*np.pi*fe*soma['L']*soma['D']/soma['exc_density']*psp0
-
-        # inhibitory synapse at soma
+        # #### SOMATIC SYNAPSES, discret summation, only inhibition, no branch weighting
+        fi = shtn_input['fi_soma']
         Gf2 = exp_FT_mod(f, params['Qi'], params['Ti'])
         psp2 = psp_norm_square_integral_per_dend_synapse_type(\
                         x[ix_dest], 0.,\
-                        f, Gf2, params['Ei'],\
-                        Garray, soma, stick, params,
+                        f, Gf2, params['Ei'], shtn_input, EqCylinder,\
+                        soma, stick, params,
                         precision=precision)
         psp0 = psp_0_freq_per_dend_synapse_type(\
                         x[ix_dest], 0.,\
                         params['Qi']*params['Ti'], params['Ei'],\
-                        Garray, soma, stick, params,
+                        shtn_input, EqCylinder, soma, stick, params,
                         precision=precision)
         sv2[ix_dest] += 2.*np.pi*fi*soma['L']*soma['D']/soma['inh_density']*psp2
         Tv[ix_dest] += 2.*np.pi*fi*soma['L']*soma['D']/soma['inh_density']*psp0**3/4./psp2

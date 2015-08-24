@@ -146,6 +146,76 @@ def Constructing_the_ball_and_tree(params, cables,
        inh_synapses, inh_netcons, inh_netstims, area_lists, spkout
 
 
+def get_v(cables):
+    """
+    get all the membrane potential values at on emoment in time
+    """
+    v = []
+    
+    v.append(np.array([[nrn.cable_0_0(.5)._ref_v[0]]])) # somatic potential
+    
+    # now dendritic potentials
+    for level in range(1, len(cables)):
+        v0 = []
+        for comp in range(max(1,2**(level-1))):
+            v1 = []
+            exec('section = nrn.cable_'+str(level)+'_'+str(comp))
+            for seg in section:
+                exec('v1.append(nrn.cable_'+str(level)+'_'+str(comp)+'('+\
+                     str(seg.x)+')._ref_v[0])')
+            v0.append(np.array(v1))
+        v.append(np.array(v0))
+        
+    return v
+
+def run_simulation(fe, fi, cables, params, tstop=2000., dt=0.025):
+
+    exc_synapses, exc_netcons, exc_netstims,\
+           inh_synapses, inh_netcons, inh_netstims,\
+           area_lists, spkout =\
+              Constructing_the_ball_and_tree(params, cables,
+                                    spiking_mech=False)
+
+    for i in range(len(cables)):
+        for j in range(len(area_lists[i])):
+            jj = j%(cables[i]['NSEG'])
+            FE, FI = fe[i][jj], fi[i][jj] # multiple branches for the same freq
+
+            # excitation
+            Ke = cables[i]['Ke_per_seg']
+            if FE>0 and Ke>0:
+                exc_netstims[i][j].interval = 1e3/FE/Ke
+            else:
+                exc_netstims[i][j].interval = 1e12
+                exc_netstims[i][j].start = 1e12
+            # inhibition
+            Ki = cables[i]['Ki_per_seg']
+            if FI>0 and Ki>0:
+                inh_netstims[i][j].interval = 1e3/FI/Ki
+            else:
+                inh_netstims[i][j].start = 1e12
+                inh_netstims[i][j].interval = 1e12
+
+    ## --- recording
+    t_vec = nrn.Vector()
+    t_vec.record(nrn._ref_t)
+    ## --- launching the simulation
+    nrn.finitialize(params['El']*1e3)
+    nrn.dt = dt
+    V = []
+    V.append(get_v(cables))
+    while nrn.t<(tstop-dt):
+        nrn.fadvance()
+        V.append(get_v(cables))
+
+    print "======================================="
+    nrn('forall delete_section()')
+    print " --- checking if the neuron is destroyed"
+    nrn.topology()
+    print "======================================="
+    return np.array(t_vec), np.array(V)
+
+"""
 def run_simulations(fe, fi, cables, params,
                                 dt = 0.1, tstop=100.,
                                 spiking_mech=True,
@@ -202,3 +272,4 @@ def run_simulations(fe, fi, cables, params,
     nrn.topology()
     print "======================================="
     return np.array(v_vec), np.array(t_vec), fout
+"""
