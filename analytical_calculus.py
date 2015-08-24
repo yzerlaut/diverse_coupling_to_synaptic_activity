@@ -85,7 +85,7 @@ def rescale_x(x, EqCylinder):
     factor = np.power(2., 1./3.*np.arange(1, len(C)+1))
     return np.sum(np.diff(C)*factor[:-1])+(x-C[-1])*factor[-1]
 
-def stat_pot_function(x, shtn_input, soma, stick, EqCylinder, Params):
+def stat_pot_function(x, shtn_input, EqCylinder, soma, stick, Params):
 
     params_for_cable_theory(stick, Params)
 
@@ -124,7 +124,7 @@ def split_root_square_of_imaginary(f, tau):
     return af, bf
 
 def psp_0_freq_per_dend_synapse_type(x, X, Gf,\
-                                     Erev, shtn_input,\
+                                     Erev, shtn_input, EqCylinder,\
                                      soma, stick, params,
                                      precision=1e2):
     Ls, Ds, L, D, Lp, Rm, Cm,\
@@ -150,13 +150,14 @@ def psp_0_freq_per_dend_synapse_type(x, X, Gf,\
         elif x>X:
             PSP = dv_LpXx(x,X,Lp,L,lbdD,lbdP,gP,rP,rD)
 
-    muV_X = stat_pot_function([X], shtn_input, soma, stick, params)[0]
+    muV_X = stat_pot_function([X], shtn_input, EqCylinder,\
+                              soma, stick, params)[0]
 
     return np.abs(Gf*PSP*(Erev-muV_X))
 
 
 def psp_norm_square_integral_per_dend_synapse_type(x, X, f, Gf2,\
-                            Erev, shtn_input,\
+                            Erev, shtn_input, EqCylinder,\
                             soma, stick, params,
                             precision=1e2):
 
@@ -174,11 +175,19 @@ def psp_norm_square_integral_per_dend_synapse_type(x, X, f, Gf2,\
     # distal params
     lbdDf = lbdD/np.sqrt(1+2*1j*np.pi*f*tauD)
     rDf = tauD/cm/(1+2*1j*np.pi*f*tauD)
-    
+
+    # muV for mean driving force
+    muV_X = stat_pot_function([X], shtn_input, EqCylinder,\
+                              soma, stick, params)[0]
+
+    # ball and tree rescaling
+    Lp, L = rescale_x(Lp, EqCylinder), rescale_x(L, EqCylinder)
+    x, X = rescale_x(x,EqCylinder), rescale_x(X,EqCylinder)
+
     # PSP with unitary current input
     if X<=Lp:
         if x<=X:
-            PSP = dv_xXLp(x,X,Lp,L,lbdDf,lbdPf,gPf,rPf,rDf)
+            PSP = dv_xXLp(x, X, Lp,L,lbdDf,lbdPf,gPf,rPf,rDf)
         elif x>X and x<=Lp:
             PSP = dv_XxLp(x,X,Lp,L,lbdDf,lbdPf,gPf,rPf,rDf)
         elif x>X and x>Lp:
@@ -191,11 +200,11 @@ def psp_norm_square_integral_per_dend_synapse_type(x, X, f, Gf2,\
         elif x>X:
             PSP = dv_LpXx(x,X,Lp,L,lbdDf,lbdPf,gPf,rPf,rDf)
 
-    muV_X = stat_pot_function([X], shtn_input, soma, stick, params)[0]
 
     return np.trapz(Gf2*np.abs(PSP)**2, f)*(Erev-muV_X)**2
 
-def get_the_theoretical_sV_and_Tv(shtn_input, f, x, params, soma, stick,\
+def get_the_theoretical_sV_and_Tv(shtn_input, EqCylinder,\
+                                  f, x, params, soma, stick,\
                                   precision=50):
     sv2 = np.zeros(len(x))
     Tv = np.zeros(len(x))
@@ -219,14 +228,14 @@ def get_the_theoretical_sV_and_Tv(shtn_input, f, x, params, soma, stick,\
             Gf2 = exp_FT_mod(f, params['Qe'], params['Te'])
             psp2 = psp_norm_square_integral_per_dend_synapse_type(\
                             x[ix_dest], X_source,\
-                            f, Gf2, params['Ee'], shtn_input,\
+                            f, Gf2, params['Ee'], shtn_input, EqCylinder,\
                             soma, stick, params,
                             precision=precision)
 
             psp0 = psp_0_freq_per_dend_synapse_type(\
                             x[ix_dest], X_source,\
                             params['Qe']*params['Te'], params['Ee'],\
-                            shtn_input, soma, stick, params,
+                            shtn_input, EqCylinder, soma, stick, params,
                             precision=precision)
             sv2[ix_dest] += 2.*np.pi*fe*DX*stick['D']/stick['exc_density']*psp2
             Tv[ix_dest] += 2.*np.pi*fe*DX*stick['D']/stick['exc_density']*psp0**3/4./psp2
@@ -236,13 +245,13 @@ def get_the_theoretical_sV_and_Tv(shtn_input, f, x, params, soma, stick,\
             Gf2 = exp_FT_mod(f, params['Qi'], params['Ti'])
             psp2 = psp_norm_square_integral_per_dend_synapse_type(\
                             x[ix_dest], X_source,\
-                            f, Gf2, params['Ei'], shtn_input,\
+                            f, Gf2, params['Ei'], shtn_input, EqCylinder,\
                             soma, stick, params,
                             precision=precision)
             psp0 = psp_0_freq_per_dend_synapse_type(\
                             x[ix_dest], X_source,\
                             params['Qi']*params['Ti'], params['Ei'],\
-                            shtn_input, soma, stick, params,
+                            shtn_input, EqCylinder, soma, stick, params,
                             precision=precision)
             sv2[ix_dest] += 2.*np.pi*fi*DX*stick['D']/stick['inh_density']*psp2
             Tv[ix_dest] += 2.*np.pi*fi*DX*stick['D']/stick['inh_density']*psp0**3/4./psp2
@@ -253,13 +262,13 @@ def get_the_theoretical_sV_and_Tv(shtn_input, f, x, params, soma, stick,\
         Gf2 = exp_FT_mod(f, params['Qi'], params['Ti'])
         psp2 = psp_norm_square_integral_per_dend_synapse_type(\
                         x[ix_dest], 0.,\
-                        f, Gf2, params['Ei'], shtn_input,\
+                        f, Gf2, params['Ei'], shtn_input, EqCylinder,\
                         soma, stick, params,
                         precision=precision)
         psp0 = psp_0_freq_per_dend_synapse_type(\
                         x[ix_dest], 0.,\
                         params['Qi']*params['Ti'], params['Ei'],\
-                        shtn_input, soma, stick, params,
+                        shtn_input, EqCylinder, soma, stick, params,
                         precision=precision)
         sv2[ix_dest] += 2.*np.pi*fi*soma['L']*soma['D']/soma['inh_density']*psp2
         Tv[ix_dest] += 2.*np.pi*fi*soma['L']*soma['D']/soma['inh_density']*psp0**3/4./psp2

@@ -27,7 +27,7 @@ FACTOR_FOR_DENSITY = 1. # because Ball & Sticks sucks !!!
 
 # synaptic density  area (m2) per one synapse !!
 # ball (soma)
-soma = {'L': 40*1e-6, 'D': 20*1e-6, 'NSEG': 1,
+soma = {'L': 20*1e-6, 'D': 20*1e-6, 'NSEG': 1,
         'exc_density':FACTOR_FOR_DENSITY*1e9,
         'inh_density':FACTOR_FOR_DENSITY*25*1e-12,
         'Ke':1e-9, 'Ki':10., 'name':'soma'}
@@ -108,8 +108,8 @@ def analyze_simulation(xtot, t_vec, V):
     return muV_exp, sV_exp, Tv_exp
 
 
-def get_analytical_estimate(shotnoise_input,
-                            soma, stick, EqCylinder, params, discret=20):
+def get_analytical_estimate(shotnoise_input, EqCylinder,
+                            soma, stick, params, discret=20):
 
     print '----------------------------------------------------'
     print ' Analytical calculus running [...]'
@@ -122,12 +122,12 @@ def get_analytical_estimate(shotnoise_input,
     f = rfft.time_to_freq(len(t), dt)
 
     muV_th = 0*x_th
-    muV_th = stat_pot_function(x_th, shotnoise_input,
-                               soma, stick, EqCylinder, params)
+    muV_th = stat_pot_function(x_th, shotnoise_input, EqCylinder,
+                               soma, stick, params)
     sV_th, Tv_th = 0*muV_th, 0*muV_th
-    # sV_th, Tv_th = get_the_theoretical_sV_and_Tv(shotnoise_input, f,\
-    #                               x_th, params, soma, stick,
-    #                               precision=discret)
+    sV_th, Tv_th = get_the_theoretical_sV_and_Tv(shotnoise_input, EqCylinder, f,\
+                                  x_th, params, soma, stick,
+                                  precision=discret)
     # Rin, Rtf = get_the_input_and_transfer_resistance(fe, fi, f, x_th, params, soma, stick)
 
     print '----------------------------------------------------'
@@ -300,8 +300,8 @@ if __name__=='__main__':
 
     # constructing the space-dependent shotnoise input for the simulation
     x_th, muV_th, sV_th, Tv_th  = \
-                get_analytical_estimate(shotnoise_input,
-                                        soma, stick, EqCylinder, params,
+                get_analytical_estimate(shotnoise_input, EqCylinder,
+                                        soma, stick, params,
                                         discret=args.discret_th)
 
     try:
