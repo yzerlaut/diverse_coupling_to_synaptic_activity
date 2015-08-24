@@ -9,7 +9,7 @@ from signanalysis import autocorrel
 
 # ------- model parameters in SI units ------- # 
 params = {
-'g_pas': 1e-3*1e4, 'cm' : 1*1e-2, 'Ra' : 35.4*1e-2, 'El': -65e-3,\
+'g_pas': 1e-4*1e4, 'cm' : 1*1e-2, 'Ra' : 35.4*1e-2, 'El': -65e-3,\
 'Qe' : 1.e-9 , 'Te' : 5.e-3, 'Ee': 0e-3,\
 'Qi' : 1.5e-9 , 'Ti' : 5.e-3, 'Ei': -80e-3,\
 'seed' : 0}
