@@ -53,9 +53,8 @@ def setup_model(EqCylinder, soma, dend, Params):
         cable = dend.copy()
         cable['x1'], cable['x2'] = EqCylinder[i-1], EqCylinder[i]
         cable['L'] = cable['x2']-cable['x1']
-        dx = cable['L']/cable['NSEG']
-        cable['x'] = EqCylinder[i-1]+dx/2+np.arange(cable['NSEG'])*dx
-        print cable['x'], cable['NSEG']
+        x = np.linspace(cable['x1'], cable['x2'], cable['NSEG']+1)
+        cable['x'] = .5*(x[1:]+x[:-1])
         xtot = np.concatenate([xtot, cable['x']])
         cable['D'] = D*2**(-2*(i-1)/3.)
         cable['inh_density'] = dend['inh_density']
@@ -82,15 +81,7 @@ from scipy.optimize import curve_fit
 
 def analyze_simulation(xtot, t_vec, V):
 
-    muV_exp, sV_exp = np.zeros(len(xtot)), np.zeros(len(xtot))
-    ix = 0
-    for j in range(len(cables)):
-        dix = cables[j]['NSEG']
-        muV_exp[ix:dix+ix] = np.array([V[it][j].mean(axis=0) for it in range(int(.1*len(t)), len(t))]).mean(axis=0)
-        sV_exp[ix:dix+ix] = np.array([V[it][j] for it in range(int(.1*len(t)), len(t))]).std(axis=(0,1))
-        ix += dix
-    
-    Tv_exp = 0*muV_exp
+    muV_exp, sV_exp, Tv_exp = [], [], []
 
     # for autocorrelation analysis
     exp_f = lambda t, tau: np.exp(-t/tau)
@@ -99,13 +90,22 @@ def analyze_simulation(xtot, t_vec, V):
         P, pcov = curve_fit(exp_f, t_shift[:i_max], v_acf[:i_max])
         return P[0]
 
-    # i0 = int(sim_params['initial_discard']/sim_params['dt']) # start for det of ACF
-    # for i in range(len(muV_exp)):
-    #     v_acf, t_shift = autocorrel(V[i0:,i],\
-    #         sim_params['window_for_autocorrel']*1e-3, 1e-3*sim_params['dt'])
-    #     Tv_exp[i] = find_acf_time(v_acf, t_shift, criteria=0.01)
+    for i in range(len(cables)): # loop over levels
+        n_level = max(1,2**(i-1)) # number of levels
+        for k in range(cables[i]['NSEG']): # loop over segments first
+            muV_exp.append(0)
+            sV_exp.append(0)
+            Tv_exp.append(0)
+            # they all have the same discretization
+            for j in range(n_level): # loop over branches then
+                v = np.array([V[it][i][j][k] for it in range(int(.1*len(t)), len(t))]).flatten()
+                muV_exp[-1] += v.mean()/n_level
+                sV_exp[-1] += v.std()/n_level
+                v_acf, t_shift = autocorrel(v,\
+                  sim_params['window_for_autocorrel']*1e-3, 1e-3*sim_params['dt'])
+                Tv_exp[-1] += find_acf_time(v_acf, t_shift, criteria=0.01)/n_level
 
-    return muV_exp, sV_exp, Tv_exp
+    return np.array(muV_exp), np.array(sV_exp), np.array(Tv_exp)
 
 
 def get_analytical_estimate(shotnoise_input, EqCylinder,
@@ -114,8 +114,7 @@ def get_analytical_estimate(shotnoise_input, EqCylinder,
     print '----------------------------------------------------'
     print ' Analytical calculus running [...]'
 
-    x_th = np.linspace(0, stick['L'], discret+1)
-    # x_th = np.concatenate([[0],.5*(x_th[1:]+x_th[:-1])])
+    x_th = np.linspace(0, stick['L'], discret)
     
     dt, tstop = 1e-5, 50e-3
     t = np.arange(int(tstop/dt))*dt
@@ -200,9 +199,10 @@ def make_comparison_plot(x_th, muV_th, sV_th, Tv_th,\
     AX[0].plot(1e6*x_th, 1e3*muV_th, 'k-', label='analytic approx.', lw=3, alpha=.5)
     AX[1].plot(1e6*x_th, 1e3*sV_th, 'k-', lw=3, alpha=.5)
     AX[2].plot(1e6*x_th, 1e3*Tv_th, 'k-', lw=3, alpha=.5)
-    AX[0].legend(loc='best', prop={'size':'small'})
+    AX[0].legend(loc='best', prop={'size':'small'}, frameon=False)
     AX[2].set_xlabel('distance from soma ($\mu$m)')
-    AX[2].set_ylim([1e3*Tv_exp.min()-1, 1e3*Tv_exp.max()+1])
+    AX[2].set_ylim([min(1e3*Tv_exp.min()-1,1e3*Tv_th.min()-1),
+                   max(1e3*Tv_exp.max()+1,1e3*Tv_th.max()+1)])
 
     YLABELS = ['$\mu_V$ (mV)', '$\sigma_V$ (mV)', '$\tau_V$ (ms)']
     # for ax, ylabel in zip([AX, YLABELS]):
@@ -264,6 +264,8 @@ if __name__=='__main__':
     x_exp, cables = setup_model(EqCylinder, soma, stick, params)    
 
     # we adjust L_proximal so that it falls inbetweee two segments
+    args.L_stick *= 1e-6 # SI units
+    args.L_proximal *= 1e-6 # SI units
     L_proximal = int(args.L_proximal/args.L_stick*args.discret_sim)*args.L_stick/args.discret_sim
     x_stick = np.linspace(0,args.L_stick, args.discret_sim+1) # then :
     x_stick = .5*(x_stick[1:]+x_stick[:-1])
@@ -274,7 +276,6 @@ if __name__=='__main__':
     for cable in cables[1:]:
         fe.append([args.fe_prox if x<L_proximal else args.fe_dist for x in cable['x']])
         fi.append([args.fi_prox if x<L_proximal else args.fi_dist for x in cable['x']])
-
     # then we run the simulation if needed
     if args.simulation:
         print 'Running simulation [...]'
@@ -295,15 +296,13 @@ if __name__=='__main__':
     # ===== now analytical calculus ========
 
     # constructing the space-dependent shotnoise input for the simulation
-    L_proximal = int(args.L_proximal/args.L_stick*args.discret_sim)*args.L_stick/args.discret_sim
-    stick['L_prox'] = L_proximal*1e-6
+    stick['L_prox'] = L_proximal
 
     # constructing the space-dependent shotnoise input for the simulation
     x_th, muV_th, sV_th, Tv_th  = \
                 get_analytical_estimate(shotnoise_input, EqCylinder,
                                         soma, stick, params,
                                         discret=args.discret_th)
-
     try:
         x_exp, fe_exp, fi_exp, muV_exp, sV_exp, Tv_exp = np.load("data/fe_prox_%1.2f_fe_dist_%1.2f_fi_prox_%1.2f_fi_dist_%1.2f.npy" %  (args.fe_prox,args.fe_dist,args.fi_prox,args.fi_prox))
     except IOError:

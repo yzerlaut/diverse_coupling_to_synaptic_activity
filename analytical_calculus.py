@@ -82,7 +82,7 @@ dv_LpXx = lambda x,X,Lp,L,lbdDf,lbdPf,gPf,rPf,rDf: (rDf*np.exp(-(L - X)/lbdDf)*n
 
 def rescale_x(x, EqCylinder):
     C = EqCylinder[EqCylinder<=x]
-    factor = np.power(2., 1./3.*np.arange(1, len(C)+1))
+    factor = np.power(2., 1./3.*np.arange(len(C)))
     return np.sum(np.diff(C)*factor[:-1])+(x-C[-1])*factor[-1]
 
 def stat_pot_function(x, shtn_input, EqCylinder, soma, stick, Params):
@@ -134,6 +134,13 @@ def psp_0_freq_per_dend_synapse_type(x, X, Gf,\
             ball_and_stick_constants(shtn_input, soma, stick, params)
     rD, rP, gP = tauD/cm, tauP/cm, lbdP*ri*Cm/tauS
     
+    muV_X = stat_pot_function([X], shtn_input, EqCylinder,\
+                              soma, stick, params)[0]
+
+    # ball and tree rescaling
+    Lp, L = rescale_x(Lp, EqCylinder), rescale_x(L, EqCylinder)
+    x, X = rescale_x(x,EqCylinder), rescale_x(X,EqCylinder)
+
     # PSP with unitary current input
     if X<=Lp:
         if x<=X:
@@ -150,8 +157,6 @@ def psp_0_freq_per_dend_synapse_type(x, X, Gf,\
         elif x>X:
             PSP = dv_LpXx(x,X,Lp,L,lbdD,lbdP,gP,rP,rD)
 
-    muV_X = stat_pot_function([X], shtn_input, EqCylinder,\
-                              soma, stick, params)[0]
 
     return np.abs(Gf*PSP*(Erev-muV_X))
 
@@ -209,8 +214,12 @@ def get_the_theoretical_sV_and_Tv(shtn_input, EqCylinder,\
     sv2 = np.zeros(len(x))
     Tv = np.zeros(len(x))
 
-    Source_Array = x[1:] # discarding the soma, treated below
+    Source_Array = np.linspace(x.min(), x.max(), precision+1)
+    Source_Array = .5*(Source_Array[1:]+Source_Array[:-1]) # discarding the soma, treated below
     DX = Source_Array[1]-Source_Array[0]
+    Branch_weights = 0*Source_Array # initialized t0 0 !
+    for b in EqCylinder:
+        Branch_weights[np.where(Source_Array>=b)[0]] += 1
     norm_for_Tv = 0*Tv
 
     for ix_dest in range(len(x)):
@@ -223,18 +232,22 @@ def get_the_theoretical_sV_and_Tv(shtn_input, EqCylinder,\
                 fe, fi = shtn_input['fe_prox'], shtn_input['fi_prox']
             else:
                 fe, fi = shtn_input['fe_dist'], shtn_input['fi_dist']
+                
+            ## weighting due to branching !
+            fe, fi = fe*Branch_weights[ix_source], fi*Branch_weights[ix_source]
+            Qe, Qi = params['Qe']/Branch_weights[ix_source],\
+                     params['Qi']/Branch_weights[ix_source]
 
             # excitatory synapse at dendrites
-            Gf2 = exp_FT_mod(f, params['Qe'], params['Te'])
+            Gf2 = exp_FT_mod(f, Qe, params['Te'])
             psp2 = psp_norm_square_integral_per_dend_synapse_type(\
                             x[ix_dest], X_source,\
                             f, Gf2, params['Ee'], shtn_input, EqCylinder,\
                             soma, stick, params,
                             precision=precision)
-
             psp0 = psp_0_freq_per_dend_synapse_type(\
                             x[ix_dest], X_source,\
-                            params['Qe']*params['Te'], params['Ee'],\
+                            Qe*params['Te'], params['Ee'],\
                             shtn_input, EqCylinder, soma, stick, params,
                             precision=precision)
             sv2[ix_dest] += 2.*np.pi*fe*DX*stick['D']/stick['exc_density']*psp2
@@ -242,7 +255,7 @@ def get_the_theoretical_sV_and_Tv(shtn_input, EqCylinder,\
             norm_for_Tv[ix_dest] += 2.*np.pi*fe*DX*stick['D']/stick['exc_density']*psp0
 
             # inhibitory synapse at dendrites
-            Gf2 = exp_FT_mod(f, params['Qi'], params['Ti'])
+            Gf2 = exp_FT_mod(f, Qi, params['Ti'])
             psp2 = psp_norm_square_integral_per_dend_synapse_type(\
                             x[ix_dest], X_source,\
                             f, Gf2, params['Ei'], shtn_input, EqCylinder,\
@@ -250,14 +263,14 @@ def get_the_theoretical_sV_and_Tv(shtn_input, EqCylinder,\
                             precision=precision)
             psp0 = psp_0_freq_per_dend_synapse_type(\
                             x[ix_dest], X_source,\
-                            params['Qi']*params['Ti'], params['Ei'],\
+                            Qi*params['Ti'], params['Ei'],\
                             shtn_input, EqCylinder, soma, stick, params,
                             precision=precision)
             sv2[ix_dest] += 2.*np.pi*fi*DX*stick['D']/stick['inh_density']*psp2
             Tv[ix_dest] += 2.*np.pi*fi*DX*stick['D']/stick['inh_density']*psp0**3/4./psp2
             norm_for_Tv[ix_dest] += 2.*np.pi*fi*DX*stick['D']/stick['inh_density']*psp0
 
-        # #### SOMATIC SYNAPSES, discret summation, only inhibition
+        # #### SOMATIC SYNAPSES, discret summation, only inhibition, no branch weighting
         fi = shtn_input['fi_soma']
         Gf2 = exp_FT_mod(f, params['Qi'], params['Ti'])
         psp2 = psp_norm_square_integral_per_dend_synapse_type(\

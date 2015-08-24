@@ -1,4 +1,3 @@
-
 # nrn_simulations.py
 from neuron import h as nrn
 import numpy as np
@@ -211,10 +210,9 @@ def run_simulation(fe, fi, cables, params, tstop=2000., dt=0.025):
 
     print "======================================="
     nrn('forall delete_section()')
-    print " --- checking if the neuron is detroyed"
+    print " --- checking if the neuron is destroyed"
     nrn.topology()
     print "======================================="
-    print np.array(V).shape
     return np.array(t_vec), np.array(V)
 
 """
