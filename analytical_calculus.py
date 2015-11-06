@@ -123,6 +123,9 @@ def split_root_square_of_imaginary(f, tau):
     bf = np.sqrt((np.sqrt(1+(2*np.pi*f*tau)**2)-1)/2)
     return af, bf
 
+from numba import jit
+
+@jit
 def psp_0_freq_per_dend_synapse_type(x, X, Gf,\
                                      Erev, shtn_input, EqCylinder,\
                                      soma, stick, params,
@@ -161,6 +164,7 @@ def psp_0_freq_per_dend_synapse_type(x, X, Gf,\
     return np.abs(Gf*PSP*(Erev-muV_X))
 
 
+@jit
 def psp_norm_square_integral_per_dend_synapse_type(x, X, f, Gf2,\
                             Erev, shtn_input, EqCylinder,\
                             soma, stick, params,
@@ -208,6 +212,7 @@ def psp_norm_square_integral_per_dend_synapse_type(x, X, f, Gf2,\
 
     return np.trapz(Gf2*np.abs(PSP)**2, f)*(Erev-muV_X)**2
 
+@jit
 def get_the_theoretical_sV_and_Tv(shtn_input, EqCylinder,\
                                   f, x, params, soma, stick,\
                                   precision=50):
