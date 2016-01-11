@@ -42,6 +42,7 @@ def calculate_mean_conductances(shtn_input,\
     
     return Gi_soma, ge_prox, gi_prox, ge_dist, gi_dist
 
+
 def ball_and_stick_params(soma, stick, Params):
     Ls, Ds = soma['L'], soma['D']
     L, Lp, D = stick['L'], stick['L_prox'], stick['D']
@@ -52,6 +53,7 @@ def ball_and_stick_params(soma, stick, Params):
     El, Ei, Ee = Params['El'], Params['Ei'], Params['Ee']
     rm, cm, ri = stick['rm'], stick['cm'], stick['ri']
     return Ls, Ds, L, D, Lp, Rm, Cm, El, Ee, Ei, rm, cm, ri
+
 
 def ball_and_stick_constants(shtn_input, soma, stick, Params):
     Ls, Ds, L, D, Lp, Rm, Cm, El, Ee, Ei, rm, cm, ri = \
@@ -65,6 +67,7 @@ def ball_and_stick_constants(shtn_input, soma, stick, Params):
     lbdD = np.sqrt(rm/ri/(1+rm*ge_dist+rm*gi_dist))
     tauS = Rm*Cm/(1+Rm*Gi_soma)
     return tauS, tauP, lbdP, tauD, lbdD
+
 
 ############### INPUT FROM SYMPY ###################
 # --- muV
