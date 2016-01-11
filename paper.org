@@ -1,4 +1,4 @@
-#+TITLE: Heterogenous firing rate responses of layer V pyramidal neurons leads to diverse coupling to presynaptic activity
+#+TITLE: Heterogenous firing responses of layer V pyramidal neurons leads to diverse coupling to presynaptic activity in a morphologically detailed model
 #+AUTHOR: Y. Zerlaut \& A. Destexhe
 #+INCLUDE: my_template.org 
 

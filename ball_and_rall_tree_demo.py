@@ -6,7 +6,9 @@ sys.path.append('/home/yann/work/python_library')
 # from my_graph import set_plot
 import fourier_for_real as rfft
 from signanalysis import autocorrel
-import brt_drawing
+from theory import brt_drawing
+from theory.analytical_calculus import *
+# we calculate the parameters to plug into cable theory
 
 # ------- model parameters in SI units ------- # 
 params = {
@@ -38,8 +40,6 @@ stick = {'L': 2000*1e-6, 'D': 4*1e-6, 'NSEG': 30,\
          'inh_density':FACTOR_FOR_DENSITY*100*1e-12,
          'Ke':100, 'Ki':100., 'name':'dend'}
 
-from analytical_calculus import *
-# we calculate the parameters to plug into cable theory
 
 def setup_model(EqCylinder, soma, dend, Params):
     """ returns the different diameters of the equivalent cylinder
