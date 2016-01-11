@@ -1,0 +1,82 @@
+
+\blfootnote{ $\,^1$ Unité de Neurosciences, Information et Complexité, Centre National de la Recherche Scientifique, FRE 3693, Gif sur Yvette, France}
+\blfootnote{ $\,^2$ European Institute fo Theoretical Neuroscience, 74 Rue du Faubourg Saint-Antoine, 75012 Paris}
+
+\blfootnote{correspondance : destexhe@unic.cnrs-gif.fr}
+
+#+LaTeX_HEADER: \def\shorttitle{Heterogenous firing response of mice pyramidal cells}
+#+LaTeX_HEADER: \def\shortauthor{Zerlaut et al.} 
+#+LaTeX_HEADER: \def\shortdate{\today} 
+
+# #+LaTeX_HEADER: \renewcommand{\includegraphics}[2][]{\fbox{#2}}
+
+* template_settings :noexport:
+
+# # footnote without markers in main text !
+#+LaTeX_HEADER: \newcommand\blfootnote[1]{  \begingroup  \renewcommand\thefootnote{}\footnote{#1}  \addtocounter{footnote}{-1}  \endgroup}
+
+** basis
+
+#+LATEX_CLASS: article
+#+OPTIONS: toc:nil        (no Table Of COntents at all)
+#+LaTeX_CLASS_OPTIONS: [8pt, a4paper, twocolumn, twoside, colorlinks]
+#+LaTeX_HEADER:\usepackage{graphicx}
+#+LaTeX_HEADER:\usepackage[AUTO]{inputenc}
+#+LaTeX_HEADER:\usepackage[T1]{fontenc}
+#+LaTeX_HEADER:\usepackage{lmodern}
+#+LaTeX_HEADER:\usepackage{amsmath}
+# #+LaTeX_HEADER:\usepackage{amssymb,mathenv,array}
+#+LaTeX_HEADER:\usepackage{microtype} % Slightly tweak font spacing for aesthetics
+#+LaTeX_HEADER: \usepackage{geometry}
+#+LaTeX_HEADER: \geometry{a4paper,total={210mm,297mm}, left=15mm, right=15mm, top=20mm, bottom=20mm, bindingoffset=0mm, columnsep=.5cm}
+#+LaTeX_HEADER: \usepackage[labelfont=bf]{caption}
+
+
+** Sections in roman
+#+LaTeX_HEADER: \renewcommand\thesection{\,\Roman{section}}
+
+
+** Hyperref setup
+#+LaTeX_HEADER: \hypersetup{allcolors = blue} % to have all the hyperlinks in 1 color
+#+LaTeX_HEADER: \newcommand{\beginsupplement}{\setcounter{table}{0}
+#+LaTeX_HEADER: \renewcommand{\thetable}{S\arabic{table}} \setcounter{figure}{0}
+#+LaTeX_HEADER: \renewcommand{\thefigure}{S\arabic{figure}}  }
+#+LaTeX_HEADER: \def\todo#1{\marginpar{\colorbox{red}{TODO}}{(TODO: \textit{#1})}}
+
+
+** Headers and footers
+
+#+LaTeX_HEADER: \usepackage{fancyhdr} % Headers and footers
+#+LaTeX_HEADER: \pagestyle{fancy} % All pages have headers and footers
+#+LaTeX_HEADER: \fancyhead{} % Blank out the default header
+#+LaTeX_HEADER: \fancyfoot{} % Blank out the default footer
+#+LaTeX_HEADER: \fancyhead[C]{\footnotesize \shorttitle \quad $\bullet$ \quad \shortauthor \quad $\bullet$ \quad \shortdate \normalsize }
+#+LaTeX_HEADER: \fancyfoot[C]{\thepage} % Custom footer text
+#+LaTeX_HEADER: \makeatletter
+
+
+** Title and Authors
+
+#+LaTeX_HEADER: \usepackage{titlesec} % Allows customization of titles
+# ## WE EXPLICIT THE FOOTNOTEMARK IN THE AUTHORS (for easier change) :
+#+LaTeX_HEADER:\renewcommand{\@fnsymbol}[1]{  \ensuremath{    \ifcase#1  \or \dagger    \or \ddagger    \or \mathsection    \or \mathparagraph    \else      \@ctrerr    \fi  } }
+#+LaTeX_HEADER: \def\@maketitle{  \newpage  \null  \vspace{-10mm}   \begin{center}  \let \footnote \thanks    {\LARGE \textbf{\@title} \par}    \vskip 1.2em    {\large      \lineskip .5em      \begin{tabular}[t]{c}        \scshape      \normalsize        \@author      \end{tabular}\par}   \vskip .6em   { \@date}  \end{center}  \par  \vskip 1em}
+#+LaTeX_HEADER: \makeatother
+#+LaTeX_HEADER: \renewcommand{\thefootnote}{\arabic{footnote}} % we restor the arabic number footnotes
+
+
+** biblio
+
+# # we delete the references name
+#+LaTeX_HEADER: \renewcommand{\refname}{\vspace{-.8cm}}
+
+#+LaTeX_HEADER: \usepackage{jneurosci}
+#+LaTeX_HEADER: \bibliographystyle{tex/jneurosci}
+
+# #+LaTeX_HEADER: \usepackage[url=false, doi=true]{natbib}
+# #+LaTeX_HEADER: \bibliographystyle{plainnat}
+# package to generate a file
+# #+LaTeX_HEADER: \usepackage{natbib,hyperref}
+# #+LaTeX_HEADER: \bibliographystyle{apalike}
+
+

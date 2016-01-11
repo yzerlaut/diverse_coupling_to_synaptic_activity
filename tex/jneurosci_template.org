@@ -1,0 +1,77 @@
+- _*Affiliation*_ : $^{1}$ Unité de Neurosciences, Information et
+  Complexité. Centre National de la Recherche Scientifique,
+  FRE 3693. 1 Avenue de la Terrasse, 91198, Gif-sur-Yvette, France
+  $^{2}$ European Institute for Theoretical Neuroscience, 74 Rue du
+  Faubourg Saint-Antoine, 75012 Paris, France
+
+- _*Abbreviated title*_ : Heterogeneous firing response of mice pyramidal cells
+
+- _*Keywords*_ : Single cell computation, fluctuation-driven regime, in vitro slice recording, dynamic-clamp
+
+- _*Corresponding Author*_ : Alain Destexhe,
+  =destexhe@unic.cnrs-gif.fr=. Unité de Neurosciences, Information et
+  Complexité. Centre National de la Recherche Scientifique,
+  FRE 3693. 1 Avenue de la Terrasse, 91198, Gif-sur-Yvette, France
+
+- _*Number of pages*_ : 28
+
+- _*Number of figures*_ : 7 
+
+- _*Number of tables*_ : 1
+
+- _*Number of words Abstract*_ : 215
+
+- _*Number of words Significance Statement*_ : 99
+
+- _*Number of words Introduction*_ : 295
+
+- _*Number of words Discussion*_ : 1076
+
+- _*Conflict of Interest*_ : The authors declare no competing financial interests.
+
+- _*Acknowledgements*_ : We would like to acknowledge the contribution
+  of Gérard Sadoc in helping us to design the dynamic-clamp
+  protocols. We also thank Guillaume Hucher for the histological work
+  as well as Manon Richard and Aurélie Daret for animal
+  facilities. Y.Z was supported by fellowships from the Initiative
+  d'Excellence Paris-Saclay and the Fondation pour la Recherche
+  Médicale (FDT 20150532751). Research funded by the CNRS, the ANR
+  (Complex-V1 project) and the European Community (BrainScales
+  FP7-269921 and the Human Brain Project FP7-604102).
+
+\newpage
+
+# ================================================================ #
+# For line numbering, you still need to include within the main org
+# file, the \begin{linenumbers} [...] \end{linenumbers}
+# ================================================================ #
+
+#+LATEX_CLASS: article
+#+OPTIONS: toc:nil (no Table Of COntents at all)
+#+LaTeX_CLASS_OPTIONS: [8pt, colorlinks, a4paper]
+#+LaTeX_HEADER:\usepackage{graphicx}
+#+LaTeX_HEADER:\usepackage[AUTO]{inputenc}
+#+LaTeX_HEADER:\usepackage[T1]{fontenc}
+#+LaTeX_HEADER:\usepackage{lmodern}
+#+LaTeX_HEADER:\usepackage{amsmath}
+#+LaTeX_HEADER:\usepackage{microtype} % Slightly tweak font spacing for aesthetics
+#+LaTeX_HEADER: \usepackage{geometry}
+#+LaTeX_HEADER: \geometry{a4paper,total={210mm,297mm}, left=25mm, right=20mm, top=20mm, bottom=20mm, bindingoffset=0mm}
+#+LaTeX_HEADER: \hypersetup{allcolors = gray}
+#+LaTeX_HEADER: \renewcommand\thesection{}
+#+LaTeX_HEADER: \renewcommand\thesubsection{}
+#+LaTeX_HEADER: \usepackage{setspace, caption}
+#+LaTeX_HEADER: \doublespacing
+#+LaTeX_HEADER: \captionsetup{font=doublespacing}% Double-spaced float captions
+#+LaTeX_HEADER: \renewcommand\ref{}
+#+LaTeX_HEADER: \renewcommand{\refname}{\vspace{-.8cm}}
+#+LaTeX_HEADER: \usepackage{lineno}
+# #+LaTeX_HEADER: \renewcommand{\includegraphics}[2][]{\fbox{#2}}
+#+LaTeX_HEADER: \usepackage[figuresonly, nolists]{endfloat}
+#+LaTeX_HEADER: \usepackage{jneurosci}
+#+LaTeX_HEADER: \bibliographystyle{jneurosci}
+
+\linenumbers
+
+
+

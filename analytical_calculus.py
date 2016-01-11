@@ -129,45 +129,6 @@ def split_root_square_of_imaginary(f, tau):
 from numba import jit
 
 @jit
-def psp_0_freq_per_dend_synapse_type(x, X, Gf,\
-                                     Erev, shtn_input, EqCylinder,\
-                                     soma, stick, params,
-                                     precision=1e2):
-    Ls, Ds, L, D, Lp, Rm, Cm,\
-        El, Ee, Ei, rm, cm, ri = ball_and_stick_params(soma, stick, params)
-
-    tauS, tauP, lbdP, tauD, lbdD = \
-            ball_and_stick_constants(shtn_input, soma, stick, params)
-    rD, rP, gP = tauD/cm, tauP/cm, lbdP*ri*Cm/tauS
-    
-    muV_X = stat_pot_function([X], shtn_input, EqCylinder,\
-                              soma, stick, params)[0]
-
-    # ball and tree rescaling
-    Lp, L = rescale_x(Lp, EqCylinder), rescale_x(L, EqCylinder)
-    x, X = rescale_x(x,EqCylinder), rescale_x(X,EqCylinder)
-
-    # PSP with unitary current input
-    if X<=Lp:
-        if x<=X:
-            PSP = dv_xXLp(x,X,Lp,L,lbdD,lbdP,gP,rP,rD)
-        elif x>X and x<=Lp:
-            PSP = dv_XxLp(x,X,Lp,L,lbdD,lbdP,gP,rP,rD)
-        elif x>X and x>Lp:
-            PSP = dv_XLpx(x,X,Lp,L,lbdD,lbdP,gP,rP,rD)
-    elif X>Lp:
-        if x<=Lp:
-            PSP = dv_xLpX(x,X,Lp,L,lbdD,lbdP,gP,rP,rD)
-        elif x>Lp and x<=X:
-            PSP = dv_LpxX(x,X,Lp,L,lbdD,lbdP,gP,rP,rD)
-        elif x>X:
-            PSP = dv_LpXx(x,X,Lp,L,lbdD,lbdP,gP,rP,rD)
-
-
-    return np.abs(Gf*PSP*(Erev-muV_X))
-
-
-@jit
 def psp_norm_square_integral_per_dend_synapse_type(x, X, f, Gf2,\
                             Erev, shtn_input, EqCylinder,\
                             soma, stick, params,
@@ -212,15 +173,13 @@ def psp_norm_square_integral_per_dend_synapse_type(x, X, f, Gf2,\
         elif x>X:
             PSP = dv_LpXx(x,X,Lp,L,lbdDf,lbdPf,gPf,rPf,rDf)
 
-
-    return np.trapz(Gf2*np.abs(PSP)**2, f)*(Erev-muV_X)**2
+    return Gf2*np.abs(PSP)**2*(Erev-muV_X)**2
 
 @jit
 def get_the_theoretical_sV_and_Tv(shtn_input, EqCylinder,\
                                   f, x, params, soma, stick,\
                                   precision=50):
-    sv2 = np.zeros(len(x))
-    Tv = np.zeros(len(x))
+    Pv = np.zeros((len(x), len(f))) # power spectral density of Vm for each position
 
     Source_Array = np.linspace(x.min(), x.max(), precision+1)
     Source_Array = .5*(Source_Array[1:]+Source_Array[:-1]) # discarding the soma, treated below
@@ -228,7 +187,6 @@ def get_the_theoretical_sV_and_Tv(shtn_input, EqCylinder,\
     Branch_weights = 0*Source_Array # initialized t0 0 !
     for b in EqCylinder:
         Branch_weights[np.where(Source_Array>=b)[0]] += 1
-    norm_for_Tv = 0*Tv
 
     for ix_dest in range(len(x)):
 
@@ -251,32 +209,16 @@ def get_the_theoretical_sV_and_Tv(shtn_input, EqCylinder,\
             psp2 = psp_norm_square_integral_per_dend_synapse_type(\
                             x[ix_dest], X_source,\
                             f, Gf2, params['Ee'], shtn_input, EqCylinder,\
-                            soma, stick, params,
-                            precision=precision)
-            psp0 = psp_0_freq_per_dend_synapse_type(\
-                            x[ix_dest], X_source,\
-                            Qe*params['Te'], params['Ee'],\
-                            shtn_input, EqCylinder, soma, stick, params,
-                            precision=precision)
-            sv2[ix_dest] += 2.*np.pi*fe*DX*stick['D']/stick['exc_density']*psp2
-            Tv[ix_dest] += 2.*np.pi*fe*DX*stick['D']/stick['exc_density']*psp0**3/4./psp2
-            norm_for_Tv[ix_dest] += 2.*np.pi*fe*DX*stick['D']/stick['exc_density']*psp0
+                            soma, stick, params, precision=precision)
+            Pv[ix_dest,:] += np.pi*fe*DX*stick['D']/stick['exc_density']*psp2
 
             # inhibitory synapse at dendrites
             Gf2 = exp_FT_mod(f, Qi, params['Ti'])
             psp2 = psp_norm_square_integral_per_dend_synapse_type(\
                             x[ix_dest], X_source,\
                             f, Gf2, params['Ei'], shtn_input, EqCylinder,\
-                            soma, stick, params,
-                            precision=precision)
-            psp0 = psp_0_freq_per_dend_synapse_type(\
-                            x[ix_dest], X_source,\
-                            Qi*params['Ti'], params['Ei'],\
-                            shtn_input, EqCylinder, soma, stick, params,
-                            precision=precision)
-            sv2[ix_dest] += 2.*np.pi*fi*DX*stick['D']/stick['inh_density']*psp2
-            Tv[ix_dest] += 2.*np.pi*fi*DX*stick['D']/stick['inh_density']*psp0**3/4./psp2
-            norm_for_Tv[ix_dest] += 2.*np.pi*fi*DX*stick['D']/stick['inh_density']*psp0
+                            soma, stick, params, precision=precision)
+            Pv[ix_dest,:] += np.pi*fi*DX*stick['D']/stick['inh_density']*psp2
 
         # #### SOMATIC SYNAPSES, discret summation, only inhibition, no branch weighting
         fi = shtn_input['fi_soma']
@@ -284,18 +226,15 @@ def get_the_theoretical_sV_and_Tv(shtn_input, EqCylinder,\
         psp2 = psp_norm_square_integral_per_dend_synapse_type(\
                         x[ix_dest], 0.,\
                         f, Gf2, params['Ei'], shtn_input, EqCylinder,\
-                        soma, stick, params,
-                        precision=precision)
-        psp0 = psp_0_freq_per_dend_synapse_type(\
-                        x[ix_dest], 0.,\
-                        params['Qi']*params['Ti'], params['Ei'],\
-                        shtn_input, EqCylinder, soma, stick, params,
-                        precision=precision)
-        sv2[ix_dest] += 2.*np.pi*fi*soma['L']*soma['D']/soma['inh_density']*psp2
-        Tv[ix_dest] += 2.*np.pi*fi*soma['L']*soma['D']/soma['inh_density']*psp0**3/4./psp2
-        norm_for_Tv[ix_dest] += 2.*np.pi*fi*soma['L']*soma['D']/soma['inh_density']*psp0
+                        soma, stick, params, precision=precision)
+        Pv[ix_dest,:] += np.pi*fi*soma['L']*soma['D']/soma['inh_density']*psp2
+
+    sV2, Tv = np.zeros(len(x)), np.zeros(len(x))
+    for ix in range(len(x)):
+        sV2[ix] = 2.*np.trapz(np.abs(Pv[ix,:]), f)
+        Tv[ix] = .5*Pv[ix,0]/(2.*np.trapz(np.abs(Pv[ix,:]), f)) # 2 times the integral to have from -infty to +infty (and methods gives [0,+infty])
         
-    return np.sqrt(sv2), Tv/norm_for_Tv
+    return np.sqrt(sV2), Tv
 
 
 def get_the_input_and_transfer_resistance(fe, fi, f, x, params, soma, stick):

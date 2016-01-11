@@ -15,6 +15,7 @@ params = {
     'Qi' : 1.5e-9 , 'Ti' : 5.e-3, 'Ei': -80e-3,\
     'seed' : 0}
 
+    
 sim_params = {#in ms
 'dt':0.025,
 'initial_discard':200.,
