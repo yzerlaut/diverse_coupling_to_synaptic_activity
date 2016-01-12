@@ -14,6 +14,42 @@ def params_for_cable_theory(cable, Params):
     cable['cm'] = Params['cm']*np.pi*D # [F/m] """" NEURON 1e-2 !!!! """"
 
 
+def setup_model(EqCylinder, soma, dend, Params):
+    """ returns the different diameters of the equivalent cylinder
+    given a number of branches point"""
+    cables, xtot = [], np.zeros(1)
+    cables.append(soma.copy())
+    cables[0]['inh_density'] = soma['inh_density']
+    cables[0]['exc_density'] = soma['exc_density']
+    Ke_tot, Ki_tot = 0, 0
+    D = dend['D'] # mothers branch diameter
+    for i in range(1,len(EqCylinder)):
+        cable = dend.copy()
+        cable['x1'], cable['x2'] = EqCylinder[i-1], EqCylinder[i]
+        cable['L'] = cable['x2']-cable['x1']
+        x = np.linspace(cable['x1'], cable['x2'], cable['NSEG']+1)
+        cable['x'] = .5*(x[1:]+x[:-1])
+        xtot = np.concatenate([xtot, cable['x']])
+        cable['D'] = D*2**(-2*(i-1)/3.)
+        cable['inh_density'] = dend['inh_density']
+        cable['exc_density'] = dend['exc_density']
+        cables.append(cable)
+
+    Ke_tot, Ki_tot, jj = 0, 0, 0
+    for cable in cables:
+        cable['Ki_per_seg'] = cable['L']*\
+          cable['D']*np.pi/cable['NSEG']/cable['inh_density']
+        cable['Ke_per_seg'] = cable['L']*\
+          cable['D']*np.pi/cable['NSEG']/cable['exc_density']
+        # summing over duplicate of compartments
+        Ki_tot += 2**jj*cable['Ki_per_seg']*cable['NSEG']
+        Ke_tot += 2**jj*cable['Ke_per_seg']*cable['NSEG']
+        if cable['name']!='soma':
+            jj+=1
+    print "Total number of EXCITATORY synapses : ", Ke_tot
+    print "Total number of INHIBITORY synapses : ", Ki_tot
+    return xtot, cables
+
 def calculate_mean_conductances(shtn_input,\
                                 soma, cable, Params):
     """
@@ -248,4 +284,36 @@ def get_the_input_and_transfer_resistance(fe, fi, f, x, params, soma, stick):
         Rin[ix_dest] = dv_kernel_per_I(x[ix_dest], x[ix_dest],
                 0., Garray, stick, soma, params) # at 0 frequency
     return Rin, Rtf
+
+
+def get_the_input_impedance_at_soma(f, EqCylinder, soma, stick, params):
+
+    # we remove the prox/dist separation, usefull only when synaptic input !!
+    stick = stick.copy()
+    stick['L_prox'], stick['L_dist'] = stick['L'], stick['L']
+    
+    Ls, Ds, L, D, Lp, Rm, Cm,\
+        El, Ee, Ei, rm, cm, ri = ball_and_stick_params(soma, stick, params)
+    Lp = L # not need of splitting the tree with respect ot proximal and distal
+    # impact of the BRANCHING !!
+    Lp, L = rescale_x(Lp, EqCylinder), rescale_x(L, EqCylinder)
+    
+    # activity set to 0 !!
+    shtn_input = {'fi_soma':0, 'fe_prox':0,'fi_prox':0,
+                  'fe_dist':0,'fi_dist':0}
+    tauS, tauP, lbdP, tauD, lbdD = \
+            ball_and_stick_constants(shtn_input, soma, stick, params)
+
+    # proximal params
+    lbdPf = lbdP/np.sqrt(1+2*1j*np.pi*f*tauP)
+    gPf = lbdPf*Cm*ri*(1+2*1j*np.pi*f*tauS)/tauS
+    rPf = tauP/cm/(1+2*1j*np.pi*f*tauP)
+
+    # distal params
+    lbdDf = lbdD/np.sqrt(1+2*1j*np.pi*f*tauD)
+    rDf = tauD/cm/(1+2*1j*np.pi*f*tauD)
+
+    # PSP with unitary current input
+    # input and recording in x=0 
+    return dv_xXLp(0., 0., Lp,L,lbdDf,lbdPf,gPf,rPf,rDf)
 

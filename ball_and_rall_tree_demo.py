@@ -41,42 +41,6 @@ stick = {'L': 2000*1e-6, 'D': 4*1e-6, 'NSEG': 30,\
          'Ke':100, 'Ki':100., 'name':'dend'}
 
 
-def setup_model(EqCylinder, soma, dend, Params):
-    """ returns the different diameters of the equivalent cylinder
-    given a number of branches point"""
-    cables, xtot = [], np.zeros(1)
-    cables.append(soma.copy())
-    cables[0]['inh_density'] = soma['inh_density']
-    cables[0]['exc_density'] = soma['exc_density']
-    Ke_tot, Ki_tot = 0, 0
-    D = dend['D'] # mothers branch diameter
-    for i in range(1,len(EqCylinder)):
-        cable = dend.copy()
-        cable['x1'], cable['x2'] = EqCylinder[i-1], EqCylinder[i]
-        cable['L'] = cable['x2']-cable['x1']
-        x = np.linspace(cable['x1'], cable['x2'], cable['NSEG']+1)
-        cable['x'] = .5*(x[1:]+x[:-1])
-        xtot = np.concatenate([xtot, cable['x']])
-        cable['D'] = D*2**(-2*(i-1)/3.)
-        cable['inh_density'] = dend['inh_density']
-        cable['exc_density'] = dend['exc_density']
-        cables.append(cable)
-
-    Ke_tot, Ki_tot, jj = 0, 0, 0
-    for cable in cables:
-        cable['Ki_per_seg'] = cable['L']*\
-          cable['D']*np.pi/cable['NSEG']/cable['inh_density']
-        cable['Ke_per_seg'] = cable['L']*\
-          cable['D']*np.pi/cable['NSEG']/cable['exc_density']
-        # summing over duplicate of compartments
-        Ki_tot += 2**jj*cable['Ki_per_seg']*cable['NSEG']
-        Ke_tot += 2**jj*cable['Ke_per_seg']*cable['NSEG']
-        if cable['name']!='soma':
-            jj+=1
-    print "Total number of EXCITATORY synapses : ", Ke_tot
-    print "Total number of INHIBITORY synapses : ", Ki_tot
-    return xtot, cables
-
 from numerical_simulations.nrn_simulations import *
 from scipy.optimize import curve_fit
 
