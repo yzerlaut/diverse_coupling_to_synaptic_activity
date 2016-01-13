@@ -10,8 +10,7 @@ from theory.analytical_calculus import * # where the core calculus lies
 #### MEAN MODEL PROPERTIES ###############################
 #### ================================================== ##
 
-soma, stick, params = np.load('mean_model.npy')
-print 1e6*soma['L'], 1e6*stick['L'], 1e6*stick['D']
+soma, stick, params = np.load('../input_impedance_calibration/mean_model.npy')
 
 # common to all plots, the frequency range we will look at [0.1,1000] Hz
 dt, tstop = 1.3e-3, 10.
@@ -197,4 +196,4 @@ if __name__=='__main__':
     else:
         fig, fig2 = make_experimental_fig()
         plt.show()
-        graph.put_list_of_figs_to_svg_fig([fig, fig2, fig3, fig4])
+        graph.put_list_of_figs_to_svg_fig([fig, fig2])

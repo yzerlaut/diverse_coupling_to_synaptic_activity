@@ -48,6 +48,8 @@ def setup_model(EqCylinder, soma, dend, Params):
             jj+=1
     print "Total number of EXCITATORY synapses : ", Ke_tot
     print "Total number of INHIBITORY synapses : ", Ki_tot
+    # we store this info in the somtic comp
+    cables[0]['Ke_tot'], cables[0]['Ki_tot'] = Ke_tot, Ki_tot
     return xtot, cables
 
 def calculate_mean_conductances(shtn_input,\
@@ -272,6 +274,65 @@ def get_the_theoretical_sV_and_Tv(shtn_input, EqCylinder,\
         
     return np.sqrt(sV2), Tv
 
+@jit
+def get_the_fluct_prop_at_soma(shtn_input, EqCylinder, params, soma, stick,\
+                               precision=50, f=rfft.time_to_freq(10000, 1e-5)):
+
+    Pv = np.zeros(len(f)) # power spectral density of Vm for each position
+
+    Source_Array = np.linspace(0, stick['L'], precision+1)
+    Source_Array = .5*(Source_Array[1:]+Source_Array[:-1]) # discarding the soma, treated below
+    DX = Source_Array[1]-Source_Array[0]
+    Branch_weights = 0*Source_Array # initialized t0 0 !
+    for b in EqCylinder:
+        Branch_weights[np.where(Source_Array>=b)[0]] += 1
+
+    #### DENDRITIC SYNAPSES
+    for ix_source in range(len(Source_Array)): 
+
+        X_source = Source_Array[ix_source]
+        if X_source<=stick['L_prox']:
+            fe, fi = shtn_input['fe_prox'], shtn_input['fi_prox']
+        else:
+            fe, fi = shtn_input['fe_dist'], shtn_input['fi_dist']
+
+        ## weighting due to branching !
+        fe, fi = fe*Branch_weights[ix_source], fi*Branch_weights[ix_source]
+        Qe, Qi = params['Qe']/Branch_weights[ix_source],\
+                 params['Qi']/Branch_weights[ix_source]
+
+        # excitatory synapse at dendrites
+        Gf2 = exp_FT_mod(f, Qe, params['Te'])
+        psp2 = psp_norm_square_integral_per_dend_synapse_type(\
+                        0., X_source,\
+                        f, Gf2, params['Ee'], shtn_input, EqCylinder,\
+                        soma, stick, params, precision=precision)
+        Pv += np.pi*fe*DX*stick['D']/stick['exc_density']*psp2
+
+        # inhibitory synapse at dendrites
+        Gf2 = exp_FT_mod(f, Qi, params['Ti'])
+        psp2 = psp_norm_square_integral_per_dend_synapse_type(\
+                        0., X_source,\
+                        f, Gf2, params['Ei'], shtn_input, EqCylinder,\
+                        soma, stick, params, precision=precision)
+        Pv += np.pi*fi*DX*stick['D']/stick['inh_density']*psp2
+
+    # #### SOMATIC SYNAPSES, discret summation, only inhibition, no branch weighting
+    fi = shtn_input['fi_soma']
+    Gf2 = exp_FT_mod(f, params['Qi'], params['Ti'])
+    psp2 = psp_norm_square_integral_per_dend_synapse_type(\
+                    0., 0.,\
+                    f, Gf2, params['Ei'], shtn_input, EqCylinder,\
+                    soma, stick, params, precision=precision)
+    Pv += np.pi*fi*soma['L']*soma['D']/soma['inh_density']*psp2
+
+    muV = stat_pot_function([0], shtn_input, EqCylinder,\
+                            soma, stick, params)[0]
+    sV2 = 2.*np.trapz(np.abs(Pv), f)
+    Tv = .5*Pv[0]/(2.*np.trapz(np.abs(Pv), f)) # 2 times the integral to have from -infty to +infty (and methods gives [0,+infty])
+        
+    return muV, np.sqrt(sV2), Tv
+
 
 def get_the_input_and_transfer_resistance(fe, fi, f, x, params, soma, stick):
     Rin, Rtf = np.zeros(len(x)), np.zeros(len(x))
@@ -285,6 +346,31 @@ def get_the_input_and_transfer_resistance(fe, fi, f, x, params, soma, stick):
                 0., Garray, stick, soma, params) # at 0 frequency
     return Rin, Rtf
 
+
+def get_the_input_resistance_at_soma(EqCylinder, soma, stick, params,
+                                     shtn_input):
+
+    Ls, Ds, L, D, Lp, Rm, Cm,\
+        El, Ee, Ei, rm, cm, ri = ball_and_stick_params(soma, stick, params)
+
+    # impact of the BRANCHING !!
+    Lp, L = rescale_x(Lp, EqCylinder), rescale_x(L, EqCylinder)
+    
+    tauS, tauP, lbdP, tauD, lbdD = \
+            ball_and_stick_constants(shtn_input, soma, stick, params)
+
+    # proximal params
+    lbdPf = lbdP/np.sqrt(1+2*1j*np.pi*f*tauP)
+    gPf = lbdPf*Cm*ri*(1+2*1j*np.pi*f*tauS)/tauS
+    rPf = tauP/cm/(1+2*1j*np.pi*f*tauP)
+
+    # distal params
+    lbdDf = lbdD/np.sqrt(1+2*1j*np.pi*f*tauD)
+    rDf = tauD/cm/(1+2*1j*np.pi*f*tauD)
+
+    # PSP with unitary current input
+    # input and recording in x=0 
+    return dv_xXLp(0., 0., Lp, L ,lbdDf,lbdPf,gPf,rPf,rDf)
 
 def get_the_input_impedance_at_soma(f, EqCylinder, soma, stick, params):
 

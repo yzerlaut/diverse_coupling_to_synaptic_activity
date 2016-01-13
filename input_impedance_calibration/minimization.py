@@ -29,8 +29,8 @@ f = .5*(f_bins[1:]+f_bins[:-1]) # frequency for theory !!
 
 N = 6
 B = np.arange(6)+3 # to be adjusted !!! (does not depends on N)
-L_soma = np.linspace(5., 30., N)*1e-6
-L_dend = np.linspace(300., 1000., N)*1e-6
+L_soma = np.linspace(5., 20., N)*1e-6
+L_dend = np.linspace(300., 600., N)*1e-6
 D_dend = np.linspace(.5, 4., N)*1e-6
 G_PAS = np.linspace(1e-5, 1e-4, N)*1e4
 CM = np.linspace(.8, 1.8, N)*1e-2
@@ -41,7 +41,7 @@ RA = np.linspace(10., 90., N)*1e-2
 #### ================================================== ##
 
 # somatic parameters
-soma = {'L': 10*1e-6, 'D': 10*1e-6, 'NSEG': 1, 'exc_density':1e9, 'inh_density':1e9, 'name':'soma'}
+soma = {'L': 10*1e-6, 'D': 15*1e-6, 'NSEG': 1, 'exc_density':1e9, 'inh_density':1e9, 'name':'soma'}
 
 # stick parameters
 stick = {'L': 500*1e-6, 'D': 1.*1e-6, 'B':10, 'NSEG': 30, 'exc_density':1e9, 'inh_density':1e9, 'name':'dend'}
@@ -76,42 +76,49 @@ def compute_deviations():
     np.save('data_minim.npy', [np.array(VALUE_PSD), np.array(VALUE_PHASE)])
 
 def find_minimum():
-    VALUE_PSD, VALUE_PHASE = np.load('data_minim.npy')
-    i0 = np.argmin(VALUE_PSD)
-    i1 = np.argmin(VALUE_PHASE)
-    i = np.argmin(VALUE_PSD/VALUE_PSD.mean()*VALUE_PHASE/VALUE_PHASE.mean())
-    # product loop
-    j=0
-    for b, ls, ld, dd, g_pas, cm, ra in itertools.product(B, L_soma, L_dend, D_dend, G_PAS, CM, RA):
-        if j==i:
-            print '====> Minimum of the PHASE and PSD'
-            soma1, stick1, params1 = soma.copy(), stick.copy(), params.copy()
-            soma1['L'] = ls
-            stick1['B'], stick1['D'], stick1['L'] = b, dd, ld
-            params1['g_pas'], params1['cm'], params1['Ra'] = g_pas, cm, ra
-            print 'B=',b, ', Ls=',1e6*ls, 'um, Ld=',1e6*ld, 'um, Dd=',\
-                      1e6*dd,'um,\n g_pas=',g_pas,', cm=', 1e2*cm, ', Ra=',1e2*ra
-            MIN_BOTH = [soma1.copy(), stick1.copy(), params1.copy()]
-        if j==i0:
-            print '====> Minimum of the PSD'
-            soma1, stick1, params1 = soma.copy(), stick.copy(), params.copy()
-            soma1['L'] = ls
-            stick1['B'], stick1['D'], stick1['L'] = b, dd, ld
-            params1['g_pas'], params1['cm'], params1['Ra'] = g_pas, cm, ra
-            print 'B=',b, ', Ls=',1e6*ls, 'um, Ld=',1e6*ld, 'um, Dd=',\
-                      1e6*dd,'um,\n g_pas=',g_pas,', cm=', 1e2*cm, ', Ra=',1e2*ra
-            MIN_PSD = [soma1.copy(), stick1.copy(), params1.copy()]
-        if j==i1:
-            print '====> Minimum of the PHASE'
-            soma1, stick1, params1 = soma.copy(), stick.copy(), params.copy()
-            soma1['L'] = ls
-            stick1['B'], stick1['D'], stick1['L'] = b, dd, ld
-            params1['g_pas'], params1['cm'], params1['Ra'] = g_pas, cm, ra
-            print 'B=',b, ', Ls=',1e6*ls, 'um, Ld=',1e6*ld, 'um, Dd=',\
-                      1e6*dd,'um,\n g_pas=',g_pas,', cm=', 1e2*cm, ', Ra=',1e2*ra
-            MIN_PHASE = [soma1.copy(), stick1.copy(), params1.copy()]
-        j+=1
-    return MIN_PHASE, MIN_PSD, MIN_BOTH
+    try :
+        VALUE_PSD, VALUE_PHASE = np.load('data_minim.npy')
+        i0 = np.argmin(VALUE_PSD)
+        i1 = np.argmin(VALUE_PHASE)
+        i = np.argmin(VALUE_PSD/VALUE_PSD.mean()*VALUE_PHASE/VALUE_PHASE.mean())
+        # product loop
+        j=0
+        for b, ls, ld, dd, g_pas, cm, ra in itertools.product(B, L_soma, L_dend, D_dend, G_PAS, CM, RA):
+            if j==i:
+                print '====> Minimum of the PHASE and PSD'
+                soma1, stick1, params1 = soma.copy(), stick.copy(), params.copy()
+                soma1['L'] = ls
+                stick1['B'], stick1['D'], stick1['L'] = b, dd, ld
+                params1['g_pas'], params1['cm'], params1['Ra'] = g_pas, cm, ra
+                print 'B=',b, ', Ls=',1e6*ls, 'um, Ld=',1e6*ld, 'um, Dd=',\
+                          1e6*dd,'um,\n g_pas=',g_pas,', cm=', 1e2*cm, ', Ra=',1e2*ra
+                MIN_BOTH = [soma1.copy(), stick1.copy(), params1.copy()]
+            if j==i0:
+                print '====> Minimum of the PSD'
+                soma1, stick1, params1 = soma.copy(), stick.copy(), params.copy()
+                soma1['L'] = ls
+                stick1['B'], stick1['D'], stick1['L'] = b, dd, ld
+                params1['g_pas'], params1['cm'], params1['Ra'] = g_pas, cm, ra
+                print 'B=',b, ', Ls=',1e6*ls, 'um, Ld=',1e6*ld, 'um, Dd=',\
+                          1e6*dd,'um,\n g_pas=',g_pas,', cm=', 1e2*cm, ', Ra=',1e2*ra
+                MIN_PSD = [soma1.copy(), stick1.copy(), params1.copy()]
+            if j==i1:
+                print '====> Minimum of the PHASE'
+                soma1, stick1, params1 = soma.copy(), stick.copy(), params.copy()
+                soma1['L'] = ls
+                stick1['B'], stick1['D'], stick1['L'] = b, dd, ld
+                params1['g_pas'], params1['cm'], params1['Ra'] = g_pas, cm, ra
+                print 'B=',b, ', Ls=',1e6*ls, 'um, Ld=',1e6*ld, 'um, Dd=',\
+                          1e6*dd,'um,\n g_pas=',g_pas,', cm=', 1e2*cm, ', Ra=',1e2*ra
+                MIN_PHASE = [soma1.copy(), stick1.copy(), params1.copy()]
+            j+=1
+        return MIN_PHASE, MIN_PSD, MIN_BOTH
+    except IOError:
+        print '--------------------------------------------'
+        print 'NEED TO MAKE THE MINIMIZATION FIRST'
+        print 'RUN :'
+        print 'python minimization compute'
+        print '--------------------------------------------'
 
 def make_fig(MIN_PHASE, MIN_PSD, MIN_BOTH):
     fig, AX = plt.subplots(1, 2, figsize=(11,4))
