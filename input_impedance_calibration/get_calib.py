@@ -30,7 +30,7 @@ def get_input_resist(soma, stick, params):
     # branching properties
     EqCylinder2 = np.linspace(0, 1, stick['B']+1)*stick['L'] # equally space branches ! UNITLESS, multiplied only in the func by stick['L']
     params_for_cable_theory(stick, params) # setting cable membrane constants
-    return get_the_input_impedance_at_soma(0., EqCylinder2, soma, stick, params)
+    return np.abs(get_the_input_impedance_at_soma(0., EqCylinder2, soma, stick, params))
 
 def adjust_model_prop(Rm, soma, stick, precision=2000):
     """ Rm in Mohm !! """
@@ -49,12 +49,10 @@ def adjust_model_prop(Rm, soma, stick, precision=2000):
         stick1['D'] += D_dend[i]
         Rin[i] = get_input_resist(soma1, stick1, params1)
     i0 = np.argmin(np.abs(Rin/1e6-Rm))
-    print i0
     soma1, stick1, params1 = soma.copy(), stick.copy(), params.copy()
-    soma1['L'] += L_soma[i]
+    soma1['L'] += L_soma[i0]
     stick1['L'] += L_dend[i0]
-    stick1['D'] += D_dend[i]
-    print 1e6*soma['L'], 1e6*stick['L'], 1e6*stick['D']
+    stick1['D'] += D_dend[i0]
     return soma1.copy(), stick1.copy(), params1.copy()
 
 #### ================================================== ##
@@ -175,35 +173,28 @@ if __name__=='__main__':
 
     from theory.brt_drawing import make_fig # where the core calculus lies
     
-    if sys.argv[-1]=='test':
-        # for Rm = 100 Mohm cell
-        soma, stick, params = adjust_model_prop(200., soma, stick, precision=1e2)
-        fig, ax = make_fig(np.linspace(0, 1, stick['B']+1)*stick['L'],
-             stick['D'], xscale=1e-6, yscale=50e-6,\
-                 added_points=None)
-        # for Rm = 1000 Mohm cell
-        soma, stick, params = adjust_model_prop(800., soma, stick, precision=1e2)
-        fig2, ax = make_fig(np.linspace(0, 1, stick['B']+1)*stick['L'],
-             stick['D'], xscale=1e-6, yscale=50e-6,\
-                 added_points=None)
+    if sys.argv[-1]=='conversion':
+        # we plot here the conversion between input resistance
+        # and dendritic tree properties
+        Rm = np.linspace(100, 900)
+        LS, LD, DD = 0*Rm, 0*Rm, 0*Rm
+
+        for i in range(len(Rm)):
+            soma1, stick1, params1 = adjust_model_prop(Rm[i], soma, stick)
+            LS[i] = 1e6*soma1['L']
+            DD[i], LD[i] = 1e6*stick1['D'], 1e6*stick1['L']
+
+        fig, AX = plt.subplots(3, figsize=(4,8))
+        plt.subplots_adjust(left=.3)
+        for ax, y, label in zip(AX[:2], [LS, DD],\
+             ['soma length ($\mu$m)', 'root branch \n diameter ($\mu$m)']):
+            ax.plot(Rm, y, 'k-', lw=2)
+            graph.set_plot(ax, ['left'], ylabel=label, xticks=[])
+        AX[2].plot(Rm, LD, 'k-', lw=2)
+        graph.set_plot(AX[2], ylabel='tree length ($\mu$m)', xlabel='input resistance (M$\Omega$)')
         plt.show()
 
     else:
         fig, fig2 = make_experimental_fig()
-
-        # then we add the other drawings only for the legend for comparison
-        soma1, stick1, params1 = adjust_model_prop(200., soma, stick)
-        fig3, ax = make_fig(np.linspace(0, 1, stick1['B']+1)*stick1['L'],
-                      stick1['D'], xscale=1e-6, yscale=50e-6, color='b')
-        fig3.set_size_inches(3, 5, forward=True)
-        soma2, stick2, params2 = adjust_model_prop(800., soma, stick)
-        fig4, ax = make_fig(np.linspace(0, 1, stick2['B']+1)*stick2['L'],
-                            stick2['D'], xscale=1e-6, yscale=50e-6, color='r')
-        fig4.set_size_inches(3, 5, forward=True)
-
         plt.show()
-        # graph.put_list_of_figs_to_svg_fig([fig, fig2, fig3, fig4])
-
-
-
-
+        graph.put_list_of_figs_to_svg_fig([fig, fig2, fig3, fig4])

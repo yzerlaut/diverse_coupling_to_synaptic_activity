@@ -80,8 +80,6 @@ def find_minimum():
     i0 = np.argmin(VALUE_PSD)
     i1 = np.argmin(VALUE_PHASE)
     i = np.argmin(VALUE_PSD/VALUE_PSD.mean()*VALUE_PHASE/VALUE_PHASE.mean())
-    print i0, i1, i, ' over ', len(VALUE_PSD)
-    print VALUE_PSD[i0], VALUE_PHASE[i1]
     # product loop
     j=0
     for b, ls, ld, dd, g_pas, cm, ra in itertools.product(B, L_soma, L_dend, D_dend, G_PAS, CM, RA):
