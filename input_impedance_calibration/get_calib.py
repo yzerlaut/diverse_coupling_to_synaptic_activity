@@ -11,6 +11,7 @@ from theory.analytical_calculus import * # where the core calculus lies
 #### ================================================== ##
 
 soma, stick, params = np.load('mean_model.npy')
+print 1e6*soma['L'], 1e6*stick['L'], 1e6*stick['D']
 
 # common to all plots, the frequency range we will look at [0.1,1000] Hz
 dt, tstop = 1.3e-3, 10.
@@ -19,7 +20,7 @@ f = rfft.time_to_freq(len(t), dt)
 
 def get_input_imped(soma, stick, params):
     # branching properties
-    EqCylinder2 = np.linspace(0, 1, stick['B'])*stick['L'] # equally space branches ! UNITLESS, multiplied only in the func by stick['L']
+    EqCylinder2 = np.linspace(0, 1, stick['B']+1)*stick['L'] # equally space branches ! UNITLESS, multiplied only in the func by stick['L']
     params_for_cable_theory(stick, params) # setting cable membrane constants
     output = get_the_input_impedance_at_soma(f, EqCylinder2, soma, stick, params)
     psd, phase = np.abs(output)/1e6, (np.angle(output)+np.pi/2.)%(2.*np.pi)-np.pi/2.
@@ -27,7 +28,7 @@ def get_input_imped(soma, stick, params):
 
 def get_input_resist(soma, stick, params):
     # branching properties
-    EqCylinder2 = np.linspace(0, 1, stick['B'])*stick['L'] # equally space branches ! UNITLESS, multiplied only in the func by stick['L']
+    EqCylinder2 = np.linspace(0, 1, stick['B']+1)*stick['L'] # equally space branches ! UNITLESS, multiplied only in the func by stick['L']
     params_for_cable_theory(stick, params) # setting cable membrane constants
     return get_the_input_impedance_at_soma(0., EqCylinder2, soma, stick, params)
 
@@ -47,11 +48,13 @@ def adjust_model_prop(Rm, soma, stick, precision=2000):
         stick1['L'] += L_dend[i]
         stick1['D'] += D_dend[i]
         Rin[i] = get_input_resist(soma1, stick1, params1)
-    i0 = np.argmin(Rin-Rm)
+    i0 = np.argmin(np.abs(Rin/1e6-Rm))
+    print i0
     soma1, stick1, params1 = soma.copy(), stick.copy(), params.copy()
     soma1['L'] += L_soma[i]
     stick1['L'] += L_dend[i0]
     stick1['D'] += D_dend[i]
+    print 1e6*soma['L'], 1e6*stick['L'], 1e6*stick['D']
     return soma1.copy(), stick1.copy(), params1.copy()
 
 #### ================================================== ##
@@ -159,10 +162,12 @@ def make_experimental_fig():
 
 
     
-    fig2, ax = make_fig(np.linspace(0, 1, stick['B'])*stick['L'],
-             stick['D'], xscale=1e-6, yscale=50e-6,\
-                 added_points=None)
+    fig2, ax = make_fig(np.linspace(0, 1, stick['B']+1)*stick['L'],
+             stick['D'], xscale=1e-6, yscale=50e-6)
+    fig2.set_size_inches(3, 5, forward=True)
 
+    print 1e6*soma['L'], 1e6*stick['L'], 1e6*stick['D']
+    
     return fig, fig2
 
 
@@ -172,21 +177,32 @@ if __name__=='__main__':
     
     if sys.argv[-1]=='test':
         # for Rm = 100 Mohm cell
-        soma, stick, params = adjust_model_prop(100., soma, stick, precision=1e2)
-        fig, ax = make_fig(np.linspace(0, 1, stick['B'])*stick['L'],
+        soma, stick, params = adjust_model_prop(200., soma, stick, precision=1e2)
+        fig, ax = make_fig(np.linspace(0, 1, stick['B']+1)*stick['L'],
              stick['D'], xscale=1e-6, yscale=50e-6,\
                  added_points=None)
         # for Rm = 1000 Mohm cell
-        soma, stick, params = adjust_model_prop(1000., soma, stick, precision=1e2)
-        fig2, ax = make_fig(np.linspace(0, 1, stick['B'])*stick['L'],
+        soma, stick, params = adjust_model_prop(800., soma, stick, precision=1e2)
+        fig2, ax = make_fig(np.linspace(0, 1, stick['B']+1)*stick['L'],
              stick['D'], xscale=1e-6, yscale=50e-6,\
                  added_points=None)
         plt.show()
 
     else:
         fig, fig2 = make_experimental_fig()
+
+        # then we add the other drawings only for the legend for comparison
+        soma1, stick1, params1 = adjust_model_prop(200., soma, stick)
+        fig3, ax = make_fig(np.linspace(0, 1, stick1['B']+1)*stick1['L'],
+                      stick1['D'], xscale=1e-6, yscale=50e-6, color='b')
+        fig3.set_size_inches(3, 5, forward=True)
+        soma2, stick2, params2 = adjust_model_prop(800., soma, stick)
+        fig4, ax = make_fig(np.linspace(0, 1, stick2['B']+1)*stick2['L'],
+                            stick2['D'], xscale=1e-6, yscale=50e-6, color='r')
+        fig4.set_size_inches(3, 5, forward=True)
+
         plt.show()
-        graph.put_list_of_figs_to_svg_fig([fig, fig2])
+        # graph.put_list_of_figs_to_svg_fig([fig, fig2, fig3, fig4])
 
 
 

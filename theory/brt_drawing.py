@@ -17,7 +17,7 @@ def vec_diameter(D,EqCylinder):
 
 def make_fig(EqCylinder, diam_stick,\
              xscale=2e-6, yscale=200e-6,\
-             added_points=None):
+             added_points=None, color='k'):
 
     fig, ax = plt.subplots(1, figsize=(.1*len(EqCylinder)**2,6), frameon=False)
     ax.axis('off')
@@ -54,7 +54,7 @@ def make_fig(EqCylinder, diam_stick,\
     patches.append(Rectangle((-.5*DX, 0), DX, L))
     COORDS.append(np.zeros(1))
     # then adding the soma
-    plt.plot([0],[-3*DY],'ko', ms=10)
+    plt.plot([0],[-3*DY],'o', ms=10, color=color)
     links.append(Line2D((0,0),(-3*DY,0)))
     # then x and y scales
     patches.append(Rectangle((nmax-3*xscale/D0, -2*DY), xscale/D0, DY))
@@ -62,7 +62,7 @@ def make_fig(EqCylinder, diam_stick,\
     patches.append(Rectangle((nmax-2*xscale/D0, -2*DY), .5, yscale))
     plt.annotate(str(int(yscale*1e6))+'$\mu$m', (nmax-xscale/D0, .8*yscale))
 
-    ax.add_collection(PatchCollection(patches, facecolor='k'))
+    ax.add_collection(PatchCollection(patches, facecolor=color, edgecolor=color))
     ax.add_collection(PatchCollection(links, linewidth=1))
 
     # we will need to add additional points

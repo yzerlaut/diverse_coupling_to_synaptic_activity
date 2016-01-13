@@ -28,13 +28,13 @@ f = .5*(f_bins[1:]+f_bins[:-1]) # frequency for theory !!
 #### ================================================== ##
 
 N = 6
-B = np.arange(8)+3 # to be adjusted !!! (does not depends on N)
+B = np.arange(6)+3 # to be adjusted !!! (does not depends on N)
 L_soma = np.linspace(5., 30., N)*1e-6
 L_dend = np.linspace(300., 1000., N)*1e-6
 D_dend = np.linspace(.5, 4., N)*1e-6
 G_PAS = np.linspace(1e-5, 1e-4, N)*1e4
-CM = np.linspace(.7, 2., N)*1e-2
-RA = np.linspace(10., 100., N)*1e-2
+CM = np.linspace(.8, 1.8, N)*1e-2
+RA = np.linspace(10., 90., N)*1e-2
 
 #### ================================================== ##
 #### MODEL PROPERTIES ###############################
@@ -55,7 +55,7 @@ params = {'g_pas': 1e-4*1e4, 'cm' : 1.*1e-2, 'Ra' : 200.*1e-2, 'El': -65e-3,
 
 def get_input_imped(soma, stick, params):
     # branching properties
-    EqCylinder2 = np.linspace(0, 1, stick['B'])*stick['L'] # equally space branches ! UNITLESS, multiplied only in the func by stick['L']
+    EqCylinder2 = np.linspace(0, 1, stick['B']+1)*stick['L'] # equally space branches ! UNITLESS, multiplied only in the func by stick['L']
     params_for_cable_theory(stick, params) # setting cable membrane constants
     output = get_the_input_impedance_at_soma(f, EqCylinder2, soma, stick, params)
     psd, phase = np.abs(output)/1e6, (np.angle(output)+np.pi/2.)%(2.*np.pi)-np.pi/2.
