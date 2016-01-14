@@ -31,12 +31,12 @@ if __name__=='__main__':
     parser.add_argument("-S", "--simulation",\
                         help="With numerical simulation (NEURON)",
                         action="store_true")
-    parser.add_argument("--fe_prox", type=float, help="excitatory synaptic frequency in proximal compartment", default=5.)
-    parser.add_argument("--fi_prox", type=float, help="inhibitory synaptic frequency in proximal compartment", default=20.)
-    parser.add_argument("--fe_dist", type=float, help="excitatory synaptic frequency in distal compartment", default=5.)
-    parser.add_argument("--fi_dist", type=float, help="inhibitory synaptic frequency in distal compartment", default=20.)
+    parser.add_argument("--fe_prox", type=float, help="excitatory synaptic frequency in proximal compartment", default=1.)
+    parser.add_argument("--fi_prox", type=float, help="inhibitory synaptic frequency in proximal compartment", default=5.)
+    parser.add_argument("--fe_dist", type=float, help="excitatory synaptic frequency in distal compartment", default=1.)
+    parser.add_argument("--fi_dist", type=float, help="inhibitory synaptic frequency in distal compartment", default=5.)
     parser.add_argument("--fe_soma", type=float, help="excitatory synaptic frequency at soma compartment", default=.0001)
-    parser.add_argument("--fi_soma", type=float, help="inhibitory synaptic frequency at soma compartment", default=20.)
+    parser.add_argument("--fi_soma", type=float, help="inhibitory synaptic frequency at soma compartment", default=5.)
     parser.add_argument("--discret_sim", type=int, help="space discretization for numerical simulation", default=20)
     parser.add_argument("--tstop_sim", type=float, help="max simulation time (s)", default=2.)
     parser.add_argument("--discret_th", type=int, help="discretization for theoretical evaluation",default=20)
@@ -88,7 +88,7 @@ if __name__=='__main__':
                   'fe_prox':args.fe_prox,'fi_prox':args.fi_prox,
                   'fe_dist':args.fe_dist,'fi_dist':args.fi_dist}
 
-
-    muV, sV, Tv = get_the_fluct_prop_at_soma(shtn_input, EqCylinder,\
-                                             params, soma, stick)
-    print 1e3*muV, 1e3*sV, 1e3*Tv
+    muV, sV, Tv, muGn = get_the_fluct_prop_at_soma(shtn_input, EqCylinder,\
+                                                   params, soma, stick)
+    
+    print 1e3*muV, 1e3*sV, 1e3*Tv, muGn

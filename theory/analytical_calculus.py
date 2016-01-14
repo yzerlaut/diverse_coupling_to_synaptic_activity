@@ -276,7 +276,7 @@ def get_the_theoretical_sV_and_Tv(shtn_input, EqCylinder,\
 
 @jit
 def get_the_fluct_prop_at_soma(shtn_input, EqCylinder, params, soma, stick,\
-                               precision=50, f=rfft.time_to_freq(10000, 1e-5)):
+                               precision=50, f=rfft.time_to_freq(1000, 1e-4)):
 
     Pv = np.zeros(len(f)) # power spectral density of Vm for each position
 
@@ -326,12 +326,20 @@ def get_the_fluct_prop_at_soma(shtn_input, EqCylinder, params, soma, stick,\
                     soma, stick, params, precision=precision)
     Pv += np.pi*fi*soma['L']*soma['D']/soma['inh_density']*psp2
 
+    Rin0 = get_the_input_resistance_at_soma(EqCylinder, soma, stick, params,
+                            {'fi_soma':0, 'fe_prox':0,'fi_prox':0,
+                             'fe_dist':0,'fi_dist':0})
+    Rin = get_the_input_resistance_at_soma(EqCylinder, soma, stick, params,
+                                           shtn_input)
+    
     muV = stat_pot_function([0], shtn_input, EqCylinder,\
                             soma, stick, params)[0]
+    
     sV2 = 2.*np.trapz(np.abs(Pv), f)
+    
     Tv = .5*Pv[0]/(2.*np.trapz(np.abs(Pv), f)) # 2 times the integral to have from -infty to +infty (and methods gives [0,+infty])
         
-    return muV, np.sqrt(sV2), Tv
+    return muV, np.sqrt(sV2), Tv, Rin0/Rin
 
 
 def get_the_input_and_transfer_resistance(fe, fi, f, x, params, soma, stick):
@@ -358,7 +366,7 @@ def get_the_input_resistance_at_soma(EqCylinder, soma, stick, params,
     
     tauS, tauP, lbdP, tauD, lbdD = \
             ball_and_stick_constants(shtn_input, soma, stick, params)
-
+    f=0
     # proximal params
     lbdPf = lbdP/np.sqrt(1+2*1j*np.pi*f*tauP)
     gPf = lbdPf*Cm*ri*(1+2*1j*np.pi*f*tauS)/tauS
@@ -370,7 +378,7 @@ def get_the_input_resistance_at_soma(EqCylinder, soma, stick, params,
 
     # PSP with unitary current input
     # input and recording in x=0 
-    return dv_xXLp(0., 0., Lp, L ,lbdDf,lbdPf,gPf,rPf,rDf)
+    return np.abs(dv_xXLp(0., 0., Lp, L ,lbdDf,lbdPf,gPf,rPf,rDf))
 
 def get_the_input_impedance_at_soma(f, EqCylinder, soma, stick, params):
 
