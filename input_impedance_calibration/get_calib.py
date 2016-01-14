@@ -113,6 +113,15 @@ def make_experimental_fig():
 
     ## THEN MODEL
 
+    from minimization import single_comp_imped
+    try:
+        Rm, Cm = np.load('single_comp_fit.npy')
+        psd, phase = single_comp_imped(f, Rm, Cm)
+        AX[1,0].loglog(f, psd, 'k:', lw=2)
+        AX[1,1].semilogx(f, phase, 'k:', lw=2, label='single comp.')
+    except IOError:
+        print 'no single compartment data available'
+    
     ### MEAN MODEL
     psd, phase = get_input_imped(soma, stick, params)
     AX[1,0].loglog(f, psd, 'k-', alpha=.8, lw=4)

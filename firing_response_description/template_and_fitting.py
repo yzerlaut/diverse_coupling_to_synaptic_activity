@@ -35,4 +35,3 @@ def effective_Vthre(Y, mVm, sVm, TvN, Gl, Cm):
 
 def final_func(coeff, muV, sV, TvN, Gl, Cm):
     return erfc_func(muV, sV, TvN, final_threshold_func(coeff, muV, sV, TvN, 1.), Gl, Cm)
-    

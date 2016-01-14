@@ -136,12 +136,34 @@ def make_fig(MIN_PHASE, MIN_PSD, MIN_BOTH):
         AX[1].semilogx(f, phase, label=label, lw=2)
     AX[0].legend(prop={'size':'xx-small'}, loc='best')
     AX[1].legend(prop={'size':'xx-small'}, loc='best')
-        
-        
+
+
+def single_comp_imped(f, Rm, Cm):
+    imped = Rm/(1.+1j*2.*np.pi*f*Rm*Cm)
+    return np.abs(imped), -np.angle(imped)
+
+def single_comp_minim():
+    
+    from scipy.optimize import minimize
+
+    def Res(p):
+        psd, phase = single_comp_imped(f, p[0], p[1])
+        return np.sum((psd-psd_means)**2)*np.sum((phase+phase_means)**2)
+
+    P0 = [400, 50e-6]
+    psd, phase = single_comp_imped(f, P0[0], P0[1])
+    print phase_means[-1], phase[-1]
+    plsq = minimize(Res,P0, method='nelder-mead')
+
+    np.save('single_comp_fit.npy', plsq.x)
+    print plsq
+
 if __name__=='__main__':
 
     if sys.argv[-1]=='compute':
         compute_deviations()
+    if sys.argv[-1]=='single_comp':
+        single_comp_minim() 
     else:
         MIN_PHASE, MIN_PSD, MIN_BOTH = find_minimum()
         make_fig(MIN_PHASE, MIN_PSD, MIN_BOTH)
