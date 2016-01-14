@@ -279,7 +279,7 @@ def get_the_fluct_prop_at_soma(SHTN_INPUT, params, soma, stick,\
                                precision=100, f=rfft.time_to_freq(1000, 1e-4)):
 
 
-    EqCylinder = np.linspace(0,1,precision)*stick['L']
+    EqCylinder = np.linspace(0,1,stick['B']+1)*stick['L']
     params_for_cable_theory(stick, params)
     
     # check if the shtn input is an array
