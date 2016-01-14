@@ -47,27 +47,11 @@ if __name__=='__main__':
     parser.add_argument("-B", "--branches", type=int, help="Number of branches (equally spaced)", default=1)
     parser.add_argument("--EqCylinder", help="Detailed branching morphology (e.g [0.,0.1,0.25, 0.7, 1.])", nargs='+', type=float, default=[])
     # synaptic properties
-    parser.add_argument("--Qe", type=float, help="Excitatory synaptic weight (nS)", default=1.)
-    parser.add_argument("--Qi", type=float, help="Inhibitory synaptic weight (nS)", default=3.)
+    parser.add_argument("--Qe", type=float, help="Excitatory synaptic weight (nS)", default=.5)
+    parser.add_argument("--Qi", type=float, help="Inhibitory synaptic weight (nS)", default=1.)
 
     args = parser.parse_args()
 
-    # setting up the stick properties
-    stick['L'] = args.L_stick*1e-6
-    stick['L_prox'] = args.L_proximal*1e-6
-    stick['D'] = args.D_stick*1e-6
-    if not len(args.EqCylinder):
-        params['B'] = args.branches
-        EqCylinder = np.linspace(0, 1, params['B']+1)*stick['L'] # equally space branches !
-    else:
-        EqCylinder = np.array(args.EqCylinder)*stick['L'] # detailed branching
-        
-    # settign up the synaptic properties
-    params['Qe'] = args.Qe*1e-9
-    params['Qi'] = args.Qi*1e-9
-
-    print ' first we set up the model [...]'
-    stick['NSEG'] = args.discret_sim
     x_exp, cables = setup_model(EqCylinder, soma, stick, params)    
 
     # we adjust L_proximal so that it falls inbetweee two segments
@@ -84,11 +68,47 @@ if __name__=='__main__':
         fe.append([args.fe_prox if x<L_proximal else args.fe_dist for x in cable['x']])
         fi.append([args.fi_prox if x<L_proximal else args.fi_dist for x in cable['x']])
         
-    shtn_input = {'fi_soma':args.fi_soma,
-                  'fe_prox':args.fe_prox,'fi_prox':args.fi_prox,
-                  'fe_dist':args.fe_dist,'fi_dist':args.fi_dist}
+    # setting up the stick properties
+    stick['L'] = args.L_stick*1e-6
+    stick['L_prox'] = args.L_proximal*1e-6
+    stick['D'] = args.D_stick*1e-6
+    if not len(args.EqCylinder):
+        params['B'] = args.branches
+        EqCylinder = np.linspace(0, 1, params['B']+1)*stick['L'] # equally space branches !
+    else:
+        EqCylinder = np.array(args.EqCylinder)*stick['L'] # detailed branching
+        
+    # settign up the synaptic properties
+    params['Qe'] = args.Qe*1e-9
+    params['Qi'] = args.Qi*1e-9
 
-    muV, sV, Tv, muGn = get_the_fluct_prop_at_soma(shtn_input, EqCylinder,\
-                                                   params, soma, stick)
+    print ' first we set up the model [...]'
+    stick['NSEG'] = args.discret_sim
     
-    print 1e3*muV, 1e3*sV, 1e3*Tv, muGn
+    shtn_input = {'fi_soma':np.array([args.fi_soma]),
+                  'fe_prox':np.array([args.fe_prox]),'fi_prox':np.array([args.fi_prox]),
+                  'fe_dist':np.array([args.fe_dist]),'fi_dist':np.array([args.fi_dist])}
+
+
+    # ALL_CELLS = np.load('all_cell_params.npy')
+
+    # for cell in ALL_CELLS:
+        
+    #     muV, sV, TvN, muGn = get_the_fluct_prop_at_soma(shtn_input,\
+    #                                                     cell['params'], cell['soma'], cell['stick'])
+    #     print 1e3*muV, 1e3*sV, TvN, muGn
+    
+    # for key, val in shtn_input.iteritems():
+    #     shtn_input[key] /= 10.
+
+    muV, sV, TvN, muGn = get_the_fluct_prop_at_soma(shtn_input,\
+                                                    params, soma, stick)
+    print 1e3*muV, 1e3*sV, TvN, muGn
+
+    # for key, val in shtn_input.iteritems():
+    #     shtn_input[key] *= 50.
+        
+    # muV, sV, TvN, muGn = get_the_fluct_prop_at_soma(shtn_input,\
+    #                                                params, soma, stick)
+    # print 1e3*muV, 1e3*sV, TvN, muGn
+    

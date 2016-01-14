@@ -17,10 +17,11 @@ EqCylinder = np.linspace(0, 1, stick['B']+1)*stick['L']
 
 CELLS = np.load('../data_firing_response/reduced_data.npy')
 Tm_data, Tm_model = np.zeros(len(CELLS)), np.zeros(len(CELLS))
+Rm_data = np.zeros(len(CELLS))
 
 for i in range(len(CELLS)):
-    Rm = 1e-6/CELLS[i]['Gl']
-    soma1, stick1, params1 = adjust_model_prop(Rm, soma, stick)
+    Rm_data[i] = 1e-6/CELLS[i]['Gl']
+    soma1, stick1, params1 = adjust_model_prop(Rm_data[i], soma, stick)
     
     EqCylinder1 = np.linspace(0, 1, stick1['B']+1)*stick1['L']
     psd = np.abs(get_the_input_impedance_at_soma(f, EqCylinder1, soma1, stick1, params1))**2
@@ -29,14 +30,23 @@ for i in range(len(CELLS)):
     Tm_data[i]= CELLS[i]['Cm']/CELLS[i]['Gl']
     
 
+print '---------------------------------------------------'
 print 'Comparison between model and data for Tm'
 print 'DATA, mean = ', 1e3*Tm_data.mean(), 'ms +/-', 1e3*Tm_data.std()
 print 'MODEL, mean = ', 1e3*Tm_model.mean(), 'ms +/-', 1e3*Tm_model.std()
+print '---------------------------------------------------'
 
-fig, ax = plt.subplots(figsize=(4,3))
-plt.subplots_adjust(bottom=.3, left=.25)
-plt.hist(1e3*Tm_data, color='r', label='data')
-plt.hist(1e3*Tm_model, color='b', label='model')
-plt.legend(frameon=False, prop={'size':'x-small'}, loc='best')
+
+fig, [ax,ax2] = plt.subplots(1, 2, figsize=(8,3))
+plt.subplots_adjust(bottom=.3, wspace=.4)
+# histogram
+ax.hist(1e3*Tm_data, color='r', label='data')
+ax.hist(1e3*Tm_model, color='b', label='model')
+ax.legend(frameon=False, prop={'size':'x-small'}, loc='best')
 set_plot(ax, xlabel='membrane time constant (ms)', ylabel='cell #')
+# correl Rm-Tm
+ax2.plot(Rm_data, 1e3*Tm_data, 'or', label='data')
+ax2.plot(Rm_data, 1e3*Tm_model, 'ob', label='model')
+ax2.legend(prop={'size':'xx-small'}, loc='best')
+set_plot(ax2, xlabel='membrane resistance (M$\Omega$)', ylabel='membrane time \n constant (ms)')
 plt.show()

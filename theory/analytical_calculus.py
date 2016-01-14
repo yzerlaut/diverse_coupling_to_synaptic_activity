@@ -275,71 +275,94 @@ def get_the_theoretical_sV_and_Tv(shtn_input, EqCylinder,\
     return np.sqrt(sV2), Tv
 
 @jit
-def get_the_fluct_prop_at_soma(shtn_input, EqCylinder, params, soma, stick,\
-                               precision=50, f=rfft.time_to_freq(1000, 1e-4)):
+def get_the_fluct_prop_at_soma(SHTN_INPUT, params, soma, stick,\
+                               precision=100, f=rfft.time_to_freq(1000, 1e-4)):
 
-    Pv = np.zeros(len(f)) # power spectral density of Vm for each position
 
-    Source_Array = np.linspace(0, stick['L'], precision+1)
-    Source_Array = .5*(Source_Array[1:]+Source_Array[:-1]) # discarding the soma, treated below
-    DX = Source_Array[1]-Source_Array[0]
-    Branch_weights = 0*Source_Array # initialized t0 0 !
-    for b in EqCylinder:
-        Branch_weights[np.where(Source_Array>=b)[0]] += 1
+    EqCylinder = np.linspace(0,1,precision)*stick['L']
+    params_for_cable_theory(stick, params)
+    
+    # check if the shtn input is an array
+    n = len(SHTN_INPUT['fi_soma'])
 
-    #### DENDRITIC SYNAPSES
-    for ix_source in range(len(Source_Array)): 
-
-        X_source = Source_Array[ix_source]
-        if X_source<=stick['L_prox']:
-            fe, fi = shtn_input['fe_prox'], shtn_input['fi_prox']
-        else:
-            fe, fi = shtn_input['fe_dist'], shtn_input['fi_dist']
-
-        ## weighting due to branching !
-        fe, fi = fe*Branch_weights[ix_source], fi*Branch_weights[ix_source]
-        Qe, Qi = params['Qe']/Branch_weights[ix_source],\
-                 params['Qi']/Branch_weights[ix_source]
-
-        # excitatory synapse at dendrites
-        Gf2 = exp_FT_mod(f, Qe, params['Te'])
-        psp2 = psp_norm_square_integral_per_dend_synapse_type(\
-                        0., X_source,\
-                        f, Gf2, params['Ee'], shtn_input, EqCylinder,\
-                        soma, stick, params, precision=precision)
-        Pv += np.pi*fe*DX*stick['D']/stick['exc_density']*psp2
-
-        # inhibitory synapse at dendrites
-        Gf2 = exp_FT_mod(f, Qi, params['Ti'])
-        psp2 = psp_norm_square_integral_per_dend_synapse_type(\
-                        0., X_source,\
-                        f, Gf2, params['Ei'], shtn_input, EqCylinder,\
-                        soma, stick, params, precision=precision)
-        Pv += np.pi*fi*DX*stick['D']/stick['inh_density']*psp2
-
-    # #### SOMATIC SYNAPSES, discret summation, only inhibition, no branch weighting
-    fi = shtn_input['fi_soma']
-    Gf2 = exp_FT_mod(f, params['Qi'], params['Ti'])
-    psp2 = psp_norm_square_integral_per_dend_synapse_type(\
-                    0., 0.,\
-                    f, Gf2, params['Ei'], shtn_input, EqCylinder,\
-                    soma, stick, params, precision=precision)
-    Pv += np.pi*fi*soma['L']*soma['D']/soma['inh_density']*psp2
-
+    muV, sV, TvN, muGn = np.zeros(n), np.zeros(n), np.zeros(n), np.zeros(n)
+        
+    # input resistance at rest
     Rin0 = get_the_input_resistance_at_soma(EqCylinder, soma, stick, params,
                             {'fi_soma':0, 'fe_prox':0,'fi_prox':0,
                              'fe_dist':0,'fi_dist':0})
-    Rin = get_the_input_resistance_at_soma(EqCylinder, soma, stick, params,
-                                           shtn_input)
-    
-    muV = stat_pot_function([0], shtn_input, EqCylinder,\
-                            soma, stick, params)[0]
-    
-    sV2 = 2.*np.trapz(np.abs(Pv), f)
-    
-    Tv = .5*Pv[0]/(2.*np.trapz(np.abs(Pv), f)) # 2 times the integral to have from -infty to +infty (and methods gives [0,+infty])
+    # membrane time constant at rest
+    Tm0 = get_membrane_time_constants(EqCylinder, soma, stick, params)
+
+    # then temporal loop
+    for i in range(n):
         
-    return muV, np.sqrt(sV2), Tv, Rin0/Rin
+        shtn_input = {'fi_soma':SHTN_INPUT['fi_soma'][i], 'fe_prox':SHTN_INPUT['fe_prox'][i],\
+                      'fi_prox':SHTN_INPUT['fi_prox'][i], 'fe_dist':SHTN_INPUT['fe_dist'][i],\
+                      'fi_dist':SHTN_INPUT['fi_dist'][i]}
+
+        Pv = np.zeros(len(f)) # power spectral density of Vm for each position
+
+        Source_Array = np.linspace(0, stick['L'], precision+1)
+        Source_Array = .5*(Source_Array[1:]+Source_Array[:-1]) # discarding the soma, treated below
+        DX = Source_Array[1]-Source_Array[0]
+        Branch_weights = 0*Source_Array # initialized t0 0 !
+        for b in EqCylinder:
+            Branch_weights[np.where(Source_Array>=b)[0]] += 1
+
+
+        #### DENDRITIC SYNAPSES
+        for ix_source in range(len(Source_Array)): 
+
+            X_source = Source_Array[ix_source]
+            if X_source<=stick['L_prox']:
+                fe, fi = shtn_input['fe_prox'], shtn_input['fi_prox']
+            else:
+                fe, fi = shtn_input['fe_dist'], shtn_input['fi_dist']
+
+            ## weighting due to branching !
+            fe, fi = fe*Branch_weights[ix_source], fi*Branch_weights[ix_source]
+            Qe, Qi = params['Qe']/Branch_weights[ix_source],\
+                     params['Qi']/Branch_weights[ix_source]
+
+            # excitatory synapse at dendrites
+            Gf2 = exp_FT_mod(f, Qe, params['Te'])
+            psp2 = psp_norm_square_integral_per_dend_synapse_type(\
+                            0., X_source,\
+                            f, Gf2, params['Ee'], shtn_input, EqCylinder,\
+                            soma, stick, params, precision=precision)
+            Pv += np.pi*fe*DX*stick['D']/stick['exc_density']*psp2
+
+            # inhibitory synapse at dendrites
+            Gf2 = exp_FT_mod(f, Qi, params['Ti'])
+            psp2 = psp_norm_square_integral_per_dend_synapse_type(\
+                            0., X_source,\
+                            f, Gf2, params['Ei'], shtn_input, EqCylinder,\
+                            soma, stick, params, precision=precision)
+            Pv += np.pi*fi*DX*stick['D']/stick['inh_density']*psp2
+
+        # #### SOMATIC SYNAPSES, discret summation, only inhibition, no branch weighting
+        fi = shtn_input['fi_soma']
+        Gf2 = exp_FT_mod(f, params['Qi'], params['Ti'])
+        psp2 = psp_norm_square_integral_per_dend_synapse_type(\
+                        0., 0.,\
+                        f, Gf2, params['Ei'], shtn_input, EqCylinder,\
+                        soma, stick, params, precision=precision)
+        Pv += np.pi*fi*soma['L']*soma['D']/soma['inh_density']*psp2
+
+        Rin = get_the_input_resistance_at_soma(EqCylinder, soma, stick, params,
+                                               shtn_input)
+
+        muV[i] = stat_pot_function([0], shtn_input, EqCylinder,\
+                                soma, stick, params)[0]
+
+        sV[i] = np.sqrt(2.*np.trapz(np.abs(Pv), f))
+
+        TvN[i] = .5*Pv[0]/(2.*np.trapz(np.abs(Pv), f))/Tm0 # 2 times the integral to have from -infty to +infty (and methods gives [0,+infty])
+
+        muGn[i] = Rin0/Rin
+
+    return muV, sV, TvN, muGn
 
 
 def get_the_input_and_transfer_resistance(fe, fi, f, x, params, soma, stick):
@@ -380,6 +403,7 @@ def get_the_input_resistance_at_soma(EqCylinder, soma, stick, params,
     # input and recording in x=0 
     return np.abs(dv_xXLp(0., 0., Lp, L ,lbdDf,lbdPf,gPf,rPf,rDf))
 
+
 def get_the_input_impedance_at_soma(f, EqCylinder, soma, stick, params):
 
     # we remove the prox/dist separation, usefull only when synaptic input !!
@@ -411,3 +435,7 @@ def get_the_input_impedance_at_soma(f, EqCylinder, soma, stick, params):
     # input and recording in x=0 
     return dv_xXLp(0., 0., Lp,L,lbdDf,lbdPf,gPf,rPf,rDf)
 
+def get_membrane_time_constants(EqCylinder, soma, stick, params,\
+                                f=rfft.time_to_freq(1000, 1e-4)):
+    psd = np.abs(get_the_input_impedance_at_soma(f, EqCylinder, soma, stick, params))**2
+    return .5*psd[0]/(2.*np.trapz(np.abs(psd), f))
