@@ -29,6 +29,10 @@ for i in range(len(CELLS)):
     Tm_data[i]= CELLS[i]['Cm']/CELLS[i]['Gl']
     
 
+print 'Comparison between model and data for Tm'
+print 'DATA, mean = ', 1e3*Tm_data.mean(), 'ms +/-', 1e3*Tm_data.std()
+print 'MODEL, mean = ', 1e3*Tm_model.mean(), 'ms +/-', 1e3*Tm_model.std()
+
 fig, ax = plt.subplots(figsize=(4,3))
 plt.subplots_adjust(bottom=.3, left=.25)
 plt.hist(1e3*Tm_data, color='r', label='data')
