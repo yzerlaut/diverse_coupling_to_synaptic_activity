@@ -20,7 +20,7 @@ soma['exc_density'], soma['inh_density']= 1e9, FACTOR*25.*1e-12
 stick['exc_density'], stick['inh_density']= FACTOR*17*1e-12, FACTOR*100*1e-12
 
 # --- fixing the synaptic parameters !!
-params['Qe'], params['Qi'] = 1e-9, 1.5e-9
+params['Qe'], params['Qi'] = .5e-9, 1.3e-9
 params['Te'], params['Ti'] = 5e-3, 5e-3
 params['Ee'], params['Ei'] = 0e-3, -80e-3
 
@@ -29,10 +29,11 @@ ALL_CELLS = np.load('../data_firing_response/reduced_data.npy')
 
 for cell in ALL_CELLS:
     cell['Rm'] = 1e-6/cell['Gl']
-    params1 = params.copy()
     soma1, stick1, params1 = adjust_model_prop(cell['Rm'], soma, stick)
+    params1 = params.copy() # need to modify it AFTER :(
     cell['soma'], cell['stick'], cell['params'] = soma1, stick1, params1
     cell['stick']['L_prox'] = cell['stick']['L']/2.
+    
 
 np.save('all_cell_params.npy', ALL_CELLS)
     
