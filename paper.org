@@ -1,14 +1,16 @@
-#+TITLE: Heterogenous firing responses of layer V pyramidal neurons leads to diverse coupling to presynaptic activity in morphologically detailed models
+#+TITLE: Heterogenous firing responses leads to diverse coupling to presynaptic activity in morphologically simplified models of layer V pyramidal neurons
 #+AUTHOR: Y. Zerlaut^{1,2} \& A. Destexhe^{1,2}
 #+INCLUDE: my_template.org 
 
 * Abstract
 
-  \bfseries 
+  \bfseries
 
-  Biological systems display heterogeneity
-
-  In a recent report, we quantified this heterogneity in the fluct. driven regime
+  Characterizing the input-output properties of neocortical neurons is
+  of crucial importance to understand the properties emerging at the
+  network level. In a companion communication [[(Zerlaut et al., 2016)]],
+  we quantified this heterogeneity in the fluctuation-driven
+  regime. In the present report
 
   We study the coupling to different form of presynaptic activities,
   either balanced, unbalanced, proximal, distal, etc..
@@ -17,27 +19,23 @@
 
 \normalfont
 
-
 * Introduction
 
 [...]
 
-
 * Results 
 <<sec:results>>
 
-** Morphology calibration on /in vitro/ data
+** Building a 
+** Calibrating the morphological model on /in vitro/ measurements
 <<sec:in-vitro-calib>>
 
-#+ATTR_LATEX: :float c :width 1.2\linewidth
+#+ATTR_LATEX: :width 1.2\linewidth
 #+NAME: fig:in-vitro-calib
-#+CAPTION: *Size variations in the theoretical model account for the heterogeneity in somatic input impedance measured /in vitro/* *(A)* Input impedance (left: modulus and right: phase shift) measured at the soma in intracellular recordings with sine-wave protocols. *(B)* Varying the size of the dendritic tree (length and diameter) partially accounts for the observed heterogeneity of the somatic input impedance.
-[[file:./figures/calibr_on_input_imped.pdf]]
-
+#+CAPTION: *Calibrating the morphologically simplified model on /in vitro/ measurements: data Size variations in the theoretical model account for the heterogeneity in somatic input impedance measured /in vitro/* *(A)* Input impedance (left: modulus and right: phase shift) measured at the soma in intracellular recordings with sine-wave protocols. *(B)* Varying the size of the dendritic tree (length and diameter) partially accounts for the observed heterogeneity of the somatic input impedance.
+[[file:./figures/calibration_on_input_imped.pdf]]
 
 * Discussion
-
-
 * Material and Methods 
 \small
 
@@ -271,18 +269,12 @@ have been done thanks to the =SciPy= package.
 ** Acknowledgments  :noexport:
 <<sec:acknowledgments>>
 
-
-We would like to acknowledge the contribution of Gérard Sadoc in
-helping us to design the dynamic-clamp protocols. We also thank
-Guillaume Hucher for the histological work as well as Manon Richard
-and Aurélie Daret for animal facilities. Y.Z was supported by
-fellowships from the Initiative d'Excellence Paris-Saclay and the
-Fondation pour la Recherche Médicale (FDT 20150532751). Research
-funded by the CNRS, the ANR (Complex-V1 project) and the European
-Community (BrainScales FP7-269921 and the Human Brain Project
-FP7-604102). The authors declare no competing financial interests.
-
-
+Y.Z was supported by fellowships from the Initiative d'Excellence
+Paris-Saclay and the Fondation pour la Recherche Médicale (FDT
+20150532751). Research funded by the CNRS, the ANR (Complex-V1
+project) and the European Community (BrainScales FP7-269921 and the
+Human Brain Project FP7-604102). The authors declare no competing
+financial interests.
 
 * References
 
