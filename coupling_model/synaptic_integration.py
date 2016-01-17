@@ -12,9 +12,9 @@ def get_fluct_var(i_nrn, F, exp_type='non specific activity'):
     elif exp_type=='balance rupture':
         feG, fiG, feI, fiI = F, 3.*F, F, 3.*F # symmetric stimulation
     elif exp_type=='proximal activity':
-        feG, fiG, feI, fiI = 2.*F, 10.*F, .5*F, 2.5*F  # symmetric stimulation
+        feG, fiG, feI, fiI = 2.*F, 10.*F, 0*F, 0*F  # symmetric stimulation
     elif exp_type=='distal activity':
-        feG, fiG, feI, fiI = .5*F, 2.5*F, 2.*F, 10.*F # symmetric stimulation
+        feG, fiG, feI, fiI = 0*F, 0*F, 2.*F, 10.*F # symmetric stimulation
     elif exp_type=='synchronized activity':
         feG, fiG, feI, fiI = F, 5.*F, F, 5.*F # symmetric stimulation
     else:

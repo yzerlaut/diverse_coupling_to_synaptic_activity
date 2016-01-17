@@ -1,6 +1,8 @@
 import numpy as np
 import matplotlib
 import matplotlib.pylab as plt
+import sys
+sys.path.append('/home/yann/work/python_library/')
 import fourier_for_real as rfft
 
 
