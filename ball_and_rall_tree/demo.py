@@ -201,6 +201,7 @@ if __name__=='__main__':
     parser.add_argument("--discret_sim", type=int, help="space discretization for numerical simulation", default=20)
     parser.add_argument("--tstop_sim", type=float, help="max simulation time (s)", default=2.)
     parser.add_argument("--discret_th", type=int, help="discretization for theoretical evaluation",default=20)
+    parser.add_argument("--seed", type=int, help="seed fo random numbers",default=3)
     # ball and stick properties
     parser.add_argument("--L_stick", type=float, help="Length of the stick in micrometer", default=2000.)
     parser.add_argument("--L_proximal", type=float, help="Length of the proximal compartment", default=2000.)
@@ -245,7 +246,7 @@ if __name__=='__main__':
     # then we run the simulation if needed
     if args.simulation:
         print 'Running simulation [...]'
-        t, V = run_simulation(fe, fi, cables, params, tstop=args.tstop_sim*1e3, dt=0.025)
+        t, V = run_simulation(fe, fi, cables, params, tstop=args.tstop_sim*1e3, dt=0.025, seed=args.seed)
         muV_exp, sV_exp, Tv_exp = analyze_simulation(x_exp, t, V)
         print 'saving the data as :', "data/fe_prox_%1.2f_fe_dist_%1.2f_fi_prox_%1.2f_fi_dist_%1.2f.npy" % (args.fe_prox,args.fe_dist,args.fi_prox,args.fi_prox)
         np.save("data/fe_prox_%1.2f_fe_dist_%1.2f_fi_prox_%1.2f_fi_dist_%1.2f.npy" % (args.fe_prox,args.fe_dist,args.fi_prox,args.fi_prox),\

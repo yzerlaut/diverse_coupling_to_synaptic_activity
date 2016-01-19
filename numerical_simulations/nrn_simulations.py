@@ -1,6 +1,8 @@
 # nrn_simulations.py
 from neuron import h as nrn
+nrn('objref nil') # need a nil object in NEURON
 import numpy as np
+from shotnoise import *
 
 def set_tree_params(EqCylinder, dend, soma, Params):
     """ returns the different diameters of the equivalent cylinder
@@ -41,21 +43,24 @@ def set_tree_params(EqCylinder, dend, soma, Params):
 def Constructing_the_ball_and_tree(params, cables,
                                 spiking_mech=False):
 
+    
     # list of excitatory stuff
-    exc_synapses, exc_netcons, exc_netstims = [], [], [] 
+    exc_synapses, exc_netcons, exc_spike_trains, exc_Ks  = [], [], [], []
     # list of inhibitory stuff
-    inh_synapses, inh_netcons, inh_netstims = [], [], []
+    inh_synapses, inh_netcons, inh_spike_trains, inh_Ks = [], [], [], []
     # area list
     area_lists = []
     
-    ## --- CREATING THE NEURON
     area_tot = 0
 
+    ## --- CREATING THE NEURON
     for level in range(len(cables)):
+        
         # list of excitatory stuff per level
-        exc_synapse, exc_netcon, exc_netstim = [], [], [] 
+        exc_synapse, exc_netcon, exc_spike_train, exc_K = [], [], [], []
         # list of inhibitory stuff per level
-        inh_synapse, inh_netcon, inh_netstim = [], [], []
+        inh_synapse, inh_netcon, inh_spike_train, inh_K = [], [], [], []
+        
         area_list = []
 
         for comp in range(max(1,2**(level-1))):
@@ -78,36 +83,29 @@ def Constructing_the_ball_and_tree(params, cables,
                 if level>=1: # if not soma
                     # in NEURON : connect daughter, mother branch
                     nrn('connect cable_'+str(int(level))+'_'+\
-                    str(int(comp))+'(0), '+\
-                    'cable_'+str(int(level-1))+\
-                    '_'+str(int(comp/2.))+'(1)')
+                        str(int(comp))+'(0), '+\
+                        'cable_'+str(int(level-1))+\
+                        '_'+str(int(comp/2.))+'(1)')
                     
                 ## --- SPREADING THE SYNAPSES (bis)
                 for seg in section:
 
                     # in each segment, we insert an excitatory synapse
-                    netstim = nrn.NetStim(seg.x, sec=section)
-                    netstim.noise, netstim.number, netstim.start = \
-                              1, 1e20, 0
-
-                    exc_netstim.append(netstim)
                     syn = nrn.ExpSyn(seg.x, sec=section)
                     syn.tau, syn.e = params['Te']*1e3, params['Ee']*1e3
                     exc_synapse.append(syn)
-                    netcon = nrn.NetCon(netstim, syn)
+                    netcon = nrn.NetCon(nrn.nil, syn)
                     netcon.weight[0] = params['Qe']*1e6
                     exc_netcon.append(netcon)
+                    exc_K.append(cables[level]['Ke_per_seg'])
+                    exc_spike_train.append([])
 
-                    # then in each segment, we insert an inhibitory synapse
-                    netstim = nrn.NetStim(seg.x, sec=section)
-                    netstim.noise, netstim.number, netstim.start = \
-                          1, 1e20, 0
-
-                    inh_netstim.append(netstim)
                     syn = nrn.ExpSyn(seg.x, sec=section)
                     syn.tau, syn.e = params['Ti']*1e3, params['Ei']*1e3
                     inh_synapse.append(syn)
-                    netcon = nrn.NetCon(netstim, syn)
+                    inh_K.append(cables[level]['Ki_per_seg'])
+                    inh_spike_train.append([])
+                    netcon = nrn.NetCon(nrn.nil, syn)
                     netcon.weight[0] = params['Qi']*1e6
                     inh_netcon.append(netcon)
 
@@ -118,10 +116,12 @@ def Constructing_the_ball_and_tree(params, cables,
 
         exc_synapses.append(exc_synapse)
         exc_netcons.append(exc_netcon)
-        exc_netstims.append(exc_netstim)
+        exc_Ks.append(exc_K)
+        exc_spike_trains.append(exc_spike_train)
         inh_synapses.append(inh_synapse)
         inh_netcons.append(inh_netcon)
-        inh_netstims.append(inh_netstim)
+        inh_Ks.append(inh_K)
+        inh_spike_trains.append(inh_spike_train)
         area_lists.append(area_list)
 
         
@@ -142,9 +142,8 @@ def Constructing_the_ball_and_tree(params, cables,
     print "with the total surface : ", area_tot
     print "======================================="
         
-    return exc_synapses, exc_netcons, exc_netstims,\
-       inh_synapses, inh_netcons, inh_netstims, area_lists, spkout
-
+    return exc_synapses, exc_netcons, exc_Ks, exc_spike_trains,\
+       inh_synapses, inh_netcons, inh_Ks, inh_spike_trains, area_lists, spkout
 
 def get_v(cables):
     """
@@ -168,18 +167,23 @@ def get_v(cables):
         
     return v
 
-def run_simulation(fe, fi, cables, params, tstop=2000., dt=0.025):
-
-    exc_synapses, exc_netcons, exc_netstims,\
-           inh_synapses, inh_netcons, inh_netstims,\
-           area_lists, spkout =\
-              Constructing_the_ball_and_tree(params, cables,
-                                    spiking_mech=False)
-
+def set_presynaptic_spikes_manually(fe, fi, cables,\
+                                    exc_spike_trains, exc_Ks,
+                                    inh_spike_trains, inh_Ks, tstop, seed=2):
     for i in range(len(cables)):
-        for j in range(len(area_lists[i])):
+        for j in range(len(exc_spike_trains[i])):
             jj = j%(cables[i]['NSEG'])
-            FE, FI = fe[i][jj], fi[i][jj] # multiple branches for the same freq
+            ## excitation
+            build_poisson_spike_train(exc_spike_trains[i][j], fe[i][jj], exc_Ks[i][j], units='ms', tstop=tstop, seed=i*(seed**2+j))
+            ## inhibition
+            build_poisson_spike_train(inh_spike_trains[i][j], fi[i][jj], inh_Ks[i][j], units='ms', tstop=tstop, seed=seed+i*(+j**2))
+
+def set_presynaptic_spikes_with_netstim(fe, fi, cables, exc_netstims, inh_netstims, FACTOR=1.):
+    
+    for i in range(len(cables)):
+        for j in range(len(exc_netstims[i])):
+            jj = j%(cables[i]['NSEG'])
+            FE, FI = FACTOR*fe[i][jj], FACTOR*fi[i][jj] # multiple branches for the same freq
 
             # excitation
             Ke = cables[i]['Ke_per_seg']
@@ -196,6 +200,26 @@ def run_simulation(fe, fi, cables, params, tstop=2000., dt=0.025):
                 inh_netstims[i][j].start = 1e12
                 inh_netstims[i][j].interval = 1e12
 
+                
+def run_simulation(fe, fi, cables, params, tstop=2000., dt=0.025, seed=3):
+    
+
+    exc_synapses, exc_netcons, exc_Ks, exc_spike_trains,\
+       inh_synapses, inh_netcons, inh_Ks, inh_spike_trains,\
+       area_lists, spkout = Constructing_the_ball_and_tree(params, cables)
+
+    # NETSTIM PUT TO 0 !!
+    # set_presynaptic_spikes_with_netstim(fe, fi, cables, exc_netstims, inh_netstims, FACTOR=0)
+    # then synapses manually
+    set_presynaptic_spikes_manually(fe, fi, cables,\
+                                        exc_spike_trains, exc_Ks,
+                                        inh_spike_trains, inh_Ks, tstop, seed=seed)
+    
+    ## QUEUING OF PRESYNAPTIC EVENTS
+    init_spike_train = queue_presynaptic_events_in_NEURON([exc_netcons, exc_spike_trains, inh_netcons, inh_spike_trains])
+    ## --- launching the simulation
+    fih = nrn.FInitializeHandler((init_spike_train, [exc_netcons, exc_spike_trains, inh_netcons, inh_spike_trains]))
+    
     ## --- recording
     t_vec = nrn.Vector()
     t_vec.record(nrn._ref_t)
