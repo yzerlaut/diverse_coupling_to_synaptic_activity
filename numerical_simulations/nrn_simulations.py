@@ -169,14 +169,14 @@ def get_v(cables):
 
 def set_presynaptic_spikes_manually(fe, fi, cables,\
                                     exc_spike_trains, exc_Ks,
-                                    inh_spike_trains, inh_Ks, tstop, seed=2):
+                                    inh_spike_trains, inh_Ks, tstop, seed=2, synchrony = 0.001):
     for i in range(len(cables)):
         for j in range(len(exc_spike_trains[i])):
             jj = j%(cables[i]['NSEG'])
             ## excitation
-            build_poisson_spike_train(exc_spike_trains[i][j], fe[i][jj], exc_Ks[i][j], units='ms', tstop=tstop, seed=i*(seed**2+j))
+            build_poisson_spike_train(exc_spike_trains[i][j], fe[i][jj], exc_Ks[i][j], units='ms', tstop=tstop, seed=i*(seed**2+j), synchrony=synchrony)
             ## inhibition
-            build_poisson_spike_train(inh_spike_trains[i][j], fi[i][jj], inh_Ks[i][j], units='ms', tstop=tstop, seed=seed+i*(+j**2))
+            build_poisson_spike_train(inh_spike_trains[i][j], fi[i][jj], inh_Ks[i][j], units='ms', tstop=tstop, seed=seed+i*(+j**2), synchrony=synchrony)
 
 def set_presynaptic_spikes_with_netstim(fe, fi, cables, exc_netstims, inh_netstims, FACTOR=1.):
     
@@ -201,9 +201,8 @@ def set_presynaptic_spikes_with_netstim(fe, fi, cables, exc_netstims, inh_netsti
                 inh_netstims[i][j].interval = 1e12
 
                 
-def run_simulation(fe, fi, cables, params, tstop=2000., dt=0.025, seed=3):
+def run_simulation(fe, fi, cables, params, tstop=2000., dt=0.025, seed=3, synchrony = 0.001):
     
-
     exc_synapses, exc_netcons, exc_Ks, exc_spike_trains,\
        inh_synapses, inh_netcons, inh_Ks, inh_spike_trains,\
        area_lists, spkout = Constructing_the_ball_and_tree(params, cables)
@@ -212,14 +211,15 @@ def run_simulation(fe, fi, cables, params, tstop=2000., dt=0.025, seed=3):
     # set_presynaptic_spikes_with_netstim(fe, fi, cables, exc_netstims, inh_netstims, FACTOR=0)
     # then synapses manually
     set_presynaptic_spikes_manually(fe, fi, cables,\
-                                        exc_spike_trains, exc_Ks,
-                                        inh_spike_trains, inh_Ks, tstop, seed=seed)
+                                    exc_spike_trains, exc_Ks,
+                                    inh_spike_trains, inh_Ks,
+                                    tstop, seed=seed, synchrony=synchrony)
     
     ## QUEUING OF PRESYNAPTIC EVENTS
     init_spike_train = queue_presynaptic_events_in_NEURON([exc_netcons, exc_spike_trains, inh_netcons, inh_spike_trains])
     ## --- launching the simulation
     fih = nrn.FInitializeHandler((init_spike_train, [exc_netcons, exc_spike_trains, inh_netcons, inh_spike_trains]))
-    
+
     ## --- recording
     t_vec = nrn.Vector()
     t_vec.record(nrn._ref_t)
