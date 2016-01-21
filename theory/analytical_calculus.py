@@ -215,7 +215,7 @@ def psp_norm_square_integral_per_dend_synapse_type(x, X, f, Gf2,\
 
     return Gf2*np.abs(PSP)**2*(Erev-muV_X)**2
 
-@jit
+# @jit
 def get_the_theoretical_sV_and_Tv(shtn_input, EqCylinder,\
                                   f, x, params, soma, stick,\
                                   precision=50):
@@ -225,6 +225,10 @@ def get_the_theoretical_sV_and_Tv(shtn_input, EqCylinder,\
     Source_Array = .5*(Source_Array[1:]+Source_Array[:-1]) # discarding the soma, treated below
     DX = Source_Array[1]-Source_Array[0]
     Branch_weights = 0*Source_Array # initialized t0 0 !
+
+    synchrony = shtn_input['synchrony']
+    print 'synchrony :', synchrony
+    
     for b in EqCylinder:
         Branch_weights[np.where(Source_Array>=b)[0]] += 1
 
@@ -235,14 +239,14 @@ def get_the_theoretical_sV_and_Tv(shtn_input, EqCylinder,\
 
             X_source = Source_Array[ix_source]
             if X_source<=stick['L_prox']:
-                fe, fi = shtn_input['fe_prox'], shtn_input['fi_prox']
+                fe, fi = shtn_input['fe_prox']/(1+synchrony), shtn_input['fi_prox']/(1+synchrony)
             else:
-                fe, fi = shtn_input['fe_dist'], shtn_input['fi_dist']
+                fe, fi = shtn_input['fe_dist']/(1+synchrony), shtn_input['fi_dist']/(1+synchrony)
                 
             ## weighting due to branching !
             fe, fi = fe*Branch_weights[ix_source], fi*Branch_weights[ix_source]
-            Qe, Qi = params['Qe']/Branch_weights[ix_source],\
-                     params['Qi']/Branch_weights[ix_source]
+            Qe, Qi = (1+synchrony)*params['Qe']/Branch_weights[ix_source],\
+                     (1+synchrony)*params['Qi']/Branch_weights[ix_source]
 
             # excitatory synapse at dendrites
             Gf2 = exp_FT_mod(f, Qe, params['Te'])
@@ -292,7 +296,7 @@ def get_the_fluct_prop_at_soma(SHTN_INPUT, params, soma, stick,\
     # input resistance at rest
     Rin0 = get_the_input_resistance_at_soma(EqCylinder, soma, stick, params,
                             {'fi_soma':0, 'fe_prox':0,'fi_prox':0,
-                             'fe_dist':0,'fi_dist':0})
+                             'fe_dist':0,'fi_dist':0, 'synchrony':0.})
     # membrane time constant at rest
     Tm0 = get_membrane_time_constants(EqCylinder, soma, stick, params)
 
@@ -301,7 +305,7 @@ def get_the_fluct_prop_at_soma(SHTN_INPUT, params, soma, stick,\
         
         shtn_input = {'fi_soma':SHTN_INPUT['fi_soma'][i], 'fe_prox':SHTN_INPUT['fe_prox'][i],\
                       'fi_prox':SHTN_INPUT['fi_prox'][i], 'fe_dist':SHTN_INPUT['fe_dist'][i],\
-                      'fi_dist':SHTN_INPUT['fi_dist'][i]}
+                      'fi_dist':SHTN_INPUT['fi_dist'][i], 'synchrony':SHTN_INPUT['synchrony'][i]}
 
         Pv = np.zeros(len(f)) # power spectral density of Vm for each position
 
@@ -321,7 +325,9 @@ def get_the_fluct_prop_at_soma(SHTN_INPUT, params, soma, stick,\
                 fe, fi = shtn_input['fe_prox'], shtn_input['fi_prox']
             else:
                 fe, fi = shtn_input['fe_dist'], shtn_input['fi_dist']
-
+                
+            synchrony = shtn_input['synchrony']
+            
             ## weighting due to branching !
             fe, fi = fe*Branch_weights[ix_source], fi*Branch_weights[ix_source]
             Qe, Qi = params['Qe']/Branch_weights[ix_source],\
