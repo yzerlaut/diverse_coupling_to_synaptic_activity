@@ -1,7 +1,7 @@
 import numpy as np
 
 def build_poisson_spike_train(spk_train, f, K, units='ms', tstop=2000., seed=1, synchrony=0):
-    f_correct = (f+1e-12)/(1.+synchrony)
+    f_correct = f/(1.+synchrony)
     np.random.seed(seed)
     f_correct+=1e-12;K+=1e-12
     if units=='ms':

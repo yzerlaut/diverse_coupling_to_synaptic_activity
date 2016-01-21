@@ -212,6 +212,8 @@ if __name__=='__main__':
     # synaptic properties
     parser.add_argument("--Qe", type=float, help="Excitatory synaptic weight (nS)", default=1.)
     parser.add_argument("--Qi", type=float, help="Inhibitory synaptic weight (nS)", default=3.)
+    
+    parser.add_argument("--save_name",default='')
 
     args = parser.parse_args()
     # setting up the stick properties
@@ -249,8 +251,7 @@ if __name__=='__main__':
         print 'Running simulation [...]'
         t, V = run_simulation(fe, fi, cables, params, tstop=args.tstop_sim*1e3, dt=0.025, seed=args.seed, synchrony=args.synchrony)
         muV_exp, sV_exp, Tv_exp = analyze_simulation(x_exp, t, V)
-        print 'saving the data as :', "data/fe_prox_%1.2f_fe_dist_%1.2f_fi_prox_%1.2f_fi_dist_%1.2f.npy" % (args.fe_prox,args.fe_dist,args.fi_prox,args.fi_prox)
-        np.save("data/fe_prox_%1.2f_fe_dist_%1.2f_fi_prox_%1.2f_fi_dist_%1.2f.npy" % (args.fe_prox,args.fe_dist,args.fi_prox,args.fi_prox),\
+        np.save("data/fe_prox_%1.2f_fe_dist_%1.2f_fi_prox_%1.2f_fi_dist_%1.2f_synch_%1.2f.npy" % (args.fe_prox,args.fe_dist,args.fi_prox,args.fi_prox,1e3*args.synchrony),\
                 [x_exp, fe, fi, muV_exp, sV_exp, Tv_exp])
         # now plotting of simulated membrane potential traces
         plot_time_traces(t, V, cables,\
@@ -272,7 +273,7 @@ if __name__=='__main__':
                                         soma, stick, params,
                                         discret=args.discret_th)
     try:
-        x_exp, fe_exp, fi_exp, muV_exp, sV_exp, Tv_exp = np.load("data/fe_prox_%1.2f_fe_dist_%1.2f_fi_prox_%1.2f_fi_dist_%1.2f.npy" %  (args.fe_prox,args.fe_dist,args.fi_prox,args.fi_prox))
+        x_exp, fe_exp, fi_exp, muV_exp, sV_exp, Tv_exp = np.load("data/fe_prox_%1.2f_fe_dist_%1.2f_fi_prox_%1.2f_fi_dist_%1.2f_synch_%1.2f.npy" % (args.fe_prox,args.fe_dist,args.fi_prox,args.fi_prox,1e3*args.synchrony))
     except IOError:
         print '======================================================'
         print 'no numerical data available !!!  '

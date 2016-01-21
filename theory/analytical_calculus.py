@@ -245,8 +245,8 @@ def get_the_theoretical_sV_and_Tv(shtn_input, EqCylinder,\
                 
             ## weighting due to branching !
             fe, fi = fe*Branch_weights[ix_source], fi*Branch_weights[ix_source]
-            Qe, Qi = params['Qe']/Branch_weights[ix_source],\
-                     params['Qi']/Branch_weights[ix_source]
+            Qe, Qi = (1+synchrony)*params['Qe']/Branch_weights[ix_source],\
+                     (1+synchrony)*params['Qi']/Branch_weights[ix_source]
 
             # excitatory synapse at dendrites
             Gf2 = exp_FT_mod(f, Qe, params['Te'])
@@ -254,7 +254,7 @@ def get_the_theoretical_sV_and_Tv(shtn_input, EqCylinder,\
                             x[ix_dest], X_source,\
                             f, Gf2, params['Ee'], shtn_input, EqCylinder,\
                             soma, stick, params, precision=precision)
-            Pv[ix_dest,:] += np.pi*fe*DX*stick['D']/stick['exc_density']*psp2*(1+synchrony)**2
+            Pv[ix_dest,:] += np.pi*fe*DX*stick['D']/stick['exc_density']*psp2
 
             # inhibitory synapse at dendrites
             Gf2 = exp_FT_mod(f, Qi, params['Ti'])
@@ -262,7 +262,7 @@ def get_the_theoretical_sV_and_Tv(shtn_input, EqCylinder,\
                             x[ix_dest], X_source,\
                             f, Gf2, params['Ei'], shtn_input, EqCylinder,\
                             soma, stick, params, precision=precision)
-            Pv[ix_dest,:] += np.pi*fi*DX*stick['D']/stick['inh_density']*psp2*(1+synchrony)**2
+            Pv[ix_dest,:] += np.pi*fi*DX*stick['D']/stick['inh_density']*psp2
 
         # #### SOMATIC SYNAPSES, discret summation, only inhibition, no branch weighting
         fi = shtn_input['fi_soma']
@@ -271,7 +271,7 @@ def get_the_theoretical_sV_and_Tv(shtn_input, EqCylinder,\
                         x[ix_dest], 0.,\
                         f, Gf2, params['Ei'], shtn_input, EqCylinder,\
                         soma, stick, params, precision=precision)
-        Pv[ix_dest,:] += np.pi*fi*soma['L']*soma['D']/soma['inh_density']*psp2*(1+synchrony)**2
+        Pv[ix_dest,:] += np.pi*fi*soma['L']*soma['D']/soma['inh_density']*psp2
 
     sV2, Tv = np.zeros(len(x)), np.zeros(len(x))
     for ix in range(len(x)):
@@ -339,7 +339,7 @@ def get_the_fluct_prop_at_soma(SHTN_INPUT, params, soma, stick,\
                             0., X_source,\
                             f, Gf2, params['Ee'], shtn_input, EqCylinder,\
                             soma, stick, params, precision=precision)
-            Pv += np.pi*fe*DX*stick['D']/stick['exc_density']*psp2*(1+synchrony)**2
+            Pv += np.pi*fe*DX*stick['D']/stick['exc_density']*psp2
 
             # inhibitory synapse at dendrites
             Gf2 = exp_FT_mod(f, Qi, params['Ti'])
@@ -347,7 +347,7 @@ def get_the_fluct_prop_at_soma(SHTN_INPUT, params, soma, stick,\
                             0., X_source,\
                             f, Gf2, params['Ei'], shtn_input, EqCylinder,\
                             soma, stick, params, precision=precision)
-            Pv += np.pi*fi*DX*stick['D']/stick['inh_density']*psp2*(1+synchrony)**2
+            Pv += np.pi*fi*DX*stick['D']/stick['inh_density']*psp2
 
         # #### SOMATIC SYNAPSES, discret summation, only inhibition, no branch weighting
         fi = shtn_input['fi_soma']
@@ -356,7 +356,7 @@ def get_the_fluct_prop_at_soma(SHTN_INPUT, params, soma, stick,\
                         0., 0.,\
                         f, Gf2, params['Ei'], shtn_input, EqCylinder,\
                         soma, stick, params, precision=precision)
-        Pv += np.pi*fi*soma['L']*soma['D']/soma['inh_density']*psp2*(1+synchrony)**2
+        Pv += np.pi*fi*soma['L']*soma['D']/soma['inh_density']*psp2
 
         Rin = get_the_input_resistance_at_soma(EqCylinder, soma, stick, params,
                                                shtn_input)
