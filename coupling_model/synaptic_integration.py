@@ -7,23 +7,29 @@ ALL_CELLS = np.load('../ball_and_rall_tree/all_cell_params.npy')
 
 def get_fluct_var(i_nrn, F, exp_type='non specific activity'):
 
+    synch = 0.1 # baseline synchrony
+    EI = 0.25 # for the excitatory/inhibitory balance
+    EI_rupt = 0.4 # balance rupture
+    PFrac = 0.9
+    DFrac = 0.8
     if exp_type=='non specific activity':
-        feG, fiG, feI, fiI = F, 5.*F, F, 5.*F # symmetric stimulation
+        feG, fiG, feI, fiI = EI*F, (1-EI)*F, EI*F, (1-EI)*F
     elif exp_type=='balance rupture':
-        feG, fiG, feI, fiI = F, 3.*F, F, 3.*F # symmetric stimulation
+        feG, fiG, feI, fiI = EI_rupt*F, (1-EI_rupt)*F, EI_rupt*F, (1-EI_rupt)*F
     elif exp_type=='proximal activity':
-        feG, fiG, feI, fiI = 2.*F, 10.*F, 0*F, 0*F  # symmetric stimulation
+        feG, fiG, feI, fiI = 2.*PFrac*EI*F, 2.*PFrac*(1-EI)*F, 2.*(1-PFrac)*EI*F, 2.*(1-PFrac)*(1-EI)*F
     elif exp_type=='distal activity':
-        feG, fiG, feI, fiI = 0*F, 0*F, 2.*F, 10.*F # symmetric stimulation
+        feG, fiG, feI, fiI = 2.*(1-DFrac)*EI*F, 2.*(1-DFrac)*(1-EI)*F, DFrac*EI*F, 2.*DFrac*(1-EI)*F
     elif exp_type=='synchronized activity':
-        feG, fiG, feI, fiI = F, 5.*F, F, 5.*F # symmetric stimulation
+        feG, fiG, feI, fiI = EI*F, (1-EI)*F, EI*F, (1-EI)*F
+        synch = 0.2
     else:
         print '------------------------------------------'
         print 'problem with the protocol: ', exp_type
         print '------------------------------------------'
 
-    shtn_input = {'fi_soma':feG, 'fe_prox':feG,'fi_prox':fiG,
-                  'fe_dist':feI,'fi_dist':fiI}
+    shtn_input = {'fi_soma':fiG, 'fe_prox':feG,'fi_prox':fiG,
+                  'fe_dist':feI,'fi_dist':fiI, 'synchrony':synch+0.*F}
 
     muV, sV, TvN, muGn = get_the_fluct_prop_at_soma(shtn_input,\
        ALL_CELLS[i_nrn]['params'], ALL_CELLS[i_nrn]['soma'],\
@@ -47,7 +53,7 @@ if __name__=='__main__':
 
     fig, AX = plt.subplots(4, 1, figsize=(4, 15))
     plt.subplots_adjust(left=.3, top=.8, wspace=.2, hspace=.2)
-    F = np.linspace(0.1,30)
+    F = np.linspace(2.,30.,4)
     COLORS=['r', 'b', 'g', 'c', 'k', 'm']
 
     PROTOCOLS = ['balance rupture', 'proximal activity', 'distal activity',\
@@ -62,7 +68,7 @@ if __name__=='__main__':
 
     LABELS = ['$\mu_V$ (mV)', '$\sigma_V$ (mV)',\
               '$\\tau_V / \\tau_m^0$ (%)', '$\mu_G / g_L$']
-    AX[0].legend(prop={'size':'small'}, bbox_to_anchor=(1., 2.5))
+    AX[0].legend(prop={'size':'small'}, bbox_to_anchor=(1., 2.))
     for ax, ylabel in zip(AX[:-1], LABELS[:-1]):
         set_plot(ax, ['left'], ylabel=ylabel, xticks=[])
     set_plot(AX[-1], ['bottom','left'],\

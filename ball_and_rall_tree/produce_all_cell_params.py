@@ -20,7 +20,7 @@ soma['exc_density'], soma['inh_density']= 1e9, FACTOR*25.*1e-12
 stick['exc_density'], stick['inh_density']= FACTOR*17*1e-12, FACTOR*100*1e-12
 
 # --- fixing the synaptic parameters !!
-params['Qe'], params['Qi'] = .5e-9, 1.3e-9
+params['Qe'], params['Qi'] = .6e-9, 1.5e-9
 params['Te'], params['Ti'] = 5e-3, 5e-3
 params['Ee'], params['Ei'] = 0e-3, -80e-3
 
