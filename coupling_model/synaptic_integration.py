@@ -1,25 +1,36 @@
 import numpy as np
 import sys
 sys.path.append('../')
-from theory.analytical_calculus import get_the_fluct_prop_at_soma
+from theory.analytical_calculus import get_the_fluct_prop_at_soma, find_balance_at_soma
 
 ALL_CELLS = np.load('../ball_and_rall_tree/all_cell_params.npy')
+
+
+def find_inh_cond_for_balance(feG, fiG, feI, fiI, i_nrn):
+    for i in range(len(F)):
+        fiG[i], fiI[i] = find_balance_at_soma(feG[i], feI[i],\
+                    ALL_CELLS[i_nrn]['params'], ALL_CELLS[i_nrn]['soma'],\
+                    ALL_CELLS[i_nrn]['stick'])
+    return fiG, fiI
 
 def get_fluct_var(i_nrn, F, exp_type='non specific activity'):
 
     synch = 0.2 # baseline synchrony
     EI = 0.25 # for the excitatory/inhibitory balance
     EI_rupt = 0.4 # unbalanced activity
-    PFrac = 0.9
-    DFrac = .99
+    PFrac = 1.
+    DFrac = 1.
     if exp_type=='non specific activity':
-        feG, fiG, feI, fiI = EI*F, (1-EI)*F, EI*F, (1-EI)*F
+        feG, fiG, feI, fiI = F, 0.*F, F, 0.*F
+        fiG, fiI = find_inh_cond_for_balance(feG, fiG, feI, fiI, i_nrn)
     elif exp_type=='unbalanced activity':
-        feG, fiG, feI, fiI = EI_rupt*F, (1-EI_rupt)*F, EI_rupt*F, (1-EI_rupt)*F
+        feG, fiG, feI, fiI = EI*F, .7*(1-EI)*F, EI*F, .7*(1-EI)*F
     elif exp_type=='proximal activity':
-        feG, fiG, feI, fiI = 2.*PFrac*EI*F, 2.*PFrac*(1-EI)*F, 2.*(1-PFrac)*EI*F, 2.*(1-PFrac)*(1-EI)*F
+        feG, fiG, feI, fiI = 2.*F, 0.*F, 0*F, 0.*F
+        fiG, fiI = find_inh_cond_for_balance(feG, fiG, feI, fiI, i_nrn)
     elif exp_type=='distal activity':
-        feG, fiG, feI, fiI = 2.*(1-DFrac)*EI*F, 2.*(1-DFrac)*(1-EI)*F, DFrac*EI*F, 2.*DFrac*(1-EI)*F
+        feG, fiG, feI, fiI = F, 0.*F, 2.*F, 0.*F
+        fiG, fiI = find_inh_cond_for_balance(feG, fiG, feI, fiI, i_nrn)
     elif exp_type=='synchronized activity':
         feG, fiG, feI, fiI = EI*F, (1-EI)*F, EI*F, (1-EI)*F
         synch = 0.4
@@ -53,7 +64,7 @@ if __name__=='__main__':
 
     fig, AX = plt.subplots(4, 1, figsize=(4, 15))
     plt.subplots_adjust(left=.3, top=.8, wspace=.2, hspace=.2)
-    F = np.linspace(1.,40.,7)
+    F = np.linspace(1.,50.,7)
     COLORS=['r', 'b', 'g', 'c', 'k', 'm']
 
     PROTOCOLS = ['unbalanced activity', 'proximal activity', 'distal activity',\

@@ -256,11 +256,11 @@ def correlating_electrophy_and_coupling(args, params):
             np.load('../3d_scan/data/full_data.npy')
     COUPLINGS = coupling_over_data(args, params)
 
-    ###############################################################################
-    """ removing cell31 !!!!!! """
-    INDEX, E0, EmuV, EsV, ETv, COUPLINGS = removing_cells(INDEX, E0, EmuV,\
-                                                          EsV, ETv, COUPLINGS, cells=['cell31'])
-    ###############################################################################
+    # ###############################################################################
+    # """ removing cell31 !!!!!! """
+    # INDEX, E0, EmuV, EsV, ETv, COUPLINGS = removing_cells(INDEX, E0, EmuV,\
+    #                                                       EsV, ETv, COUPLINGS, cells=['cell31'])
+    # ###############################################################################
     
     YLABELS1 = [r"$\langle \nu_\mathrm{out}\rangle$"]+\
                [r"coupling (Hz)"]+\

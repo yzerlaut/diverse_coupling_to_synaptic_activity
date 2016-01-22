@@ -251,17 +251,17 @@ def get_the_theoretical_sV_and_Tv(shtn_input, EqCylinder,\
             X_source = Source_Array[ix_source]
             if X_source<=stick['L_prox']:
                 fe, fi = shtn_input['fe_prox'], shtn_input['fi_prox']
-                synapse_factor = 1.
+                weight_synapse_factor = 1.
             else:
                 fe, fi = shtn_input['fe_dist'], shtn_input['fi_dist']
-                synapse_factor = params['factor_for_distal_synapses']
+                weight_synapse_factor = params['factor_for_distal_synapses']
                 
             fe /= synch_dividor
             fi /= synch_dividor
             ## weighting due to branching !
             fe, fi = fe*Branch_weights[ix_source], fi*Branch_weights[ix_source]
-            Qe, Qi = synapse_factor*params['Qe']/Branch_weights[ix_source],\
-                     synapse_factor*params['Qi']/Branch_weights[ix_source]
+            Qe, Qi = weight_synapse_factor*params['Qe']/Branch_weights[ix_source],\
+                     weight_synapse_factor*params['Qi']/Branch_weights[ix_source]
 
             # excitatory synapse at dendrites
             Gf2 = exp_FT_mod(f, Qe, params['Te'])
@@ -343,10 +343,12 @@ def get_the_fluct_prop_at_soma(SHTN_INPUT, params, soma, stick,\
             X_source = Source_Array[ix_source]
             if X_source<=stick['L_prox']:
                 fe, fi = shtn_input['fe_prox'], shtn_input['fi_prox']
-                synapse_factor = 1.
+                weight_synapse_factor = 1.
+                tau_synapse_factor = 1.
             else:
                 fe, fi = shtn_input['fe_dist'], shtn_input['fi_dist']
-                synapse_factor = params['factor_for_distal_synapses']
+                weight_synapse_factor = params['factor_for_distal_synapses_weight']
+                tau_synapse_factor = params['factor_for_distal_synapses_tau']
                 
             synchrony = shtn_input['synchrony']
             
@@ -354,11 +356,11 @@ def get_the_fluct_prop_at_soma(SHTN_INPUT, params, soma, stick,\
             fe, fi = fe*Branch_weights[ix_source], fi*Branch_weights[ix_source]
             fe /= synch_dividor
             fi /= synch_dividor
-            Qe, Qi = synapse_factor*params['Qe']/Branch_weights[ix_source],\
-                     synapse_factor*params['Qi']/Branch_weights[ix_source]
+            Qe, Qi = weight_synapse_factor*params['Qe']/Branch_weights[ix_source],\
+                     weight_synapse_factor*params['Qi']/Branch_weights[ix_source]
 
             # excitatory synapse at dendrites
-            Gf2 = exp_FT_mod(f, Qe, params['Te'])
+            Gf2 = exp_FT_mod(f, Qe, params['Te']*tau_synapse_factor)
             psp2 = psp_norm_square_integral_per_dend_synapse_type(\
                             0., X_source,\
                             f, Gf2, params['Ee'], shtn_input, EqCylinder,\
@@ -366,7 +368,7 @@ def get_the_fluct_prop_at_soma(SHTN_INPUT, params, soma, stick,\
             Pv += np.pi*fe*DX*stick['D']/stick['exc_density']*psp2*synch_factor
 
             # inhibitory synapse at dendrites
-            Gf2 = exp_FT_mod(f, Qi, params['Ti'])
+            Gf2 = exp_FT_mod(f, Qi, params['Ti']*tau_synapse_factor)
             psp2 = psp_norm_square_integral_per_dend_synapse_type(\
                             0., X_source,\
                             f, Gf2, params['Ei'], shtn_input, EqCylinder,\
@@ -471,3 +473,22 @@ def get_membrane_time_constants(EqCylinder, soma, stick, params,\
                                 f=rfft.time_to_freq(1000, 1e-4)):
     psd = np.abs(get_the_input_impedance_at_soma(f, EqCylinder, soma, stick, params))**2
     return .5*psd[0]/(2.*np.trapz(np.abs(psd), f))
+
+
+def find_balance_at_soma(Fe_prox, Fe_dist, params, soma, stick,\
+                         balance=-60e-3, precision=1e2):
+
+    EqCylinder = np.linspace(0,1,stick['B']+1)*stick['L']
+    
+    shtn_input = {'fe_prox':Fe_prox, 'fe_dist':Fe_dist}
+    FI_prox = np.linspace(Fe_prox/2., 10.*Fe_prox, int(precision))
+    FI_dist = np.linspace(Fe_dist/2., 10.*Fe_dist, int(precision))
+
+    muV = 0.*FI_dist
+    for i in range(int(precision)):
+        shtn_input['fi_prox'], shtn_input['fi_dist']= FI_prox[i], FI_dist[i]
+        shtn_input['fi_soma']= FI_prox[i]
+        muV[i] = stat_pot_function([0], shtn_input, EqCylinder,\
+                                soma, stick, params)[0]
+    i0 = np.argmin(np.abs(muV-balance))
+    return FI_prox[i0], FI_dist[i0]
