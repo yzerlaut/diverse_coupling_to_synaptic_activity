@@ -9,7 +9,6 @@ from firing_response_description.template_and_fitting import final_func
 #### ================================================== ##
 
 soma, stick, params = np.load('../input_impedance_calibration/mean_model.npy')
-stick['L_prox'] = factor_for_L_prox*stick['L']
 
 # --- fixing the synaptic densities !!
 
@@ -23,8 +22,10 @@ stick['exc_density'], stick['inh_density']= FACTOR*17*1e-12, FACTOR*100*1e-12
 params['Qe'], params['Qi'] = .6e-9, 1.5e-9
 params['Te'], params['Ti'] = 5e-3, 5e-3
 params['Ee'], params['Ei'] = 0e-3, -80e-3
+params['El'] = -60e-3#0e-3, -80e-3
 params['factor_for_L_prox'] = 2./3.
-params['factor_for_distal_synapses'] = 3.
+params['factor_for_distal_synapses_weight'] = 3.
+params['factor_for_distal_synapses_tau'] = 2.
 
 # data of the reduced morphologies
 ALL_CELLS = np.load('../data_firing_response/reduced_data.npy')

@@ -251,14 +251,17 @@ def get_the_theoretical_sV_and_Tv(shtn_input, EqCylinder,\
             X_source = Source_Array[ix_source]
             if X_source<=stick['L_prox']:
                 fe, fi = shtn_input['fe_prox'], shtn_input['fi_prox']
+                synapse_factor = 1.
             else:
                 fe, fi = shtn_input['fe_dist'], shtn_input['fi_dist']
+                synapse_factor = params['factor_for_distal_synapses']
+                
             fe /= synch_dividor
             fi /= synch_dividor
             ## weighting due to branching !
             fe, fi = fe*Branch_weights[ix_source], fi*Branch_weights[ix_source]
-            Qe, Qi = params['Qe']/Branch_weights[ix_source],\
-                     params['Qi']/Branch_weights[ix_source]
+            Qe, Qi = synapse_factor*params['Qe']/Branch_weights[ix_source],\
+                     synapse_factor*params['Qi']/Branch_weights[ix_source]
 
             # excitatory synapse at dendrites
             Gf2 = exp_FT_mod(f, Qe, params['Te'])
@@ -343,7 +346,7 @@ def get_the_fluct_prop_at_soma(SHTN_INPUT, params, soma, stick,\
                 synapse_factor = 1.
             else:
                 fe, fi = shtn_input['fe_dist'], shtn_input['fi_dist']
-                synapse_factor = 3.
+                synapse_factor = params['factor_for_distal_synapses']
                 
             synchrony = shtn_input['synchrony']
             

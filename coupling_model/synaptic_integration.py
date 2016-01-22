@@ -53,17 +53,25 @@ if __name__=='__main__':
 
     fig, AX = plt.subplots(4, 1, figsize=(4, 15))
     plt.subplots_adjust(left=.3, top=.8, wspace=.2, hspace=.2)
-    F = np.linspace(2.,40.,4)
+    F = np.linspace(1.,40.,7)
     COLORS=['r', 'b', 'g', 'c', 'k', 'm']
 
     PROTOCOLS = ['unbalanced activity', 'proximal activity', 'distal activity',\
                  'synchronized activity', 'non specific activity']
         
     for i in range(len(PROTOCOLS)):
-        feG, fiG, feI, fiI, synch, muV, sV, TvN, muGn = get_fluct_var(i_nrn, F,\
-                                      exp_type=PROTOCOLS[i])
-        for ax, x in zip(AX, [1e3*muV, 1e3*sV, 1e2*TvN, muGn]):
-            ax.plot(F, x, lw=2, color=COLORS[i], label=PROTOCOLS[i])
+        if sys.argv[-1]=='all':
+            for i_nrn in range(len(ALL_CELLS)):
+                print 'cell: ', i_nrn
+                feG, fiG, feI, fiI, synch, muV, sV, TvN, muGn = get_fluct_var(i_nrn, F,\
+                                              exp_type=PROTOCOLS[i])
+                for ax, x in zip(AX, [1e3*muV, 1e3*sV, 1e2*TvN, muGn]):
+                    ax.plot(F, x, lw=.5, color=COLORS[i], label=PROTOCOLS[i])
+        else:
+            feG, fiG, feI, fiI, synch, muV, sV, TvN, muGn = get_fluct_var(i_nrn, F,\
+                                          exp_type=PROTOCOLS[i])
+            for ax, x in zip(AX, [1e3*muV, 1e3*sV, 1e2*TvN, muGn]):
+                ax.plot(F, x, lw=2, color=COLORS[i], label=PROTOCOLS[i])
 
 
     LABELS = ['$\mu_V$ (mV)', '$\sigma_V$ (mV)',\

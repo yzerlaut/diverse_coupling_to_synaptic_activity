@@ -90,8 +90,8 @@ def make_experimental_fig():
     for m in MICE:
         rm = m['psd'][:3].mean()
         r = (rm-psd_boundaries[0])/(psd_boundaries[1]-psd_boundaries[0])
-        AX[0,0].loglog(m['freq'][m['freq']<HIGH_BOUND], m['psd'][m['freq']<HIGH_BOUND], 'D-', color=mymap(r,1), ms=4)
-        AX[0,1].semilogx(m['freq'][m['freq']<HIGH_BOUND], m['phase'][m['freq']<HIGH_BOUND], 'D-', color=mymap(r,1), ms=4)
+        AX[0,0].loglog(m['freq'][m['freq']<HIGH_BOUND], m['psd'][m['freq']<HIGH_BOUND], 'D-', color=mymap(r,1), ms=2)
+        AX[0,1].semilogx(m['freq'][m['freq']<HIGH_BOUND], m['phase'][m['freq']<HIGH_BOUND], 'D-', color=mymap(r,1), ms=2)
 
     AX[0,0].annotate('n='+str(len(MICE))+' cells', (.2,.2), xycoords='axes fraction', fontsize=18)
 
@@ -158,7 +158,7 @@ def make_experimental_fig():
     for ax, xlabel in zip([AX[0,0], AX[1,0]], ['','frequency (Hz)']):
         graph.set_plot(ax, xlim=[.08,1000], ylim=[6., 1200],\
                    xticks=[1,10,100,1000], yticks=[10,100,1000],yticks_labels=['10','100','1000'],\
-                       xlabel=xlabel,ylabel='input impedance ($\mathrm{M}\Omega$)')
+                       xlabel=xlabel,ylabel='modulus ($\mathrm{M}\Omega$)')
 
     for ax, xlabel in zip([AX[0,1], AX[1,1]], ['','frequency (Hz)']):
         graph.set_plot(ax, xlim=[.08,1000], ylim=[-.2,2.3],\
@@ -172,19 +172,14 @@ def make_experimental_fig():
              stick['D'], xscale=1e-6, yscale=50e-6)
     fig2.set_size_inches(3, 5, forward=True)
 
-    print 1e6*soma['L'], 1e6*stick['L'], 1e6*stick['D']
+    fig3 = make_conversion_fig(Rm0=Rm)
     
-    return fig, fig2
+    return fig, fig2, fig3
 
-
-if __name__=='__main__':
-
-    from theory.brt_drawing import make_fig # where the core calculus lies
-    
-    if sys.argv[-1]=='conversion':
+def make_conversion_fig(Rm0=None):
         # we plot here the conversion between input resistance
         # and dendritic tree properties
-        Rm = np.linspace(100, 900)
+        Rm = np.linspace(150, 900)
         LS, LD, DD = 0*Rm, 0*Rm, 0*Rm
 
         for i in range(len(Rm)):
@@ -192,17 +187,26 @@ if __name__=='__main__':
             LS[i] = 1e6*soma1['L']
             DD[i], LD[i] = 1e6*stick1['D'], 1e6*stick1['L']
 
-        fig, AX = plt.subplots(3, figsize=(4,8))
-        plt.subplots_adjust(left=.3)
+        fig, AX = plt.subplots(3, figsize=(4.5,6))
+        AX[0].set_title('resizing rule')
+        plt.subplots_adjust(left=.4, bottom=.15, hspace=.3)
         for ax, y, label in zip(AX[:2], [LS, DD],\
-             ['soma length ($\mu$m)', 'root branch \n diameter ($\mu$m)']):
+             ['length of \n soma ($\mu$m)', 'root branch \n diameter ($\mu$m)']):
             ax.plot(Rm, y, 'k-', lw=2)
             graph.set_plot(ax, ['left'], ylabel=label, xticks=[])
         AX[2].plot(Rm, LD, 'k-', lw=2)
-        graph.set_plot(AX[2], ylabel='tree length ($\mu$m)', xlabel='input resistance (M$\Omega$)')
-        plt.show()
+        graph.set_plot(AX[2], ylabel='tree length \n ($\mu$m)', xlabel='somatic input \n resistance (M$\Omega$)')
 
-    else:
-        fig, fig2 = make_experimental_fig()
-        plt.show()
-        graph.put_list_of_figs_to_svg_fig([fig, fig2])
+        if Rm0 is not None:
+            AX[0].plot([Rm0], [1e6*soma['L']], 'kD');AX[1].plot([Rm0], [1e6*stick['D']], 'kD')
+            AX[2].plot([Rm0], [1e6*stick['L']], 'kD')
+        return fig
+
+if __name__=='__main__':
+
+    from theory.brt_drawing import make_fig # where the core calculus lies
+    
+
+    fig, fig2, fig3 = make_experimental_fig()
+    plt.show()
+    graph.put_list_of_figs_to_svg_fig([fig, fig2, fig3])
