@@ -198,7 +198,7 @@ if __name__=='__main__':
     parser.add_argument("--fi_dist", type=float, help="inhibitory synaptic frequency in distal compartment", default=20.)
     parser.add_argument("--fe_soma", type=float, help="excitatory synaptic frequency at soma compartment", default=.0001)
     parser.add_argument("--fi_soma", type=float, help="inhibitory synaptic frequency at soma compartment", default=20.)
-    parser.add_argument("--synchrony", type=float, help="synchrony of presynaptic spikes", default=1e-3)
+    parser.add_argument("--synchrony", type=float, help="synchrony of presynaptic spikes", default=0.)
     parser.add_argument("--discret_sim", type=int, help="space discretization for numerical simulation", default=20)
     parser.add_argument("--tstop_sim", type=float, help="max simulation time (s)", default=2.)
     parser.add_argument("--discret_th", type=int, help="discretization for theoretical evaluation",default=20)
@@ -212,10 +212,16 @@ if __name__=='__main__':
     # synaptic properties
     parser.add_argument("--Qe", type=float, help="Excitatory synaptic weight (nS)", default=1.)
     parser.add_argument("--Qi", type=float, help="Inhibitory synaptic weight (nS)", default=3.)
-    
-    parser.add_argument("--save_name",default='')
 
+    parser.add_argument("--save_name",default='')
+    
     args = parser.parse_args()
+
+    if args.save_name=='':
+        save_name = "data/fe_prox_%1.2f_fe_dist_%1.2f_fi_prox_%1.2f_fi_dist_%1.2f_synch_%1.2f.npy" % (args.fe_prox,args.fe_dist,args.fi_prox,args.fi_prox,1e3*args.synchrony)
+    else:
+        save_name = args.save_name
+    
     # setting up the stick properties
     stick['L'] = args.L_stick*1e-6
     stick['D'] = args.D_stick*1e-6
@@ -251,8 +257,8 @@ if __name__=='__main__':
         print 'Running simulation [...]'
         t, V = run_simulation(fe, fi, cables, params, tstop=args.tstop_sim*1e3, dt=0.025, seed=args.seed, synchrony=args.synchrony)
         muV_exp, sV_exp, Tv_exp = analyze_simulation(x_exp, t, V)
-        np.save("data/fe_prox_%1.2f_fe_dist_%1.2f_fi_prox_%1.2f_fi_dist_%1.2f_synch_%1.2f.npy" % (args.fe_prox,args.fe_dist,args.fi_prox,args.fi_prox,1e3*args.synchrony),\
-                [x_exp, fe, fi, muV_exp, sV_exp, Tv_exp])
+        np.save(save_name, [x_exp, fe, fi, muV_exp, sV_exp, Tv_exp])
+        
         # now plotting of simulated membrane potential traces
         plot_time_traces(t, V, cables,\
             title='$\\nu_e^p$=  %1.2f Hz, $\\nu_e^d$=  %1.2f Hz, $\\nu^p_i$= %1.2f Hz, $\\nu^d_i$= %1.2f Hz' % (args.fe_prox,args.fe_dist,args.fi_prox,args.fi_prox))
@@ -273,7 +279,7 @@ if __name__=='__main__':
                                         soma, stick, params,
                                         discret=args.discret_th)
     try:
-        x_exp, fe_exp, fi_exp, muV_exp, sV_exp, Tv_exp = np.load("data/fe_prox_%1.2f_fe_dist_%1.2f_fi_prox_%1.2f_fi_dist_%1.2f_synch_%1.2f.npy" % (args.fe_prox,args.fe_dist,args.fi_prox,args.fi_prox,1e3*args.synchrony))
+        x_exp, fe_exp, fi_exp, muV_exp, sV_exp, Tv_exp = np.load(save_name)
     except IOError:
         print '======================================================'
         print 'no numerical data available !!!  '
