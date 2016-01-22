@@ -7,14 +7,14 @@ ALL_CELLS = np.load('../ball_and_rall_tree/all_cell_params.npy')
 
 def get_fluct_var(i_nrn, F, exp_type='non specific activity'):
 
-    synch = 0.1 # baseline synchrony
+    synch = 0.2 # baseline synchrony
     EI = 0.25 # for the excitatory/inhibitory balance
-    EI_rupt = 0.4 # balance rupture
+    EI_rupt = 0.4 # unbalanced activity
     PFrac = 0.9
-    DFrac = 0.8
+    DFrac = .99
     if exp_type=='non specific activity':
         feG, fiG, feI, fiI = EI*F, (1-EI)*F, EI*F, (1-EI)*F
-    elif exp_type=='balance rupture':
+    elif exp_type=='unbalanced activity':
         feG, fiG, feI, fiI = EI_rupt*F, (1-EI_rupt)*F, EI_rupt*F, (1-EI_rupt)*F
     elif exp_type=='proximal activity':
         feG, fiG, feI, fiI = 2.*PFrac*EI*F, 2.*PFrac*(1-EI)*F, 2.*(1-PFrac)*EI*F, 2.*(1-PFrac)*(1-EI)*F
@@ -22,7 +22,7 @@ def get_fluct_var(i_nrn, F, exp_type='non specific activity'):
         feG, fiG, feI, fiI = 2.*(1-DFrac)*EI*F, 2.*(1-DFrac)*(1-EI)*F, DFrac*EI*F, 2.*DFrac*(1-EI)*F
     elif exp_type=='synchronized activity':
         feG, fiG, feI, fiI = EI*F, (1-EI)*F, EI*F, (1-EI)*F
-        synch = 0.2
+        synch = 0.4
     else:
         print '------------------------------------------'
         print 'problem with the protocol: ', exp_type
@@ -35,7 +35,7 @@ def get_fluct_var(i_nrn, F, exp_type='non specific activity'):
        ALL_CELLS[i_nrn]['params'], ALL_CELLS[i_nrn]['soma'],\
             ALL_CELLS[i_nrn]['stick'])
 
-    return feG, fiG, feI, fiI, muV, sV, TvN, muGn
+    return feG, fiG, feI, fiI, synch, muV, sV, TvN, muGn
 
 def sine(t, w, t0=0):
     return np.sin(2.*np.pi*(t-t0)*w)
@@ -53,21 +53,21 @@ if __name__=='__main__':
 
     fig, AX = plt.subplots(4, 1, figsize=(4, 15))
     plt.subplots_adjust(left=.3, top=.8, wspace=.2, hspace=.2)
-    F = np.linspace(2.,30.,4)
+    F = np.linspace(2.,40.,4)
     COLORS=['r', 'b', 'g', 'c', 'k', 'm']
 
-    PROTOCOLS = ['balance rupture', 'proximal activity', 'distal activity',\
+    PROTOCOLS = ['unbalanced activity', 'proximal activity', 'distal activity',\
                  'synchronized activity', 'non specific activity']
         
     for i in range(len(PROTOCOLS)):
-        feG, fiG, feI, fiI, muV, sV, TvN, muGn = get_fluct_var(i_nrn, F,\
+        feG, fiG, feI, fiI, synch, muV, sV, TvN, muGn = get_fluct_var(i_nrn, F,\
                                       exp_type=PROTOCOLS[i])
         for ax, x in zip(AX, [1e3*muV, 1e3*sV, 1e2*TvN, muGn]):
             ax.plot(F, x, lw=2, color=COLORS[i], label=PROTOCOLS[i])
 
 
     LABELS = ['$\mu_V$ (mV)', '$\sigma_V$ (mV)',\
-              '$\\tau_V / \\tau_m^0$ (%)', '$\mu_G / g_L$']
+              '$\\tau_V / \\tau_m^0$ (%)', '$g_{tot}^{soma} / g_L$']
     AX[0].legend(prop={'size':'small'}, bbox_to_anchor=(1., 2.))
     for ax, ylabel in zip(AX[:-1], LABELS[:-1]):
         set_plot(ax, ['left'], ylabel=ylabel, xticks=[])

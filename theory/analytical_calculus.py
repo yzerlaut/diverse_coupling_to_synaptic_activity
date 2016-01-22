@@ -1,3 +1,4 @@
+from numba import jit
 import numpy as np
 import matplotlib
 import matplotlib.pylab as plt
@@ -154,19 +155,20 @@ def stat_pot_function(x, shtn_input, EqCylinder, soma, stick, Params):
         else muVD(rescale_x(xx, EqCylinder),Lp,L,lbdD,lbdP,gP,v0D,v0P,V0) for xx in x])
 
 
+@jit
 def exp_FT(f, Q, Tsyn, t0=0):
     return Q*np.exp(-1j*2*np.pi*t0*f)/(1j*2*np.pi*f+1./Tsyn)
 
+@jit
 def exp_FT_mod(f, Q, Tsyn):
     return Q**2/((2*np.pi*f)**2+(1./Tsyn)**2)
 
+@jit
 def split_root_square_of_imaginary(f, tau):
     # returns the ral and imaginary part of Sqrt(1+2*Pi*f*tau)
     af = np.sqrt((np.sqrt(1+(2*np.pi*f*tau)**2)+1)/2)
     bf = np.sqrt((np.sqrt(1+(2*np.pi*f*tau)**2)-1)/2)
     return af, bf
-
-from numba import jit
 
 @jit
 def psp_norm_square_integral_per_dend_synapse_type(x, X, f, Gf2,\
@@ -227,7 +229,16 @@ def get_the_theoretical_sV_and_Tv(shtn_input, EqCylinder,\
     Branch_weights = 0*Source_Array # initialized t0 0 !
 
     synchrony = shtn_input['synchrony']
-    print 'synchrony :', synchrony
+    synch_factor = 1.+3.*synchrony # factor for the PSP event
+    synch_dividor = 1.+synchrony # dividor for the real frequency
+    # rational: new_freq = freq/(1.+synchrony)
+    # we generate spikes with frequency : new_freq
+    # then we duplicate each spike with a probability : 'synchrony'
+    # so we get independent events (1 spike) with frequency new_freq*(1-synchrony)
+    # and we get double events with freq: new_freq*synchrony
+    # double envents have a weight (2*PSP)**2 -> 4
+    # new_freq*(1-synchrony+4*synchrony)
+
     
     for b in EqCylinder:
         Branch_weights[np.where(Source_Array>=b)[0]] += 1
@@ -239,14 +250,15 @@ def get_the_theoretical_sV_and_Tv(shtn_input, EqCylinder,\
 
             X_source = Source_Array[ix_source]
             if X_source<=stick['L_prox']:
-                fe, fi = shtn_input['fe_prox']/(1+synchrony), shtn_input['fi_prox']/(1+synchrony)
+                fe, fi = shtn_input['fe_prox'], shtn_input['fi_prox']
             else:
-                fe, fi = shtn_input['fe_dist']/(1+synchrony), shtn_input['fi_dist']/(1+synchrony)
-                
+                fe, fi = shtn_input['fe_dist'], shtn_input['fi_dist']
+            fe /= synch_dividor
+            fi /= synch_dividor
             ## weighting due to branching !
             fe, fi = fe*Branch_weights[ix_source], fi*Branch_weights[ix_source]
-            Qe, Qi = (1+synchrony)*params['Qe']/Branch_weights[ix_source],\
-                     (1+synchrony)*params['Qi']/Branch_weights[ix_source]
+            Qe, Qi = params['Qe']/Branch_weights[ix_source],\
+                     params['Qi']/Branch_weights[ix_source]
 
             # excitatory synapse at dendrites
             Gf2 = exp_FT_mod(f, Qe, params['Te'])
@@ -254,7 +266,7 @@ def get_the_theoretical_sV_and_Tv(shtn_input, EqCylinder,\
                             x[ix_dest], X_source,\
                             f, Gf2, params['Ee'], shtn_input, EqCylinder,\
                             soma, stick, params, precision=precision)
-            Pv[ix_dest,:] += np.pi*fe*DX*stick['D']/stick['exc_density']*psp2
+            Pv[ix_dest,:] += np.pi*fe*DX*stick['D']/stick['exc_density']*psp2*synch_factor
 
             # inhibitory synapse at dendrites
             Gf2 = exp_FT_mod(f, Qi, params['Ti'])
@@ -262,16 +274,17 @@ def get_the_theoretical_sV_and_Tv(shtn_input, EqCylinder,\
                             x[ix_dest], X_source,\
                             f, Gf2, params['Ei'], shtn_input, EqCylinder,\
                             soma, stick, params, precision=precision)
-            Pv[ix_dest,:] += np.pi*fi*DX*stick['D']/stick['inh_density']*psp2
+            Pv[ix_dest,:] += np.pi*fi*DX*stick['D']/stick['inh_density']*psp2*synch_factor
 
         # #### SOMATIC SYNAPSES, discret summation, only inhibition, no branch weighting
         fi = shtn_input['fi_soma']
+        fi /= synch_dividor
         Gf2 = exp_FT_mod(f, params['Qi'], params['Ti'])
         psp2 = psp_norm_square_integral_per_dend_synapse_type(\
                         x[ix_dest], 0.,\
                         f, Gf2, params['Ei'], shtn_input, EqCylinder,\
                         soma, stick, params, precision=precision)
-        Pv[ix_dest,:] += np.pi*fi*soma['L']*soma['D']/soma['inh_density']*psp2
+        Pv[ix_dest,:] += np.pi*fi*soma['L']*soma['D']/soma['inh_density']*psp2*synch_factor
 
     sV2, Tv = np.zeros(len(x)), np.zeros(len(x))
     for ix in range(len(x)):
@@ -307,6 +320,10 @@ def get_the_fluct_prop_at_soma(SHTN_INPUT, params, soma, stick,\
                       'fi_prox':SHTN_INPUT['fi_prox'][i], 'fe_dist':SHTN_INPUT['fe_dist'][i],\
                       'fi_dist':SHTN_INPUT['fi_dist'][i], 'synchrony':SHTN_INPUT['synchrony'][i]}
 
+        synchrony = shtn_input['synchrony']
+        synch_factor = 1.+3.*synchrony # factor for the PSP event
+        synch_dividor = 1.+synchrony # dividor for the real frequency
+
         Pv = np.zeros(len(f)) # power spectral density of Vm for each position
 
         Source_Array = np.linspace(0, stick['L'], precision+1)
@@ -323,15 +340,19 @@ def get_the_fluct_prop_at_soma(SHTN_INPUT, params, soma, stick,\
             X_source = Source_Array[ix_source]
             if X_source<=stick['L_prox']:
                 fe, fi = shtn_input['fe_prox'], shtn_input['fi_prox']
+                synapse_factor = 1.
             else:
                 fe, fi = shtn_input['fe_dist'], shtn_input['fi_dist']
+                synapse_factor = 3.
                 
             synchrony = shtn_input['synchrony']
             
             ## weighting due to branching !
             fe, fi = fe*Branch_weights[ix_source], fi*Branch_weights[ix_source]
-            Qe, Qi = params['Qe']/Branch_weights[ix_source],\
-                     params['Qi']/Branch_weights[ix_source]
+            fe /= synch_dividor
+            fi /= synch_dividor
+            Qe, Qi = synapse_factor*params['Qe']/Branch_weights[ix_source],\
+                     synapse_factor*params['Qi']/Branch_weights[ix_source]
 
             # excitatory synapse at dendrites
             Gf2 = exp_FT_mod(f, Qe, params['Te'])
@@ -339,7 +360,7 @@ def get_the_fluct_prop_at_soma(SHTN_INPUT, params, soma, stick,\
                             0., X_source,\
                             f, Gf2, params['Ee'], shtn_input, EqCylinder,\
                             soma, stick, params, precision=precision)
-            Pv += np.pi*fe*DX*stick['D']/stick['exc_density']*psp2
+            Pv += np.pi*fe*DX*stick['D']/stick['exc_density']*psp2*synch_factor
 
             # inhibitory synapse at dendrites
             Gf2 = exp_FT_mod(f, Qi, params['Ti'])
@@ -347,7 +368,7 @@ def get_the_fluct_prop_at_soma(SHTN_INPUT, params, soma, stick,\
                             0., X_source,\
                             f, Gf2, params['Ei'], shtn_input, EqCylinder,\
                             soma, stick, params, precision=precision)
-            Pv += np.pi*fi*DX*stick['D']/stick['inh_density']*psp2
+            Pv += np.pi*fi*DX*stick['D']/stick['inh_density']*psp2*synch_factor
 
         # #### SOMATIC SYNAPSES, discret summation, only inhibition, no branch weighting
         fi = shtn_input['fi_soma']
@@ -356,7 +377,7 @@ def get_the_fluct_prop_at_soma(SHTN_INPUT, params, soma, stick,\
                         0., 0.,\
                         f, Gf2, params['Ei'], shtn_input, EqCylinder,\
                         soma, stick, params, precision=precision)
-        Pv += np.pi*fi*soma['L']*soma['D']/soma['inh_density']*psp2
+        Pv += np.pi*fi*soma['L']*soma['D']/soma['inh_density']*psp2*synch_factor
 
         Rin = get_the_input_resistance_at_soma(EqCylinder, soma, stick, params,
                                                shtn_input)
