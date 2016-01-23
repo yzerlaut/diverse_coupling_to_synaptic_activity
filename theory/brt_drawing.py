@@ -88,18 +88,22 @@ if __name__=='__main__':
     ,formatter_class=argparse.RawTextHelpFormatter)
 
     # ball and tree properties
-    parser.add_argument("--L_stick", type=float, help="Length of the stick in micrometer", default=2000.)
+    parser.add_argument("--L_stick", type=float, help="Length of the stick in micrometer", default=700.)
     parser.add_argument("--D_stick", type=float, help="Diameter of the stick", default=2.)
-    parser.add_argument("-B", "--branches", type=int, help="Number of branches (equally spaced)", default=1)
+    parser.add_argument("-B", "--branches", type=int, help="Number of branches (equally spaced)", default=5)
     parser.add_argument("--L_proximal", type=float, help="Length of the proximal compartment", default=2000.)
 
-    EqCylinder = 1e-6*np.array([0, 100, 500, 600, 1000, 1800, 2000])
+    args = parser.parse_args()
+
+    EqCylinder = np.linspace(0,args.L_stick,args.branches+1)*1e-6
+    # EqCylinder = 1e-6*np.array([0, 100, 500, 600, 1000, 1800, 2000])
     # EqCylinder = 1e-6*np.array([0, 100, 600, 2000])
     # EqCylinder = 1e-6*np.array([0, 2000])
 
-    fig, ax = make_fig(EqCylinder, 5e-6,\
-                       added_points=[[5,8,.1,'g','D', 8],\
-                                     [6,5,.5,'r','x', 10]])
+    # fig, ax = make_fig(EqCylinder, args.D_stick,\
+    #                    added_points=[[5,8,.1,'g','D', 8],\
+    #                                  [6,5,.5,'r','x', 10]])
+    fig, ax = make_fig(EqCylinder, args.D_stick)
 
     plt.show()
 
