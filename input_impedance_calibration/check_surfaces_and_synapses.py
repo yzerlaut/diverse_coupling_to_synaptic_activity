@@ -14,8 +14,10 @@ EqCylinder = np.linspace(0, 1, stick['B']+1)*stick['L']
 
 # fixing the synaptic densities !!
 FACTOR = 1./2. # we double the densities
-soma['exc_density'], soma['inh_density']= 1e9, FACTOR*25.*1e-12
-stick['exc_density'], stick['inh_density']= FACTOR*17*1e-12, FACTOR*100*1e-12
+# soma['exc_density'], soma['inh_density']= 1e9, FACTOR*25.*1e-12
+# stick['exc_density'], stick['inh_density']= FACTOR*17*1e-12, FACTOR*100*1e-12
+soma['exc_density'], soma['inh_density']= 1e9, (1e-5)**2/15.
+stick['exc_density'], stick['inh_density']= (1e-5)**2/50., (1e-5)**2/10.
 
 Rm = get_Rm_range()
 
@@ -29,8 +31,9 @@ for i in range(len(Rm)):
     Ke[i], Ki[i] = cables1[0]['Ke_tot'], cables1[0]['Ki_tot']
 
     
-fig, ax = plt.subplots(1, 2, figsize=(7,3))
+fig, ax = plt.subplots(1, 3, figsize=(10,3))
 plt.subplots_adjust(bottom=.3)
-ax[0].hist(Ke, color='g');set_plot(ax[0], xlabel='exc. synapses')
+ax[0].hist(Ke, color='g');set_plot(ax[0], xlabel='exc. synapses', ylabel='cell #')
 ax[1].hist(Ki, color='r');set_plot(ax[1], xlabel='inh. synapses')
+ax[2].hist(np.array(Ke)/np.array(Ki), color='k');set_plot(ax[2], xlabel='ratio \n exc/inh #')
 plt.show()

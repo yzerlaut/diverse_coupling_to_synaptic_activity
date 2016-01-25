@@ -35,6 +35,7 @@ if __name__=='__main__':
                   'fe_dist':[args.fe_dist],'fi_dist':[args.fi_dist]}
 
     ALL_CELLS = np.load('all_cell_params.npy')
+    
     for cell in ALL_CELLS:
         muV, sV, TvN, muGn = get_the_fluct_prop_at_soma(shtn_input,\
                            cell['params'], cell['soma'], cell['stick'])

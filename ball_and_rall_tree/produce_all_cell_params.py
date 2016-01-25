@@ -13,8 +13,10 @@ soma, stick, params = np.load('../input_impedance_calibration/mean_model.npy')
 # --- fixing the synaptic densities !!
 
 FACTOR = 1. # factor for the synaptic densities densities
-soma['exc_density'], soma['inh_density']= 1e9, FACTOR*25.*1e-12
-stick['exc_density'], stick['inh_density']= FACTOR*17*1e-12, FACTOR*100*1e-12
+# soma['exc_density'], soma['inh_density']= 1e9, FACTOR*25.*1e-12
+# stick['exc_density'], stick['inh_density']= FACTOR*17*1e-12, FACTOR*100*1e-12
+soma['exc_density'], soma['inh_density']= 1e9, (1e-5)**2/30.
+stick['exc_density'], stick['inh_density']= (1e-5)**2/60., (1e-5)**2/10.
 
 # --- fixing the synaptic parameters !!
 params['Qe'], params['Qi'] = .6e-9, 1.2e-9
@@ -32,12 +34,12 @@ if sys.argv[-1]=='plot':
     import matplotlib.pylab as plt
     
     fig, ax = plt.subplots(1,2, figsize=(6,3))
-    ax[0].fill_between([0,1],[0,0],np.ones(2)*(10e-6)**2/soma['inh_density'], color='r')
-    ax[0].fill_between([0,1],[0,0],np.ones(2)*(10e-6)**2/soma['exc_density'], color='g', lw=4)
-    ax[1].fill_between([0,1],[0,0],np.ones(2)*(10e-6)**2/stick['exc_density'], color='g')
-    ax[1].fill_between([0,1],[0,0],np.ones(2)*(10e-6)**2/stick['inh_density'], color='r')
-    set_plot(ax[0], ['left'], ylabel='synaptic densities \n synapses/100$\mu^2$', xticks=[], ylim=[0,7], yticks=[0,3,6])
-    set_plot(ax[1], ['left'], ylabel='synaptic densities \n synapses/100$\mu^2$', xticks=[], ylim=[0,7], yticks=[0,3,6])
+    ax[0].fill_between([0,1],[0,0],np.ones(2)*(1e-5)**2/soma['inh_density'], color='r')
+    ax[0].fill_between([0,1],[0,0],np.ones(2)*(1e-5)**2/soma['exc_density'], color='g', lw=4)
+    ax[1].fill_between([0,1],[0,0],np.ones(2)*(1e-5)**2/stick['exc_density'], color='g')
+    ax[1].fill_between([0,1],[0,0],np.ones(2)*(1e-5)**2/stick['inh_density'], color='r')
+    set_plot(ax[0], ['left'], ylabel='synaptic densities \n synapses/100$\mu m^2$', xticks=[])
+    set_plot(ax[1], ['left'], ylabel='synaptic densities \n synapses/100$\mu m^2$', xticks=[])
 
     fig, ax = plt.subplots(1,2, figsize=(8,3))
     fig.suptitle('synaptic event')
