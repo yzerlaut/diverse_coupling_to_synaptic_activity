@@ -15,11 +15,11 @@ soma, stick, params = np.load('../input_impedance_calibration/mean_model.npy')
 FACTOR = 1. # factor for the synaptic densities densities
 # soma['exc_density'], soma['inh_density']= 1e9, FACTOR*25.*1e-12
 # stick['exc_density'], stick['inh_density']= FACTOR*17*1e-12, FACTOR*100*1e-12
-soma['exc_density'], soma['inh_density']= 1e9, (1e-5)**2/30.
-stick['exc_density'], stick['inh_density']= (1e-5)**2/60., (1e-5)**2/10.
+soma['exc_density'], soma['inh_density']= 1e9, (1e-5)**2/15.
+stick['exc_density'], stick['inh_density']= (1e-5)**2/50., (1e-5)**2/10.
 
 # --- fixing the synaptic parameters !!
-params['Qe'], params['Qi'] = .6e-9, 1.2e-9
+params['Qe'], params['Qi'] = .4e-9, 1.e-9
 params['Te'], params['Ti'] = 3e-3, 3e-3
 params['Ee'], params['Ei'] = 0e-3, -80e-3
 params['El'] = -60e-3#0e-3, -80e-3
