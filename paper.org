@@ -1,0 +1,139 @@
+#+TITLE: Heterogenous firing responses leads to diverse coupling to presynaptic activity in a simplified morphological model of layer V pyramidal neurons
+#+AUTHOR: Y. Zerlaut^{1,2} \& A. Destexhe^{1,2}
+#+INCLUDE: my_template.org 
+
+* Abstract
+
+  \bfseries
+
+  Characterizing the input-output properties of neocortical neurons is
+  of crucial importance to understand the properties emerging at the
+  network level. In a companion communication [[(Zerlaut et al., 2016)]],
+  we reported how individual neurons differ in their excitability and
+  sensitivities to the properties of the membrane potential
+  fluctuations. In the present report, we investigate how this
+  heterogeneity is translated into diverse input-ouput properties 
+
+  We study the coupling to different form of presynaptic activities,
+  either balanced, unbalanced, proximal, distal, etc..
+
+  In this letter, we investigate the 
+
+\normalfont
+
+* Introduction
+
+[...]
+
+* Results 
+<<sec:results>>
+\normalsize
+
+** Building a 
+
+#+ATTR_LATEX: :width \linewidth
+#+NAME: fig:in-vitro-calib
+#+CAPTION: *A theoretical framework for single cell computation.*
+[[file:./figures/model_illustration.pdf]]
+
+** Calibrating the morphological model on /in vitro/ measurements
+<<sec:in-vitro-calib>>
+
+#+ATTR_LATEX: :width \linewidth
+#+NAME: fig:in-vitro-calib
+#+CAPTION: *Calibrating the morphologically simplified model on /in vitro/ measurements: data Size variations in the theoretical model account for the heterogeneity in somatic input impedance measured /in vitro/* *(A)* Input impedance (left: modulus and right: phase shift) measured at the soma in intracellular recordings with sine-wave protocols. *(B)* Varying the size of the dendritic tree (length and diameter) partially accounts for the observed heterogeneity of the somatic input impedance.
+[[file:./figures/calibration_on_input_imped.pdf]]
+
+* Discussion
+
+** An analytical model for dendritic integration in the fluctuation-driven regime
+
+we provided a stratey for the analytical treatment of dendritic
+integration in the fluctuation-driven regime that relies on 1)
+shotnoise theory, 2) cable theory and 3) adequate approximations.
+
+The main advantage of this model is that you can very naturall plug in
+physiological parameters (because surface area is physiological as
+well as transfer resistance to soma) and still it remains analytical.
+
+** Heterogeneity of morpological and passive neuronal properties
+
+In this study, the rescaling rule between input resistance at the soma
+and the morphological model has led to the 
+
+* Material and Methods 
+\small
+
+** Experimental preparation and electrophysiological recordings
+<<sec:exp-prep>>
+
+Experimental methods were identical to those presented in
+[[citet:Zerlaut2016]]. Very briefly, we performed intracellular
+patch-clamp recordings using the perforated patch technique on layer V
+pyramidal neurons of coronal slices of juvenile mice primary visual
+cortex. For the n=13 cells presented in this study, the access
+resistance R_S was [[XX]] M\(\Omega\) \(\pm\) [[YY]], the leak current at
+-75mV was [[XX]] pA \(\pm\) [[YY]], cells had an input resistance R_m of [[XX]]
+M$\Omega$ \(\pm\) [[YY]] and a membrane time constant at rest of [[XX]] ms
+\(\pm\) [[YY]].
+
+** Input impedance characterization
+<<sec:measured-quant>>
+
+ To determine the input impedance at the soma, we injected sinusoidal
+ currents in the current-clamp mode of the amplifier (Multiclamp 700B,
+ Molecular Devices), we recorded the membrane potential response to a
+ current input of the form \(I(t)=I \, \sin(2\pi \, f \, t) \), we
+ varied the frequencies $f$ and amplitudes $I over 40 episodes per
+ cell. The frequency range scanned was [0.1, 500] Hz. For each cell,
+ we determined manually the current amplitude $I_0$ that gave a \sim
+ 5mV amplitude in a current step protocol, from this value, the value
+ of $I$ was scaled exponentially between $I_0$ at 0.1 Hz and $50 I_0$
+ at 500Hz. The reason for varying the current amplitude (and not only
+ the oscillation frequency) in those input impedance protocols is to
+ anticipate for the low pass filtering of the membrane and insure that
+ the membrane potential response at high frequencies is far above the
+ electronic noise level (\sim 0.1 mV).
+
+After removing the first 3 periods of the oscillations (to avoid
+transient effects), we fitted the membrane potential response to the
+form:
+
+\begin{equation}
+V(t) = E_L + R \, I \, \sin(2\pi \, f \, t + \phi)
+\end{equation}
+
+where $E_L$, $R$ and $\phi$ were fitted with a least-square
+minimization procedure. The frequency dependent values of $R$ and
+$\phi$ give the modulus and phase shift of the input impedance
+presented in Figure [[fig:in-vitro-calib]]A
+
+** Numerical tools
+<<sec:numerical-tools>>
+
+All numerical simulations of single cell dynamics have been performed
+with custom code written in the numerical library of =python=: =numpy=
+and optimized with the =numba= library. For the neuronal model, each
+point (a mean output frequency and its standard deviation across
+trials) corresponds to numerical simulations running with a time step
+dt=0.01ms, for a duration of 10s and repeated 4 times with different
+seeds (one simulation duration: $\sim$ 2s of real time on a Dell
+Optiplex 9020 desktop computer). Experimental protocols and
+online-analysis have been written in =Elphy2=. Plots and data analysis
+have been done thanks to the =SciPy= package.
+
+** Acknowledgments
+<<sec:acknowledgments>>
+
+Y.Z was supported by fellowships from the Initiative d'Excellence
+Paris-Saclay and the Fondation pour la Recherche Médicale (FDT
+20150532751). Research funded by the CNRS, the ANR (Complex-V1
+project) and the European Community (BrainScales FP7-269921 and the
+Human Brain Project FP7-604102). The authors declare no competing
+financial interests.
+
+* References
+
+\bibliography{tex/biblio}
+
+
