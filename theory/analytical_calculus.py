@@ -67,19 +67,28 @@ def calculate_mean_conductances(shtn_input,\
     """
 
     L, D, Lp = cable['L'], cable['D'], cable['L_prox']
-    Te, Qe = Params['Te'], Params['Qe']
-    Ti, Qi = Params['Ti'], Params['Qi']
-
-    ge_prox = Qe*shtn_input['fe_prox']*Te*D*np.pi/cable['exc_density']
-    gi_prox = Qi*shtn_input['fi_prox']*Ti*D*np.pi/cable['inh_density']
-    ge_dist = Qe*shtn_input['fe_dist']*Te*D*np.pi/cable['exc_density']
-    gi_dist = Qi*shtn_input['fi_dist']*Ti*D*np.pi/cable['inh_density']
+    Te_prox, Qe_prox = Params['Te'], Params['Qe']
+    Ti_prox, Qi_prox = Params['Ti'], Params['Qi']
+    if params.has_key()=='factor_for_distal_synapses_weight':
+        Qe_dist = Qe_prox*params['factor_for_distal_synapses_weight']
+        Qi_dist = Qi_prox*params['factor_for_distal_synapses_weight']
+    else:
+        Qe_dist, Qi_dist = Qe_prox, Qi_prox
+    if params.has_key()=='factor_for_distal_synapses_tau':
+        Te_dist = Te_prox*params['factor_for_distal_synapses_weight']
+        Ti_dist = Ti_prox*params['factor_for_distal_synapses_weight']
+    else:
+        Te_dist, Ti_dist = Te_prox, Ti_prox
+        
+    ge_prox = Qe_prox*shtn_input['fe_prox']*Te_prox*D*np.pi/cable['exc_density']
+    gi_prox = Qi_prox*shtn_input['fi_prox']*Ti_prox*D*np.pi/cable['inh_density']
+    ge_dist = Qe_dist*shtn_input['fe_dist']*Te_dist*D*np.pi/cable['exc_density']
+    gi_dist = Qi_dist*shtn_input['fi_dist']*Ti_dist*D*np.pi/cable['inh_density']
 
     # somatic inhibitory conductance
     Ls, Ds = soma['L'], soma['D']
     Kis = np.pi*Ls*Ds/soma['inh_density']
-    Gi_soma = Qi*Kis*shtn_input['fi_soma']*Ti
-    # print 'Gi soma (nS) : ', 1e9*Gi
+    Gi_soma = Qi_prox*Kis*shtn_input['fi_soma']*Ti_prox
     
     return Gi_soma, ge_prox, gi_prox, ge_dist, gi_dist
 
@@ -217,6 +226,7 @@ def psp_norm_square_integral_per_dend_synapse_type(x, X, f, Gf2,\
 
     return Gf2*np.abs(PSP)**2*(Erev-muV_X)**2
 
+
 # @jit
 def get_the_theoretical_sV_and_Tv(shtn_input, EqCylinder,\
                                   f, x, params, soma, stick,\
@@ -297,6 +307,45 @@ def get_the_theoretical_sV_and_Tv(shtn_input, EqCylinder,\
     return np.sqrt(sV2), Tv
 
 @jit
+def psp_norm_square_integral_per_dend_synapse_type_at_soma(X, f, Gf2,\
+                            Erev, shtn_input, EqCylinder,\
+                            soma, stick, params,
+                            precision=1e2):
+
+    Ls, Ds, L, D, Lp, Rm, Cm,\
+        El, Ee, Ei, rm, cm, ri = ball_and_stick_params(soma, stick, params)
+
+    tauS, tauP, lbdP, tauD, lbdD = \
+            ball_and_stick_constants(shtn_input, soma, stick, params)
+
+    # proximal params
+    lbdPf = lbdP/np.sqrt(1+2*1j*np.pi*f*tauP)
+    gPf = lbdPf*Cm*ri*(1+2*1j*np.pi*f*tauS)/tauS
+    rPf = tauP/cm/(1+2*1j*np.pi*f*tauP)
+
+    # distal params
+    lbdDf = lbdD/np.sqrt(1+2*1j*np.pi*f*tauD)
+    rDf = tauD/cm/(1+2*1j*np.pi*f*tauD)
+
+    # muV for mean driving force
+    muV_X = stat_pot_function([X], shtn_input, EqCylinder,\
+                              soma, stick, params)[0]
+
+    # ball and tree rescaling
+    Lp, L = rescale_x(Lp, EqCylinder), rescale_x(L, EqCylinder)
+    x, X = rescale_x(x,EqCylinder), rescale_x(X,EqCylinder)
+
+    # PSP with unitary current input
+    if X<=Lp:
+        # to be replaced by simplified expression
+        PSP = dv_xXLp(0., X, Lp,L,lbdDf,lbdPf,gPf,rPf,rDf) 
+    elif X>Lp:
+        # to be replaced by simplified expression
+        PSP = dv_xLpX(0.,X,Lp,L,lbdDf,lbdPf,gPf,rPf,rDf)
+
+    return Gf2*np.abs(PSP)**2*(Erev-muV_X)**2
+
+@jit
 def get_the_fluct_prop_at_soma(SHTN_INPUT, params, soma, stick,\
                                precision=100, f=rfft.time_to_freq(1000, 1e-4)):
 
@@ -361,16 +410,16 @@ def get_the_fluct_prop_at_soma(SHTN_INPUT, params, soma, stick,\
 
             # excitatory synapse at dendrites
             Gf2 = exp_FT_mod(f, Qe, params['Te']*tau_synapse_factor)
-            psp2 = psp_norm_square_integral_per_dend_synapse_type(\
-                            0., X_source,\
+            psp2 = psp_norm_square_integral_per_dend_synapse_type_at_soma(\
+                            X_source,\
                             f, Gf2, params['Ee'], shtn_input, EqCylinder,\
                             soma, stick, params, precision=precision)
             Pv += np.pi*fe*DX*stick['D']/stick['exc_density']*psp2*synch_factor
 
             # inhibitory synapse at dendrites
             Gf2 = exp_FT_mod(f, Qi, params['Ti']*tau_synapse_factor)
-            psp2 = psp_norm_square_integral_per_dend_synapse_type(\
-                            0., X_source,\
+            psp2 = psp_norm_square_integral_per_dend_synapse_type_at_soma(\
+                            X_source,\
                             f, Gf2, params['Ei'], shtn_input, EqCylinder,\
                             soma, stick, params, precision=precision)
             Pv += np.pi*fi*DX*stick['D']/stick['inh_density']*psp2*synch_factor
@@ -378,8 +427,8 @@ def get_the_fluct_prop_at_soma(SHTN_INPUT, params, soma, stick,\
         # #### SOMATIC SYNAPSES, discret summation, only inhibition, no branch weighting
         fi = shtn_input['fi_soma']
         Gf2 = exp_FT_mod(f, params['Qi'], params['Ti'])
-        psp2 = psp_norm_square_integral_per_dend_synapse_type(\
-                        0., 0.,\
+        psp2 = psp_norm_square_integral_per_dend_synapse_type_at_soma(\
+                        0.,\
                         f, Gf2, params['Ei'], shtn_input, EqCylinder,\
                         soma, stick, params, precision=precision)
         Pv += np.pi*fi*soma['L']*soma['D']/soma['inh_density']*psp2*synch_factor
