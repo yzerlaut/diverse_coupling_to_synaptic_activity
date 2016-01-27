@@ -2,37 +2,59 @@
 #+AUTHOR: Y. Zerlaut^{1,2} \& A. Destexhe^{1,2}
 #+INCLUDE: my_template.org 
 
+
 * Abstract
 
   \bfseries
 
   Characterizing the input-output properties of neocortical neurons is
   of crucial importance to understand the properties emerging at the
-  network level. In a companion communication [[(Zerlaut et al., 2016)]],
-  we reported how individual neurons differ in their excitability and
+  network level. In a companion communication [[cite:Zerlaut2016]], we
+  reported how individual neurons differ in their excitability and
   sensitivities to the properties of the membrane potential
   fluctuations. In the present report, we investigate how this
-  heterogeneity is translated into diverse input-ouput properties 
+  heterogeneity is translated into diverse input-ouput properties
+  (i.e. in th relation from presynaptic quantities to spiking
+  probability).  
+
+  To this purpose, we designed a simplified morphological model of
+  layer V pyramidal neurons with a dendritic tree following Rall's
+  branching rule. We first show that we are able to calibrate this
+  simplified model on /in vitro/ measurements of somatic input
+  impedance in layer V pyramidal neurons of juvenile mive visual
+  cortex. We then propose and analytical derivation for the membrane
+  potential fluctuations at the soma as a function of the properties
+  of the synaptic bombardment.
 
   We study the coupling to different form of presynaptic activities,
   either balanced, unbalanced, proximal, distal, etc..
 
-  In this letter, we investigate the 
-
 \normalfont
+
+\newpage
 
 * Introduction
 
 [...]
 
+Experimental evidence accumulate to show how the diverse activation of
+neurons within a neocortical population might be the substrate of 
+
+Though this diverse activation is likely to be due to specific
+connectivity schemes, we explore here a complementary mechanism: given
+the strong heterogeneity in electrophysiological properties of
+neocortical pyramidal cells
+
+\newpage
+
 * Results 
 <<sec:results>>
 \normalsize
 
-** Building a 
+** A simplified morphological model of 
 
 #+ATTR_LATEX: :width \linewidth
-#+NAME: fig:in-vitro-calib
+#+NAME: fig:model-illustration
 #+CAPTION: *A theoretical framework for single cell computation.*
 [[file:./figures/model_illustration.pdf]]
 
@@ -41,8 +63,13 @@
 
 #+ATTR_LATEX: :width \linewidth
 #+NAME: fig:in-vitro-calib
-#+CAPTION: *Calibrating the morphologically simplified model on /in vitro/ measurements: data Size variations in the theoretical model account for the heterogeneity in somatic input impedance measured /in vitro/* *(A)* Input impedance (left: modulus and right: phase shift) measured at the soma in intracellular recordings with sine-wave protocols. *(B)* Varying the size of the dendritic tree (length and diameter) partially accounts for the observed heterogeneity of the somatic input impedance.
+#+CAPTION: *Calibrating the model on /in vitro/ measurements: the simplified model and its size variations provides an approximation for the somatic input impedance and its heterogeneity*. *(A)* Input impedance (left: modulus and right: phase shift) measured at the soma in intracellular recordings with sine-wave protocols in current-clamp (inset). The color code indicates the input resistance and is likely to result from size variations of individual cells. *(B)* A medium size model accounts for the average data and varying the size of the dendritic tree and soma reproduces the trend in the individual measurements. Large cells (blue) have a lower modulus and a lower phase shift while small cells (red) have both a higher modulus and phase shift. *(C)* Left: We obtain a map between input resistance and size of the morphological model. Right: Representation of the medium-size model.
 [[file:./figures/calibration_on_input_imped.pdf]]
+
+
+** An analytical treatment of 
+
+comparison with simulations in =NEURON=
 
 * Discussion
 
@@ -56,20 +83,27 @@ The main advantage of this model is that you can very naturall plug in
 physiological parameters (because surface area is physiological as
 well as transfer resistance to soma) and still it remains analytical.
 
+
 ** Heterogeneity of morpological and passive neuronal properties
 
 In this study, the rescaling rule between input resistance at the soma
 and the morphological model has led to the 
 
+** Diverse coupling to presynaptic activity
+
+
+
 * Material and Methods 
 \small
 
-** Neuronal model: morphology
+** Neuronal model
 <<sec:correlation-generator>>
+
+The model is illustrated on Figure [[model-illustration]].
 
 - morphology with symmetric branching
 
-- E_e=0mV
+- different properties for the proximal part vs the distal part 
 
 ** Compartementalization
 
@@ -172,7 +206,67 @@ software. The morphology
 
 ** Strategy for the analytical derivation
 
-[[cite:Tuckwell2002]]
+# Strategy for the analytical derivation
+
+We present here a derivation that provides an analytical approximation
+for the properties of the fluctuations of the membrane potential at
+the soma for our model. Summing up its properties, we get: 1) a
+morphology with a lumped somatic compartement and a dendritic tree of
+symmetric branching following Rall's rule 2) conductance-based
+synapses 3) independent excitatory and inhibitory shotnoise input
+spread all over the morphology 4) assymetric properties between a
+proximal part and a distal part and 5) a certain degree of synchrony
+in the pre-synaptic spikes.
+
+The properties of the membrane potential fluctuations at the soma
+correspond to three stationary statistical properties of the
+fluctuations: their mean $\mu_V$, their standard deviation
+\(\sigma_V\) and their /global/ autocorrelation time
+\(\tau_V\). Following [[citetext:Zerlaut2016]], we emphasize that the
+/global/ autocorrelation time is a partial description of the
+autocorrelation function (as the autocorrelation function is not
+exponential) but it constitues the first order description of the
+temporal dynamics of the fluctuations.
+
+A commonly adopted strategy in the /fluctuation-driven/ regime to
+obtain statistical properties is to use stochastic calculus after
+having performed the /diffusion approximation/, i.e. approximating the
+synaptic conductance time course by a stochastic process, see
+e.g. [[cite:Tuckwell2002]]). This approach is nonetheless not easily
+generalizable to conductance input in an extended structure and render
+the inclusion of assymetric properties (proximal vs distal)
+complicated. We rather propose here an approach that combines
+simplifying assumptions and results from shotnoise theory, it
+constitues an extension of the approach proposed in [[citetext:Kuhn2004]].
+
+The strategy is the following, for each set of synaptic stimulation
+\(\{\nu^e_p, \nu_i^p, \nu_e^d, \nu_i^d, s\}\): 1) we derive a mean
+membrane potential \(\mu_V(x)\) corresponding to the stationary
+response to constant densities of conductances given by the means of
+the synaptic stimulation. We use this space-dependent membrane
+potential \(\mu_V(x)\) to fix the driving force all along the membrane
+for all synapses, 2) the relation between synaptic events and the
+membrane potential is now linear, we calculate the effect of a given
+
+
+We use the reduction to the equivalent cylinder
+
+- 3) The relation between synaptic events and the membrane potential
+  is now linear
+
+
+We will split the cable into two domains $[0,L_P]$ and $[L_p,L]$, in each of the domain, we can apply the previous strategy because the mean conductance is constant and at the junction between the two cables, we have two condtions, the continuity of the membrane potential : 
+$$
+v(x \rightarrow L_p^-)=v(x \rightarrow L_p^+)
+$$
+and the conservation of the current
+$$
+\frac{1}{r_i} \frac{\partial v^p}{\partial x}_{x \rightarrow L_p^-} = 
+\frac{1}{r_i} \frac{\partial v^d}{\partial x}_{x \rightarrow L_p^+} 
+$$
+
+where the notation : $x \rightarrow y^-$ and $x \rightarrow y^+$ account for the limit toward $y$ coming from lower or higher values respecively.
+
 
 The full derivation has been conducted with the help of the python
 modulus for symbolic computation: =sympy=. The resulting expression
@@ -182,7 +276,8 @@ the following [[http://nbviewer.jupyter.org/urls/bitbucket.org/yzerlaut/diverse_
 
 ** From fluctuation properties to spiking probability
 
-Focus of a previous communication, see [[citet:Zerlaut2016]].
+
+Focus of a previous communication, see [[citetext:Zerlaut2016]].
 
 ** Experimental preparation and electrophysiological recordings
 <<sec:exp-prep>>
