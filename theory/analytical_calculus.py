@@ -15,6 +15,10 @@ def params_for_cable_theory(cable, Params):
     cable['rm'] = 1./Params['g_pas']/(np.pi*D) # [O.m]   """" NEURON 1e-1 !!!! """" 
     cable['ri'] = Params['Ra']/(np.pi*D**2/4) # [O/m]
     cable['cm'] = Params['cm']*np.pi*D # [F/m] """" NEURON 1e-2 !!!! """"
+    
+    # here we add the proximal length
+    if Params.has_key('factor_for_L_prox') and not Params.has_key('L_prox'):
+        cable['L_prox'] = cable['L']*Params['factor_for_L_prox']
 
 
 def setup_model(EqCylinder, soma, dend, Params):
@@ -67,16 +71,17 @@ def calculate_mean_conductances(shtn_input,\
     """
 
     L, D, Lp = cable['L'], cable['D'], cable['L_prox']
+        
     Te_prox, Qe_prox = Params['Te'], Params['Qe']
     Ti_prox, Qi_prox = Params['Ti'], Params['Qi']
-    if params.has_key()=='factor_for_distal_synapses_weight':
-        Qe_dist = Qe_prox*params['factor_for_distal_synapses_weight']
-        Qi_dist = Qi_prox*params['factor_for_distal_synapses_weight']
+    if Params.has_key('factor_for_distal_synapses_weight'):
+        Qe_dist = Qe_prox*Params['factor_for_distal_synapses_weight']
+        Qi_dist = Qi_prox*Params['factor_for_distal_synapses_weight']
     else:
         Qe_dist, Qi_dist = Qe_prox, Qi_prox
-    if params.has_key()=='factor_for_distal_synapses_tau':
-        Te_dist = Te_prox*params['factor_for_distal_synapses_weight']
-        Ti_dist = Ti_prox*params['factor_for_distal_synapses_weight']
+    if Params.has_key('factor_for_distal_synapses_tau'):
+        Te_dist = Te_prox*Params['factor_for_distal_synapses_weight']
+        Ti_dist = Ti_prox*Params['factor_for_distal_synapses_weight']
     else:
         Te_dist, Ti_dist = Te_prox, Ti_prox
         
@@ -95,7 +100,7 @@ def calculate_mean_conductances(shtn_input,\
 
 def ball_and_stick_params(soma, stick, Params):
     Ls, Ds = soma['L'], soma['D']
-    L, Lp, D = stick['L'], stick['L_prox'], stick['D']
+    L, D, Lp = stick['L'], stick['D'], stick['L_prox']
     Rm = 1./(np.pi*Ls*Ds*Params['g_pas'])
     # print 'Rm (soma)', 1e-6*Rm, 'MOhm'
     Cm = np.pi*Ls*Ds*Params['cm']
@@ -333,7 +338,7 @@ def psp_norm_square_integral_per_dend_synapse_type_at_soma(X, f, Gf2,\
 
     # ball and tree rescaling
     Lp, L = rescale_x(Lp, EqCylinder), rescale_x(L, EqCylinder)
-    x, X = rescale_x(x,EqCylinder), rescale_x(X,EqCylinder)
+    X = rescale_x(X,EqCylinder)
 
     # PSP with unitary current input
     if X<=Lp:
@@ -352,6 +357,7 @@ def get_the_fluct_prop_at_soma(SHTN_INPUT, params, soma, stick,\
 
     EqCylinder = np.linspace(0,1,stick['B']+1)*stick['L']
     params_for_cable_theory(stick, params)
+    setup_model(EqCylinder, soma, stick, params)
     
     # check if the shtn input is an array
     n = len(SHTN_INPUT['fi_soma'])

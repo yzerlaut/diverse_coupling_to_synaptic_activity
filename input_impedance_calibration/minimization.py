@@ -27,8 +27,8 @@ f = .5*(f_bins[1:]+f_bins[:-1]) # frequency for theory !!
 #### MODEL VARIATIONS ###############################
 #### ================================================== ##
 
-N = 6
-B = np.arange(6)+3 # to be adjusted !!! (does not depends on N)
+N = 5
+B = np.arange(N)+3 # to be adjusted !!! (does not depends on N)
 L_soma = np.linspace(5., 20., N)*1e-6
 L_dend = np.linspace(300., 600., N)*1e-6
 D_dend = np.linspace(.5, 4., N)*1e-6
@@ -62,7 +62,7 @@ def get_input_imped(soma, stick, params):
     return psd, -phase
 
 import itertools
-def compute_deviations():
+def compute_deviations(factor_for_phase=3.):
     VALUE_PSD, VALUE_PHASE = [], []
     # product loop
     for b, ls, ld, dd, g_pas, cm, ra in itertools.product(B, L_soma, L_dend, D_dend, G_PAS, CM, RA):
@@ -71,8 +71,8 @@ def compute_deviations():
         stick1['B'], stick1['D'], stick1['L'] = b, dd, ld
         params1['g_pas'], params1['cm'], params1['Ra'] = g_pas, cm, ra
         psd, phase = get_input_imped(soma1, stick1, params1)
-        VALUE_PSD.append(np.sum((psd-psd_means)**2))
-        VALUE_PHASE.append(np.sum((phase-phase_means)**2))
+        VALUE_PSD.append(np.sum((np.log(psd)/np.log(10)-np.log(psd_means)/np.log(10))**2))
+        VALUE_PHASE.append(factor_for_phase*np.sum((phase-phase_means)**2))
     np.save('data_minim.npy', [np.array(VALUE_PSD), np.array(VALUE_PHASE)])
 
 def find_minimum():
@@ -162,7 +162,7 @@ if __name__=='__main__':
 
     if sys.argv[-1]=='compute':
         compute_deviations()
-    if sys.argv[-1]=='single_comp':
+    elif sys.argv[-1]=='single_comp':
         single_comp_minim() 
     else:
         MIN_PHASE, MIN_PSD, MIN_BOTH = find_minimum()

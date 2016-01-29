@@ -19,13 +19,15 @@ soma['exc_density'], soma['inh_density']= 1e9, (1e-5)**2/15.
 stick['exc_density'], stick['inh_density']= (1e-5)**2/50., (1e-5)**2/10.
 
 # --- fixing the synaptic parameters !!
-params['Qe'], params['Qi'] = .4e-9, 1.e-9
-params['Te'], params['Ti'] = 3e-3, 3e-3
+params['Qe'], params['Qi'] = 1.e-9, 1.2e-9
+params['Te'], params['Ti'] = 4e-3, 4e-3
 params['Ee'], params['Ei'] = 0e-3, -80e-3
 params['El'] = -60e-3#0e-3, -80e-3
 params['factor_for_L_prox'] = 2./3.
-params['factor_for_distal_synapses_weight'] = 3.
-params['factor_for_distal_synapses_tau'] = 3.
+params['factor_for_distal_synapses_weight'] = 2.
+params['factor_for_distal_synapses_tau'] = 2.
+
+np.save('mean_model.npy', [soma, stick, params])
 
 if sys.argv[-1]=='plot':
 

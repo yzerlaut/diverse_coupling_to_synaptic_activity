@@ -37,9 +37,10 @@ def adjust_model_prop(Rm, soma, stick, precision=2000):
         print '---------------------------------------------------'
         print '/!\ Rm value too high or too low for the conversion'
         print '---------------------------------------------------'
-    L_soma = np.linspace(-3,8,precision)*1e-6
-    L_dend = np.linspace(-225,600,precision)*1e-6
-    D_dend = np.linspace(-.75,2.,precision)*1e-6
+    BASE = np.linspace(-1,2.,precision)
+    L_soma = 2e-6*BASE
+    L_dend = 150e-6*BASE
+    D_dend = .75*1e-6*BASE
     Rin = np.zeros(precision)
     for i in range(len(Rin)):
         soma1, stick1, params1 = soma.copy(), stick.copy(), params.copy()
@@ -90,8 +91,8 @@ def make_experimental_fig():
     for m in MICE:
         rm = m['psd'][:3].mean()
         r = (rm-psd_boundaries[0])/(psd_boundaries[1]-psd_boundaries[0])
-        AX[0,0].loglog(m['freq'][m['freq']<HIGH_BOUND], m['psd'][m['freq']<HIGH_BOUND], 'D-', color=mymap(r,1), ms=2)
-        AX[0,1].semilogx(m['freq'][m['freq']<HIGH_BOUND], m['phase'][m['freq']<HIGH_BOUND], 'D-', color=mymap(r,1), ms=2)
+        AX[0,0].loglog(m['freq'][m['freq']<HIGH_BOUND], m['psd'][m['freq']<HIGH_BOUND], 'o-', color=mymap(r,1), ms=3)
+        AX[0,1].semilogx(m['freq'][m['freq']<HIGH_BOUND], m['phase'][m['freq']<HIGH_BOUND], 'o-', color=mymap(r,1), ms=3)
 
     AX[0,0].annotate('n='+str(len(MICE))+' cells', (.2,.2), xycoords='axes fraction', fontsize=18)
 
@@ -127,23 +128,15 @@ def make_experimental_fig():
     AX[1,0].loglog(f, psd, 'k-', alpha=.8, lw=4)
     AX[1,1].semilogx(f, -phase, 'k-', alpha=.8, lw=4, label='medium size \n   model')
 
+    
     ### MODEL VARIATIONS
-    N=5
-    L_soma = np.linspace(-2,2,N)*1e-6
-    D_soma = 0*np.linspace(-5,5,N)*1e-6
-    L_dend = np.linspace(-150,150,N)*1e-6
-    D_dend = np.linspace(-.5,.5,N)*1e-6
-    B = 0*np.linspace(-2,2,N, dtype=int)
-    for b, ls, ds, ld, dd, r in zip(B, L_soma, D_soma, L_dend, D_dend, np.linspace(1,0,N)):
-        soma1, stick1, params1 = soma.copy(), stick.copy(), params.copy()
-        soma1['L'] += ls
-        soma1['D'] += ds
-        stick1['L'] += ld
-        stick1['D'] += dd
-        stick1['B'] += b
+    base = np.linspace(0,1,4)
+    for b in base:
+        Rrm = 300.+500.*b
+        soma1, stick1, params1 = adjust_model_prop(Rrm, soma, stick)
         psd, phase = get_input_imped(soma1, stick1, params1)
-        AX[1,0].loglog(f, psd, '-', color=mymap(r,1), ms=5)
-        AX[1,1].semilogx(f, -phase, '-', color=mymap(r,1), ms=5)
+        AX[1,0].loglog(f, psd, '-', color=mymap(b,1), ms=5)
+        AX[1,1].semilogx(f, -phase, '-', color=mymap(b,1), ms=5)
 
     ### ===================== FINAL graph settings
 
