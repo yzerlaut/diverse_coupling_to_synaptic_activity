@@ -198,9 +198,12 @@ def set_presynaptic_spikes_manually(shotnoise_input, cables,\
             build_poisson_spike_train(inh_spike_trains[i][j], fi, inh_Ks[i][j], units='ms',\
                                       tstop=tstop, seed=seed+i*(+j**2), synchrony=synchrony)
 
-def run_simulation(shotnoise_input, cables, params, tstop=2000., dt=0.025, seed=3, synchrony = 0.):
-    
-
+def run_simulation(shotnoise_input, cables, params, tstop=2000.,\
+                   dt=0.025, seed=3, synchrony = 0.,\
+                   recordings=[[0,0,.5]]):
+    """
+    recordings is a set of tuple of the form : [branch_generation, branch_number, xseg]
+    """
     exc_synapses, exc_netcons, exc_Ks, exc_spike_trains,\
        inh_synapses, inh_netcons, inh_Ks, inh_spike_trains,\
        area_lists, spkout = Constructing_the_ball_and_tree(params, cables)
@@ -219,6 +222,15 @@ def run_simulation(shotnoise_input, cables, params, tstop=2000., dt=0.025, seed=
     ## --- recording
     t_vec = nrn.Vector()
     t_vec.record(nrn._ref_t)
+    V = []
+    # for i in range(len(recording)):
+    for rec in recordings:
+        V.append(nrn.Vector())
+        exec('V[-1].record(nrn.cable_'+str(rec[0])+'_'+str(rec[1])+'('+str(rec[0])+')._ref'_v[0]'
+
+        
+    v.append(np.array([[nrn.cable_0_0(.5)._ref_v[0]]])) # somatic potential
+    
     ## --- launching the simulation
     nrn.finitialize(params['El']*1e3)
     nrn.dt = dt
