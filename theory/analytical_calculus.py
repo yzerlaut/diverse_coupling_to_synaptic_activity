@@ -16,10 +16,6 @@ def params_for_cable_theory(cable, Params):
     cable['ri'] = Params['Ra']/(np.pi*D**2/4) # [O/m]
     cable['cm'] = Params['cm']*np.pi*D # [F/m] """" NEURON 1e-2 !!!! """"
     
-    # here we add the proximal length
-    if Params.has_key('factor_for_L_prox') and not Params.has_key('L_prox'):
-        cable['L_prox'] = cable['L']*Params['factor_for_L_prox']
-
 
 def setup_model(EqCylinder, soma, dend, Params):
     """ returns the different diameters of the equivalent cylinder
@@ -55,7 +51,7 @@ def setup_model(EqCylinder, soma, dend, Params):
             jj+=1
     print "Total number of EXCITATORY synapses : ", Ke_tot
     print "Total number of INHIBITORY synapses : ", Ki_tot
-    # we store this info in the somtic comp
+    # we store this info in the somatic comp
     cables[0]['Ke_tot'], cables[0]['Ki_tot'] = Ke_tot, Ki_tot
     return xtot, cables
 
@@ -70,20 +66,14 @@ def calculate_mean_conductances(shtn_input,\
     the third one is an ABSOLUTE conductance !
     """
 
-    L, D, Lp = cable['L'], cable['D'], cable['L_prox']
+    D = cable['D']
         
     Te_prox, Qe_prox = Params['Te'], Params['Qe']
     Ti_prox, Qi_prox = Params['Ti'], Params['Qi']
-    if Params.has_key('factor_for_distal_synapses_weight'):
-        Qe_dist = Qe_prox*Params['factor_for_distal_synapses_weight']
-        Qi_dist = Qi_prox*Params['factor_for_distal_synapses_weight']
-    else:
-        Qe_dist, Qi_dist = Qe_prox, Qi_prox
-    if Params.has_key('factor_for_distal_synapses_tau'):
-        Te_dist = Te_prox*Params['factor_for_distal_synapses_weight']
-        Ti_dist = Ti_prox*Params['factor_for_distal_synapses_weight']
-    else:
-        Te_dist, Ti_dist = Te_prox, Ti_prox
+    Qe_dist = Qe_prox*Params['factor_for_distal_synapses_weight']
+    Qi_dist = Qi_prox*Params['factor_for_distal_synapses_weight']
+    Te_dist = Te_prox*Params['factor_for_distal_synapses_weight']
+    Ti_dist = Ti_prox*Params['factor_for_distal_synapses_weight']
         
     ge_prox = Qe_prox*shtn_input['fe_prox']*Te_prox*D*np.pi/cable['exc_density']
     gi_prox = Qi_prox*shtn_input['fi_prox']*Ti_prox*D*np.pi/cable['inh_density']
@@ -100,7 +90,8 @@ def calculate_mean_conductances(shtn_input,\
 
 def ball_and_stick_params(soma, stick, Params):
     Ls, Ds = soma['L'], soma['D']
-    L, D, Lp = stick['L'], stick['D'], stick['L_prox']
+    L, D = stick['L'], stick['D']
+    Lp = L*Params['fraction_for_L_prox']
     Rm = 1./(np.pi*Ls*Ds*Params['g_pas'])
     # print 'Rm (soma)', 1e-6*Rm, 'MOhm'
     Cm = np.pi*Ls*Ds*Params['cm']
@@ -143,17 +134,17 @@ def rescale_x(x, EqCylinder):
     factor = np.power(2., 1./3.*np.arange(len(C)))
     return np.sum(np.diff(C)*factor[:-1])+(x-C[-1])*factor[-1]
 
-
 def lbd(x, l, lp, B, lbdP, lbdD):
     # specific to evenly space branches !! (see older implementation with EqCylinder for more general implement.)
     branch_length = l/B # length of one branch !
-    return (lbdP+(lbdD-lbdP)*(1-np.sign(x+1e-9-lp)))*2**(-1./3.*int(x/branch_length))
+    print np.intp(x/branch_length-1e-9)
+    return (lbdP+(lbdD-lbdP)*(1-np.sign(x+1e-9-lp)))*2**(-1./3.*np.intp(x/branch_length))
     
-def rescale_x(x, l, lp, B, lbdP, lbdD):
+def rescale2_x(x, l, lp, B, lbdP, lbdD):
     # specific to evenly space branches !! (see older implementation with EqCylinder for more general implement.)
-    EqCylinder = np.sort(np.concatenate([np.linspace(0, L, B+1), [lp]]))
+    EqCylinder = np.sort(np.concatenate([np.linspace(0, l, B+1), [lp]]))
     C = EqCylinder[EqCylinder<=x]
-    return np.sum(np.diff(C)/lbd(C)[:-1])+(x-C[-1])/lbd(C[-1])
+    return np.sum(np.diff(C)/lbd(C, l, lp, B, lbdP, lbdD)[:-1])+(x-C[-1])/lbd(C[-1], l, lp, B, lbdP, lbdD)
 
 
 def stat_pot_function(x, shtn_input, EqCylinder, soma, stick, Params):
@@ -177,7 +168,11 @@ def stat_pot_function(x, shtn_input, EqCylinder, soma, stick, Params):
     # somatic params
     V0 = (El+Rm*Gi_soma*Ei)/(1+Rm*Gi_soma)
     
+    Lp1, L1 = rescale2_x(Lp, L, Lp, Params['B'], lbdP, lbdD), rescale2_x(L, L, Lp, Params['B'], lbdP, lbdD)
+    print Lp1, L1
     Lp, L = rescale_x(Lp, EqCylinder), rescale_x(L, EqCylinder)
+    print Lp, L
+    
     return np.array([muVP(rescale_x(xx, EqCylinder),Lp,L,lbdD,lbdP,gP,v0D,v0P,V0) if xx<Lp\
         else muVD(rescale_x(xx, EqCylinder),Lp,L,lbdD,lbdP,gP,v0D,v0P,V0) for xx in x])
 
@@ -277,12 +272,14 @@ def get_the_theoretical_sV_and_Tv(shtn_input, EqCylinder,\
         for ix_source in range(len(Source_Array)): 
 
             X_source = Source_Array[ix_source]
-            if X_source<=stick['L_prox']:
+            if X_source<=stick['L']*params['fraction_for_L_prox']:
                 fe, fi = shtn_input['fe_prox'], shtn_input['fi_prox']
                 weight_synapse_factor = 1.
+                tau_synapse_factor = 1.
             else:
                 fe, fi = shtn_input['fe_dist'], shtn_input['fi_dist']
-                weight_synapse_factor = params['factor_for_distal_synapses']
+                weight_synapse_factor = params['factor_for_distal_synapses_weight']
+                tau_synapse_factor = params['factor_for_distal_synapses_tau']
                 
             fe /= synch_dividor
             fi /= synch_dividor
@@ -292,7 +289,7 @@ def get_the_theoretical_sV_and_Tv(shtn_input, EqCylinder,\
                      weight_synapse_factor*params['Qi']/Branch_weights[ix_source]
 
             # excitatory synapse at dendrites
-            Gf2 = exp_FT_mod(f, Qe, params['Te'])
+            Gf2 = exp_FT_mod(f, Qe, params['Te']*tau_synapse_factor)
             psp2 = psp_norm_square_integral_per_dend_synapse_type(\
                             x[ix_dest], X_source,\
                             f, Gf2, params['Ee'], shtn_input, EqCylinder,\
@@ -300,7 +297,7 @@ def get_the_theoretical_sV_and_Tv(shtn_input, EqCylinder,\
             Pv[ix_dest,:] += np.pi*fe*DX*stick['D']/stick['exc_density']*psp2*synch_factor
 
             # inhibitory synapse at dendrites
-            Gf2 = exp_FT_mod(f, Qi, params['Ti'])
+            Gf2 = exp_FT_mod(f, Qi, params['Ti']*tau_synapse_factor)
             psp2 = psp_norm_square_integral_per_dend_synapse_type(\
                             x[ix_dest], X_source,\
                             f, Gf2, params['Ei'], shtn_input, EqCylinder,\
@@ -409,7 +406,7 @@ def get_the_fluct_prop_at_soma(SHTN_INPUT, params, soma, stick,\
         for ix_source in range(len(Source_Array)): 
 
             X_source = Source_Array[ix_source]
-            if X_source<=stick['L_prox']:
+            if X_source<=stick['L']*params['fraction_for_L_prox']:
                 fe, fi = shtn_input['fe_prox'], shtn_input['fi_prox']
                 weight_synapse_factor = 1.
                 tau_synapse_factor = 1.
@@ -510,7 +507,6 @@ def get_the_input_impedance_at_soma(f, EqCylinder, soma, stick, params):
 
     # we remove the prox/dist separation, usefull only when synaptic input !!
     stick = stick.copy()
-    stick['L_prox'], stick['L_dist'] = stick['L'], stick['L']
     
     Ls, Ds, L, D, Lp, Rm, Cm,\
         El, Ee, Ei, rm, cm, ri = ball_and_stick_params(soma, stick, params)

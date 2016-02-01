@@ -102,7 +102,7 @@ def get_analytical_estimate(shotnoise_input, EqCylinder,
     return x_th, muV_th, sV_th, Tv_th
 
 
-def plot_time_traces(t_vec, V, cables, title=''):
+def plot_time_traces(t_vec, V, cables, title='', recordings=[[0,0,0.5]]):
 
     # time window
     i1, i2 = 0, min([int(1000/(t[1]-t[0])),len(t_vec)])
@@ -150,7 +150,7 @@ def plot_time_traces(t_vec, V, cables, title=''):
     return fig2
 
 def make_comparison_plot(x_th, muV_th, sV_th, Tv_th,\
-                      x_exp, muV_exp, sV_exp, Tv_exp, shotnoise_input):
+                         x_exp, muV_exp, sV_exp, Tv_exp, shotnoise_input):
 
     # input frequencies
     # fig, ax = plt.subplots(2, 1, figsize=(3,6))
@@ -194,8 +194,8 @@ if __name__=='__main__':
                         action="store_true")
     parser.add_argument("--fe_prox", type=float, help="excitatory synaptic frequency in proximal compartment", default=5.)
     parser.add_argument("--fi_prox", type=float, help="inhibitory synaptic frequency in proximal compartment", default=20.)
-    parser.add_argument("--fe_dist", type=float, help="excitatory synaptic frequency in distal compartment", default=5.)
-    parser.add_argument("--fi_dist", type=float, help="inhibitory synaptic frequency in distal compartment", default=20.)
+    parser.add_argument("--fe_dist", type=float, help="excitatory synaptic frequency in distal compartment", default=30.)
+    parser.add_argument("--fi_dist", type=float, help="inhibitory synaptic frequency in distal compartment", default=25.)
     parser.add_argument("--fe_soma", type=float, help="excitatory synaptic frequency at soma compartment", default=.0001)
     parser.add_argument("--fi_soma", type=float, help="inhibitory synaptic frequency at soma compartment", default=20.)
     parser.add_argument("--synchrony", type=float, help="synchrony of presynaptic spikes", default=0.)
@@ -205,7 +205,7 @@ if __name__=='__main__':
     parser.add_argument("--seed", type=int, help="seed fo random numbers",default=3)
     # ball and stick properties
     parser.add_argument("--L_stick", type=float, help="Length of the stick in micrometer", default=2000.)
-    parser.add_argument("--L_proximal", type=float, help="Length of the proximal compartment", default=2000.)
+    parser.add_argument("--L_prox_fraction", type=float, help="fraction of tree corresponding to prox. compartment", default=2./3.)
     parser.add_argument("--D_stick", type=float, help="Diameter of the stick", default=2.)
     parser.add_argument("-B", "--branches", type=int, help="Number of branches (equally spaced)", default=1)
     parser.add_argument("--EqCylinder", help="Detailed branching morphology (e.g [0.,0.1,0.25, 0.7, 1.])", nargs='+', type=float, default=[])
@@ -230,48 +230,43 @@ if __name__=='__main__':
         EqCylinder = np.linspace(0, 1, params['B']+1)*stick['L'] # equally space branches !
     else:
         EqCylinder = np.array(args.EqCylinder)*stick['L'] # detailed branching
-        
+
+    # fraction L_prox
+    params['fraction_for_L_prox'] = args.L_prox_fraction
+    
     # settign up the synaptic properties
     params['Qe'] = args.Qe*1e-9
     params['Qi'] = args.Qi*1e-9
+    params['factor_for_distal_synapses_tau'] = 2.
+    params['factor_for_distal_synapses_weight'] = 2.
 
     print ' first we set up the model [...]'
     stick['NSEG'] = args.discret_sim
     x_exp, cables = setup_model(EqCylinder, soma, stick, params)    
 
-    # we adjust L_proximal so that it falls inbetweee two segments
-    args.L_stick *= 1e-6 # SI units
-    args.L_proximal *= 1e-6 # SI units
-    L_proximal = int(args.L_proximal/args.L_stick*args.discret_sim)*args.L_stick/args.discret_sim
-    x_stick = np.linspace(0,args.L_stick, args.discret_sim+1) # then :
+    x_stick = np.linspace(0,args.L_stick*1e-6, args.discret_sim+1) # then :
     x_stick = .5*(x_stick[1:]+x_stick[:-1])
+    
     # constructing the space-dependent shotnoise input for the simulation
-    fe, fi = [], []
-    fe.append([0]) # no excitation on somatic compartment
-    fi.append([args.fi_soma]) # inhibition on somatic compartment
-    for cable in cables[1:]:
-        fe.append([args.fe_prox if x<L_proximal else args.fe_dist for x in cable['x']])
-        fi.append([args.fi_prox if x<L_proximal else args.fi_dist for x in cable['x']])
+
+    shotnoise_input = {'synchrony':args.synchrony,
+                       'fi_soma':args.fi_prox,
+                       'fe_prox':args.fe_prox,'fi_prox':args.fi_prox,
+                       'fe_dist':args.fe_dist,'fi_dist':args.fi_dist}
+    
     # then we run the simulation if needed
     if args.simulation:
         print 'Running simulation [...]'
-        t, V = run_simulation(fe, fi, cables, params, tstop=args.tstop_sim*1e3, dt=0.025, seed=args.seed, synchrony=args.synchrony)
+        t, V = run_simulation(shotnoise_input, cables, params, tstop=args.tstop_sim*1e3, dt=0.025, seed=args.seed, synchrony=args.synchrony)
         muV_exp, sV_exp, Tv_exp = analyze_simulation(x_exp, t, V)
-        np.save(save_name, [x_exp, fe, fi, muV_exp, sV_exp, Tv_exp])
+        np.save(save_name, [x_exp, shotnoise_input, muV_exp, sV_exp, Tv_exp])
         
         # now plotting of simulated membrane potential traces
         plot_time_traces(t, V, cables,\
             title='$\\nu_e^p$=  %1.2f Hz, $\\nu_e^d$=  %1.2f Hz, $\\nu^p_i$= %1.2f Hz, $\\nu^d_i$= %1.2f Hz' % (args.fe_prox,args.fe_dist,args.fi_prox,args.fi_prox))
         plt.show()
 
-    shotnoise_input = {'fi_soma':args.fi_soma, 'synchrony':args.synchrony,
-                       'fe_prox':args.fe_prox,'fi_prox':args.fi_prox,
-                       'fe_dist':args.fe_dist,'fi_dist':args.fi_dist}
-
     # ===== now analytical calculus ========
-
-    # constructing the space-dependent shotnoise input for the simulation
-    stick['L_prox'] = L_proximal
 
     # constructing the space-dependent shotnoise input for the simulation
     x_th, muV_th, sV_th, Tv_th  = \
@@ -279,7 +274,7 @@ if __name__=='__main__':
                                         soma, stick, params,
                                         discret=args.discret_th)
     try:
-        x_exp, fe_exp, fi_exp, muV_exp, sV_exp, Tv_exp = np.load(save_name)
+        x_exp, shotnoise_input, muV_exp, sV_exp, Tv_exp = np.load(save_name)
     except IOError:
         print '======================================================'
         print 'no numerical data available !!!  '

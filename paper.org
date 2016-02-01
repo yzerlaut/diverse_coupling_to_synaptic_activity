@@ -422,9 +422,12 @@ Following [[citetext:Rall1962]], we now define a dimensionless length $X$:
  X(x) = \int_0^x \frac{dx}{\lambda(x)}
 \end{equation}
 
+<<<<<<< HEAD
 We define \(L= X(l) \) and \(L_p= X(l_p) \), the total length and
 proximal part length respectively (capital letters design rescaled
 quantities).
+=======
+>>>>>>> 3e50844f1bd75d7848146d6d58a992475c7d2da3
 
 ** Mean membrane potential derivation
 <<sec:mean-derivation>>
