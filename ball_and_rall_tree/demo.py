@@ -246,16 +246,15 @@ if __name__=='__main__':
     x_stick = np.linspace(0,args.L_stick, args.discret_sim+1) # then :
     x_stick = .5*(x_stick[1:]+x_stick[:-1])
     # constructing the space-dependent shotnoise input for the simulation
-    fe, fi = [], []
-    fe.append([0]) # no excitation on somatic compartment
-    fi.append([args.fi_soma]) # inhibition on somatic compartment
-    for cable in cables[1:]:
-        fe.append([args.fe_prox if x<L_proximal else args.fe_dist for x in cable['x']])
-        fi.append([args.fi_prox if x<L_proximal else args.fi_dist for x in cable['x']])
+
+    shotnoise_input = {'synchrony':args.synchrony,
+                       'fe_prox':args.fe_prox,'fi_prox':args.fi_prox,
+                       'fe_dist':args.fe_dist,'fi_dist':args.fi_dist}
+    
     # then we run the simulation if needed
     if args.simulation:
         print 'Running simulation [...]'
-        t, V = run_simulation(fe, fi, cables, params, tstop=args.tstop_sim*1e3, dt=0.025, seed=args.seed, synchrony=args.synchrony)
+        t, V = run_simulation(shotnoise_input, cables, params, tstop=args.tstop_sim*1e3, dt=0.025, seed=args.seed, synchrony=args.synchrony)
         muV_exp, sV_exp, Tv_exp = analyze_simulation(x_exp, t, V)
         np.save(save_name, [x_exp, fe, fi, muV_exp, sV_exp, Tv_exp])
         
@@ -264,7 +263,7 @@ if __name__=='__main__':
             title='$\\nu_e^p$=  %1.2f Hz, $\\nu_e^d$=  %1.2f Hz, $\\nu^p_i$= %1.2f Hz, $\\nu^d_i$= %1.2f Hz' % (args.fe_prox,args.fe_dist,args.fi_prox,args.fi_prox))
         plt.show()
 
-    shotnoise_input = {'fi_soma':args.fi_soma, 'synchrony':args.synchrony,
+    shotnoise_input = {'synchrony':args.synchrony,
                        'fe_prox':args.fe_prox,'fi_prox':args.fi_prox,
                        'fe_dist':args.fe_dist,'fi_dist':args.fi_dist}
 

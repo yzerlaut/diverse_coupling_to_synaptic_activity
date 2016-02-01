@@ -23,7 +23,7 @@ params['Qe'], params['Qi'] = 1.e-9, 1.2e-9
 params['Te'], params['Ti'] = 4e-3, 4e-3
 params['Ee'], params['Ei'] = 0e-3, -80e-3
 params['El'] = -60e-3#0e-3, -80e-3
-params['factor_for_L_prox'] = 2./3.
+params['fraction_for_L_prox'] = 2./3.
 params['factor_for_distal_synapses_weight'] = 2.
 params['factor_for_distal_synapses_tau'] = 2.
 
@@ -66,7 +66,7 @@ else:
         soma1, stick1, params1 = adjust_model_prop(cell['Rm'], soma, stick)
         params1 = params.copy() # need to modify it AFTER :(
         cell['soma'], cell['stick'], cell['params'] = soma1, stick1, params1
-        cell['stick']['L_prox'] = params1['factor_for_L_prox']*cell['stick']['L']
+        cell['stick']['L_prox'] = params1['fraction_for_L_prox']*cell['stick']['L']
 
     np.save('all_cell_params.npy', ALL_CELLS)
 

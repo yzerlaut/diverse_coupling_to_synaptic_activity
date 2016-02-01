@@ -43,7 +43,6 @@ def set_tree_params(EqCylinder, dend, soma, Params):
 def Constructing_the_ball_and_tree(params, cables,
                                 spiking_mech=False):
 
-    
     # list of excitatory stuff
     exc_synapses, exc_netcons, exc_spike_trains, exc_Ks  = [], [], [], []
     # list of inhibitory stuff
@@ -113,6 +112,15 @@ def Constructing_the_ball_and_tree(params, cables,
                     area_tot+=nrn.area(seg.x, sec=section)
                     area_list.append(nrn.area(seg.x, sec=section))
 
+                    tree_fraction = seg.x/len(cables)+float(level/len(cables))
+                    if tree_fraction>params['fraction_for_L_prox']:
+                        print 'need to strengthen synapses'
+                        print tree_fraction
+                        exc_synapse[-1].tau *= params['factor_for_distal_synapses_tau']
+                        inh_synapse[-1].tau *= params['factor_for_distal_synapses_tau']
+                        exc_netcon[-1].weight[0] *= params['factor_for_distal_synapses_weight']
+                        inh_netcon[-1].weight[0] *= params['factor_for_distal_synapses_weight']
+                        
 
         exc_synapses.append(exc_synapse)
         exc_netcons.append(exc_netcon)
@@ -167,53 +175,38 @@ def get_v(cables):
         
     return v
 
-def set_presynaptic_spikes_manually(fe, fi, cables,\
+def set_presynaptic_spikes_manually(shotnoise_input, cables,\
                                     exc_spike_trains, exc_Ks,
                                     inh_spike_trains, inh_Ks, tstop, seed=2, synchrony=0.):
+    
     for i in range(len(cables)):
         for j in range(len(exc_spike_trains[i])):
             jj = j%(cables[i]['NSEG'])
+
+            tree_fraction = float(jj)/len(cables)+float(i)/len(cables)
+            if tree_fraction>params['fraction_for_L_prox']:
+                print '[--FREQ] distal frequency !'
+                print tree_fraction
+                fe, fi = shotnoise_input['fe_dist'], shotnoise_input['fi_dist']
+            else:
+                fe, fi = shotnoise_input['fe_prox'], shotnoise_input['fi_prox']
+            
             ## excitation
-            build_poisson_spike_train(exc_spike_trains[i][j], fe[i][jj], exc_Ks[i][j], units='ms',\
+            build_poisson_spike_train(exc_spike_trains[i][j], fe, exc_Ks[i][j], units='ms',\
                                       tstop=tstop, seed=i*(seed**2+j), synchrony=synchrony)
             ## inhibition
-            build_poisson_spike_train(inh_spike_trains[i][j], fi[i][jj], inh_Ks[i][j], units='ms',\
+            build_poisson_spike_train(inh_spike_trains[i][j], fi, inh_Ks[i][j], units='ms',\
                                       tstop=tstop, seed=seed+i*(+j**2), synchrony=synchrony)
 
-def set_presynaptic_spikes_with_netstim(fe, fi, cables, exc_netstims, inh_netstims, FACTOR=1.):
-    
-    for i in range(len(cables)):
-        for j in range(len(exc_netstims[i])):
-            jj = j%(cables[i]['NSEG'])
-            FE, FI = FACTOR*fe[i][jj], FACTOR*fi[i][jj] # multiple branches for the same freq
-
-            # excitation
-            Ke = cables[i]['Ke_per_seg']
-            if FE>0 and Ke>0:
-                exc_netstims[i][j].interval = 1e3/FE/Ke
-            else:
-                exc_netstims[i][j].interval = 1e12
-                exc_netstims[i][j].start = 1e12
-            # inhibition
-            Ki = cables[i]['Ki_per_seg']
-            if FI>0 and Ki>0:
-                inh_netstims[i][j].interval = 1e3/FI/Ki
-            else:
-                inh_netstims[i][j].start = 1e12
-                inh_netstims[i][j].interval = 1e12
-
-                
-def run_simulation(fe, fi, cables, params, tstop=2000., dt=0.025, seed=3, synchrony = 0.):
+def run_simulation(shotnoise_input, cables, params, tstop=2000., dt=0.025, seed=3, synchrony = 0.):
     
 
     exc_synapses, exc_netcons, exc_Ks, exc_spike_trains,\
        inh_synapses, inh_netcons, inh_Ks, inh_spike_trains,\
        area_lists, spkout = Constructing_the_ball_and_tree(params, cables)
 
-    # NETSTIM PUT TO 0 !!
-    # set_presynaptic_spikes_with_netstim(fe, fi, cables, exc_netstims, inh_netstims, FACTOR=0)
     # then synapses manually
-    set_presynaptic_spikes_manually(fe, fi, cables,\
+    set_presynaptic_spikes_manually(shotnoise_input, cables,\
                                     exc_spike_trains, exc_Ks,
                                     inh_spike_trains, inh_Ks,
                                     tstop, seed=seed, synchrony=synchrony)
