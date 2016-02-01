@@ -413,7 +413,8 @@ Following [[citetext:Rall1962]], we now define a dimensionless length $X$:
 \end{equation}
 
 We define \(L= X(l) \) and \(L_p= X(l_p) \), the total length and
-proximal part length respectively (capital letters index )
+proximal part length respectively (capital letters design rescaled
+quantities).
 
 ** Mean membrane potential derivation
 <<sec:mean-derivation>>
