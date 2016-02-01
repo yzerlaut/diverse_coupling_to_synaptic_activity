@@ -150,7 +150,7 @@ def plot_time_traces(t_vec, V, cables, title='', recordings=[[0,0,0.5]]):
     return fig2
 
 def make_comparison_plot(x_th, muV_th, sV_th, Tv_th,\
-                      x_exp, muV_exp, sV_exp, Tv_exp, shotnoise_input):
+                         x_exp, muV_exp, sV_exp, Tv_exp, shotnoise_input):
 
     # input frequencies
     # fig, ax = plt.subplots(2, 1, figsize=(3,6))
@@ -230,24 +230,23 @@ if __name__=='__main__':
         EqCylinder = np.linspace(0, 1, params['B']+1)*stick['L'] # equally space branches !
     else:
         EqCylinder = np.array(args.EqCylinder)*stick['L'] # detailed branching
-        
+
+    # fraction L_prox
+    params['fraction_for_L_prox'] = args.L_prox_fraction
+    
     # settign up the synaptic properties
     params['Qe'] = args.Qe*1e-9
     params['Qi'] = args.Qi*1e-9
+    params['factor_for_distal_synapses_tau'] = 2.
+    params['factor_for_distal_synapses_weight'] = 2.
 
     print ' first we set up the model [...]'
     stick['NSEG'] = args.discret_sim
     x_exp, cables = setup_model(EqCylinder, soma, stick, params)    
 
-    # we adjust L_proximal so that it falls inbetweee two segments
-    args.L_stick *= 1e-6 # SI units
-    # args.L_proximal *= 1e-6 # SI units
-    # L_proximal = int(args.L_proximal/args.L_stick*args.discret_sim)*args.L_stick/args.discret_sim
-    x_stick = np.linspace(0,args.L_stick, args.discret_sim+1) # then :
+    x_stick = np.linspace(0,args.L_stick*1e-6, args.discret_sim+1) # then :
     x_stick = .5*(x_stick[1:]+x_stick[:-1])
-    params['fraction_for_L_prox'] = args.L_prox_fraction
-    params['factor_for_distal_synapses_tau'] = 2.
-    params['factor_for_distal_synapses_weight'] = 2.
+    
     # constructing the space-dependent shotnoise input for the simulation
 
     shotnoise_input = {'synchrony':args.synchrony,
@@ -270,15 +269,12 @@ if __name__=='__main__':
     # ===== now analytical calculus ========
 
     # constructing the space-dependent shotnoise input for the simulation
-    stick['L_prox'] = L_proximal
-
-    # constructing the space-dependent shotnoise input for the simulation
     x_th, muV_th, sV_th, Tv_th  = \
                 get_analytical_estimate(shotnoise_input, EqCylinder,
                                         soma, stick, params,
                                         discret=args.discret_th)
     try:
-        x_exp, fe_exp, fi_exp, muV_exp, sV_exp, Tv_exp = np.load(save_name)
+        x_exp, shotnoise_input, muV_exp, sV_exp, Tv_exp = np.load(save_name)
     except IOError:
         print '======================================================'
         print 'no numerical data available !!!  '
