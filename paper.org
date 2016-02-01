@@ -2,7 +2,6 @@
 #+AUTHOR: Y. Zerlaut^{1,2} \& A. Destexhe^{1,2}
 #+INCLUDE: my_template.org 
 
-
 * Abstract
 
   \bfseries
@@ -106,7 +105,7 @@ investigate the firing response in terms of those somatic variables
 
 \newpage
 
-** An analytical approximation for the properties of the membrane potential fluctuations
+** An analytical approximation for the properties of the membrane potential fluctuations at the soma
 
 Needed because simulations of morphologies are computationally very
 expensive, very limited scan of input space is allowed.
@@ -115,7 +114,8 @@ comparison between analytical approx and simulations in =NEURON=
 
 #+ATTR_LATEX: :width \linewidth
 #+NAME: fig:analytics-accuracy
-#+CAPTION: *Accuracy of the analytical approximation for the properties of the membrane potential fluctuations: comparison between numerical simulations and analytical estimates*. 
+#+CAPTION: *Accuracy of the analytical approximation for the properties of the membrane potential fluctuations: comparison between numerical simulations and analytical estimates*. We vary 
+[[./figures/none_yet.pdf]]
 
 We emphasize here that even if the analytical description uses the
 reduction to the equivalent cylinder (and therefore could be seen as
@@ -123,7 +123,16 @@ equivalent to the Ball and Stick model), the described model has
 separate branches so that the fluctuations are uncorrelated from
 branches to branches unlike in the Ball and Stick model.
 
-** diverse coupling
+** Fluctuations properties for various type of synaptic activities
+
+
+
+#+ATTR_LATEX: :width \linewidth
+#+NAME: fig:analytics-accuracy
+   #+CAPTION: *Fluctuations properties as a function of the population activity for various properties of synaptic activty*. *(A)* We vary 
+[[./figures/none_yet.pdf]]
+
+** Heterogeneous firing response induce diverse coupling to the types of synaptic activity
 
 * Discussion
 
