@@ -144,16 +144,16 @@ def rescale_x(x, EqCylinder):
     return np.sum(np.diff(C)*factor[:-1])+(x-C[-1])*factor[-1]
 
 
-def lbd(x, l, lp, B, lbdP, lbdD):
-    # specific to evenly space branches !! (see older implementation with EqCylinder for more general implement.)
-    branch_length = l/B # length of one branch !
-    return (lbdP+(lbdD-lbdP)*(1-np.sign(x+1e-9-lp)))*2**(-1./3.*int(x/branch_length))
+# def lbd(x, l, lp, B, lbdP, lbdD):
+#     # specific to evenly space branches !! (see older implementation with EqCylinder for more general implement.)
+#     branch_length = l/B # length of one branch !
+#     return (lbdP+(lbdD-lbdP)*(1-np.sign(x+1e-9-lp)))*2**(-1./3.*int(x/branch_length))
     
-def rescale_x(x, l, lp, B, lbdP, lbdD):
-    # specific to evenly space branches !! (see older implementation with EqCylinder for more general implement.)
-    EqCylinder = np.sort(np.concatenate([np.linspace(0, L, B+1), [lp]]))
-    C = EqCylinder[EqCylinder<=x]
-    return np.sum(np.diff(C)/lbd(C)[:-1])+(x-C[-1])/lbd(C[-1])
+# def rescale_x(x, l, lp, B, lbdP, lbdD):
+#     # specific to evenly space branches !! (see older implementation with EqCylinder for more general implement.)
+#     EqCylinder = np.sort(np.concatenate([np.linspace(0, L, B+1), [lp]]))
+#     C = EqCylinder[EqCylinder<=x]
+#     return np.sum(np.diff(C)/lbd(C)[:-1])+(x-C[-1])/lbd(C[-1])
 
 
 def stat_pot_function(x, shtn_input, EqCylinder, soma, stick, Params):

@@ -102,7 +102,7 @@ def get_analytical_estimate(shotnoise_input, EqCylinder,
     return x_th, muV_th, sV_th, Tv_th
 
 
-def plot_time_traces(t_vec, V, cables, title=''):
+def plot_time_traces(t_vec, V, cables, title='', recordings=[[0,0,0.5]]):
 
     # time window
     i1, i2 = 0, min([int(1000/(t[1]-t[0])),len(t_vec)])
@@ -205,7 +205,7 @@ if __name__=='__main__':
     parser.add_argument("--seed", type=int, help="seed fo random numbers",default=3)
     # ball and stick properties
     parser.add_argument("--L_stick", type=float, help="Length of the stick in micrometer", default=2000.)
-    parser.add_argument("--L_proximal", type=float, help="Length of the proximal compartment", default=2000.)
+    parser.add_argument("--L_prox_fraction", type=float, help="fraction of tree corresponding to prox. compartment", default=2./3.)
     parser.add_argument("--D_stick", type=float, help="Diameter of the stick", default=2.)
     parser.add_argument("-B", "--branches", type=int, help="Number of branches (equally spaced)", default=1)
     parser.add_argument("--EqCylinder", help="Detailed branching morphology (e.g [0.,0.1,0.25, 0.7, 1.])", nargs='+', type=float, default=[])
@@ -241,13 +241,17 @@ if __name__=='__main__':
 
     # we adjust L_proximal so that it falls inbetweee two segments
     args.L_stick *= 1e-6 # SI units
-    args.L_proximal *= 1e-6 # SI units
-    L_proximal = int(args.L_proximal/args.L_stick*args.discret_sim)*args.L_stick/args.discret_sim
+    # args.L_proximal *= 1e-6 # SI units
+    # L_proximal = int(args.L_proximal/args.L_stick*args.discret_sim)*args.L_stick/args.discret_sim
     x_stick = np.linspace(0,args.L_stick, args.discret_sim+1) # then :
     x_stick = .5*(x_stick[1:]+x_stick[:-1])
+    params['fraction_for_L_prox'] = args.L_prox_fraction
+    params['factor_for_distal_synapses_tau'] = 2.
+    params['factor_for_distal_synapses_weight'] = 2.
     # constructing the space-dependent shotnoise input for the simulation
 
     shotnoise_input = {'synchrony':args.synchrony,
+                       'fi_soma':args.fi_prox,
                        'fe_prox':args.fe_prox,'fi_prox':args.fi_prox,
                        'fe_dist':args.fe_dist,'fi_dist':args.fi_dist}
     
@@ -256,16 +260,12 @@ if __name__=='__main__':
         print 'Running simulation [...]'
         t, V = run_simulation(shotnoise_input, cables, params, tstop=args.tstop_sim*1e3, dt=0.025, seed=args.seed, synchrony=args.synchrony)
         muV_exp, sV_exp, Tv_exp = analyze_simulation(x_exp, t, V)
-        np.save(save_name, [x_exp, fe, fi, muV_exp, sV_exp, Tv_exp])
+        np.save(save_name, [x_exp, shotnoise_input, muV_exp, sV_exp, Tv_exp])
         
         # now plotting of simulated membrane potential traces
         plot_time_traces(t, V, cables,\
             title='$\\nu_e^p$=  %1.2f Hz, $\\nu_e^d$=  %1.2f Hz, $\\nu^p_i$= %1.2f Hz, $\\nu^d_i$= %1.2f Hz' % (args.fe_prox,args.fe_dist,args.fi_prox,args.fi_prox))
         plt.show()
-
-    shotnoise_input = {'synchrony':args.synchrony,
-                       'fe_prox':args.fe_prox,'fi_prox':args.fi_prox,
-                       'fe_dist':args.fe_dist,'fi_dist':args.fi_dist}
 
     # ===== now analytical calculus ========
 

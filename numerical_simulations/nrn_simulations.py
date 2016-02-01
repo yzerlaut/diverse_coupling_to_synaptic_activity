@@ -112,10 +112,9 @@ def Constructing_the_ball_and_tree(params, cables,
                     area_tot+=nrn.area(seg.x, sec=section)
                     area_list.append(nrn.area(seg.x, sec=section))
 
-                    tree_fraction = seg.x/len(cables)+float(level/len(cables))
+                    tree_fraction = float(seg.x)/(len(cables)-1)+float(level-1)/(len(cables)-1)
                     if tree_fraction>params['fraction_for_L_prox']:
-                        print 'need to strengthen synapses'
-                        print tree_fraction
+                        print 'strengthen synapse !'
                         exc_synapse[-1].tau *= params['factor_for_distal_synapses_tau']
                         inh_synapse[-1].tau *= params['factor_for_distal_synapses_tau']
                         exc_netcon[-1].weight[0] *= params['factor_for_distal_synapses_weight']
@@ -175,7 +174,7 @@ def get_v(cables):
         
     return v
 
-def set_presynaptic_spikes_manually(shotnoise_input, cables,\
+def set_presynaptic_spikes_manually(shotnoise_input, cables, params,\
                                     exc_spike_trains, exc_Ks,
                                     inh_spike_trains, inh_Ks, tstop, seed=2, synchrony=0.):
     
@@ -183,10 +182,8 @@ def set_presynaptic_spikes_manually(shotnoise_input, cables,\
         for j in range(len(exc_spike_trains[i])):
             jj = j%(cables[i]['NSEG'])
 
-            tree_fraction = float(jj)/len(cables)+float(i)/len(cables)
+            tree_fraction = float(jj)/(len(cables)-1)/cables[i]['NSEG']+float(i-1)/(len(cables)-1)
             if tree_fraction>params['fraction_for_L_prox']:
-                print '[--FREQ] distal frequency !'
-                print tree_fraction
                 fe, fi = shotnoise_input['fe_dist'], shotnoise_input['fi_dist']
             else:
                 fe, fi = shotnoise_input['fe_prox'], shotnoise_input['fi_prox']
@@ -199,8 +196,7 @@ def set_presynaptic_spikes_manually(shotnoise_input, cables,\
                                       tstop=tstop, seed=seed+i*(+j**2), synchrony=synchrony)
 
 def run_simulation(shotnoise_input, cables, params, tstop=2000.,\
-                   dt=0.025, seed=3, synchrony = 0.,\
-                   recordings=[[0,0,.5]]):
+                   dt=0.025, seed=3, synchrony = 0., recordings='full'):
     """
     recordings is a set of tuple of the form : [branch_generation, branch_number, xseg]
     """
@@ -209,7 +205,7 @@ def run_simulation(shotnoise_input, cables, params, tstop=2000.,\
        area_lists, spkout = Constructing_the_ball_and_tree(params, cables)
 
     # then synapses manually
-    set_presynaptic_spikes_manually(shotnoise_input, cables,\
+    set_presynaptic_spikes_manually(shotnoise_input, cables, params,\
                                     exc_spike_trains, exc_Ks,
                                     inh_spike_trains, inh_Ks,
                                     tstop, seed=seed, synchrony=synchrony)
@@ -223,22 +219,22 @@ def run_simulation(shotnoise_input, cables, params, tstop=2000.,\
     t_vec = nrn.Vector()
     t_vec.record(nrn._ref_t)
     V = []
-    # for i in range(len(recording)):
-    for rec in recordings:
-        V.append(nrn.Vector())
-        exec('V[-1].record(nrn.cable_'+str(rec[0])+'_'+str(rec[1])+'('+str(rec[0])+')._ref'_v[0]'
 
-        
-    v.append(np.array([[nrn.cable_0_0(.5)._ref_v[0]]])) # somatic potential
-    
+    if recordings is not 'full':
+        for rec in recordings:
+            V.append(nrn.Vector())
+            exec('V[-1].record(nrn.cable_'+str(rec[0])+'_'+str(rec[1])+'('+str(rec[0])+')._ref_v[0]')
+
     ## --- launching the simulation
     nrn.finitialize(params['El']*1e3)
     nrn.dt = dt
-    V = []
-    V.append(get_v(cables))
+    if recordings is 'full':
+        V.append(get_v(cables))
+
     while nrn.t<(tstop-dt):
         nrn.fadvance()
-        V.append(get_v(cables))
+        if recordings is 'full':
+            V.append(get_v(cables))
 
     print "======================================="
     nrn('forall delete_section()')
