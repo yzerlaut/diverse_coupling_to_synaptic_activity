@@ -535,9 +535,9 @@ v_0^d + B &\cosh(X-L), \quad \forall X \in [L_p,L]
 \right.
 \end{equation}
 
-with $A$ and $B$ are explicited in the supplementary
-section[[sec:mean-coeff]]. The accuracy of this expression can be seen on
-Figure [[fig:analytics-accuracy]].
+with $A$ and $B$ explicited in the supplementary material. The
+accuracy of this expression can be seen on Figure
+[[fig:analytics-accuracy]].
 
 
 ** Equation for the membane potential response to a synaptic event
@@ -674,7 +674,7 @@ distribution theory (see [[citetext:Appel2008]] for a comprehensive
 textbook) to translate the synaptic input into boundary conditions at
 $X_{src}$, physically this corresponds to: 1) the continuity of the
 membrane potential and 2) the discontinuity of the current resulting
-from the synaptic input.
+from the synaptic input. To solve this equation, we split 
 
 The solution to this equation is:
 \begin{equation}
@@ -729,12 +729,12 @@ M$\Omega$ \(\pm\) [[YY]] and a membrane time constant at rest of [[XX]] ms
  cell. The frequency range scanned was [0.1, 500] Hz. For each cell,
  we determined manually the current amplitude $I_0$ that gave a \sim
  5mV amplitude in a current step protocol, from this value, the value
- of $I$ was scaled exponentially between $I_0$ at 0.1 Hz and $50 I_0$
- at 500Hz. The reason for varying the current amplitude (and not only
- the oscillation frequency) in those input impedance protocols is to
- anticipate for the low pass filtering of the membrane and insure that
- the membrane potential response at high frequencies is far above the
- electronic noise level (\sim 0.1 mV).
+ of $I$ was scaled exponentially between $I_0$ at 0.1 Hz and \(50
+ I_0\) at 500Hz. The reason for varying the current amplitude (and not
+ only the oscillation frequency) in those input impedance protocols is
+ to anticipate for the low pass filtering of the membrane and insure
+ that the membrane potential response at high frequencies is far above
+ the electronic noise level (\sim 0.1 mV).
 
 After removing the first 3 periods of the oscillations (to avoid
 transient effects), we fitted the membrane potential response to the
@@ -744,7 +744,7 @@ form:
 V(t) = E_L + R \, I \, \sin(2\pi \, f \, t - \phi)
 \end{equation}
 
-where $E_L$, $R$ and $\phi$ were fitted with a least-square
+where \(E_L, R\) and $\phi$ were fitted with a least-square
 minimization procedure. The frequency dependent values of $R$ and
 $\phi$ give the modulus and phase shift of the input impedance
 presented in Figure [[fig:in-vitro-calib]]A
@@ -777,63 +777,6 @@ financial interests.
 
 \bibliography{tex/biblio}
 
-* Supplementary Material
-<<sec:supplementary>>
-
-** Coefficients for the mean membrane potential solution
-<<sec:mean-coeff>>
-
-
-The first coefficient $A$ is given by:
-\begin{equation}
-A=\frac{\alpha}{\beta}
-\end{equation}
-
-with:
-
-\begin{equation}
-\begin{split}
-& \alpha = V_{0} \gamma^{P} \lambda^{D} \cosh{\left (L_{p} \right )}
-\cosh{\left (L - L_{p} \right )} + V_{0} \gamma^{P} \lambda^{P}
-\sinh{\left (L_{p} \right )} \sinh{\left (L - L_{p} \right )} \\
-& \quad - \gamma^{P} \lambda^{D} v^{d}_{0} \cosh{\left (L_{p} \right )}
-\cosh{\left (L - L_{p} \right )} - \gamma^{P} \lambda^{P} v^{d}_{0}
-\sinh{\left (L_{p} \right )} \sinh{\left (L - L_{p} \right )} \\
-& \quad - \lambda^{P} v^{d}_{0} \sinh{\left (L - L_{p} \right )}
- + \lambda^{P} v^{p}_{0} \sinh{\left (L - L_{p} \right )} \\
-& \beta = \gamma^{P} \lambda^{D} \cosh{\left (L_{p} \right )}
-\cosh{\left (L - L_{p} \right )} + \gamma^{P} \lambda^{P} \sinh{\left
-(L_{p} \right )} \sinh{\left (L - L_{p} \right )} + \\
-& \quad \lambda^{D} \sinh{\left (L_{p} \right )} \cosh{\left (L - L_{p} \right )}
- + \lambda^{P} \sinh{\left (L - L_{p} \right )} \cosh{\left (L_{p} \right
-)}
-\end{split}
-\end{equation}
-
-
-The second coefficient $B$ is given by:
-\begin{equation}
-B=\frac{\gamma}{\delta}
-\end{equation}
-
-with:
-
-\begin{equation}
-\begin{split}
-& \gamma = \lambda^{D} \big( V_{0} \gamma^{P} + \gamma^{P} v^{d}_{0}
-\cosh{\left (L_{p} \right )} - \gamma^{P} v^{d}_{0} \\
-& \quad  - \gamma^{P}
-v^{p}_{0} \cosh{\left (L_{p} \right )} + v^{d}_{0} \sinh{\left (L_{p}
-\right )} - v^{p}_{0} \sinh{\left (L_{p} \right )} \big) \\
-& \delta = \gamma^{P}
-\lambda^{D} \cosh{\left (L_{p} \right )} \cosh{\left (L - L_{p} \right
-)} + \gamma^{P} \lambda^{P} \sinh{\left (L_{p} \right )} \sinh{\left
-(L - L_{p} \right )}  \\
-& \quad + \lambda^{D} \sinh{\left (L_{p} \right )}
-\cosh{\left (L - L_{p} \right )}  + \lambda^{P} \sinh{\left (L - L_{p}
-\right )} \cosh{\left (L_{p} \right )}
-\end{split}
-\end{equation}
 
 
 
