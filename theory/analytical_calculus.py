@@ -117,6 +117,15 @@ def ball_and_stick_constants(shtn_input, soma, stick, Params):
 
 ############### INPUT FROM SYMPY ###################
 # --- muV
+@jit
+def A_coeff(Lp, L, lbdD, lbdP, gP, v0D, v0P, V0): return (V0*gP*lbdD*np.cosh(Lp)*np.cosh(L - Lp) + V0*gP*lbdP*np.sinh(Lp)*np.sinh(L - Lp) - gP*lbdD*v0P*np.cosh(Lp)*np.cosh(L - Lp) - gP*lbdP*v0P*np.sinh(Lp)*np.sinh(L - Lp) + lbdP*v0D*np.sinh(L - Lp) - lbdP*v0P*np.sinh(L - Lp))/(gP*lbdD*np.cosh(Lp)*np.cosh(L - Lp) + gP*lbdP*np.sinh(Lp)*np.sinh(L - Lp) + lbdD*np.sinh(Lp)*np.cosh(L - Lp) + lbdP*np.sinh(L - Lp)*np.cosh(Lp))
+@jit
+def B_coeff(Lp, L, lbdD, lbdP, gP, v0D, v0P, V0): return lbdD*(V0*gP - gP*v0D*np.cosh(Lp) + gP*v0P*np.cosh(Lp) - gP*v0P - v0D*np.sinh(Lp) + v0P*np.sinh(Lp))/(gP*lbdD*np.cosh(Lp)*np.cosh(L - Lp) + gP*lbdP*np.sinh(Lp)*np.sinh(L - Lp) + lbdD*np.sinh(Lp)*np.cosh(L - Lp) + lbdP*np.sinh(L - Lp)*np.cosh(Lp))
+@jit
+def muV_prox(X, Lp, L, lbdD, lbdP, gP, v0D, v0P, V0): return v0P + A_coeff(Lp, L, lbdD, lbdP, gP, v0D, v0P, V0)*np.cosh(X)+gP*(v0P-V0+A_coeff(Lp, L, lbdD, lbdP, gP, v0D, v0P, V0))*np.sinh(X)
+@jit
+def muV_dist(X, Lp, L, lbdD, lbdP, gP, v0D, v0P, V0): return v0D + B_coeff(Lp, L, lbdD, lbdP, gP, v0D, v0P, V0)*np.cosh(X-L)
+
 muVP = lambda x,Lp,L,lbdD,lbdP,gP,v0D,v0P,V0: ((V0*gP*lbdD*np.cosh((L - Lp)/lbdD)*np.cosh((Lp - x)/lbdP) + V0*gP*lbdP*np.sinh((L - Lp)/lbdD)*np.sinh((Lp - x)/lbdP) + gP*lbdD*v0P*np.cosh(Lp/lbdP)*np.cosh((L - Lp)/lbdD) - gP*lbdD*v0P*np.cosh((L - Lp)/lbdD)*np.cosh((Lp - x)/lbdP) + gP*lbdP*v0D*np.sinh((L - Lp)/lbdD)*np.sinh(x/lbdP) + gP*lbdP*v0P*np.sinh(Lp/lbdP)*np.sinh((L - Lp)/lbdD) - gP*lbdP*v0P*np.sinh((L - Lp)/lbdD)*np.sinh(x/lbdP) - gP*lbdP*v0P*np.sinh((L - Lp)/lbdD)*np.sinh((Lp - x)/lbdP) + lbdD*v0P*np.sinh(Lp/lbdP)*np.cosh((L - Lp)/lbdD) + lbdP*v0D*np.sinh((L - Lp)/lbdD)*np.cosh(x/lbdP) + lbdP*v0P*np.sinh((L - Lp)/lbdD)*np.cosh(Lp/lbdP) - lbdP*v0P*np.sinh((L - Lp)/lbdD)*np.cosh(x/lbdP))/(gP*lbdD*np.cosh(Lp/lbdP)*np.cosh((L - Lp)/lbdD) + gP*lbdP*np.sinh(Lp/lbdP)*np.sinh((L - Lp)/lbdD) + lbdD*np.sinh(Lp/lbdP)*np.cosh((L - Lp)/lbdD) + lbdP*np.sinh((L - Lp)/lbdD)*np.cosh(Lp/lbdP)))
 muVD = lambda x,Lp,L,lbdD,lbdP,gP,v0D,v0P,V0: ((lbdD*(gP*(V0 - v0P)*(gP*np.sinh(Lp/lbdP) + np.cosh(Lp/lbdP))*np.cosh(Lp/lbdP) - (gP*np.cosh(Lp/lbdP) + np.sinh(Lp/lbdP))*(gP*(V0 - v0P)*np.sinh(Lp/lbdP) + v0D - v0P))*np.cosh((L - x)/lbdD) + v0D*(lbdD*(gP*np.cosh(Lp/lbdP) + np.sinh(Lp/lbdP))*np.cosh((L - Lp)/lbdD) + lbdP*(gP*np.sinh(Lp/lbdP) + np.cosh(Lp/lbdP))*np.sinh((L - Lp)/lbdD)))/(lbdD*(gP*np.cosh(Lp/lbdP) + np.sinh(Lp/lbdP))*np.cosh((L - Lp)/lbdD) + lbdP*(gP*np.sinh(Lp/lbdP) + np.cosh(Lp/lbdP))*np.sinh((L - Lp)/lbdD)))
 
@@ -137,12 +146,14 @@ def rescale_x(x, EqCylinder):
 def lbd(x, l, lp, B, lbdP, lbdD):
     # specific to evenly space branches !! (see older implementation with EqCylinder for more general implement.)
     branch_length = l/B # length of one branch !
-    print np.intp(x/branch_length-1e-9)
-    return (lbdP+(lbdD-lbdP)*(1-np.sign(x+1e-9-lp)))*2**(-1./3.*np.intp(x/branch_length))
+    reduction_factor =  2**(-1./3.*np.intp(x/branch_length))
+    new_lbd = (lbdP+(lbdD-lbdP)*.5*(np.sign(x+1e-9-lp)+1))
+    return new_lbd*reduction_factor
     
 def rescale2_x(x, l, lp, B, lbdP, lbdD):
     # specific to evenly space branches !! (see older implementation with EqCylinder for more general implement.)
-    EqCylinder = np.sort(np.concatenate([np.linspace(0, l, B+1), [lp]]))
+    # EqCylinder = np.sort(np.concatenate([np.linspace(0, l, B+1), [lp]]))
+    EqCylinder = np.linspace(0, l, B+1)
     C = EqCylinder[EqCylinder<=x]
     return np.sum(np.diff(C)/lbd(C, l, lp, B, lbdP, lbdD)[:-1])+(x-C[-1])/lbd(C[-1], l, lp, B, lbdP, lbdD)
 
@@ -151,7 +162,7 @@ def stat_pot_function(x, shtn_input, EqCylinder, soma, stick, Params):
 
     params_for_cable_theory(stick, Params)
 
-    Ls, Ds, L, D, Lp, Rm, Cm,\
+    Ls, Ds, l, D, lp, Rm, Cm,\
         El, Ee, Ei, rm, cm, ri = ball_and_stick_params(soma, stick, Params)
 
     Gi_soma, ge_prox, gi_prox, ge_dist, gi_dist = \
@@ -167,14 +178,13 @@ def stat_pot_function(x, shtn_input, EqCylinder, soma, stick, Params):
     v0D = (El+rm*ge_dist*Ee+rm*gi_dist*Ei)/(1+rm*ge_dist+rm*gi_dist)
     # somatic params
     V0 = (El+Rm*Gi_soma*Ei)/(1+Rm*Gi_soma)
-    
-    Lp1, L1 = rescale2_x(Lp, L, Lp, Params['B'], lbdP, lbdD), rescale2_x(L, L, Lp, Params['B'], lbdP, lbdD)
-    print Lp1, L1
-    Lp, L = rescale_x(Lp, EqCylinder), rescale_x(L, EqCylinder)
-    print Lp, L
-    
-    return np.array([muVP(rescale_x(xx, EqCylinder),Lp,L,lbdD,lbdP,gP,v0D,v0P,V0) if xx<Lp\
-        else muVD(rescale_x(xx, EqCylinder),Lp,L,lbdD,lbdP,gP,v0D,v0P,V0) for xx in x])
+
+    X = np.array([rescale2_x(xx, l, lp, Params['B'], lbdP, lbdD) for xx in x])
+    Lp, L = rescale2_x(lp, l, lp, Params['B'], lbdP, lbdD), rescale2_x(l, l, lp, Params['B'], lbdP, lbdD)
+
+    return np.array([muV_prox(XX, Lp, L, lbdD, lbdP, gP, v0D, v0P, V0) if XX<Lp\
+                     else muV_dist(XX, Lp, L, lbdD, lbdP, gP, v0D, v0P, V0) for XX in X])
+
 
 
 @jit

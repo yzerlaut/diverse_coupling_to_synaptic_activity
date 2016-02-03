@@ -24,7 +24,7 @@
 #+LaTeX_HEADER:\usepackage[T1]{fontenc}
 #+LaTeX_HEADER:\usepackage{lmodern}
 #+LaTeX_HEADER:\usepackage{amsmath}
-# #+LaTeX_HEADER:\usepackage{amssymb,mathenv,array}
+# #+LaTeX_HEADER:\usepackage{amssymb,mathenv,array,breqn}
 #+LaTeX_HEADER:\usepackage{microtype} % Slightly tweak font spacing for aesthetics
 #+LaTeX_HEADER: \usepackage{geometry}
 #+LaTeX_HEADER: \geometry{a4paper,total={210mm,297mm}, left=15mm, right=15mm, top=20mm, bottom=20mm, bindingoffset=0mm, columnsep=.5cm}
