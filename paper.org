@@ -643,7 +643,6 @@ current resulting from the synaptic input.
 \right.
 \end{equation}
 
-
 We will solve Equation [[eq:psp-equation-reduced]] by using Fourier
 analysis. We take the following convention for the Fourier transform:
 
@@ -684,9 +683,9 @@ where
 \begin{equation}
 \begin{split}
 & \alpha_f^p = \sqrt{1+ 2 i \pi f \tau_m^p} \qquad
- r_f^p = \frac{\tau_m^p}{c_m \, \lambda^p \, (1+ 2 i \pi f \tau_m^p)} \\
+ r_f^p = \frac{\tau_m^p}{c_m \, \lambda^p} \\
 & \alpha_f^d = \sqrt{1+ 2 i \pi f \tau_m^d} \qquad
- r_f^d = \frac{\tau_m^d}{c_m \, \lambda^d \, (1+ 2 i \pi f \tau_m^d)} \\
+ r_f^d = \frac{\tau_m^d}{c_m \, \lambda^d} \\
 & \qquad \qquad \gamma_f^p =  \gamma^p \, (1+ 2 i \pi f \tau_m^S) \\
 \end{split}
 \end{equation}
