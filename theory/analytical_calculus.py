@@ -116,46 +116,7 @@ def ball_and_stick_constants(shtn_input, soma, stick, Params):
 
 
 ############### INPUT FROM SYMPY ###################
-# --- muV
-@jit
-def A_coeff(Lp, L, lbdD, lbdP, gP, v0D, v0P, V0): return (V0*gP*lbdD*np.cosh(Lp)*np.cosh(L - Lp) + V0*gP*lbdP*np.sinh(Lp)*np.sinh(L - Lp) - gP*lbdD*v0P*np.cosh(Lp)*np.cosh(L - Lp) - gP*lbdP*v0P*np.sinh(Lp)*np.sinh(L - Lp) + lbdP*v0D*np.sinh(L - Lp) - lbdP*v0P*np.sinh(L - Lp))/(gP*lbdD*np.cosh(Lp)*np.cosh(L - Lp) + gP*lbdP*np.sinh(Lp)*np.sinh(L - Lp) + lbdD*np.sinh(Lp)*np.cosh(L - Lp) + lbdP*np.sinh(L - Lp)*np.cosh(Lp))
-@jit
-def B_coeff(Lp, L, lbdD, lbdP, gP, v0D, v0P, V0): return lbdD*(V0*gP - gP*v0D*np.cosh(Lp) + gP*v0P*np.cosh(Lp) - gP*v0P - v0D*np.sinh(Lp) + v0P*np.sinh(Lp))/(gP*lbdD*np.cosh(Lp)*np.cosh(L - Lp) + gP*lbdP*np.sinh(Lp)*np.sinh(L - Lp) + lbdD*np.sinh(Lp)*np.cosh(L - Lp) + lbdP*np.sinh(L - Lp)*np.cosh(Lp))
-@jit
-def muV_prox(X, Lp, L, lbdD, lbdP, gP, v0D, v0P, V0): return v0P + A_coeff(Lp, L, lbdD, lbdP, gP, v0D, v0P, V0)*np.cosh(X)+gP*(v0P-V0+A_coeff(Lp, L, lbdD, lbdP, gP, v0D, v0P, V0))*np.sinh(X)
-@jit
-def muV_dist(X, Lp, L, lbdD, lbdP, gP, v0D, v0P, V0): return v0D + B_coeff(Lp, L, lbdD, lbdP, gP, v0D, v0P, V0)*np.cosh(X-L)
-
-@jit
-def Af_coeff(Xsrc, If, afP, afD, gfP, rfP, rfD, Lp, L, lbdD, lbdP): return If*rfP*(-afD*lbdP*np.cosh(L*afD - Lp*afD - Lp*afP + Xsrc*afP) + afD*lbdP*np.cosh(L*afD - Lp*afD + Lp*afP - Xsrc*afP) + afP*lbdD*np.cosh(L*afD - Lp*afP - Xsrc*afD + Xsrc*afP) + afP*lbdD*np.cosh(L*afD + Lp*afP - Xsrc*afD - Xsrc*afP))/(afP*(-afD*gfP*lbdP*np.cosh(-L*afD + Lp*afD + Lp*afP) + afD*gfP*lbdP*np.cosh(L*afD - Lp*afD + Lp*afP) - afD*lbdP*np.sinh(-L*afD + Lp*afD + Lp*afP) + afD*lbdP*np.sinh(L*afD - Lp*afD + Lp*afP) + afP*gfP*lbdD*np.cosh(-L*afD + Lp*afP + Xsrc*afD) + afP*gfP*lbdD*np.cosh(L*afD + Lp*afP - Xsrc*afD) + afP*lbdD*np.sinh(-L*afD + Lp*afP + Xsrc*afD) + afP*lbdD*np.sinh(L*afD + Lp*afP - Xsrc*afD)))
-@jit
-def Bf_coeff(Xsrc, If, afP, afD, gfP, rfP, rfD, Lp, L, lbdD, lbdP): return If*lbdD*rfP*(gfP*np.sinh(-L*afD + Xsrc*afD + Xsrc*afP) + gfP*np.sinh(L*afD - Xsrc*afD + Xsrc*afP) + np.cosh(-L*afD + Xsrc*afD + Xsrc*afP) + np.cosh(L*afD - Xsrc*afD + Xsrc*afP))/(-afD*gfP*lbdP*np.cosh(-L*afD + Lp*afD + Lp*afP) + afD*gfP*lbdP*np.cosh(L*afD - Lp*afD + Lp*afP) - afD*lbdP*np.sinh(-L*afD + Lp*afD + Lp*afP) + afD*lbdP*np.sinh(L*afD - Lp*afD + Lp*afP) + afP*gfP*lbdD*np.cosh(-L*afD + Lp*afP + Xsrc*afD) + afP*gfP*lbdD*np.cosh(L*afD + Lp*afP - Xsrc*afD) + afP*lbdD*np.sinh(-L*afD + Lp*afP + Xsrc*afD) + afP*lbdD*np.sinh(L*afD + Lp*afP - Xsrc*afD))
-@jit
-def Cf_coeff(Xsrc, If, afP, afD, gfP, rfP, rfD, Lp, L, lbdD, lbdP): return If*afD*lbdP*rfP*(gfP*np.cosh(-L*afD + Lp*afD + Xsrc*afP) - gfP*np.cosh(L*afD - Lp*afD + Xsrc*afP) + np.sinh(-L*afD + Lp*afD + Xsrc*afP) - np.sinh(L*afD - Lp*afD + Xsrc*afP))/(afP*(-afD*gfP*lbdP*np.cosh(-L*afD + Lp*afD + Lp*afP) + afD*gfP*lbdP*np.cosh(L*afD - Lp*afD + Lp*afP) - afD*lbdP*np.sinh(-L*afD + Lp*afD + Lp*afP) + afD*lbdP*np.sinh(L*afD - Lp*afD + Lp*afP) + afP*gfP*lbdD*np.cosh(-L*afD + Lp*afP + Xsrc*afD) + afP*gfP*lbdD*np.cosh(L*afD + Lp*afP - Xsrc*afD) + afP*lbdD*np.sinh(-L*afD + Lp*afP + Xsrc*afD) + afP*lbdD*np.sinh(L*afD + Lp*afP - Xsrc*afD)))
-@jit
-def Df_coeff(Xsrc, If, afP, afD, gfP, rfP, rfD, Lp, L, lbdD, lbdP): return 2*If*lbdD*rfP*(gfP*np.sinh(Xsrc*afP) + np.cosh(Xsrc*afP))/(-afD*gfP*lbdP*np.cosh(-L*afD + Lp*afD + Lp*afP) + afD*gfP*lbdP*np.cosh(L*afD - Lp*afD + Lp*afP) - afD*lbdP*np.sinh(-L*afD + Lp*afD + Lp*afP) + afD*lbdP*np.sinh(L*afD - Lp*afD + Lp*afP) + afP*gfP*lbdD*np.cosh(-L*afD + Lp*afP + Xsrc*afD) + afP*gfP*lbdD*np.cosh(L*afD + Lp*afP - Xsrc*afD) + afP*lbdD*np.sinh(-L*afD + Lp*afP + Xsrc*afD) + afP*lbdD*np.sinh(L*afD + Lp*afP - Xsrc*afD))
-@jit
-def dv_X_Xsrc_Lp(X, Xsrc, If, afP, afD, gfP, rfP, rfD, Lp, L, lbdD, lbdP): return Af_coeff(Xsrc, If, afP, afD, gfP, rfP, rfD, Lp, L, lbdD, lbdP)*(np.cosh(afP*X)+gfP*np.sinh(afP*X)) 
-@jit
-def dv_Xsrc_X_Lp(X, Xsrc, If, afP, afD, gfP, rfP, rfD, Lp, L, lbdD, lbdP): return Bf_coeff(Xsrc, If, afP, afD, gfP, rfP, rfD, Lp, L, lbdD, lbdP)*np.cosh(afP*(X-Lp))+Cf_coeff(Xsrc, If, afP, afD, gfP, rfP, rfD, Lp, L, lbdD, lbdP)*np.sinh(afP*(X-Lp)) 
-@jit
-def dv_Xsrc_Lp_X(X, Xsrc, If, afP, afD, gfP, rfP, rfD, Lp, L, lbdD, lbdP): return Df_coeff(Xsrc, If, afP, afD, gfP, rfP, rfD, Lp, L, lbdD, lbdP)*np.cosh(afD*(X-L))
-
-@jit
-def Ef_coeff(Xsrc, If, afP, afD, gfP, rfP, rfD, Lp, L, lbdD, lbdP): return 2*If*lbdP*rfD*np.cosh(afD*(L - Xsrc))/(-afD*gfP*lbdP*np.cosh(-L*afD + Lp*afD + Lp*afP) + afD*gfP*lbdP*np.cosh(L*afD - Lp*afD + Lp*afP) - afD*lbdP*np.sinh(-L*afD + Lp*afD + Lp*afP) + afD*lbdP*np.sinh(L*afD - Lp*afD + Lp*afP) + afP*gfP*lbdD*np.cosh(-L*afD + Lp*afD + Lp*afP) + afP*gfP*lbdD*np.cosh(L*afD - Lp*afD + Lp*afP) + afP*lbdD*np.sinh(-L*afD + Lp*afD + Lp*afP) + afP*lbdD*np.sinh(L*afD - Lp*afD + Lp*afP))
-@jit
-def Ff_coeff(Xsrc, If, afP, afD, gfP, rfP, rfD, Lp, L, lbdD, lbdP): return If*lbdP*rfD*(gfP*np.sinh(-L*afD + Lp*afP + Xsrc*afD) + gfP*np.sinh(L*afD + Lp*afP - Xsrc*afD) + np.cosh(-L*afD + Lp*afP + Xsrc*afD) + np.cosh(L*afD + Lp*afP - Xsrc*afD))/(-afD*gfP*lbdP*np.cosh(-L*afD + Lp*afD + Lp*afP) + afD*gfP*lbdP*np.cosh(L*afD - Lp*afD + Lp*afP) - afD*lbdP*np.sinh(-L*afD + Lp*afD + Lp*afP) + afD*lbdP*np.sinh(L*afD - Lp*afD + Lp*afP) + afP*gfP*lbdD*np.cosh(-L*afD + Lp*afD + Lp*afP) + afP*gfP*lbdD*np.cosh(L*afD - Lp*afD + Lp*afP) + afP*lbdD*np.sinh(-L*afD + Lp*afD + Lp*afP) + afP*lbdD*np.sinh(L*afD - Lp*afD + Lp*afP))
-@jit
-def Gf_coeff(Xsrc, If, afP, afD, gfP, rfP, rfD, Lp, L, lbdD, lbdP): return If*afP*lbdD*rfD*(gfP*np.cosh(-L*afD + Lp*afP + Xsrc*afD) + gfP*np.cosh(L*afD + Lp*afP - Xsrc*afD) + np.sinh(-L*afD + Lp*afP + Xsrc*afD) + np.sinh(L*afD + Lp*afP - Xsrc*afD))/(afD*(-afD*gfP*lbdP*np.cosh(-L*afD + Lp*afD + Lp*afP) + afD*gfP*lbdP*np.cosh(L*afD - Lp*afD + Lp*afP) - afD*lbdP*np.sinh(-L*afD + Lp*afD + Lp*afP) + afD*lbdP*np.sinh(L*afD - Lp*afD + Lp*afP) + afP*gfP*lbdD*np.cosh(-L*afD + Lp*afD + Lp*afP) + afP*gfP*lbdD*np.cosh(L*afD - Lp*afD + Lp*afP) + afP*lbdD*np.sinh(-L*afD + Lp*afD + Lp*afP) + afP*lbdD*np.sinh(L*afD - Lp*afD + Lp*afP)))
-@jit
-def Hf_coeff(Xsrc, If, afP, afD, gfP, rfP, rfD, Lp, L, lbdD, lbdP): return If*rfD/(afD*np.sinh(afD*(L - Xsrc)) - (afD**2*lbdP*(gfP*np.sinh(Lp*afP) + np.cosh(Lp*afP))*np.sinh(afD*(Lp - Xsrc))/(afP*lbdD*(gfP*np.cosh(Lp*afP) + np.sinh(Lp*afP))) - afD*np.cosh(afD*(Lp - Xsrc)))*np.cosh(afD*(L - Xsrc))/(afD*lbdP*(gfP*np.sinh(Lp*afP) + np.cosh(Lp*afP))*np.cosh(afD*(Lp - Xsrc))/(afP*lbdD*(gfP*np.cosh(Lp*afP) + np.sinh(Lp*afP))) - np.sinh(afD*(Lp - Xsrc))))
-@jit
-def dv_X_Lp_Xsrc(X, Xsrc, If, afP, afD, gfP, rfP, rfD, Lp, L, lbdD, lbdP): return Ef_coeff(Xsrc, If, afP, afD, gfP, rfP, rfD, Lp, L, lbdD, lbdP)*(np.cosh(afP*X)+gfP*np.sinh(afP*X)) 
-@jit
-def dv_Lp_X_Xsrc(X, Xsrc, If, afP, afD, gfP, rfP, rfD, Lp, L, lbdD, lbdP): return Ff_coeff(Xsrc, If, afP, afD, gfP, rfP, rfD, Lp, L, lbdD, lbdP)*np.cosh(afD*(X-Lp))+Gf_coeff(Xsrc, If, afP, afD, gfP, rfP, rfD, Lp, L, lbdD, lbdP)*np.sinh(afD*(X-Lp)) 
-@jit
-def dv_Lp_Xsrc_X(X, Xsrc, If, afP, afD, gfP, rfP, rfD, Lp, L, lbdD, lbdP): return Hf_coeff(Xsrc, If, afP, afD, gfP, rfP, rfD, Lp, L, lbdD, lbdP)*np.cosh(afD*(X-L)) 
-
+exec(open('../theory/functions.txt'))
 
 
 muVP = lambda x,Lp,L,lbdD,lbdP,gP,v0D,v0P,V0: ((V0*gP*lbdD*np.cosh((L - Lp)/lbdD)*np.cosh((Lp - x)/lbdP) + V0*gP*lbdP*np.sinh((L - Lp)/lbdD)*np.sinh((Lp - x)/lbdP) + gP*lbdD*v0P*np.cosh(Lp/lbdP)*np.cosh((L - Lp)/lbdD) - gP*lbdD*v0P*np.cosh((L - Lp)/lbdD)*np.cosh((Lp - x)/lbdP) + gP*lbdP*v0D*np.sinh((L - Lp)/lbdD)*np.sinh(x/lbdP) + gP*lbdP*v0P*np.sinh(Lp/lbdP)*np.sinh((L - Lp)/lbdD) - gP*lbdP*v0P*np.sinh((L - Lp)/lbdD)*np.sinh(x/lbdP) - gP*lbdP*v0P*np.sinh((L - Lp)/lbdD)*np.sinh((Lp - x)/lbdP) + lbdD*v0P*np.sinh(Lp/lbdP)*np.cosh((L - Lp)/lbdD) + lbdP*v0D*np.sinh((L - Lp)/lbdD)*np.cosh(x/lbdP) + lbdP*v0P*np.sinh((L - Lp)/lbdD)*np.cosh(Lp/lbdP) - lbdP*v0P*np.sinh((L - Lp)/lbdD)*np.cosh(x/lbdP))/(gP*lbdD*np.cosh(Lp/lbdP)*np.cosh((L - Lp)/lbdD) + gP*lbdP*np.sinh(Lp/lbdP)*np.sinh((L - Lp)/lbdD) + lbdD*np.sinh(Lp/lbdP)*np.cosh((L - Lp)/lbdD) + lbdP*np.sinh((L - Lp)/lbdD)*np.cosh(Lp/lbdP)))
@@ -234,7 +195,7 @@ def split_root_square_of_imaginary(f, tau):
     bf = np.sqrt((np.sqrt(1+(2*np.pi*f*tau)**2)-1)/2)
     return af, bf
 
-@jit
+# @jit
 def psp_norm_square_integral_per_dend_synapse_type(x, X, f, Gf2,\
                             Erev, shtn_input, EqCylinder,\
                             soma, stick, params,
@@ -252,13 +213,13 @@ def psp_norm_square_integral_per_dend_synapse_type(x, X, f, Gf2,\
             ball_and_stick_constants(shtn_input, soma, stick, params)
 
     # proximal params
-    afP = np.sqrt(1+2*1j*np.pi*f*tauP)
-    gfP = lbdP*Cm*ri*(1+2*1j*np.pi*f*tauS)/tauS
-    rfP = tauP/cm/lbdP/(1+2*1j*np.pi*f*tauP)*afP
+    afP = np.sqrt(1+2.*1j*np.pi*f*tauP)
+    gfP = lbdP*Cm*ri/tauS*(1+2.*1j*np.pi*f*tauS)
+    rfP = tauP/cm/lbdP#/(1+2.*1j*np.pi*f*tauP)*afP
 
     # distal params
-    afD = np.sqrt(1+2*1j*np.pi*f*tauD)
-    rfD = tauD/cm/lbdD/(1+2*1j*np.pi*f*tauD)*afD
+    afD = np.sqrt(1+2.*1j*np.pi*f*tauD)
+    rfD = tauD/cm/lbdD#/(1+2.*1j*np.pi*f*tauD)*afD
 
     # ball and tree rescaling
     Lp = rescale2_x(lp, l, lp, params['B'], lbdP, lbdD)
@@ -291,51 +252,51 @@ def psp_norm_square_integral_per_dend_synapse_type(x, X, f, Gf2,\
     return Gf2*np.abs(PSP)**2*(Erev-muV_X)**2
 
 # @jit
-# def psp_norm_square_integral_per_dend_synapse_type(x, X, f, Gf2,\
-#                             Erev, shtn_input, EqCylinder,\
-#                             soma, stick, params,
-#                             precision=1e2):
+def psp_norm_square_integral_per_dend_synapse_type2(x, X, f, Gf2,\
+                            Erev, shtn_input, EqCylinder,\
+                            soma, stick, params,
+                            precision=1e2):
 
-#     Ls, Ds, L, D, Lp, Rm, Cm,\
-#         El, Ee, Ei, rm, cm, ri = ball_and_stick_params(soma, stick, params)
+    Ls, Ds, L, D, Lp, Rm, Cm,\
+        El, Ee, Ei, rm, cm, ri = ball_and_stick_params(soma, stick, params)
 
-#     tauS, tauP, lbdP, tauD, lbdD = \
-#             ball_and_stick_constants(shtn_input, soma, stick, params)
+    tauS, tauP, lbdP, tauD, lbdD = \
+            ball_and_stick_constants(shtn_input, soma, stick, params)
 
-#     # proximal params
-#     lbdPf = lbdP/np.sqrt(1+2*1j*np.pi*f*tauP)
-#     gPf = lbdPf*Cm*ri*(1+2*1j*np.pi*f*tauS)/tauS
-#     rPf = tauP/cm/(1+2*1j*np.pi*f*tauP)
+    # proximal params
+    lbdPf = lbdP/np.sqrt(1+2*1j*np.pi*f*tauP)
+    gPf = lbdPf*Cm*ri*(1+2*1j*np.pi*f*tauS)/tauS
+    rPf = tauP/cm/(1+2*1j*np.pi*f*tauP)
 
-#     # distal params
-#     lbdDf = lbdD/np.sqrt(1+2*1j*np.pi*f*tauD)
-#     rDf = tauD/cm/(1+2*1j*np.pi*f*tauD)
+    # distal params
+    lbdDf = lbdD/np.sqrt(1+2*1j*np.pi*f*tauD)
+    rDf = tauD/cm/(1+2*1j*np.pi*f*tauD)
 
-#     # muV for mean driving force
-#     muV_X = stat_pot_function([X], shtn_input, EqCylinder,\
-#                               soma, stick, params)[0]
+    # muV for mean driving force
+    muV_X = stat_pot_function([X], shtn_input, EqCylinder,\
+                              soma, stick, params)[0]
 
-#     # ball and tree rescaling
-#     Lp, L = rescale_x(Lp, EqCylinder), rescale_x(L, EqCylinder)
-#     x, X = rescale_x(x,EqCylinder), rescale_x(X,EqCylinder)
+    # ball and tree rescaling
+    Lp, L = rescale_x(Lp, EqCylinder), rescale_x(L, EqCylinder)
+    x, X = rescale_x(x,EqCylinder), rescale_x(X,EqCylinder)
 
-#     # PSP with unitary current input
-#     if X<=Lp:
-#         if x<=X:
-#             PSP = dv_xXLp(x, X, Lp,L,lbdDf,lbdPf,gPf,rPf,rDf)
-#         elif x>X and x<=Lp:
-#             PSP = dv_XxLp(x,X,Lp,L,lbdDf,lbdPf,gPf,rPf,rDf)
-#         elif x>X and x>Lp:
-#             PSP = dv_XLpx(x,X,Lp,L,lbdDf,lbdPf,gPf,rPf,rDf)
-#     elif X>Lp:
-#         if x<=Lp:
-#             PSP = dv_xLpX(x,X,Lp,L,lbdDf,lbdPf,gPf,rPf,rDf)
-#         elif x>Lp and x<=X:
-#             PSP = dv_LpxX(x,X,Lp,L,lbdDf,lbdPf,gPf,rPf,rDf)
-#         elif x>X:
-#             PSP = dv_LpXx(x,X,Lp,L,lbdDf,lbdPf,gPf,rPf,rDf)
+    # PSP with unitary current input
+    if X<=Lp:
+        if x<=X:
+            PSP = dv_xXLp(x, X, Lp,L,lbdDf,lbdPf,gPf,rPf,rDf)
+        elif x>X and x<=Lp:
+            PSP = dv_XxLp(x,X,Lp,L,lbdDf,lbdPf,gPf,rPf,rDf)
+        elif x>X and x>Lp:
+            PSP = dv_XLpx(x,X,Lp,L,lbdDf,lbdPf,gPf,rPf,rDf)
+    elif X>Lp:
+        if x<=Lp:
+            PSP = dv_xLpX(x,X,Lp,L,lbdDf,lbdPf,gPf,rPf,rDf)
+        elif x>Lp and x<=X:
+            PSP = dv_LpxX(x,X,Lp,L,lbdDf,lbdPf,gPf,rPf,rDf)
+        elif x>X:
+            PSP = dv_LpXx(x,X,Lp,L,lbdDf,lbdPf,gPf,rPf,rDf)
 
-#     return Gf2*np.abs(PSP)**2*(Erev-muV_X)**2
+    return Gf2*np.abs(PSP)**2*(Erev-muV_X)**2
 
 
 # @jit
@@ -360,7 +321,6 @@ def get_the_theoretical_sV_and_Tv(shtn_input, EqCylinder,\
     # double envents have a weight (2*PSP)**2 -> 4
     # new_freq*(1-synchrony+4*synchrony)
 
-    
     for b in EqCylinder:
         Branch_weights[np.where(Source_Array>=b)[0]] += 1
 

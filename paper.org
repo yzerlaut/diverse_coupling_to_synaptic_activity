@@ -518,7 +518,7 @@ where:
 \begin{split}
 & v_0^p = \frac{E_L + r_m g_{e0}^p E_e + r_m g_{i0}^p E_i}{ 1 + r_m g_{e0}^p + r_m g_{i0}^p }\\
 & v_0^d = \frac{E_L + r_m g_{e0}^d E_e + r_m g_{i0}^d E_i}{ 1 + r_m g_{e0}^d + r_m g_{i0}^d }\\
-& \gamma^p = \frac{r_i \lambda^p}{R_m \, (1+ G_i^0 RM)}\\
+& \gamma^p = \frac{r_i \lambda^p \, (1+ G_i^0 R_m)}{R_m}\\
 & V_0 = \frac{E_L + G_i^0 R_m E_i}{ 1 +  + G_i^0 R_m }
 \end{split}
 \end{equation}
@@ -622,7 +622,29 @@ where we have introduced the following time constants:
 \end{split}
 \end{equation}
 
-We solve Equation [[eq:psp-equation-reduced]] by using Fourier
+Now used distribution theory (see [[citetext:Appel2008]] for a
+comprehensive textbook) to translate the synaptic input into boundary
+conditions at $X_{src}$, physically this corresponds to: 1) the
+continuity of the membrane potential and 2) the discontinuity of the
+current resulting from the synaptic input.
+
+\begin{equation}
+\left\{
+\begin{split}
+&  \delta v(X_{src}^-,f) = \delta v(X_{src}^+,f) \\
+& \frac{\partial \delta v}{\partial X}_{X_{src}^+} 
+- \frac{\partial \delta v}{\partial X}_{X_{src}^-} 
+= - \big(\mu_v(X_{src})-E_{rev}\big) \times \\
+& \qquad \qquad \qquad 
+\big( \frac{\tau_m^p}{\lambda^p} +
+  (\frac{\tau_m^d}{\lambda^d}-\frac{\tau_m^p}{\lambda^p}) 
+ \mathcal{H}(X_{src}-L_p) \big) \, \frac{g(t)}{c_m} \\
+\end{split}
+\right.
+\end{equation}
+
+
+We will solve Equation [[eq:psp-equation-reduced]] by using Fourier
 analysis. We take the following convention for the Fourier transform:
 
 #+NAME: eq:fourier-convention
@@ -669,14 +691,9 @@ where
 \end{split}
 \end{equation}
 
-After having performed the Fourier transform, we have used
-distribution theory (see [[citetext:Appel2008]] for a comprehensive
-textbook) to translate the synaptic input into boundary conditions at
-$X_{src}$, physically this corresponds to: 1) the continuity of the
-membrane potential and 2) the discontinuity of the current resulting
-from the synaptic input. To solve this equation, we split 
 
 The solution to this equation is:
+
 \begin{equation}
 \begin{split}
 & \hat{\delta v}(X, X_{src}, f) = \\
