@@ -136,13 +136,191 @@ For the PSP events we need to solve:
 \right.
 \end{equation}
 
+To obtain the solution, we need to split the solution into two cases:
 
+**** $X_{src} \leq L_p$
+
+Let's write the solution to this equation as the form (already
+including the boundary conditions at $X=0$ and $X=L$):
 
 \begin{equation}
-& A_f(X_src)=\frac{I_{f} r^{P}_{f} \left(- \alpha^{D}_{f} \lambda^{P} \cosh{\left (L \alpha^{D}_{f} - L_{p} \alpha^{D}_{f} - L_{p} \alpha^{P}_{f} + X_{s} \alpha^{P}_{f} \right )} + \alpha^{D}_{f} \lambda^{P} \cosh{\left (L \alpha^{D}_{f} - L_{p} \alpha^{D}_{f} + L_{p} \alpha^{P}_{f} - X_{s} \alpha^{P}_{f} \right )} + \alpha^{P}_{f} \lambda^{D} \cosh{\left (L \alpha^{D}_{f} - L_{p} \alpha^{P}_{f} - X_{s} \alpha^{D}_{f} + X_{s} \alpha^{P}_{f} \right )} + \alpha^{P}_{f} \lambda^{D} \cosh{\left (L \alpha^{D}_{f} + L_{p} \alpha^{P}_{f} - X_{s} \alpha^{D}_{f} - X_{s} \alpha^{P}_{f} \right )}\right)}{\alpha^{P}_{f} \left(- \alpha^{D}_{f} \gamma^{P}_{f} \lambda^{P} \cosh{\left (- L \alpha^{D}_{f} + L_{p} \alpha^{D}_{f} + L_{p} \alpha^{P}_{f} \right )} + \alpha^{D}_{f} \gamma^{P}_{f} \lambda^{P} \cosh{\left (L \alpha^{D}_{f} - L_{p} \alpha^{D}_{f} + L_{p} \alpha^{P}_{f} \right )} - \alpha^{D}_{f} \lambda^{P} \sinh{\left (- L \alpha^{D}_{f} + L_{p} \alpha^{D}_{f} + L_{p} \alpha^{P}_{f} \right )} + \alpha^{D}_{f} \lambda^{P} \sinh{\left (L \alpha^{D}_{f} - L_{p} \alpha^{D}_{f} + L_{p} \alpha^{P}_{f} \right )} + \alpha^{P}_{f} \gamma^{P}_{f} \lambda^{D} \cosh{\left (- L \alpha^{D}_{f} + L_{p} \alpha^{P}_{f} + X_{s} \alpha^{D}_{f} \right )} + \alpha^{P}_{f} \gamma^{P}_{f} \lambda^{D} \cosh{\left (L \alpha^{D}_{f} + L_{p} \alpha^{P}_{f} - X_{s} \alpha^{D}_{f} \right )} + \alpha^{P}_{f} \lambda^{D} \sinh{\left (- L \alpha^{D}_{f} + L_{p} \alpha^{P}_{f} + X_{s} \alpha^{D}_{f} \right )} + \alpha^{P}_{f} \lambda^{D} \sinh{\left (L \alpha^{D}_{f} + L_{p} \alpha^{P}_{f} - X_{s} \alpha^{D}_{f} \right )}\right)}
-& B_f(X_src)=\frac{I_{f} \lambda^{D} r^{P}_{f} \left(\gamma^{P}_{f} \sinh{\left (- L \alpha^{D}_{f} + X_{s} \alpha^{D}_{f} + X_{s} \alpha^{P}_{f} \right )} + \gamma^{P}_{f} \sinh{\left (L \alpha^{D}_{f} - X_{s} \alpha^{D}_{f} + X_{s} \alpha^{P}_{f} \right )} + \cosh{\left (- L \alpha^{D}_{f} + X_{s} \alpha^{D}_{f} + X_{s} \alpha^{P}_{f} \right )} + \cosh{\left (L \alpha^{D}_{f} - X_{s} \alpha^{D}_{f} + X_{s} \alpha^{P}_{f} \right )}\right)}{- \alpha^{D}_{f} \gamma^{P}_{f} \lambda^{P} \cosh{\left (- L \alpha^{D}_{f} + L_{p} \alpha^{D}_{f} + L_{p} \alpha^{P}_{f} \right )} + \alpha^{D}_{f} \gamma^{P}_{f} \lambda^{P} \cosh{\left (L \alpha^{D}_{f} - L_{p} \alpha^{D}_{f} + L_{p} \alpha^{P}_{f} \right )} - \alpha^{D}_{f} \lambda^{P} \sinh{\left (- L \alpha^{D}_{f} + L_{p} \alpha^{D}_{f} + L_{p} \alpha^{P}_{f} \right )} + \alpha^{D}_{f} \lambda^{P} \sinh{\left (L \alpha^{D}_{f} - L_{p} \alpha^{D}_{f} + L_{p} \alpha^{P}_{f} \right )} + \alpha^{P}_{f} \gamma^{P}_{f} \lambda^{D} \cosh{\left (- L \alpha^{D}_{f} + L_{p} \alpha^{P}_{f} + X_{s} \alpha^{D}_{f} \right )} + \alpha^{P}_{f} \gamma^{P}_{f} \lambda^{D} \cosh{\left (L \alpha^{D}_{f} + L_{p} \alpha^{P}_{f} - X_{s} \alpha^{D}_{f} \right )} + \alpha^{P}_{f} \lambda^{D} \sinh{\left (- L \alpha^{D}_{f} + L_{p} \alpha^{P}_{f} + X_{s} \alpha^{D}_{f} \right )} + \alpha^{P}_{f} \lambda^{D} \sinh{\left (L \alpha^{D}_{f} + L_{p} \alpha^{P}_{f} - X_{s} \alpha^{D}_{f} \right )}}
-& C_f(X_src)=\frac{I_{f} \alpha^{D}_{f} \lambda^{P} r^{P}_{f} \left(\gamma^{P}_{f} \cosh{\left (- L \alpha^{D}_{f} + L_{p} \alpha^{D}_{f} + X_{s} \alpha^{P}_{f} \right )} - \gamma^{P}_{f} \cosh{\left (L \alpha^{D}_{f} - L_{p} \alpha^{D}_{f} + X_{s} \alpha^{P}_{f} \right )} + \sinh{\left (- L \alpha^{D}_{f} + L_{p} \alpha^{D}_{f} + X_{s} \alpha^{P}_{f} \right )} - \sinh{\left (L \alpha^{D}_{f} - L_{p} \alpha^{D}_{f} + X_{s} \alpha^{P}_{f} \right )}\right)}{\alpha^{P}_{f} \left(- \alpha^{D}_{f} \gamma^{P}_{f} \lambda^{P} \cosh{\left (- L \alpha^{D}_{f} + L_{p} \alpha^{D}_{f} + L_{p} \alpha^{P}_{f} \right )} + \alpha^{D}_{f} \gamma^{P}_{f} \lambda^{P} \cosh{\left (L \alpha^{D}_{f} - L_{p} \alpha^{D}_{f} + L_{p} \alpha^{P}_{f} \right )} - \alpha^{D}_{f} \lambda^{P} \sinh{\left (- L \alpha^{D}_{f} + L_{p} \alpha^{D}_{f} + L_{p} \alpha^{P}_{f} \right )} + \alpha^{D}_{f} \lambda^{P} \sinh{\left (L \alpha^{D}_{f} - L_{p} \alpha^{D}_{f} + L_{p} \alpha^{P}_{f} \right )} + \alpha^{P}_{f} \gamma^{P}_{f} \lambda^{D} \cosh{\left (- L \alpha^{D}_{f} + L_{p} \alpha^{P}_{f} + X_{s} \alpha^{D}_{f} \right )} + \alpha^{P}_{f} \gamma^{P}_{f} \lambda^{D} \cosh{\left (L \alpha^{D}_{f} + L_{p} \alpha^{P}_{f} - X_{s} \alpha^{D}_{f} \right )} + \alpha^{P}_{f} \lambda^{D} \sinh{\left (- L \alpha^{D}_{f} + L_{p} \alpha^{P}_{f} + X_{s} \alpha^{D}_{f} \right )} + \alpha^{P}_{f} \lambda^{D} \sinh{\left (L \alpha^{D}_{f} + L_{p} \alpha^{P}_{f} - X_{s} \alpha^{D}_{f} \right )}\right)}
-& D_f(X_src)=\frac{2 I_{f} \lambda^{D} r^{P}_{f} \left(\gamma^{P}_{f} \sinh{\left (X_{s} \alpha^{P}_{f} \right )} + \cosh{\left (X_{s} \alpha^{P}_{f} \right )}\right)}{- \alpha^{D}_{f} \gamma^{P}_{f} \lambda^{P} \cosh{\left (- L \alpha^{D}_{f} + L_{p} \alpha^{D}_{f} + L_{p} \alpha^{P}_{f} \right )} + \alpha^{D}_{f} \gamma^{P}_{f} \lambda^{P} \cosh{\left (L \alpha^{D}_{f} - L_{p} \alpha^{D}_{f} + L_{p} \alpha^{P}_{f} \right )} - \alpha^{D}_{f} \lambda^{P} \sinh{\left (- L \alpha^{D}_{f} + L_{p} \alpha^{D}_{f} + L_{p} \alpha^{P}_{f} \right )} + \alpha^{D}_{f} \lambda^{P} \sinh{\left (L \alpha^{D}_{f} - L_{p} \alpha^{D}_{f} + L_{p} \alpha^{P}_{f} \right )} + \alpha^{P}_{f} \gamma^{P}_{f} \lambda^{D} \cosh{\left (- L \alpha^{D}_{f} + L_{p} \alpha^{P}_{f} + X_{s} \alpha^{D}_{f} \right )} + \alpha^{P}_{f} \gamma^{P}_{f} \lambda^{D} \cosh{\left (L \alpha^{D}_{f} + L_{p} \alpha^{P}_{f} - X_{s} \alpha^{D}_{f} \right )} + \alpha^{P}_{f} \lambda^{D} \sinh{\left (- L \alpha^{D}_{f} + L_{p} \alpha^{P}_{f} + X_{s} \alpha^{D}_{f} \right )} + \alpha^{P}_{f} \lambda^{D} \sinh{\left (L \alpha^{D}_{f} + L_{p} \alpha^{P}_{f} - X_{s} \alpha^{D}_{f} \right )}}
+\begin{split}
+& \hat{\delta v}(X, X_{src}, f) = \\
+&\left\{
+\begin{split}
+& A_f(X_{src}) \, \big ( \cosh(\alpha_f^p \, X)+\gamma^p \, \sinh(\alpha_f^p \, X) \big) \\
+& \qquad \qquad \mathrm{ if: } 0 \leq X \leq X_{src} \leq L_p \leq L \\
+& B_f(X_{src})\, \cosh(\alpha_f^p \, (X-L_p))+C_f(X_{src})\, \sinh(\alpha_f^p \, (X-L_p)) \\
+& \qquad \qquad \mathrm{ if: } 0 \leq X_{src}  \leq X \leq L_p \leq L \\
+& D_f(X_{src}) \, \cosh(\alpha_f^d \, (X-L) )  \\
+& \qquad \qquad \mathrm{ if: } 0 \leq X_{src} \leq L_p  \leq X \leq L 
+\end{split}
+\right.
+\end{split}
 \end{equation}
+
+We write the 4 conditions correspondingto the conditions in $X_{src}$
+and $L_p$ to get $A_f, B_f, C_f, D_f$. On a matrix form, this gives:
+
+\begin{equation}
+\hspace{-4cm}
+\footnotesize
+M = 
+\begin{pmatrix}
+    \cosh(\alpha_f^p \, X_{src})+\gamma_f^p \sinh(\alpha_f^p \, X_{src})  
+         & -\cosh(\alpha_f^p \, (X_{src}-L_p)) & -\sinh(\alpha_f^p \, (X_{src}-L_p)) & 0 \\
+    \alpha_f^p \big ( \sinh(\alpha_f^p \, X_{src})+\gamma_f^p \cosh(\alpha_f^p \, X_{src})  \big)
+         & - \alpha_f^p \sinh(\alpha_f^p \, (X_{src}-L_p)) & -\alpha_f^p \cosh(\alpha_f^p \, (X_{src}-L_p)) & 0 \\
+    0 & 1 & 0 & - \cosh(\alpha_f^d \, (L_p-L)) \\
+    0 & 0 & \alpha_f^p & -  \alpha_f^d \frac{\lambda^p}{\lambda^d} \, \sinh(\alpha_f^d \, (L_p-L))
+\end{pmatrix}
+\end{equation}
+
+\begin{equation}
+M \cdot
+\begin{pmatrix}
+    A_f \\
+    B_f \\
+    C_f \\
+    D_f
+\end{pmatrix} = 
+\begin{pmatrix}
+0 \\
+- r_f^p I_f \\
+0 \\
+0
+\end{pmatrix}
+\end{equation}
+
+And we will solve it with the =solve_linear_system_LU= method of
+=sympy=. For the $A_f(X_{src})$ coefficient, we obtain:
+
+\begin{equation}
+A_f(X_{src}) = \frac{a^1_f(X_{src})}{a^2_f(X_{src})}
+\end{equation}
+
+with:
+
+\begin{equation}
+\begin{split}
+& a^1_f(X_{src}) = I_{f} r^{P}_{f} \left(- \alpha^{D}_{f} \lambda^{P} \cosh{\left (L \alpha^{D}_{f} - L_{p} \alpha^{D}_{f} - L_{p} \alpha^{P}_{f} + X_{s} \alpha^{P}_{f} \right )}  \\
+& \qquad + \alpha^{D}_{f} \lambda^{P} \cosh{\left (L \alpha^{D}_{f} - L_{p} \alpha^{D}_{f} + L_{p} \alpha^{P}_{f} - X_{s} \alpha^{P}_{f} \right )}  \\
+& \qquad + \alpha^{P}_{f} \lambda^{D} \cosh{\left (L \alpha^{D}_{f} - L_{p} \alpha^{D}_{f} - L_{p} \alpha^{P}_{f} + X_{s} \alpha^{P}_{f} \right )}  \\
+& \qquad + \alpha^{P}_{f} \lambda^{D} \cosh{\left (L \alpha^{D}_{f} - L_{p} \alpha^{D}_{f} + L_{p} \alpha^{P}_{f} - X_{s} \alpha^{P}_{f} \right )}\right)\\
+& a^2_f(X_{src}) = \alpha^{P}_{f} \left(- \alpha^{D}_{f} \gamma^{P}_{f} \lambda^{P} \cosh{\left (- L \alpha^{D}_{f} + L_{p} \alpha^{D}_{f} + L_{p} \alpha^{P}_{f} \right )}  \\
+& \qquad + \alpha^{D}_{f} \gamma^{P}_{f} \lambda^{P} \cosh{\left (L \alpha^{D}_{f} - L_{p} \alpha^{D}_{f} + L_{p} \alpha^{P}_{f} \right )} -  \\
+& \qquad \alpha^{D}_{f} \lambda^{P} \sinh{\left (- L \alpha^{D}_{f} + L_{p} \alpha^{D}_{f} + L_{p} \alpha^{P}_{f} \right )}  \\
+& \qquad + \alpha^{D}_{f} \lambda^{P} \sinh{\left (L \alpha^{D}_{f} - L_{p} \alpha^{D}_{f} + L_{p} \alpha^{P}_{f} \right )}  \\
+& \qquad + \alpha^{P}_{f} \gamma^{P}_{f} \lambda^{D} \cosh{\left (- L \alpha^{D}_{f} + L_{p} \alpha^{D}_{f} + L_{p} \alpha^{P}_{f} \right )}  \\
+& \qquad + \alpha^{P}_{f} \gamma^{P}_{f} \lambda^{D} \cosh{\left (L \alpha^{D}_{f} - L_{p} \alpha^{D}_{f} + L_{p} \alpha^{P}_{f} \right )}  \\
+& \qquad + \alpha^{P}_{f} \lambda^{D} \sinh{\left (- L \alpha^{D}_{f} + L_{p} \alpha^{D}_{f} + L_{p} \alpha^{P}_{f} \right )}  \\
+& \qquad + \alpha^{P}_{f} \lambda^{D} \sinh{\left (L \alpha^{D}_{f} - L_{p} \alpha^{D}_{f} + L_{p} \alpha^{P}_{f} \right )}\right)\\
+\end{split}
+\end{equation}
+
+**** $ L_p \leq X_{src}$
+
+
+Let's write the solution to this equation as the form (already
+including the boundary conditions at $X=0$ and $X=L$:
+
+\begin{equation}
+\begin{split}
+& \hat{\delta v}(X, X_{src}, f) = \\
+&\left\{
+\begin{split}
+& E_f(X_{src}) \, \big ( \cosh(\alpha_f^p \, X)+\gamma^p \, \sinh(\alpha_f^p \, X) \big) \\
+& \qquad \qquad \mathrm{ if: } 0 \leq X \leq L_p \leq X_{src} \leq L \\
+& F_f(X_{src})\, \cosh(\alpha_f^d \, (X-L_p))+G_f(X_{src})\, \sinh(\alpha_f^d \, (X-L_p)) \\
+& \qquad \qquad \mathrm{ if: } 0  \leq L_p  \leq X \leq X_{src} \leq L \\
+& H_f(X_{src}) \, \cosh(\alpha_f^d \, (X-L) )  \\
+& \qquad \qquad \mathrm{ if: } 0  \leq L_p \leq X_{src}  \leq X \leq L 
+\end{split}
+\right.
+\end{split}
+\end{equation}
+
+We write the 4 conditions correspondingto the conditions in $X_{src}$
+and $L_p$ to get $A_f, B_f, C_f, D_f$. On a matrix form, this gives:
+
+We rewrite this condition on a matrix form:
+
+\begin{equation}
+\hspace{-4cm}
+\footnotesize
+M_2 = 
+\begin{pmatrix}
+    \cosh(\alpha_f^p \, L_p)+\gamma_f^p \sinh(\alpha_f^p \, L_p) & -1 & 0 &0 & 0 \\
+    \alpha_f^p \big ( \sinh(\alpha_f^p \, L_p)+\gamma_f^p \cosh(\alpha_f^p \, L_p)  \big) 
+         & 0 & -  \alpha_f^d \frac{\lambda^p}{\lambda^d} & 0 \\
+    0 & \cosh(\alpha_f^d \, (X_{src}-L_p)) & \sinh(\alpha_f^d \, (X_{src}-L_p)) & - \cosh(\alpha_f^d \, (X_{src}-L))\\
+    0 & \alpha_f^d \, \sinh(\alpha_f^d \, (X_{src}-L_p)) & \alpha_f^d \, \cosh(\alpha_f^d \, (X_{src}-L_p))
+         & - \alpha_f^d \, \sinh(\alpha_f^d \, (X_{src}-L))\\
+\end{pmatrix}
+\end{equation}
+
+\begin{equation}
+M \cdot
+\begin{pmatrix}
+    E_f \\
+    F_f \\
+    G_f \\
+    H_f
+\end{pmatrix} = 
+\begin{pmatrix}
+0 \\
+0 \\
+0 \\
+- r_f^d I_f
+\end{pmatrix}
+\end{equation}
+
+And we will solve it with the =solve_linear_system_LU= method of
+=sympy=. For the $E_f(X_{src})$ coefficient, we obtain:
+
+\begin{equation}
+E_f(X_{src}) = \frac{e^1_f(X_{src})}{e^2_f(X_{src})}
+\end{equation}
+
+with:
+
+\begin{equation}
+\begin{split}
+& e^1_f(X_{src}) = 2 I_{f} \lambda^{P} r^{D}_{f} \cosh{\left (\alpha^{D}_{f} \left(L - X_{s}\right) \right )} \\
+& e^2_f(X_{src}) = - \alpha^{D}_{f} \gamma^{P}_{f} \lambda^{P} \cosh{\left (- L \alpha^{D}_{f} + L_{p} \alpha^{D}_{f} + L_{p} \alpha^{P}_{f} \right )} \\
+& \qquad + \alpha^{D}_{f} \gamma^{P}_{f} \lambda^{P} \cosh{\left (L \alpha^{D}_{f} - L_{p} \alpha^{D}_{f} + L_{p} \alpha^{P}_{f} \right )}  \\
+& \qquad- \alpha^{D}_{f} \lambda^{P} \sinh{\left (- L \alpha^{D}_{f} + L_{p} \alpha^{D}_{f} + L_{p} \alpha^{P}_{f} \right )}  \\
+& \qquad+ \alpha^{D}_{f} \lambda^{P} \sinh{\left (L \alpha^{D}_{f} - L_{p} \alpha^{D}_{f} + L_{p} \alpha^{P}_{f} \right )}  \\
+& \qquad+ \alpha^{P}_{f} \gamma^{P}_{f} \lambda^{D} \cosh{\left (- L \alpha^{D}_{f} + L_{p} \alpha^{D}_{f} + L_{p} \alpha^{P}_{f} \right )}  \\
+& \qquad+ \alpha^{P}_{f} \gamma^{P}_{f} \lambda^{D} \cosh{\left (L \alpha^{D}_{f} - L_{p} \alpha^{D}_{f} + L_{p} \alpha^{P}_{f} \right )}  \\
+& \qquad+ \alpha^{P}_{f} \lambda^{D} \sinh{\left (- L \alpha^{D}_{f} + L_{p} \alpha^{D}_{f} + L_{p} \alpha^{P}_{f} \right )}  \\
+& \qquad+ \alpha^{P}_{f} \lambda^{D} \sinh{\left (L \alpha^{D}_{f} - L_{p} \alpha^{D}_{f} + L_{p} \alpha^{P}_{f} \right )}
+\end{split}
+\end{equation}
+
+
+**** PSP at the soma
+
+The main text writes a solution for the PSP at soma of the form:
+
+\begin{equation}
+\hat{\delta v}(X=0, X_{src}, f) = K_f(X_{src}) \, 
+\big(\mu_v(X_{src})-E_{rev}\big) \,  \hat{g(f)} 
+\end{equation}
+
+The correspondance with the previous calculus is to take a unitary
+current \(I_f=1\) and \( K_f(X_{src}) \) given by:
+
+\begin{equation}
+K_f(X_{src}) = 
+\left\{
+\begin{split}
+& A_f(X_{src}) \forall X_{src} \in [0,L_p] \\
+& E_f(X_{src}) \forall X_{src} \in [L_p, L]
+\end{split}
+\right.
+\end{equation}
+
+
 
 
