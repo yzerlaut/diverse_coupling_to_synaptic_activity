@@ -119,11 +119,11 @@ def cable_eq_params(f, tauS, tauP, lbdP, tauD, lbdD, Cm, cm, ri, lp, l, B):
         # proximal params
     afP = np.sqrt(1+2.*1j*np.pi*f*tauP)
     gfP = lbdP*Cm*ri/tauS*(1+2.*1j*np.pi*f*tauS)
-    rfP = tauP/cm/lbdP*afP ## FACTOR ??
+    rfP = tauP/cm/lbdP ## FACTOR ??
 
     # distal params
     afD = np.sqrt(1+2.*1j*np.pi*f*tauD)
-    rfD = tauD/cm/lbdD*afD ## FACTOR ??
+    rfD = tauD/cm/lbdD ## FACTOR ??
 
     # ball and tree rescaling
     Lp = rescale_x(lp, l, lp, B, lbdP, lbdD)

@@ -60,8 +60,10 @@ def analyze_simulation(xtot, t_vec, V):
                 v = np.array([V[it][i][j][k] for it in range(int(.1*len(t)), len(t))]).flatten()
                 muV_exp[-1] += v.mean()/n_level
                 sV_exp[-1] += v.std()/n_level
+                v_acf, t_shift = autocorrel(v,\
+                  sim_params['window_for_autocorrel']*1e-3, 1e-3*sim_params['dt'])
                 Tv_exp[-1] += np.trapz(v_acf, t_shift)/n_level
-
+                  
     return np.array(muV_exp), np.array(sV_exp), np.array(Tv_exp)
 
 
@@ -184,9 +186,9 @@ if __name__=='__main__':
                         help="With numerical simulation (NEURON)",
                         action="store_true")
     parser.add_argument("--fe_prox", type=float, help="excitatory synaptic frequency in proximal compartment", default=5.)
-    parser.add_argument("--fi_prox", type=float, help="inhibitory synaptic frequency in proximal compartment", default=20.)
-    parser.add_argument("--fe_dist", type=float, help="excitatory synaptic frequency in distal compartment", default=30.)
-    parser.add_argument("--fi_dist", type=float, help="inhibitory synaptic frequency in distal compartment", default=25.)
+    parser.add_argument("--fi_prox", type=float, help="inhibitory synaptic frequency in proximal compartment", default=10.)
+    parser.add_argument("--fe_dist", type=float, help="excitatory synaptic frequency in distal compartment", default=5.)
+    parser.add_argument("--fi_dist", type=float, help="inhibitory synaptic frequency in distal compartment", default=10.)
     parser.add_argument("--fe_soma", type=float, help="excitatory synaptic frequency at soma compartment", default=.0001)
     parser.add_argument("--fi_soma", type=float, help="inhibitory synaptic frequency at soma compartment", default=20.)
     parser.add_argument("--synchrony", type=float, help="synchrony of presynaptic spikes", default=0.)
@@ -195,7 +197,7 @@ if __name__=='__main__':
     parser.add_argument("--discret_th", type=int, help="discretization for theoretical evaluation",default=20)
     parser.add_argument("--seed", type=int, help="seed fo random numbers",default=3)
     # ball and stick properties
-    parser.add_argument("--L_stick", type=float, help="Length of the stick in micrometer", default=2000.)
+    parser.add_argument("--L_stick", type=float, help="Length of the stick in micrometer", default=1000.)
     parser.add_argument("--L_prox_fraction", type=float, help="fraction of tree corresponding to prox. compartment", default=1.99/3.)
     parser.add_argument("--D_stick", type=float, help="Diameter of the stick", default=2.)
     parser.add_argument("-B", "--branches", type=int, help="Number of branches (equally spaced)", default=1)
