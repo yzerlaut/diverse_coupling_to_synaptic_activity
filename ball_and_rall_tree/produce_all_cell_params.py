@@ -63,10 +63,8 @@ else:
 
     for cell in ALL_CELLS:
         cell['Rm'] = 1e-6/cell['Gl']
-        soma1, stick1, params1 = adjust_model_prop(cell['Rm'], soma, stick)
-        params1 = params.copy() # need to modify it AFTER :(
+        soma1, stick1, params1 = adjust_model_prop(cell['Rm'], soma, stick, params2=params.copy())
         cell['soma'], cell['stick'], cell['params'] = soma1, stick1, params1
-        cell['stick']['L_prox'] = params1['fraction_for_L_prox']*cell['stick']['L']
 
     np.save('all_cell_params.npy', ALL_CELLS)
 

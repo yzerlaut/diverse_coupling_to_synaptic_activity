@@ -31,7 +31,7 @@ def get_input_resist(soma, stick, params):
     params_for_cable_theory(stick, params) # setting cable membrane constants
     return np.abs(get_the_input_impedance_at_soma(0., EqCylinder2, soma, stick, params))
 
-def adjust_model_prop(Rm, soma, stick, precision=2000):
+def adjust_model_prop(Rm, soma, stick, precision=2000, params2=None):
     """ Rm in Mohm !! """
     if Rm>1200 or Rm<100:
         print '---------------------------------------------------'
@@ -43,13 +43,17 @@ def adjust_model_prop(Rm, soma, stick, precision=2000):
     D_dend = .75*1e-6*BASE
     Rin = np.zeros(precision)
     for i in range(len(Rin)):
-        soma1, stick1, params1 = soma.copy(), stick.copy(), params.copy()
+        soma1, stick1 = soma.copy(), stick.copy()
+        if params2 is None:
+            params1 = params.copy()
+        else:
+            params1=params2
         soma1['L'] += L_soma[i]
         stick1['L'] += L_dend[i]
         stick1['D'] += D_dend[i]
         Rin[i] = get_input_resist(soma1, stick1, params1)
     i0 = np.argmin(np.abs(Rin/1e6-Rm))
-    soma1, stick1, params1 = soma.copy(), stick.copy(), params.copy()
+    soma1, stick1 = soma.copy(), stick.copy()
     soma1['L'] += L_soma[i0]
     stick1['L'] += L_dend[i0]
     stick1['D'] += D_dend[i0]

@@ -176,8 +176,8 @@ def stat_pot_function(x, shtn_input, EqCylinder, soma, stick, Params):
     # somatic params
     V0 = (El+Rm*Gi_soma*Ei)/(1+Rm*Gi_soma)
 
-    X = np.array([rescale_x(xx, l, lp, Params['B'], lbdP, lbdD) for xx in x])
-    Lp, L = rescale_x(lp, l, lp, Params['B'], lbdP, lbdD), rescale_x(l, l, lp, Params['B'], lbdP, lbdD)
+    X = np.array([rescale_x(xx, l, lp, stick['B'], lbdP, lbdD) for xx in x])
+    Lp, L = rescale_x(lp, l, lp, stick['B'], lbdP, lbdD), rescale_x(l, l, lp, stick['B'], lbdP, lbdD)
 
     return np.array([muV_prox(XX, Lp, L, lbdD, lbdP, gP, v0D, v0P, V0) if XX<Lp\
                      else muV_dist(XX, Lp, L, lbdD, lbdP, gP, v0D, v0P, V0) for XX in X])
@@ -215,9 +215,9 @@ def psp_norm_square_integral_per_dend_synapse_type(x_dest, x_src, f, Gf2,\
             ball_and_stick_constants(shtn_input, soma, stick, params)
     # cable constants
     afP, gfP, rfP, afD, rfD, Lp, L = cable_eq_params(f, tauS, tauP, lbdP,\
-                                    tauD, lbdD, Cm, cm, ri, lp, l, params['B'])
-    Xsrc = rescale_x(x_src, l, lp, params['B'], lbdP, lbdD)
-    Xdest = rescale_x(x_dest, l, lp, params['B'], lbdP, lbdD)
+                                    tauD, lbdD, Cm, cm, ri, lp, l, stick['B'])
+    Xsrc = rescale_x(x_src, l, lp, stick['B'], lbdP, lbdD)
+    Xdest = rescale_x(x_dest, l, lp, stick['B'], lbdP, lbdD)
 
     # PSP with unitary current input
     if Xsrc<=Lp:
@@ -336,8 +336,8 @@ def psp_norm_square_integral_per_dend_synapse_type_at_soma(x_src, f, Gf2,\
             ball_and_stick_constants(shtn_input, soma, stick, params)
     # cable constants
     afP, gfP, rfP, afD, rfD, Lp, L = cable_eq_params(f, tauS, tauP, lbdP,\
-                                    tauD, lbdD, Cm, cm, ri, lp, l, params['B'])
-    Xsrc = rescale_x(x_src, l, lp, params['B'], lbdP, lbdD)
+                                    tauD, lbdD, Cm, cm, ri, lp, l, stick['B'])
+    Xsrc = rescale_x(x_src, l, lp, stick['B'], lbdP, lbdD)
     
     # PSP with unitary current input
     if Xsrc<=Lp:
@@ -468,10 +468,6 @@ def get_the_input_and_transfer_resistance(fe, fi, f, x, params, soma, stick):
 def get_the_input_resistance_at_soma(EqCylinder, soma, stick, params,
                                      shtn_input):
 
-    # muV for mean driving force
-    muV_X = stat_pot_function([x_src], shtn_input, EqCylinder,\
-                              soma, stick, params)[0]
-    
     # model parameters
     Ls, Ds, l, D, lp, Rm, Cm,\
         El, Ee, Ei, rm, cm, ri = ball_and_stick_params(soma, stick, params)
@@ -479,8 +475,8 @@ def get_the_input_resistance_at_soma(EqCylinder, soma, stick, params,
     tauS, tauP, lbdP, tauD, lbdD = \
             ball_and_stick_constants(shtn_input, soma, stick, params)
     # cable constants
-    afP, gfP, rfP, afD, rfD, Lp, L = cable_eq_params(f, tauS, tauP, lbdP,\
-                                    tauD, lbdD, Cm, cm, ri, lp, l, params['B'])
+    afP, gfP, rfP, afD, rfD, Lp, L = cable_eq_params(0., tauS, tauP, lbdP,\
+                                    tauD, lbdD, Cm, cm, ri, lp, l, stick['B'])
                                     
     # PSP with unitary current input
     # input and recording in x=0 
@@ -505,7 +501,7 @@ def get_the_input_impedance_at_soma(f, EqCylinder, soma, stick, params):
             
     # cable constants
     afP, gfP, rfP, afD, rfD, Lp, L = cable_eq_params(f, tauS, tauP, lbdP,\
-                                    tauD, lbdD, Cm, cm, ri, lp, l, params['B'])
+                                    tauD, lbdD, Cm, cm, ri, lp, l, stick['B'])
                                     
     # PSP with unitary current input
     # input and recording in x=0 

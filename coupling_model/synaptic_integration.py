@@ -4,6 +4,7 @@ sys.path.append('../')
 from theory.analytical_calculus import get_the_fluct_prop_at_soma, find_balance_at_soma
 
 soma, stick, params = np.load('../ball_and_rall_tree/mean_model.npy')
+ALL_CELLS = np.load('../ball_and_rall_tree/all_cell_params.npy')
 
 def find_inh_cond_for_balance(feG, fiG, feI, fiI, i_nrn, balance=-60e-3):
     for i in range(len(F)):

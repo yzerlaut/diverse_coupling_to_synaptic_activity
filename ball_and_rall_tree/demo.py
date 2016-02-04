@@ -149,9 +149,9 @@ def make_comparison_plot(x_th, muV_th, sV_th, Tv_th,\
     # membrane pot 
     fig1, AX = plt.subplots(3,1, sharex=True, figsize=(5,8))
     # numerical simulations
-    AX[0].plot(1e6*x_exp, muV_exp, 'kD', label='num. sim')
-    AX[1].plot(1e6*x_exp, sV_exp, 'kD')
-    AX[2].plot(1e6*x_exp, 1e3*Tv_exp, 'kD')
+    AX[0].plot(1e6*x_exp, muV_exp, 'kD', label='num. sim', ms=4)
+    AX[1].plot(1e6*x_exp, sV_exp, 'kD', ms=4)
+    AX[2].plot(1e6*x_exp, 1e3*Tv_exp, 'kD', ms=4)
     # analytical calculuc
     AX[0].plot(1e6*x_th, 1e3*muV_th, 'k-', label='analytic approx.', lw=3, alpha=.5)
     AX[1].plot(1e6*x_th, 1e3*sV_th, 'k-', lw=3, alpha=.5)
@@ -217,8 +217,8 @@ if __name__=='__main__':
     stick['L'] = args.L_stick*1e-6
     stick['D'] = args.D_stick*1e-6
     if not len(args.EqCylinder):
-        params['B'] = args.branches
-        EqCylinder = np.linspace(0, 1, params['B']+1)*stick['L'] # equally space branches !
+        stick['B'] = args.branches
+        EqCylinder = np.linspace(0, 1, stick['B']+1)*stick['L'] # equally space branches !
     else:
         EqCylinder = np.array(args.EqCylinder)*stick['L'] # detailed branching
 
