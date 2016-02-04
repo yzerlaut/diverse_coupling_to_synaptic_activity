@@ -49,13 +49,6 @@ def analyze_simulation(xtot, t_vec, V):
 
     muV_exp, sV_exp, Tv_exp = [], [], []
 
-    # for autocorrelation analysis
-    exp_f = lambda t, tau: np.exp(-t/tau)
-    def find_acf_time(v_acf, t_shift, criteria=0.01):
-        i_max = np.argmin(np.abs(v_acf-criteria))
-        P, pcov = curve_fit(exp_f, t_shift[:i_max], v_acf[:i_max])
-        return P[0]
-
     for i in range(len(cables)): # loop over levels
         n_level = max(1,2**(i-1)) # number of levels
         for k in range(cables[i]['NSEG']): # loop over segments first
@@ -67,9 +60,7 @@ def analyze_simulation(xtot, t_vec, V):
                 v = np.array([V[it][i][j][k] for it in range(int(.1*len(t)), len(t))]).flatten()
                 muV_exp[-1] += v.mean()/n_level
                 sV_exp[-1] += v.std()/n_level
-                v_acf, t_shift = autocorrel(v,\
-                  sim_params['window_for_autocorrel']*1e-3, 1e-3*sim_params['dt'])
-                Tv_exp[-1] += find_acf_time(v_acf, t_shift, criteria=0.01)/n_level
+                Tv_exp[-1] += np.trapz(v_acf, t_shift)/n_level
 
     return np.array(muV_exp), np.array(sV_exp), np.array(Tv_exp)
 
