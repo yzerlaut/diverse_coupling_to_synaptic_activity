@@ -47,6 +47,7 @@ def setup_model(EqCylinder, soma, dend, Params):
         # summing over duplicate of compartments
         Ki_tot += 2**jj*cable['Ki_per_seg']*cable['NSEG']
         Ke_tot += 2**jj*cable['Ke_per_seg']*cable['NSEG']
+        cable['Area_per_seg'] = cable['L']*cable['D']*np.pi/cable['NSEG']
         if cable['name']!='soma':
             jj+=1
     print "Total number of EXCITATORY synapses : ", Ke_tot
@@ -113,6 +114,22 @@ def ball_and_stick_constants(shtn_input, soma, stick, Params):
     lbdD = np.sqrt(rm/ri/(1+rm*ge_dist+rm*gi_dist))
     tauS = Rm*Cm/(1+Rm*Gi_soma)
     return tauS, tauP, lbdP, tauD, lbdD
+
+def cable_eq_params(f, tauS, tauP, lbdP, tauD, lbdD, Cm, cm, ri, lp, l, B):
+        # proximal params
+    afP = np.sqrt(1+2.*1j*np.pi*f*tauP)
+    gfP = lbdP*Cm*ri/tauS*(1+2.*1j*np.pi*f*tauS)
+    rfP = tauP/cm/lbdP*afP ## FACTOR ??
+
+    # distal params
+    afD = np.sqrt(1+2.*1j*np.pi*f*tauD)
+    rfD = tauD/cm/lbdD*afD ## FACTOR ??
+
+    # ball and tree rescaling
+    Lp = rescale_x(lp, l, lp, B, lbdP, lbdD)
+    L = rescale_x(l, l, lp, B, lbdP, lbdD)
+    
+    return afP, gfP, rfP, afD, rfD, Lp, L
 
 
 ############### INPUT FROM SYMPY ###################
@@ -196,23 +213,9 @@ def psp_norm_square_integral_per_dend_synapse_type(x_dest, x_src, f, Gf2,\
     # activity dependent parameters
     tauS, tauP, lbdP, tauD, lbdD = \
             ball_and_stick_constants(shtn_input, soma, stick, params)
-
-    # proximal params
-    afP = np.sqrt(1+2.*1j*np.pi*f*tauP)
-    gfP = lbdP*Cm*ri/tauS*(1+2.*1j*np.pi*f*tauS)
-    # rfP = tauP/cm/lbdP/(1+2.*1j*np.pi*f*tauP)
-    # rfP = tauP/cm/lbdP/afP
-    rfP = tauP/cm/lbdP
-
-    # distal params
-    afD = np.sqrt(1+2.*1j*np.pi*f*tauD)
-    # rfD = tauD/cm/lbdD/(1+2.*1j*np.pi*f*tauD)
-    # rfD = tauD/cm/lbdD/afP
-    rfD = tauD/cm/lbdD
-
-    # ball and tree rescaling
-    Lp = rescale_x(lp, l, lp, params['B'], lbdP, lbdD)
-    L = rescale_x(l, l, lp, params['B'], lbdP, lbdD)
+    # cable constants
+    afP, gfP, rfP, afD, rfD, Lp, L = cable_eq_params(f, tauS, tauP, lbdP,\
+                                    tauD, lbdD, Cm, cm, ri, lp, l, params['B'])
     Xsrc = rescale_x(x_src, l, lp, params['B'], lbdP, lbdD)
     Xdest = rescale_x(x_dest, l, lp, params['B'], lbdP, lbdD)
 
@@ -316,45 +319,36 @@ def get_the_theoretical_sV_and_Tv(shtn_input, EqCylinder,\
     return np.sqrt(sV2), Tv
 
 @jit
-def psp_norm_square_integral_per_dend_synapse_type_at_soma(X, f, Gf2,\
+def psp_norm_square_integral_per_dend_synapse_type_at_soma(x_src, f, Gf2,\
                             Erev, shtn_input, EqCylinder,\
                             soma, stick, params,
                             precision=1e2):
 
-    Ls, Ds, L, D, Lp, Rm, Cm,\
+    # muV for mean driving force
+    muV_X = stat_pot_function([x_src], shtn_input, EqCylinder,\
+                              soma, stick, params)[0]
+    
+    # model parameters
+    Ls, Ds, l, D, lp, Rm, Cm,\
         El, Ee, Ei, rm, cm, ri = ball_and_stick_params(soma, stick, params)
-
+    # activity dependent parameters
     tauS, tauP, lbdP, tauD, lbdD = \
             ball_and_stick_constants(shtn_input, soma, stick, params)
-
-    # proximal params
-    lbdPf = lbdP/np.sqrt(1+2*1j*np.pi*f*tauP)
-    gPf = lbdPf*Cm*ri*(1+2*1j*np.pi*f*tauS)/tauS
-    rPf = tauP/cm/(1+2*1j*np.pi*f*tauP)
-
-    # distal params
-    lbdDf = lbdD/np.sqrt(1+2*1j*np.pi*f*tauD)
-    rDf = tauD/cm/(1+2*1j*np.pi*f*tauD)
-
-    # muV for mean driving force
-    muV_X = stat_pot_function([X], shtn_input, EqCylinder,\
-                              soma, stick, params)[0]
-
-    # ball and tree rescaling
-    Lp, L = rescale_x(Lp, EqCylinder), rescale_x(L, EqCylinder)
-    X = rescale_x(X,EqCylinder)
-
+    # cable constants
+    afP, gfP, rfP, afD, rfD, Lp, L = cable_eq_params(f, tauS, tauP, lbdP,\
+                                    tauD, lbdD, Cm, cm, ri, lp, l, params['B'])
+    Xsrc = rescale_x(x_src, l, lp, params['B'], lbdP, lbdD)
+    
     # PSP with unitary current input
-    if X<=Lp:
+    if Xsrc<=Lp:
         # to be replaced by simplified expression
-        PSP = dv_xXLp(0., X, Lp,L,lbdDf,lbdPf,gPf,rPf,rDf) 
-    elif X>Lp:
+        PSP = dv_X_Xsrc_Lp(0., Xsrc, 1., afP, afD, gfP, rfP, rfD, Lp, L, lbdD, lbdP)
+    elif Xsrc>Lp:
         # to be replaced by simplified expression
-        PSP = dv_xLpX(0.,X,Lp,L,lbdDf,lbdPf,gPf,rPf,rDf)
+        PSP = dv_X_Lp_Xsrc(0., Xsrc, 1., afP, afD, gfP, rfP, rfD, Lp, L, lbdD, lbdP)
 
     return Gf2*np.abs(PSP)**2*(Erev-muV_X)**2
 
-@jit
 def get_the_fluct_prop_at_soma(SHTN_INPUT, params, soma, stick,\
                                precision=100, f=rfft.time_to_freq(1000, 1e-4)):
 
@@ -474,27 +468,23 @@ def get_the_input_and_transfer_resistance(fe, fi, f, x, params, soma, stick):
 def get_the_input_resistance_at_soma(EqCylinder, soma, stick, params,
                                      shtn_input):
 
-    Ls, Ds, L, D, Lp, Rm, Cm,\
-        El, Ee, Ei, rm, cm, ri = ball_and_stick_params(soma, stick, params)
-
-    # impact of the BRANCHING !!
-    Lp, L = rescale_x(Lp, EqCylinder), rescale_x(L, EqCylinder)
+    # muV for mean driving force
+    muV_X = stat_pot_function([x_src], shtn_input, EqCylinder,\
+                              soma, stick, params)[0]
     
+    # model parameters
+    Ls, Ds, l, D, lp, Rm, Cm,\
+        El, Ee, Ei, rm, cm, ri = ball_and_stick_params(soma, stick, params)
+    # activity dependent parameters
     tauS, tauP, lbdP, tauD, lbdD = \
             ball_and_stick_constants(shtn_input, soma, stick, params)
-    f=0
-    # proximal params
-    lbdPf = lbdP/np.sqrt(1+2*1j*np.pi*f*tauP)
-    gPf = lbdPf*Cm*ri*(1+2*1j*np.pi*f*tauS)/tauS
-    rPf = tauP/cm/(1+2*1j*np.pi*f*tauP)
-
-    # distal params
-    lbdDf = lbdD/np.sqrt(1+2*1j*np.pi*f*tauD)
-    rDf = tauD/cm/(1+2*1j*np.pi*f*tauD)
-
+    # cable constants
+    afP, gfP, rfP, afD, rfD, Lp, L = cable_eq_params(f, tauS, tauP, lbdP,\
+                                    tauD, lbdD, Cm, cm, ri, lp, l, params['B'])
+                                    
     # PSP with unitary current input
     # input and recording in x=0 
-    return np.abs(dv_xXLp(0., 0., Lp, L ,lbdDf,lbdPf,gPf,rPf,rDf))
+    return np.abs(dv_X_Xsrc_Lp(0., 0., 1., afP, afD, gfP, rfP, rfD, Lp, L, lbdD, lbdP))
 
 
 def get_the_input_impedance_at_soma(f, EqCylinder, soma, stick, params):
@@ -502,30 +492,24 @@ def get_the_input_impedance_at_soma(f, EqCylinder, soma, stick, params):
     # we remove the prox/dist separation, usefull only when synaptic input !!
     stick = stick.copy()
     
-    Ls, Ds, L, D, Lp, Rm, Cm,\
+    # model parameters
+    Ls, Ds, l, D, lp, Rm, Cm,\
         El, Ee, Ei, rm, cm, ri = ball_and_stick_params(soma, stick, params)
-    Lp = L # not need of splitting the tree with respect ot proximal and distal
-    # impact of the BRANCHING !!
-    Lp, L = rescale_x(Lp, EqCylinder), rescale_x(L, EqCylinder)
-    
-    # activity set to 0 !!
+        
     shtn_input = {'fi_soma':0, 'fe_prox':0,'fi_prox':0,
                   'fe_dist':0,'fi_dist':0}
+    
+    # activity dependent parameters
     tauS, tauP, lbdP, tauD, lbdD = \
             ball_and_stick_constants(shtn_input, soma, stick, params)
-
-    # proximal params
-    lbdPf = lbdP/np.sqrt(1+2*1j*np.pi*f*tauP)
-    gPf = lbdPf*Cm*ri*(1+2*1j*np.pi*f*tauS)/tauS
-    rPf = tauP/cm/(1+2*1j*np.pi*f*tauP)
-
-    # distal params
-    lbdDf = lbdD/np.sqrt(1+2*1j*np.pi*f*tauD)
-    rDf = tauD/cm/(1+2*1j*np.pi*f*tauD)
-
+            
+    # cable constants
+    afP, gfP, rfP, afD, rfD, Lp, L = cable_eq_params(f, tauS, tauP, lbdP,\
+                                    tauD, lbdD, Cm, cm, ri, lp, l, params['B'])
+                                    
     # PSP with unitary current input
     # input and recording in x=0 
-    return dv_xXLp(0., 0., Lp,L,lbdDf,lbdPf,gPf,rPf,rDf)
+    return np.abs(dv_X_Xsrc_Lp(0., 0., 1., afP, afD, gfP, rfP, rfD, Lp, L, lbdD, lbdP))
 
 def get_membrane_time_constants(EqCylinder, soma, stick, params,\
                                 f=rfft.time_to_freq(1000, 1e-4)):
