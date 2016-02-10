@@ -1,257 +1,785 @@
-#+TITLE: Heterogenous firing responses of layer V pyramidal neurons leads to diverse coupling to presynaptic activity in morphologically detailed models
+#+TITLE: Heterogenous firing responses leads to diverse coupling to presynaptic activity in a simplified morphological model of layer V pyramidal neurons
 #+AUTHOR: Y. Zerlaut^{1,2} \& A. Destexhe^{1,2}
 #+INCLUDE: my_template.org 
 
 * Abstract
 
-  \bfseries 
+  \bfseries
 
-  Biological systems display heterogeneity
+  Growing experimental evidences suggest that cortical processing of
+  sensory input relies on the differential activation of neurons
+  within cortical networks, the circuit or cellular mechanisms
+  underlying this . In a companion communication [[cite:Zerlaut2016]], we
+  reported how individual neurons differ in their excitability and
+  sensitivities to the properties of the membrane potential
+  fluctuations. In the present report, we investigate how this
+  heterogeneity is translated into diverse input-ouput properties
+  (i.e. in th relation from presynaptic quantities to spiking
+  probability).
 
-  In a recent report, we quantified this heterogneity in the fluct. driven regime
+  To this purpose, we designed a simplified morphological model of
+  layer V pyramidal neurons with a dendritic tree following Rall's
+  branching rule. We first show that we are able to calibrate this
+  simplified model on /in vitro/ measurements of somatic input
+  impedance in layer V pyramidal neurons of juvenile mive visual
+  cortex. We then propose and analytical derivation for the membrane
+  potential fluctuations at the soma as a function of the properties
+  of the synaptic bombardment.
 
   We study the coupling to different form of presynaptic activities,
   either balanced, unbalanced, proximal, distal, etc..
 
-  In this letter, we investigate the 
-
 \normalfont
 
+\newpage
 
 * Introduction
 
 [...]
 
+Experimental evidence accumulate to show how the diverse activation of
+neurons within a neocortical population might be the substrate of 
+
+Though this diverse activation is likely to be due to specific
+connectivity schemes, we explore here a complementary mechanism: given
+the strong heterogeneity in electrophysiological properties of
+neocortical pyramidal cells
+
+\newpage
 
 * Results 
 <<sec:results>>
+\normalsize
 
-** Morphology calibration on /in vitro/ data
+** A theoretical framework for single cell computation
+
+[[taken from previous paper, to be adapted]]
+
+Determining the cellular input-output functions is complex because
+input of neocortical neurons are mostly in dendrites and output spikes
+are generated in initial segments of an axon as reviewed in
+[[citetext:Stuart2015]] and [[citetext:Debanne2011]] 
+input will therefore crucially shape their input-output
+relationship. Various parameters of presynaptic activity can
+arbitrarily control the properties of the membrane potential
+fluctuations at the soma. Those properties can be quantified by
+identifying three somatic variables that provide a reduced description
+of the dynamical state at the soma in the /fluctuation-driven/ regime:
+the mean \mu_V, the standard deviation \sigma_V of the membrane
+potential fluctuations and their typical autocorrelation time $\tau_V$
+(see Methods[[sec:autocorrel-def]]). For example, the
+excitatory/inhibitory balance controls the mean depolarization at the
+soma \mu_V, the mean synaptic bombardment impacts the standard
+deviation \sigma_V and the speed of the membrane potential
+fluctuations \tau_V. Other effects such as synchrony in the
+presynaptic spike trains or ratio between distally and proximally
+targeting synaptic activity also affect the statistical properties of
+the fluctuations. The effects of synaptic input and its dendritic
+integration on somatic variables can be investigated theoretically
+using cable theory [[cite:Tuckwell2002]] and will be the focus of a future
+communication.
+
+Because the spike initiation site lies electrotonically close to the
+soma [[cite:Debanne2011]], we assume that those three purely somatic
+variables will define the firing rate uniquely. In this study we
+investigate the firing response in terms of those somatic variables
+(illustrated in Figure [[fig:3D-motiv]]).
+
+** A simplified morphological model of layer V pyramidal neurons
+
+#+ATTR_LATEX: :width \linewidth
+#+NAME: fig:model-illustration
+#+CAPTION: *A theoretical framework for single cell computation in the fluctuation-driven regime*. *(A)* Theoretical paradigm: to get the input-output function of a single cell, we split the relation from presynaptic quantities (the input) to the spiking probability (the output) into two steps. 1) passive dendritic integration shape the membrane potential at the soma and 2) how those fluctuations are translated into spikes is captured by a firing response function determined /in vitro/ [[cite:Zerlaut2016]] *(B)* Theoretical model for dendritic integration. A single cell is made of a lumped impedance somatic compartment and a dendritic tree. The dendritic tree is composed of B branches (here B=5), the branching is symmetric and follow Rall's 3/2 rule for the branch diameters. Synapses are then spread all over the membrane according to physiological synaptic densities. We define 3 domains: a somatic and proximal domain as well as a distal domain, excitatory and inhibitory synaptic input can vary independently in those domains. An additional variable: synaptic synchrony controls the degree of coincidents synaptic inputs.
+[[file:./figures/model_illustration.pdf]]
+
+
+\newpage 
+
+** Calibrating the morphological model on /in vitro/ measurements
 <<sec:in-vitro-calib>>
 
-#+ATTR_LATEX: :float c :width 1.2\linewidth
+#+ATTR_LATEX: :width \linewidth
 #+NAME: fig:in-vitro-calib
-#+CAPTION: *Size variations in the theoretical model account for the heterogeneity in somatic input impedance measured /in vitro/* *(A)* Input impedance (left: modulus and right: phase shift) measured at the soma in intracellular recordings with sine-wave protocols. *(B)* Varying the size of the dendritic tree (length and diameter) partially accounts for the observed heterogeneity of the somatic input impedance.
-[[file:./figures/calibr_on_input_imped.pdf]]
+#+CAPTION: *Calibrating the model on /in vitro/ measurements: the simplified model and its size variations provides an approximation for the somatic input impedance and its heterogeneity*. *(A)* Input impedance (left: modulus and right: phase shift) measured at the soma in intracellular recordings with sine-wave protocols in current-clamp (inset). The color code indicates the input resistance and is likely to result from size variations of individual cells. *(B)* A medium size model accounts for the average data and varying the size of the dendritic tree and soma reproduces the trend in the individual measurements. Large cells (blue) have a lower modulus and a lower phase shift while small cells (red) have both a higher modulus and phase shift. *(C)* Left: We obtain a map between input resistance and size of the morphological model. Right: Representation of the medium-size model.
+[[file:./figures/calibration_on_input_imped.pdf]]
 
+
+\newpage
+
+** An analytical approximation for the properties of the membrane potential fluctuations
+
+Needed because simulations of morphologies are computationally very
+expensive, very limited scan of input space is allowed.
+
+comparison between analytical approx and simulations in =NEURON=
+
+#+ATTR_LATEX: :width \linewidth
+#+NAME: fig:analytics-accuracy
+#+CAPTION: *Accuracy of the analytical approximation for the properties of the membrane potential fluctuations: comparison between numerical simulations and analytical estimates*. 
+[[./to_be_done.pdf]]
+
+We emphasize here that even if the analytical description uses the
+reduction to the equivalent cylinder (and therefore could be seen as
+equivalent to the Ball and Stick model), the described model has
+separate branches so that the fluctuations are uncorrelated from
+branches to branches unlike in the Ball and Stick model.
+
+** diverse coupling
 
 * Discussion
 
+** An analytical model for dendritic integration in the fluctuation-driven regime
+
+we provided a stratey for the analytical treatment of dendritic
+integration in the fluctuation-driven regime that relies on 1)
+shotnoise theory, 2) cable theory and 3) adequate approximations.
+
+The main advantage of this model is that you can very naturall plug in
+physiological parameters (because surface area is physiological as
+well as transfer resistance to soma) and still it remains analytical.
+
+Literature suffers from the reduction to single-compartment
+
+The current model provides a tool to make network dynamics question
+amenable to mathematical analysis with morphologically detailed
+models.
+
+** Heterogeneity of morpological and passive neuronal properties
+
+In this study, the rescaling rule between input resistance at the soma
+and the morphological model has led to a relative 
+
+** Diverse coupling to presynaptic activity
 
 * Material and Methods 
 \small
 
-** Experimental preparation
-<<sec:exp-prep>>
-
-Experimental procedures with animals were performed following the
-instructions of the European Council Directive 2010 86/609/EEC and its
-French transposition (Décret 2013/118). Swiss wild-type mice of either
-sex, 8–13 days old, were anesthetized with inhaled isoflurane and
-decapitated, their brain was rapidly removed and immersed in cold
-“cutting” solution (\sim 4^{o}C) containing the following (in mM): 110
-Choline Chloride, 2.5 KCl, 1.25 NaH2PO4, 26 NaHCO3, 8 MgCl2, 1 CaCl2,
-10 glucose, pH equilibrated to 7.3 with O2/CO2 (95\%/5\%). Coronal
-slices (300 $\mu\mathrm{m}$ thick) were prepared with a vibratome
-(Leica VT1200 S, Leica Microsystems) and stored at room temperature in
-oxygenated aCSF containing the following (in mM): 126 NaCl, 2.5 KCl,
-1.5 NaH2PO4, 26 NaHCO3, 2 MgCl2, 2 CaCl2 and 10 glucose, pH 7.4. The
-slices were then transferred to the recording chamber (perfused with
-the same solution) where the temperature was maintained at
-34^{o}C. Slices containing primary visual cortex were taken as the
-first four slices containing brain cortex starting from the most
-caudal one.
+#+NAME: table:Figure-1
+#+CAPTION: *Model parameters* 
+| Parameter Name          | Symbol | Value | Unit |
+|-------------------------+--------+-------+------|
+| leak resistance density | r_m    |       |      |
+|-------------------------+--------+-------+------|
 
 
-** Electrophysiological recordings
-<<sec:electrophy>>
+** Neuronal model
+<<sec:correlation-generator>>
 
-We performed intracellular recordings of visually identified pyramidal
-cells located in the layer V of mice cortex using the perforated patch
-technique.
+The model is illustrated on Figure [[fig:model-illustration]]B.
 
-Patch electrodes (tip resistance: 1.5–2.5 $\mathrm{M}\Omega$) were
-pulled on a Sutter P-1000 apparatus (Sutter Instruments) and filled in
-a two step procedure. The pipettes were pre-filled with a solution
-containing the following (in mM): 130 K-Gluconate, KCl 7, NaCl 1,
-MgCl2 4, HEPES 10, pH adjusted to 7.3 with KOH (osmolarity 260
-mOsm). The pipette was then back-filled with the same solution to
-which was added Amphotericin-B (Sigma Aldrich) previously dissolved in
-DMSO, the final concentration of Amphotericin-B was 60
-$\mu\mathrm{M}$. The reason for this two step procedure is to allow a
-current flow out of the pipette (to preserve the tip from dirt)
-without pouring the perforant onto the target cell during the pipette
-approach. The perforation could therefore happen only after diffusion
-of Amphotericin-B through the "clean" solution, this usually took 5-10
-minutes after the pipette filling, thus allowing the cell-attached
-configuration to form in absence of the perforant molecule.
+- morphology with symmetric branching
 
-We recorded from n=30 cells. After perforation, the access resistance
-R_S was 14.7M\(\Omega\) \(\pm\) 6.9. This value was plugged in into
-the amplifier-build bridge compensation system during the
-current-clamp recordings. At -75 mV, the recordings exhibited a leak
-current of -31.9 pA \(\pm\) 26.8 (minimum observed resting potential:
--76 mV), this current value was then set for each neuron as the
-holding current during the recording. Recorded pyramidal cells had an
-input resistance R_m of 355.9 M$\Omega$ \(\pm\)184.1 and a membrane
-time constant at rest of : 31.4ms \(\pm\) 12.0. Recordings lasted 36.7
-min \pm 20.9. In the absence of current injection, cells presented a
-quiescent activity.
+- different properties for the proximal part vs the distal part 
 
-The liquid junction potential was measured to be 6 mV and membrane
-potential recordings were corrected accordingly. Note that there might
-be anyway an unknown constant shift in the voltage value because the
-Amphotericin-B pores are selective channels (so that a non-zero
-reversal potential could appear if the cellular medium and our pipette
-medium are different). The absolute values of the membrane potential
-presented here should therefore be interpreted carefully (but this
-would only affect the \( \langle V_\mathrm{thre}^\mathrm{eff}
-\rangle_\mathcal{D} \) quantity reported in this study).
+** Compartementalization
 
+ proximal vs. distal
 
+various synaptic properties to obtain the location independence at the
+soma [[cite:Macgee2000]].
 
-** Measuring firing rate
-<<sec:measured-quant>>
+** Correlation generator
+<<sec:correlation-generator>>
 
- We measured the firing rate simply by counting spikes over a fixed
- time window. Spikes were detected as a upward crossings of -20mV. The
- first 100ms we removed to avoid transient effects associated to the
- membrane potential rise. The duration of the stimulation was usually
- 5s, therefore the minimum (non zero) rate was 0.2 Hz. Also an online
- analysis was counting spikes and the stimulation was stopped when
- \sim 20 spikes were reached (see in Figure [[fig:exp-charact]]E, the
- middle episode is shorter than the two other ones), this to avoid
- spending to much recording time in the high firing rate range.
+Very simplistic model, synchrony is not shared across synapses. We
+duplicate spikes of one synapse with probability $s$.
 
+** Model equations: synaptic input and passive properties
+<<sec:model-equations>>
 
-** Dynamic-clamp
-<<sec:dynamic-clamp>>
+The cable equation describes the temporal evolution and spatial spread of the membrane potential along the branches of the dendritic tree [[cite:RallXXXX]]:
 
-Our dynamic-clamp system consists of an Intel Quad-Core computer
-equipped with an acquisition card (NI PCI-6251 ADC/DAC,Mseries,
-National Instruments) connected to the amplifier operating in
-current-clamp mode. The dynamic-clamp software is based on a custom
-ADC/DAC (analog-to-digital/digital-to-analog) program used for data
-acquisition and analysis [Elphy2, developed at Unité de Neurosciences,
-Information et Complexité (UNIC) by Gérard Sadoc] and interfaced with
-the =NEURON= simulator version 6.0 (Hines and Carnevale,
-1997). =NEURON= was modified and recompiled to run under the INtime
-(TenAsys), a Real Time Operating System running alongside Microsoft
-Windows.  The recordings were performed using a Multiclamp 700B
-amplifier (Molecular Devices). Stimulation protocols were run in real
-time with the acquisition card at 10 kHz. Acquisition and filter
-frequencies were set at 10 and 4 kHz, respectively. An unfiltered copy
-of the membrane potential signal was feeding the /dynamic clamp/
-system.
-
-
-** Single compartment approximation
-<<sec:single-comp>>
-
-Both for the experimentally recorded neurons and for the theoretical
-models, we will use the single compartment membrane equation. The
-passive properties of a neuron are therefore described by a leak
-conductance g_L, a capacitance C_m and a resting potential E_L. With
-an additional current $I(V, t)$, the membrane potential thus follows:
-
-#+NAME: eq:membrane-eq
+#+NAME: eq:cable
 \begin{equation}
-  C_\mathrm{m} \frac{dV}{dt} = I(V, t) + g_\mathrm{L} \, (E_\mathrm{L} - V)
+\frac{1}{r_i} \frac{\partial^2 v}{\partial x^2} = i_m(v, x, t) = c_m \frac{\partial v}{\partial t} + \frac{v-E_L}{r_m} - i_{syn}(v,x,t)
 \end{equation}
 
-Passive properties were fitted from the response to a hyperpolarizing
-current step for the recorded neocortical neurons in the subthreshold
-domain (around -75 \pm 5mV).
+the membrane current $i_m(v, x, t)$ is a linear density of current (the presented cable equation already includes the radial symmetry). Though the modeled system has several branches, the equation can be written as a single spatial dependency $x$ because the symmetry of the model across branches imply that the properties of the input are identical at a given distance to the soma.
 
-Though this approximation was found to be satisfactory (Figure
-[[fig:exp-charact]]C), monitoring possible deviations is important in this
-study as the approximation is used to shape the fluctuations of the
-membrane potential. We therefore performed a cell-by-cell
-quantification of the accuracy of the approximation as follows. We
-take the protocols that were used to determine the membrane
-properties: prior to each protocol, we recorded and averaged the
-response to 10 current pulses of $\sim$ 500ms and of $\Delta I \sim$
-15pA amplitude, not the (noisy) continuous monitoring presented in
-Figure [[fig:exp-charact]]. We average over trials the membrane potential
-response and fit an exponential curve to this mean response
-$V_\mathrm{sc}^\mathrm{fit}(t)$, we get a membrane time
-$\tau_\mathrm{m}^0$ and a membrane resistance $R_\mathrm{m}^0$. We
-define the residual trace as the normalized absolute difference
-between the fit and the trace :
+Synaptic input is modeled by local (infinitely small) and transient changes of membrane permeability to selective ionic channels. Both excitatory (accounting for AMPA synapses) and inhibitory synapses (accounting for GABAa synapses) are considered, their reversal potential is E_e=0mV and E_i=-80mV respectively. Each synaptic event is generated by a shotnoise and its effect on the conductance is a jump followed by an exponential decay. The form of the synaptic current is therefore:
 
+#+NAME: eq:synaptic-currents
 \begin{equation}
-\mathrm{Res}(t) = \big| \frac{  V(t) - V_\mathrm{sc}^\mathrm{fit}(t)}{R_m^0 \Delta I}  \big| 
-\label{eq:residual-single-comp}
+\left\{
+\begin{split}
+& i_{syn}(v,x,t) = g_e(x,t)(E_e-v)+g_i(x,t)(E_i-v) \\
+& g_e(x,t) = \sum_{\big\{x_e, \{t_e\} \big\}} \delta(x-x_e) \sum_{t_e} \mathcal{H}(t-t_e) Q_e(x) \, e^{-\frac{t-t_e}{\tau_e(x)}} \\
+& g_i(x,t) = \sum_{\big\{x_i, \{t_i\} \big\}} \delta(x-x_i) \sum_{t_i} \mathcal{H}(t-t_i) Q_i(x) \, e^{-\frac{t-t_i}{\tau_i(x)}}\\
+\end{split}
+\right.
 \end{equation}
 
- Now we quantify the accuracy of the single-compartment approximation
- by taking the (normalized) integral over 7 membrane time constant of
- the residual trace.
- # (see bottom traces in [[fig:single-comp-approx]]B and [[fig:single-comp-approx]]C).
+where $g_e$ and $g_i$ are linear densities of conductances. Each
+synapse, indexed by $s$, has a position $x_s$ and a set of presynaptic
+events \(\{t_s\}\), hence the iteration over \( \big\{x_s, \{t_s\}
+\big\} \) for the sum over synapses for each synaptic
+type. $\mathcal{H}$ is the Heaviside step function. The presynaptic
+events $\{t_s\}$ are generated by point processes at fixed frequencies
+$\nu_s$ with a given degree of synchrony, see details in the previous
+section[[sec:correlation-generator]].
 
+The model distinguishes two domains : a proximal domain with the upper
+index $p$ and a distal domain with the upper index $d$ (see Figure
+[[fig:model-illustration]]). Then the space-dependent quantities
+(presynaptic frequencies, synaptic quantal and synaptic decay time
+constant) can be written as :
+
+#+NAME: eq:space-dep-quant
 \begin{equation}
-C_\mathrm{sc} = \int_{t_0}^{t_0+7 \, \tau_m^0} \frac{dt}{7\,\tau_m^0}
-\mathrm{Res}(t)
-\label{eq:accuracy-coeff-single-comp}
+\left\{
+\begin{split}
+& \nu_e(x) = \nu_e^P + (\nu_e^d - \nu_e^p) \mathcal{H}(x-l_p)\\
+&\nu_i(x) = \nu_i^P + (\nu_i^d - \nu_i^p) \mathcal{H}(x-l_p) \\
+& Q_e(x) = Q_e^P + (Q_e^d - Q_e^p) \mathcal{H}(x-l_p)\\
+& Q_i(x) = Q_i^P + (Q_i^d - Q_i^p) \mathcal{H}(x-l_p) \\
+&\tau_e(x) = \tau_e^P + (\tau_e^d - \tau_e^p) \mathcal{H}(x-l_p)\\
+&\tau_i(x) = \tau_i^P + (\tau_i^d - \tau_i^p) \mathcal{H}(x-l_p) 
+\end{split}
+\right.
 \end{equation}
 
- The two normalizations (by membrane resistance and membrane time
- constant) were performed to yield comparable quantities for different
- membrane parameters.
+The continuity of the membrane potential and of the current at the
+boundaries between the proximal and distal part imply:
 
- We investigated whether the quality of the approximation had an
- impact on the excitability and sensitivities presented in the
- Results, we found no significant correlations between those
- quantities and the quality of the recordings (c<0.2 and p>0.2 for all
- characteristics, Pearson correlations), thus suggesting that the
- results of our study were not impacted by deviations from the single
- compartment approximation.
-
-
-** Global autocorrelation time
-<<sec:autocorrel-def>>
-
-We present here a theoretical estimate for the speed of the membrane
-potential fluctuations.
-
-In the case of a fluctuating synaptic input with temporal dynamics
-(e.g. resulting from a shotnoise of /exponential/ synapses considered
-in this study, unlike the /delta/ synapses considered in other
-studies, see [[citetext:Amit1997]] for an example), the autocorrelation
-function is not an exponential function. Consequently, the resulting
-membrane fluctuations can not be characterised by a single time
-constant $\tau_V$ (see the inset in Figure
-[[fig:3D-motiv]]). Nevertheless, the time constant taken from an
-exponential approximation of the normalized autocorrelation function
-corresponds to a first order description of the autocorrelation and
-will be the main contributor to the temporal dynamics of the
-fluctuations.
-
-As a theoretical prediction for this /global autocorrelation/ time, we
-take the half integral of the normalized autocorrelation correlation
-function:
-
-#+NAME: eq:Tv-def
 \begin{equation}
-  \tau_V = \frac{1}{2} \, \int_\mathbb{R} d \tau \frac{A(\tau)}{A(0)}
+\left\{
+\begin{split}
+& v(l_p^-,t) = v(l_p^+,t) \\
+& \frac{1}{r_i} \frac{\partial v}{\partial x}_{l_p^-} 
+= \frac{1}{r_i} \frac{\partial v}{\partial x}_{l_p^+} 
+\end{split}
+\right.
 \end{equation}
 
-where \( A(\tau) \) is the autocorrelation function of the V_m
-fluctuations (see an example of \( A(\tau)/A(0) \) in Figure
-[[fig:3D-motiv]]). From shotnoise theory [[cite:Daley2007]], we will obtain
-the power spectral density of the V_m fluctuations \( P_V(f) \), so we
-re-express the global autocorrelation time as:
+where the limit with upper index $\pm$ indicate the limit taken from
+the left or the right respectively.
+
+
+At the soma, $(x=0)$, we have a lumped impedance compartment. It has
+leaky RC circuit properties and also receives synaptic inhibition, the
+somatic membrane potential therefore follows :
+
+\begin{equation}
+\left\{
+\begin{split}
+& C_M \frac{dV}{dt} + \frac{V-E_L}{R_M} + G_I(t) \, (V-E_i)  + I(t) = 0 \\
+& G_i(t) = \sum_{N_i} \sum_{\{t_i\}} Q_i^p \, e^{-\frac{-(t-t_i)}{\tau_i^p}} \, \mathcal{H}(t-t_i)
+\end{split}
+\right.
+\end{equation}
+
+where $I(t)$ is the time-dependent input current from the soma into the dendrite. $R_M$ and $C_M$ are the RC properties of the lumped compartment (capital letters will indicate the somatic properties throughout the calculus). $N_i$ is the number of somatic synapses, each of them generates a point process $\{t_i\}$ of inhibitory synaptic events. The properties of the somatic synapses $(\nu_i^d, Q_i^d, \tau_i^d)$ are equivalent to the proximal ones.
+
+This equation with the membrane potential continuity will determine the boundary condition at the soma (x=0). We identify $V(t)=v(0,t)$, then $I(t)$ is the current input into the dendritic tree at $x=0$ so it verifies:
+
+\begin{equation}
+\frac{\partial v}{\partial x}_{|x=0}} = - r_i \, I(t)
+\end{equation}
+
+So:
+#+NAME: eq:soma-bound
+\begin{equation}
+\frac{\partial v}{\partial x}_{|x=0} = r_i \, 
+\Big( C_M \frac{\partial v}{\partial t}_{|x=0} + \frac{v(0,t)-E_L}{R_m} + G_I(t) \, ( v(0,t)-E_i) \Big)
+\end{equation}
+
+Finally, the last boundary condition is that all branches terminate with an infinite resistance that impede current flow (sealed-end boundary conditions):
+
+#+NAME: eq:end-bound
+\begin{equation}
+\frac{\partial v}{\partial x}_{x=l} = 0
+\end{equation}
+
+Together with the biased Poisson process for event generation (see
+previous section[[sec:correlation-generator]]), the final set of equations
+that describes the model, is therefore:
+
+#+NAME: eq:model-equation
+\begin{equation}
+\left\{
+\begin{split}
+& \frac{1}{r_i} \frac{\partial^2 v}{\partial x^2} = 
+c_m \frac{\partial v}{\partial t} + \frac{v-E_L}{r_m} - i_{syn}(v,x,t)\\
+& \frac{\partial v}{\partial x}_{|x=0} = r_i \, 
+\Big( C_M \frac{\partial v}{\partial t}_{|x=0} + \\
+& \qquad \qquad \frac{v(0,t)-E_L}{R_m} + G_I(t) \, ( v(0,t)-E_i) \Big) \\
+& v(l_p^-,t) = v(l_p^+,t) \\
+& \frac{\partial v}{\partial x}_{l_p^-} 
+= \frac{\partial v}{\partial x}_{l_p^+} \\
+& \frac{\partial v}{\partial x}_{x=l} = 0
+\end{split}
+\right.
+\end{equation}
+
+** Numerical implementation
+<<numerical-implementation>>
+
+The full model has been implemented numerically using the =NEURON=
+software. The branched morhology was created and passive cable
+properties were introduced. The spatial discretization was =nseg=30=
+segments per branch. On each segment, one excitatory and one
+inhibitory synapse were created, the shotnoise frequency was then
+scaled according to the segment area and the synaptic density to
+account for the number of synapses on this segment (using the
+properties of the Poisson process, N synapses at frequency $\nu$ is a
+synapse at frequency $N\nu$). Custom event generation was implemented
+to introduce correlations (instead of classical =NetStim=) and fed
+=NetCon= objects attached to each synapses (=ExpSyn= synapses).
+
+** Strategy for the analytical derivation
+<<sec:strategy>>
+
+We present here a derivation that provides an analytical approximation
+for the properties of the fluctuations of the membrane potential at
+the soma for our model. Summing up its properties, we get: 1) a
+morphology with a lumped somatic compartement and a dendritic tree of
+symmetric branching following Rall's rule 2) conductance-based
+synapses 3) independent excitatory and inhibitory shotnoise input
+spread all over the morphology 4) assymetric properties between a
+proximal part and a distal part and 5) a certain degree of synchrony
+in the pre-synaptic spikes.
+
+The properties of the membrane potential fluctuations at the soma
+correspond to three stationary statistical properties of the
+fluctuations: their mean $\mu_V$, their standard deviation
+\(\sigma_V\) and their /global/ autocorrelation time
+\(\tau_V\). Following [[citetext:Zerlaut2016]], we emphasize that the
+/global/ autocorrelation time is a partial description of the
+autocorrelation function (as the autocorrelation function is not
+exponential) but it constitues the first order description of the
+temporal dynamics of the fluctuations.
+
+A commonly adopted strategy in the /fluctuation-driven/ regime to
+obtain statistical properties is to use stochastic calculus after
+having performed the /diffusion approximation/, i.e. approximating the
+synaptic conductance time course by a stochastic process, see
+e.g. [[cite:Tuckwell2002]]). This approach is nonetheless not easily
+generalizable to conductance input in an extended structure and render
+the inclusion of assymetric properties (proximal vs distal)
+complicated. We rather propose here an approach that combines
+simplifying assumptions and analytical results from shotnoise theory,
+it constitues an extension of the approach proposed in
+[[citetext:Kuhn2004]].
+
+For each set of synaptic stimulation \(\{\nu^e_p, \nu_i^p, \nu_e^d,
+\nu_i^d, s\}\), the derivation corresponds to the following steps:
+
+- We transform the dendritic structure to its equivalent cylinder. The
+  reduction to the equivalent cylinder is "activity-dependent" and
+  captures the changes in membrane properties that results from the
+  mean synaptic conductance levels.
+
+- We derive a mean membrane potential \(\mu_V(x)\) corresponding to
+  the stationary response to constant densities of conductances given
+  by the means of the synaptic stimulation. We use this
+  space-dependent membrane potential \(\mu_V(x)\) to fix the driving
+  force all along the membrane for all synapses. The relation between
+  synaptic events and the membrane potential now becomes linear.
+
+- We derive a new cable equation that describes the variations of the
+  membrane potential around this $\mu_V(x)$ solution. 
+
+- We calculate the effect of one synaptic event on a branch \(b, b\in
+  [1,B]\) at a distance $x$. We calculate the post-synaptic membrane
+  potential event \($PSP_b(x,t)\) at the soma resulting from $b$
+  synchronous synaptic events occuring at the distance $x$ from the
+  soma. We approximate the effect of only one event by rescaling the
+  response by the number of input \($PSP_b(x,t)/b\).
+
+- We use shotnoise theory to compute the power spectrum density of the
+  membrane potential fluctuations resulting from all excitatory and
+  inhibitory synaptic events (including the synchrony between events).
+
+The full derivation has been conducted with the help of the python
+modulus for symbolic computation: =sympy= (deriving homogenous
+solutions is relatively simple but computing coefficients with the
+boudaries conditions give rise to complex expressions because of the
+number of parameters). The resulting expression were then exported to
+=numpy= functions for numerical evaluation. The =ipython= notebook
+that presents the full derivation is available on the following [[http://nbviewer.jupyter.org/urls/bitbucket.org/yzerlaut/diverse_coupling_to_synaptic_activity/raw/master/notebooks/Fluctuations_at_soma_for_Ball_&_Rall_tree.ipynb][link]].
+
+** Reduction to an equivalent cylinder
+<<sec:reduction-to-eq-cyl>>
+
+The key of the derivation relies on having the possibility to reduce
+the complex morphology to an equivalent cylinder [[cite:Rall1962]]. We
+adapted this procedure to capture the change in integrative properties
+of the membrane that results from the mean synaptic bombardment during
+active cortical states, reviewed in [[citetext:Destexhe2003]].
+
+For a set of synaptic stimulation \(\{\nu^e_p, \nu_i^p, \nu_e^d,
+\nu_i^d, s\}\), let's introduce the following stationary densities of
+conductances:
+
+\begin{equation}
+\left\{
+\begin{split}
+& g_{e0}^p = \pi \, d \, \mathcal{D}_e \, \nu_e^p \, \tau_e^p \, Q_e^p \quad ;  \quad
+g_{i0}^p = \pi \, d \, \mathcal{D}_i \, \nu_i^p \, \tau_i^p \, Q_i^p \\
+& g_{e0}^d = \pi \, d \, \mathcal{D}_e  \, \nu_e^d \, \tau_e^d \, Q_e^d \quad ; \quad 
+g_{i0}^d = \pi \, d \, \mathcal{D}_i \, \nu_i^d \, \tau_i^d \, Q_i^d
+\end{split}
+\right.
+\end{equation}
+
+where $\mathcal{D}_e$ and $\mathcal{D}_i$ are the excitatory and
+inhibitory synaptic densities (see Figure [[fig:model-illustration]]B).
+
+We introduce two activity-dependent electrotonic constants relative to
+the proximal and distal part respectively:
+
+\begin{equation}
+\lambda^p= \sqrt{\frac{r_m}{r_i (1 + r_m g_{e0}^p + r_m g_{i0}^p)}}
+\quad 
+\lambda^d= \sqrt{\frac{r_m}{r_i (1 + r_m g_{e0}^d + r_m g_{i0}^d)}}$
+\end{equation}
+
+For a dendritic tree of total length $l$, whose proximal part ends at
+$l_p$ and with $B$ evenly spaced generations of branches, we define
+the space-dependent electrotonic constant:
+
+\begin{equation}
+ \lambda(x) = \big( \lambda^p + \mathcal{H}(x-l_p)(\lambda^d-\lambda^p) \big)
+ 2^{- \frac{1}{3} \, \lfloor \frac{B \, x}{l} \rfloor}
+\end{equation}
+
+where \( \lfloor . \rfloor \) is the floor function. Note that
+$\lambda(x)$ is constant on a given generation, but it decreases from
+generation to generation because of the decreasing diameter along the
+dendritic tree. It also depends on the synaptic activity and
+therefore has a discontinuity at $x=l_p$.
+
+Following [[citetext:Rall1962]], we now define a dimensionless length $X$:
+
+#+NAME: eq:x-rescale
+\begin{equation}
+ X(x) = \int_0^x \frac{dx}{\lambda(x)}
+\end{equation}
+
+We define \(L= X(l) \) and \(L_p= X(l_p) \), the total length and
+proximal part length respectively (capital letters design rescaled
+quantities).
+
+
+** Mean membrane potential
+<<sec:mean-derivation>>
+
+We derive the mean membrane potential \(\mu_V(x)\) corresponding to
+the stationary response to constant densities of conductances given by
+the means of the synaptic stimulation. We obtain the stationary
+equations by removing temporal derivatives in Equation, the set of
+equation governing this mean membrane potential in all branches is
+therefore:
+
+#+NAME: eq:model-equation-muV
+\begin{equation}
+\left\{
+\begin{split}
+& \frac{1}{r_i} \frac{\partial^2 \mu_v}{\partial x^2} = \frac{\mu_v(x)-E_L}{r_m} \\
+& \qquad - g_{e0}^p \, (\mu_v(x) - E_e) - g_{0i}^p \, (\mu_v(x) - E_i) \quad \forall x \in [0,l_p] \\
+& \frac{1}{r_i} \frac{\partial^2 \mu_v}{\partial x^2} =  \frac{\mu_v(x)-E_L}{r_m} \\
+& \qquad - g_{e0}^d \, (\mu_v(x) - E_e) - g_{0i}^d \, (\mu_v(x) - E_i)  \quad \forall x \in [l_p,l]  \\
+& \frac{\partial \mu_v}{\partial x}_{|x=0} = r_i \, \big(
+ \frac{\mu_v(0)-E_L}{R_m} + G_{i0}^S \, ( \mu_v(0)-E_i) \big)\\
+& \mu_v(l_p^-,t) = \mu_v(l_p^+,t) \\
+& \frac{\partial \mu_v}{\partial x}_{l_p^-} 
+= \frac{\partial \mu_v}{\partial x}_{l_p^+} \\
+& \frac{\partial \mu_v}{\partial x}_{x=l} = 0
+\end{split}
+\right.
+\end{equation}
+
+Because the reduction to the equivalent cylinder conserves the
+membrane area and the previous equation only depends on density of
+currents, the equation governing $\mu_v(x)$ in all branches can be
+transformed into an equation on an equivalent cylinder of length $L$.
+We rescale $x$ by $\lambda(x)$ (see Equation [[eq:x-rescale]]) and we
+obtain the equation verified by \(\mu_V(X)\):
+
+#+NAME: eq:model-equation-muV-rescaled
+\begin{equation}
+\left\{
+\begin{split}
+& \frac{\partial^2 \mu_v}{\partial X^2} = \mu_v(X)-v_0^p \quad \forall X \in [0,L_p] \\
+&\frac{\partial^2 \mu_v}{\partial X^2} = \mu_v(X)-v_0^d \quad \forall X \in [L_p,L]  \\
+&\frac{\partial \mu_v}{\partial X}|_{X=0} = \gamma^p \, 
+\Big( \mu_v(0) - V_0  \Big) \\
+&\mu_v(L_p^-) = \mu_v(L_p^+) \\
+&\frac{\partial \mu_v}{\partial X}_{L_p^-} = \frac{\lambda^p}{\lambda^d}
+\frac{\partial \mu_v}{\partial X}_{L_p^+} \\
+&\frac{\partial \mu_v}{\partial X}_{X=L} = 0 
+\end{split}
+\right.
+\end{equation}
+
+where:
+
+\begin{equation}
+\begin{split}
+& v_0^p = \frac{E_L + r_m g_{e0}^p E_e + r_m g_{i0}^p E_i}{ 1 + r_m g_{e0}^p + r_m g_{i0}^p }\\
+& v_0^d = \frac{E_L + r_m g_{e0}^d E_e + r_m g_{i0}^d E_i}{ 1 + r_m g_{e0}^d + r_m g_{i0}^d }\\
+& \gamma^p = \frac{r_i \lambda^p \, (1+ G_i^0 R_m)}{R_m}\\
+& V_0 = \frac{E_L + G_i^0 R_m E_i}{ 1 +  + G_i^0 R_m }
+\end{split}
+\end{equation}
+
+The solution for this equation is:
+\begin{equation}
+ \mu_v(X) = 
+\left\{
+\begin{split}
+v_0^p + A &\cosh(X) + (v_0^p-V_0+ A) \sinh(X), \\
+ & \quad \forall X \in [0,L_p] \\
+v_0^d + B &\cosh(X-L), \quad \forall X \in [L_p,L]
+\end{split}
+\right.
+\end{equation}
+
+with $A$ and $B$ explicited in the supplementary material. The
+accuracy of this expression can be seen on Figure
+[[fig:analytics-accuracy]].
+
+** Membane potential response to a synaptic event
+<<sec:eq-for-var-around-mean>>
+
+We now look for the response to \(n_{src}= \lfloor \frac{B \,
+x_{src}}{l} \rfloor} \) synaptic events at position \(x_{src}\) on all
+branches of the generation of \(x_src\), those events have a
+conductance $g(t)/n_{src}$ and reversal potential $E_{rev}$. We make
+the hypothesis that the initial condition correspond to the stationary
+mean membrane potential $\mu_V(x)$. This potential will also be used
+to fix the driving force at the synapse to $\mu_v(x_{src})-E_{rev}$,
+this linearizes the equation and will allow an analytical
+treatment. To derive the equation for the response around the mean
+\(\mu_v(x)\), we rewrite Equation [[eq:model-equation]] with \(v(x, t) =
+\delta v(x, t) + \mu_v(x)\), we obtain the equation for \(\delta v(x,
+t)\):
+
+#+NAME: eq:psp-equation
+\begin{equation}
+\left\{
+\begin{split}
+& \frac{1}{r_i} \frac{\partial^2 \delta v}{\partial x^2} = 
+c_m \frac{\partial \delta v}{\partial t} 
++ \frac{\delta v}{r_m} (1 + r_m \, g_{e0}^p + r_m \, g_{i0}^p) \\
+& \qquad - \delta(x-x_{src}) \, \big(\mu_v(x_{src})-E_{rev}\big) \, \frac{g(t)}{n_{src}},
+\quad \forall x \in [0,l_p] \\
+& \frac{1}{r_i} \frac{\partial^2 \delta v}{\partial x^2} = 
+c_m \frac{\partial \delta v}{\partial t} 
++ \frac{\delta v}{r_m} (1 + r_m \, g_{e0}^d + r_m \, g_{i0}^d) \\
+& \qquad
+- \delta(x-x_{src}) \, \big(\mu_v(x_{src})-E_{rev}\big) \, \frac{g(t)}{n_{src}},
+\quad   \forall x \in [l_p,l]\\
+& \frac{1}{r_i} \frac{\partial \delta v}{\partial x}_{|x=0} = 
+ C_M \frac{\partial \delta  v}{\partial t}_{|x=0} +  
+ \frac{ \delta v(0,t)}{R_m} ( 1+ R_m G_{i0}^S) \\
+&  \delta v(l_p^-,t) = \delta v(l_p^+,t) \\
+& \frac{\partial \delta v}{\partial x}_{l_p^-} 
+= \frac{\partial \delta v}{\partial x}_{l_p^+} \\
+& \frac{\partial \delta v}{\partial x}_{x=l} = 0
+\end{split}
+\right.
+\end{equation}
+
+Because this synaptic event is concomitant in all branches at distance
+$x_{src}$, we can use again the reduction to the equivalent cylinder
+(note that the event has now a weight multiplied by $n_{src}$ so that
+its conductance becomes \(g(t)\)), we obtain:
+
+#+NAME: eq:psp-equation-reduced
+\begin{equation}
+\left\{
+\begin{split}
+& \frac{\partial^2 \delta v}{\partial X^2} =
+\big( \tau_m^p + (\tau_m^d-\tau_m^p) 
+\mathcal{H}(X-L_p) \big) \frac{\partial \delta v}{\partial t} + \delta v \\
+& \qquad - \big(\mu_v(X_{src})-E_{rev}\big) \,  \delta(X-X_{src}) \times \\
+& \qquad \qquad \frac{g(t)}{c_m} 
+  \big( \frac{\tau_m^p}{\lambda^p} +
+  (\frac{\tau_m^d}{\lambda^d}-\frac{\tau_m^p}{\lambda^p}) 
+\mathcal{H}(X_{src}-L_p) \big) \\
+& \frac{\partial \delta v}{\partial X}_{|X=0} = 
+ \gamma^p \big( \tau_m^S \frac{\partial \delta  v}{\partial t}_{|X=0} +  
+ \delta v(0,t) \big) \\
+& \delta v(L_p^-,t) = \delta v(L_p^+,t) \\
+& \frac{\partial \delta v}{\partial X}_{L_p^-} 
+= \frac{\lambda^p}{\lambda^d} \, 
+\frac{\partial \delta v}{\partial X}_{L_p^+} \\
+& \frac{\partial \delta v}{\partial X}_{X=L} = 0
+\end{split}
+\right.
+\end{equation}
+
+where we have introduced the following time constants:
+
+#+NAME: eq:time-constants
+\begin{equation}
+\begin{split}
+ & \tau_m^D = \frac{r_m \, c_m}{1+r_m \, g_{e0}^d+r_m \, g_{i0}^d} \\
+ & \tau_m^P = \frac{r_m \, c_m}{1+r_m \, g_{e0}^p+r_m \, g_{i0}^p} \\
+ & \tau_m^S = \frac{R_m \, C_m}{1+R_m \, G_{i0}^S}
+\end{split}
+\end{equation}
+
+Now used distribution theory (see [[citetext:Appel2008]] for a
+comprehensive textbook) to translate the synaptic input into boundary
+conditions at $X_{src}$, physically this corresponds to: 1) the
+continuity of the membrane potential and 2) the discontinuity of the
+current resulting from the synaptic input.
+
+\begin{equation}
+\left\{
+\begin{split}
+&  \delta v(X_{src}^-,f) = \delta v(X_{src}^+,f) \\
+& \frac{\partial \delta v}{\partial X}_{X_{src}^+} 
+- \frac{\partial \delta v}{\partial X}_{X_{src}^-} 
+= - \big(\mu_v(X_{src})-E_{rev}\big) \times \\
+& \qquad \qquad \qquad 
+\big( \frac{\tau_m^p}{\lambda^p} +
+  (\frac{\tau_m^d}{\lambda^d}-\frac{\tau_m^p}{\lambda^p}) 
+ \mathcal{H}(X_{src}-L_p) \big) \, \frac{g(t)}{c_m} \\
+\end{split}
+\right.
+\end{equation}
+
+We will solve Equation [[eq:psp-equation-reduced]] by using Fourier
+analysis. We take the following convention for the Fourier transform:
+
+#+NAME: eq:fourier-convention
+\begin{equation}
+\hat{F}(f) = \int_\mathbb{R} F(t) \, e^{- 2 i \pi f t} \, dt
+\end{equation}
+
+We Fourier transform the set of Equations [[eq:psp-equation-reduced]], we
+obtain:
+
+#+NAME: eq:psp-equation-fourier
+\begin{equation}
+\left\{
+\begin{split}
+& \frac{\partial^2 \hat{\delta v}}{\partial X^2} =
+\big( \alpha_f^p + (\alpha_f^d-\alpha_f^p) 
+\mathcal{H}(X-L_p) \big)^2 \, 
+\hat{\delta v}  \\
+& \frac{\partial \hat{\delta v}}{\partial X}_{|X=0} = 
+ \gamma_f^p \,  \hat{\delta v}(0,f) \\
+&  \hat{\delta v}(X_{src}^-,f) = \hat{\delta v}(X_{src}^+,f) \\
+& \frac{\partial \hat{\delta v}}{\partial X}_{X_{src}^-} 
+= \frac{\partial \hat{\delta v}}{\partial X}_{X_{src}^+} 
+- \big(\mu_v(X_{src})-E_{rev}\big) \times \\
+& \qquad \qquad \qquad \qquad 
+\big( r_f^p + (r_f^d-r_f^p) \mathcal{H}(X_{src}-L_p) \big) \, \hat{g(f)} \\
+& \hat{\delta v}(L_p^-,f) = \hat{\delta v}(L_p^+,f) \\
+& \frac{\partial \hat{\delta v}}{\partial X}_{L_p^-} 
+= \frac{\lambda^p}{\lambda^d} \, 
+\frac{\partial \hat{\delta v}}{\partial X}_{L_p^+} \\
+& \frac{\partial \hat{\delta v}}{\partial X}_{X=L} = 0
+\end{split}
+\right.
+\end{equation}
+
+where 
+\begin{equation}
+\begin{split}
+& \alpha_f^p = \sqrt{1+ 2 i \pi f \tau_m^p} \qquad
+ r_f^p = \frac{\tau_m^p}{c_m \, \lambda^p} \\
+& \alpha_f^d = \sqrt{1+ 2 i \pi f \tau_m^d} \qquad
+ r_f^d = \frac{\tau_m^d}{c_m \, \lambda^d} \\
+& \qquad \qquad \gamma_f^p =  \gamma^p \, (1+ 2 i \pi f \tau_m^S) \\
+\end{split}
+\end{equation}
+
+This equation is solved in the supplementary material. We will use the
+solution at the soma, it can be written:
+
+\begin{equation}
+\hat{\delta v}(X=0, X_{src}, f) = K_f(X_{src}) \, 
+\big(\mu_v(X_{src})-E_{rev}\big) \,  \hat{g(f)} 
+\end{equation}
+
+** Deriving the fluctuations properties
+
+From shotnoise theory [[cite:Daley2007]] (see also
+[[citetext:ElBoustani2009a]] for an application similar to ours), we can
+obtain the power spectral density of the V_m fluctuations \( P_V(f) \)
+as a response to the stimulation Equation [[eq:fluct-eq]]:
+
+From point process theory, this can be seen as two nested point
+processes. The first point process follows a Poisson process which
+determines the cluster positions and the second one determines
+randomly the position of kz1 points within each cluster according to
+an arbitrary density probability function. The correspondance between
+both representations is straightforward and the power spectrum density
+can be computed analytically with the Neyman- Scott equation
+[23,24,51]
+
+#+NAME: eq:vm-pwd
+\begin{equation}
+\begin{split}
+ P_V(f)  = & \sum_{syn} \nu_{syn} \, \| \hat{\mathrm{PSP}}(f) \|^2 \\
+ & = 2 \nu_{in} \, \frac{Q_I^2 \, \tau_S^2 / \mu_G^2 }{
+ (1+4 \pi^2 f^2 \tau_S^2)(1+4 \pi^2 f^2 \tau_m^2)}
+\end{split}
+\end{equation}
 
 #+NAME: eq:Tv-def-with-pwd
 \begin{equation}
   \tau_V = \frac{1}{2} \, \big( \frac{\int_\mathbb{R} P_V(f) \, d f}{ P_V(0) } \big)^{-1}
 \end{equation}
 
- In this study, this formula reduces to a very simple form (see next
- section). Note that the relations presented in this paper rely on the
- following convention for the Fourier transform: \( \hat{F}(f) =
- \int_\mathbb{R} F(t) \, e^{- 2 i \pi f t} \, dt\).
+#+NAME: eq:var-expr
+\begin{equation}
+  \sigma_V^2 = \int_\mathbb{R} P_V(f) \, df
+\end{equation}
 
+** From fluctuation properties to spiking probability
+
+
+Focus of a previous communication, see [[citetext:Zerlaut2016]].
+
+** Experimental preparation and electrophysiological recordings
+<<sec:exp-prep>>
+
+Experimental methods were identical to those presented in
+[[citetext:Zerlaut2016]]. Very briefly, we performed intracellular
+patch-clamp recordings using the perforated patch technique on layer V
+pyramidal neurons of coronal slices of juvenile mice primary visual
+cortex. For the n=13 cells presented in this study, the access
+resistance R_S was [[XX]] M\(\Omega\) \(\pm\) [[YY]], the leak current at
+-75mV was [[XX]] pA \(\pm\) [[YY]], cells had an input resistance R_m of [[XX]]
+M$\Omega$ \(\pm\) [[YY]] and a membrane time constant at rest of [[XX]] ms
+\(\pm\) [[YY]].
+
+** Input impedance characterization
+<<sec:measured-quant>>
+
+ To determine the input impedance at the soma, we injected sinusoidal
+ currents in the current-clamp mode of the amplifier (Multiclamp 700B,
+ Molecular Devices), we recorded the membrane potential response to a
+ current input of the form \(I(t)=I \, \sin(2\pi \, f \, t) \), we
+ varied the frequencies $f$ and amplitudes $I over 40 episodes per
+ cell. The frequency range scanned was [0.1, 500] Hz. For each cell,
+ we determined manually the current amplitude $I_0$ that gave a \sim
+ 5mV amplitude in a current step protocol, from this value, the value
+ of $I$ was scaled exponentially between $I_0$ at 0.1 Hz and \(50
+ I_0\) at 500Hz. The reason for varying the current amplitude (and not
+ only the oscillation frequency) in those input impedance protocols is
+ to anticipate for the low pass filtering of the membrane and insure
+ that the membrane potential response at high frequencies is far above
+ the electronic noise level (\sim 0.1 mV).
+
+After removing the first 3 periods of the oscillations (to avoid
+transient effects), we fitted the membrane potential response to the
+form:
+
+\begin{equation}
+V(t) = E_L + R \, I \, \sin(2\pi \, f \, t - \phi)
+\end{equation}
+
+where \(E_L, R\) and $\phi$ were fitted with a least-square
+minimization procedure. The frequency dependent values of $R$ and
+$\phi$ give the modulus and phase shift of the input impedance
+presented in Figure [[fig:in-vitro-calib]]A
 
 ** Numerical tools
 <<sec:numerical-tools>>
@@ -267,25 +795,20 @@ Optiplex 9020 desktop computer). Experimental protocols and
 online-analysis have been written in =Elphy2=. Plots and data analysis
 have been done thanks to the =SciPy= package.
 
-
-** Acknowledgments  :noexport:
+** Acknowledgments
 <<sec:acknowledgments>>
 
-
-We would like to acknowledge the contribution of Gérard Sadoc in
-helping us to design the dynamic-clamp protocols. We also thank
-Guillaume Hucher for the histological work as well as Manon Richard
-and Aurélie Daret for animal facilities. Y.Z was supported by
-fellowships from the Initiative d'Excellence Paris-Saclay and the
-Fondation pour la Recherche Médicale (FDT 20150532751). Research
-funded by the CNRS, the ANR (Complex-V1 project) and the European
-Community (BrainScales FP7-269921 and the Human Brain Project
-FP7-604102). The authors declare no competing financial interests.
-
-
+Y.Z was supported by fellowships from the Initiative d'Excellence
+Paris-Saclay and the Fondation pour la Recherche Médicale (FDT
+20150532751). Research funded by the CNRS, the ANR (Complex-V1
+project) and the European Community (BrainScales FP7-269921 and the
+Human Brain Project FP7-604102). The authors declare no competing
+financial interests.
 
 * References
 
 \bibliography{tex/biblio}
+
+
 
 

@@ -1,11 +1,10 @@
 
 \blfootnote{ $\,^1$ Unité de Neurosciences, Information et Complexité, Centre National de la Recherche Scientifique, FRE 3693, Gif sur Yvette, France}
 \blfootnote{ $\,^2$ European Institute fo Theoretical Neuroscience, 74 Rue du Faubourg Saint-Antoine, 75012 Paris}
+\blfootnote{correspondance : <lastname>@unic.cnrs-gif.fr}
 
-\blfootnote{correspondance : destexhe@unic.cnrs-gif.fr}
-
-#+LaTeX_HEADER: \def\shorttitle{Heterogenous firing response of mice pyramidal cells}
-#+LaTeX_HEADER: \def\shortauthor{Zerlaut et al.} 
+#+LaTeX_HEADER: \def\shorttitle{Heterogenous firing response leads to diverse coupling to synaptic activity}
+#+LaTeX_HEADER: \def\shortauthor{Zerlaut \& Destexhe} 
 #+LaTeX_HEADER: \def\shortdate{\today} 
 
 # #+LaTeX_HEADER: \renewcommand{\includegraphics}[2][]{\fbox{#2}}
@@ -25,7 +24,7 @@
 #+LaTeX_HEADER:\usepackage[T1]{fontenc}
 #+LaTeX_HEADER:\usepackage{lmodern}
 #+LaTeX_HEADER:\usepackage{amsmath}
-# #+LaTeX_HEADER:\usepackage{amssymb,mathenv,array}
+# #+LaTeX_HEADER:\usepackage{amssymb,mathenv,array,breqn}
 #+LaTeX_HEADER:\usepackage{microtype} % Slightly tweak font spacing for aesthetics
 #+LaTeX_HEADER: \usepackage{geometry}
 #+LaTeX_HEADER: \geometry{a4paper,total={210mm,297mm}, left=15mm, right=15mm, top=20mm, bottom=20mm, bindingoffset=0mm, columnsep=.5cm}

@@ -1,12 +1,15 @@
 import numpy as np
 import matplotlib.pylab as plt
 
+from synaptic_integration import get_fluct_var
+
 from scipy.stats.stats import pearsonr
 
 import sys
 sys.path.append('/home/yann/work/python_library')
 from my_graph import set_plot
 
+ALL_CELLS = np.load('../ball_and_rall_tree/all_cell_params.npy')
 
 from firing_response_description.template_and_fitting import final_func
 
@@ -36,33 +39,15 @@ def run_single_experiment(t, i_nrn, args, exp_type='control', seed=1):
     """
 
     # setting up the experiment
-    FE = generate_population_rate(t, F0=args.F0, SF=args.SF, T=args.TF, seed=seed) # basis
-    fe, fi = FE, 5.*FE
-    
-    if exp_type=='non specific activity':
-        feG, fiG, feI, fiI = fe, fi, fe, fi # symmetric stimulation
-        muV, sV, TvN, muG = get_fluct_var(i_nrn, feG, fiG, feI, fiI)
-    elif exp_type=='unbalanced activity':
-        feG, fiG, feI, fiI = fe, fi, fe, fi # symmetric stimulation
-        muV, sV, TvN, muG = get_fluct_var(i_nrn, feG, fiG, feI, fiI)
-    elif exp_type=='proximal activity':
-        # multiplied by 2 !
-        feG, fiG, feI, fiI = fe, fi, 0*fe, 0*fi # no distal stimulation !!
-        muV, sV, TvN, muG = get_fluct_var(i_nrn, feG, fiG, feI, fiI)
-    elif exp_type=='distal activity':
-        # multiplied by 2 !
-        feG, fiG, feI, fiI = 0*fe, 0*fi, fe, fi
-        muV, sV, TvN, muG = get_fluct_var(i_nrn, feG, fiG, feI, fiI)
-    elif exp_type=='synchronized activity':
-        # process with 0 mean
-        feG, fiG, feI, fiI = fe, fi, fe, fi # symmetric stimulation
-        muV, sV, TvN, muG = get_fluct_var(i_nrn, feG, fiG, feI, fiI)
+    F = generate_population_rate(t, F0=args.F0, SF=args.SF, T=args.TF, seed=seed) # basis
+
+    feG, fiG, feI, fiI, synch, muV, sV, TvN, muGn = get_fluct_var(i_nrn, F, exp_type=exp_type)
 
     ## FIRING RATE RESPONSE
     Fout = final_func(ALL_CELLS[i_nrn]['P'], muV, sV, TvN,\
                       ALL_CELLS[i_nrn]['Gl'], ALL_CELLS[i_nrn]['Cm'])
 
-    return feG, fiG, feI, fiI, muV, sV, TvN, muG, Fout
+    return feG, fiG, feI, fiI, muV, sV, TvN, muGn, Fout
 
         
 def make_fig(args):
@@ -271,11 +256,11 @@ def correlating_electrophy_and_coupling(args, params):
             np.load('../3d_scan/data/full_data.npy')
     COUPLINGS = coupling_over_data(args, params)
 
-    ###############################################################################
-    """ removing cell31 !!!!!! """
-    INDEX, E0, EmuV, EsV, ETv, COUPLINGS = removing_cells(INDEX, E0, EmuV,\
-                                                          EsV, ETv, COUPLINGS, cells=['cell31'])
-    ###############################################################################
+    # ###############################################################################
+    # """ removing cell31 !!!!!! """
+    # INDEX, E0, EmuV, EsV, ETv, COUPLINGS = removing_cells(INDEX, E0, EmuV,\
+    #                                                       EsV, ETv, COUPLINGS, cells=['cell31'])
+    # ###############################################################################
     
     YLABELS1 = [r"$\langle \nu_\mathrm{out}\rangle$"]+\
                [r"coupling (Hz)"]+\
