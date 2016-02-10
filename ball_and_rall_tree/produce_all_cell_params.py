@@ -24,8 +24,8 @@ params['Te'], params['Ti'] = 4e-3, 4e-3
 params['Ee'], params['Ei'] = 0e-3, -80e-3
 params['El'] = -60e-3#0e-3, -80e-3
 params['fraction_for_L_prox'] = 2./3.
-params['factor_for_distal_synapses_weight'] = 2.
-params['factor_for_distal_synapses_tau'] = 2.
+params['factor_for_distal_synapses_weight'] = 3.
+params['factor_for_distal_synapses_tau'] = 3.
 
 np.save('mean_model.npy', [soma, stick, params])
 

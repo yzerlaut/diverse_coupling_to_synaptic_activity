@@ -29,7 +29,7 @@ def get_fluct_var(i_nrn, F, exp_type='non specific activity', balance=-58e-3):
         feG, fiG, feI, fiI = 2.*F, 0.*F, 0*F, 0.*F
         fiG, fiI = find_inh_cond_for_balance(feG, fiG, feI, fiI, i_nrn, balance=balance)
     elif exp_type=='distal activity':
-        feG, fiG, feI, fiI = F, 0.*F, 2.*F, 0.*F
+        feG, fiG, feI, fiI = 0*F, 0.*F, 2.*F, 0.*F
         fiG, fiI = find_inh_cond_for_balance(feG, fiG, feI, fiI, i_nrn, balance=balance)
     elif exp_type=='synchronized activity':
         feG, fiG, feI, fiI = EI*F, (1-EI)*F, EI*F, (1-EI)*F
@@ -65,7 +65,7 @@ if __name__=='__main__':
     fig, AX = plt.subplots(4, 1, figsize=(4, 15))
     fig2, AX2 = plt.subplots(4, 1, figsize=(4, 15))
     plt.subplots_adjust(left=.3, top=.8, wspace=.2, hspace=.2)
-    F = np.linspace(.01,3.,7)
+    F = np.linspace(.001,1.5,3)
     COLORS=['r', 'b', 'g', 'c', 'k', 'm']
 
     PROTOCOLS = ['unbalanced activity', 'proximal activity', 'distal activity',\
@@ -89,10 +89,10 @@ if __name__=='__main__':
             for ax, x in zip(AX2, [feG, fiG, feI, fiI]):
                 ax.plot(F, x, lw=.5, color=COLORS[i], label=PROTOCOLS[i])
 
-
     LABELS = ['$\mu_V$ (mV)', '$\sigma_V$ (mV)',\
               '$\\tau_V / \\tau_m^0$ (%)', '$g_{tot}^{soma} / g_L$']
-    AX[0].legend(prop={'size':'small'}, bbox_to_anchor=(1., 2.))
+    
+    AX[0].legend(prop={'size':'small'}, bbox_to_anchor=(1., 1.))
     for ax, ylabel in zip(AX[:-1], LABELS[:-1]):
         set_plot(ax, ['left'], ylabel=ylabel, xticks=[])
     set_plot(AX[-1], ['bottom','left'],\
