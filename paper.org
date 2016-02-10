@@ -6,22 +6,22 @@
 
   \bfseries
 
-  Growing experimental evidences suggest that cortical processing of
-  sensory input relies on the differential activation of neurons
-  within cortical networks, the circuit or cellular mechanisms
-  underlying this . In a companion communication [[cite:Zerlaut2016]], we
-  reported how individual neurons differ in their excitability and
+  Neocortical processing of sensory input rely on the specific
+  activation of subpopulations within the cortical network, and
+  specific circuitry is thought to be the primary mechanism underlying
+  this feature. Nonetheless, in a companion study [[cite:Zerlaut2016]], we
+  found that individual neurons differ in their excitability and
   sensitivities to the properties of the membrane potential
   fluctuations. In the present report, we investigate how this
   heterogeneity is translated into diverse input-ouput properties
-  (i.e. in th relation from presynaptic quantities to spiking
+  (i.e. in the relation from presynaptic quantities to spiking
   probability).
 
   To this purpose, we designed a simplified morphological model of
   layer V pyramidal neurons with a dendritic tree following Rall's
   branching rule. We first show that we are able to calibrate this
   simplified model on /in vitro/ measurements of somatic input
-  impedance in layer V pyramidal neurons of juvenile mive visual
+  impedance in layer V pyramidal neurons of juvenile mice visual
   cortex. We then propose and analytical derivation for the membrane
   potential fluctuations at the soma as a function of the properties
   of the synaptic bombardment.

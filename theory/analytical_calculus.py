@@ -73,8 +73,8 @@ def calculate_mean_conductances(shtn_input,\
     Ti_prox, Qi_prox = Params['Ti'], Params['Qi']
     Qe_dist = Qe_prox*Params['factor_for_distal_synapses_weight']
     Qi_dist = Qi_prox*Params['factor_for_distal_synapses_weight']
-    Te_dist = Te_prox*Params['factor_for_distal_synapses_weight']
-    Ti_dist = Ti_prox*Params['factor_for_distal_synapses_weight']
+    Te_dist = Te_prox*Params['factor_for_distal_synapses_tau']
+    Ti_dist = Ti_prox*Params['factor_for_distal_synapses_tau']
         
     ge_prox = Qe_prox*shtn_input['fe_prox']*Te_prox*D*np.pi/cable['exc_density']
     gi_prox = Qi_prox*shtn_input['fi_prox']*Ti_prox*D*np.pi/cable['inh_density']
@@ -133,7 +133,6 @@ def cable_eq_params(f, tauS, tauP, lbdP, tauD, lbdD, Cm, cm, ri, lp, l, B):
 
 
 ############### INPUT FROM SYMPY ###################
-# --- muV
 
 exec(open('../theory/functions.txt'))
 
@@ -145,7 +144,7 @@ def rescale_x(x, EqCylinder):
 def lbd(x, l, lp, B, lbdP, lbdD):
     # specific to evenly space branches !! (see older implementation with EqCylinder for more general implement.)
     branch_length = l/B # length of one branch !
-    reduction_factor =  2**(-1./3.*np.intp(x/branch_length))
+    reduction_factor =  np.power(2., -1./3.*np.intp(x/branch_length))
     new_lbd = (lbdP+(lbdD-lbdP)*.5*(np.sign(x+1e-9-lp)+1))
     return new_lbd*reduction_factor
     
