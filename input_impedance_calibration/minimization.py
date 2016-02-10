@@ -28,9 +28,9 @@ f = .5*(f_bins[1:]+f_bins[:-1]) # frequency for theory !!
 #### ================================================== ##
 
 N = 5
-B = np.arange(N)+3 # to be adjusted !!! (does not depends on N)
+B = np.arange(N)+2 # to be adjusted !!! (does not depends on N)
 L_soma = np.linspace(5., 20., N)*1e-6
-L_dend = np.linspace(300., 600., N)*1e-6
+L_dend = np.linspace(300., 800., N)*1e-6
 D_dend = np.linspace(.5, 4., N)*1e-6
 G_PAS = np.linspace(1e-5, 1e-4, N)*1e4
 CM = np.linspace(.8, 1.8, N)*1e-2

@@ -484,9 +484,6 @@ def get_the_input_resistance_at_soma(EqCylinder, soma, stick, params,
 
 def get_the_input_impedance_at_soma(f, EqCylinder, soma, stick, params):
 
-    # we remove the prox/dist separation, usefull only when synaptic input !!
-    stick = stick.copy()
-    
     # model parameters
     Ls, Ds, l, D, lp, Rm, Cm,\
         El, Ee, Ei, rm, cm, ri = ball_and_stick_params(soma, stick, params)
@@ -504,7 +501,7 @@ def get_the_input_impedance_at_soma(f, EqCylinder, soma, stick, params):
                                     
     # PSP with unitary current input
     # input and recording in x=0 
-    return np.abs(dv_X_Xsrc_Lp(0., 0., 1., afP, afD, gfP, rfP, rfD, Lp, L, lbdD, lbdP))
+    return dv_X_Xsrc_Lp(0., 0., 1., afP, afD, gfP, rfP, rfD, Lp, L, lbdD, lbdP)
 
 def get_membrane_time_constants(EqCylinder, soma, stick, params,\
                                 f=rfft.time_to_freq(1000, 1e-4)):
