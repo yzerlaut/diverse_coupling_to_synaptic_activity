@@ -119,11 +119,11 @@ def cable_eq_params(f, tauS, tauP, lbdP, tauD, lbdD, Cm, cm, ri, lp, l, B):
         # proximal params
     afP = np.sqrt(1+2.*1j*np.pi*f*tauP)
     gfP = lbdP*Cm*ri/tauS*(1+2.*1j*np.pi*f*tauS)
-    rfP = tauP/cm/lbdP ## FACTOR ??
+    rfP = tauP/cm/lbdP
 
     # distal params
     afD = np.sqrt(1+2.*1j*np.pi*f*tauD)
-    rfD = tauD/cm/lbdD ## FACTOR ??
+    rfD = tauD/cm/lbdD
 
     # ball and tree rescaling
     Lp = rescale_x(lp, l, lp, B, lbdP, lbdD)
@@ -388,7 +388,6 @@ def get_the_fluct_prop_at_soma(SHTN_INPUT, params, soma, stick,\
         for b in EqCylinder:
             Branch_weights[np.where(Source_Array>=b)[0]] += 1
 
-
         #### DENDRITIC SYNAPSES
         for ix_source in range(len(Source_Array)): 
 
@@ -451,19 +450,6 @@ def get_the_fluct_prop_at_soma(SHTN_INPUT, params, soma, stick,\
     return muV, sV, TvN, muGn
 
 
-def get_the_input_and_transfer_resistance(fe, fi, f, x, params, soma, stick):
-    Rin, Rtf = np.zeros(len(x)), np.zeros(len(x))
-    Garray = calculate_mean_conductances(fe, fi, soma, stick, params)
-    
-    for ix_dest in range(len(x)):
-
-        Rtf[ix_dest] = dv_kernel_per_I(0., x[ix_dest],
-                0., Garray, stick, soma, params) # at 0 frequency
-        Rin[ix_dest] = dv_kernel_per_I(x[ix_dest], x[ix_dest],
-                0., Garray, stick, soma, params) # at 0 frequency
-    return Rin, Rtf
-
-
 def get_the_input_resistance_at_soma(EqCylinder, soma, stick, params,
                                      shtn_input):
 
@@ -480,6 +466,51 @@ def get_the_input_resistance_at_soma(EqCylinder, soma, stick, params,
     # PSP with unitary current input
     # input and recording in x=0 
     return np.abs(dv_X_Xsrc_Lp(0., 0., 1., afP, afD, gfP, rfP, rfD, Lp, L, lbdD, lbdP))
+
+def get_the_transfer_resistance_to_soma(EqCylinder, soma, stick, params, precision=100):
+
+    shtn_input = {'fi_soma':0, 'fe_prox':0,'fi_prox':0,
+                  'fe_dist':0,'fi_dist':0}
+    params_for_cable_theory(stick, params)
+    setup_model(EqCylinder, soma, stick, params)
+    
+    # model parameters
+    Ls, Ds, l, D, lp, Rm, Cm,\
+        El, Ee, Ei, rm, cm, ri = ball_and_stick_params(soma, stick, params)
+    # activity dependent parameters
+    tauS, tauP, lbdP, tauD, lbdD = \
+            ball_and_stick_constants(shtn_input, soma, stick, params)
+    # cable constants
+    afP, gfP, rfP, afD, rfD, Lp, L = cable_eq_params(0., tauS, tauP, lbdP,\
+                                    tauD, lbdD, Cm, cm, ri, lp, l, stick['B'])
+                                    
+    Source_Array = np.linspace(0, stick['L'], precision+1)
+    Source_Array = .5*(Source_Array[1:]+Source_Array[:-1]) # discarding the soma, treated below
+    DX = Source_Array[1]-Source_Array[0]
+    Branch_weights = 0*Source_Array # initialized t0 0 !
+    for b in EqCylinder:
+        Branch_weights[np.where(Source_Array>=b)[0]] += 1
+
+    R_transfer = np.zeros(len(Source_Array)+1)
+    N_synapses = np.zeros(len(Source_Array)+1)
+    
+    #### DENDRITIC SYNAPSES
+    for ix_source in range(len(Source_Array)): 
+
+        X_source = Source_Array[ix_source]
+        Xsrc = rescale_x(X_source, l, lp, stick['B'], lbdP, lbdD) # rescaled x_source
+        if X_source<=Lp:
+            R_transfer[ix_source] = dv_X_Xsrc_Lp(0., Xsrc, 1., afP, afD, gfP, rfP, rfD, Lp, L, lbdD, lbdP)
+        else:
+            R_transfer[ix_source] = dv_X_Lp_Xsrc(0., Xsrc, 1., afP, afD, gfP, rfP, rfD, Lp, L, lbdD, lbdP)
+        N_synapses[ix_source] = Branch_weights[ix_source]*np.pi*DX*stick['D']
+        N_synapses[ix_source] *= (1./stick['exc_density']+1./stick['inh_density'])
+
+    ### SOMATIC SYNAPSES
+    N_synapses[-1] = np.pi*soma['L']*soma['D']*(1./soma['exc_density']+1./soma['inh_density'])
+    R_transfer[-1] = dv_X_Xsrc_Lp(0., 0., 1., afP, afD, gfP, rfP, rfD, Lp, L, lbdD, lbdP)
+    
+    return (R_transfer*N_synapses)/N_synapses.sum()
 
 
 def get_the_input_impedance_at_soma(f, EqCylinder, soma, stick, params):

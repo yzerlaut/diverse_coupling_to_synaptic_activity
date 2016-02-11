@@ -12,13 +12,6 @@ from input_impedance_calibration.get_calib import adjust_model_prop
 soma, stick, params = np.load('../input_impedance_calibration/mean_model.npy')
 EqCylinder = np.linspace(0, 1, stick['B']+1)*stick['L']
 
-# fixing the synaptic densities !!
-FACTOR = 1./2. # we double the densities
-# soma['exc_density'], soma['inh_density']= 1e9, FACTOR*25.*1e-12
-# stick['exc_density'], stick['inh_density']= FACTOR*17*1e-12, FACTOR*100*1e-12
-soma['exc_density'], soma['inh_density']= 1e9, (1e-5)**2/15.
-stick['exc_density'], stick['inh_density']= (1e-5)**2/50., (1e-5)**2/10.
-
 Rm = get_Rm_range()
 
 Ke, Ki = 0*Rm, 0*Rm

@@ -5,6 +5,7 @@ sys.path.append('/home/yann/work/python_library/')
 import my_graph as graph
 sys.path.append('../')
 from theory.analytical_calculus import * # where the core calculus lies
+from membrane_parameters import soma, stick, params # BASELINE PARAMETERS
 
 #### ================================================== ##
 #### LOAD DATA ###############################
@@ -39,21 +40,6 @@ RA = np.linspace(10., 90., N)*1e-2
 #### ================================================== ##
 #### MODEL PROPERTIES ###############################
 #### ================================================== ##
-
-# somatic parameters
-soma = {'L': 10*1e-6, 'D': 15*1e-6, 'NSEG': 1, 'exc_density':1e9, 'inh_density':1e9, 'name':'soma'}
-
-# stick parameters
-stick = {'L': 500*1e-6, 'D': 1.*1e-6, 'B':10, 'NSEG': 30, 'exc_density':1e9, 'inh_density':1e9, 'name':'dend'}
-
-# biophysical properties
-params = {'g_pas': 1e-4*1e4, 'cm' : 1.*1e-2, 'Ra' : 200.*1e-2, 'El': -65e-3,
-          'Qe' : 1.e-9 , 'Te' : 5.e-3, 'Ee': 0e-3,
-          'Qi' : 1.5e-9 , 'Ti' : 5.e-3, 'Ei': -80e-3,
-          'Ee': 0e-3, 'Ei': -80e-3}
-params['fraction_for_L_prox'] = 2./3.
-params['factor_for_distal_synapses_weight'] = 2.
-params['factor_for_distal_synapses_tau'] = 2.
 
 
 def get_input_imped(soma, stick, params):

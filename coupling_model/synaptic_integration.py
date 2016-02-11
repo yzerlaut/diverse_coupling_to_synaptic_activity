@@ -3,8 +3,8 @@ import sys
 sys.path.append('../')
 from theory.analytical_calculus import get_the_fluct_prop_at_soma, find_balance_at_soma
 
-soma, stick, params = np.load('../ball_and_rall_tree/mean_model.npy')
-ALL_CELLS = np.load('../ball_and_rall_tree/all_cell_params.npy')
+soma, stick, params = np.load('../input_impedance_calibration/mean_model.npy')
+ALL_CELLS = np.load('../input_impedance_calibration/all_cell_params.npy')
 
 def find_inh_cond_for_balance(feG, fiG, feI, fiI, i_nrn, balance=-60e-3):
     for i in range(len(F)):
@@ -63,9 +63,10 @@ if __name__=='__main__':
     i_nrn = 2 # index of the neuron
 
     fig, AX = plt.subplots(4, 1, figsize=(4, 15))
+    plt.subplots_adjust(left=.3, top=.8, wspace=.2, hspace=.2)
     fig2, AX2 = plt.subplots(4, 1, figsize=(4, 15))
     plt.subplots_adjust(left=.3, top=.8, wspace=.2, hspace=.2)
-    F = np.linspace(.001,1.5,3)
+    F = np.linspace(.1,.6,3)
     COLORS=['r', 'b', 'g', 'c', 'k', 'm']
 
     PROTOCOLS = ['unbalanced activity', 'proximal activity', 'distal activity',\
@@ -92,7 +93,7 @@ if __name__=='__main__':
     LABELS = ['$\mu_V$ (mV)', '$\sigma_V$ (mV)',\
               '$\\tau_V / \\tau_m^0$ (%)', '$g_{tot}^{soma} / g_L$']
     
-    AX[0].legend(prop={'size':'small'}, bbox_to_anchor=(1., 1.))
+    AX[0].legend(prop={'size':'xx-small'}, bbox_to_anchor=(1., 2.))
     for ax, ylabel in zip(AX[:-1], LABELS[:-1]):
         set_plot(ax, ['left'], ylabel=ylabel, xticks=[])
     set_plot(AX[-1], ['bottom','left'],\

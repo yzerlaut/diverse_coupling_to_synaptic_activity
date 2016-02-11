@@ -10,25 +10,6 @@ from firing_response_description.template_and_fitting import final_func
 
 soma, stick, params = np.load('../input_impedance_calibration/mean_model.npy')
 
-# --- fixing the synaptic densities !!
-
-FACTOR = 1. # factor for the synaptic densities densities
-# soma['exc_density'], soma['inh_density']= 1e9, FACTOR*25.*1e-12
-# stick['exc_density'], stick['inh_density']= FACTOR*17*1e-12, FACTOR*100*1e-12
-soma['exc_density'], soma['inh_density']= 1e9, (1e-5)**2/15.
-stick['exc_density'], stick['inh_density']= (1e-5)**2/50., (1e-5)**2/10.
-
-# --- fixing the synaptic parameters !!
-params['Qe'], params['Qi'] = 1.e-9, 1.2e-9
-params['Te'], params['Ti'] = 4e-3, 4e-3
-params['Ee'], params['Ei'] = 0e-3, -80e-3
-params['El'] = -60e-3#0e-3, -80e-3
-params['fraction_for_L_prox'] = 2./3.
-params['factor_for_distal_synapses_weight'] = 3.
-params['factor_for_distal_synapses_tau'] = 3.
-
-np.save('mean_model.npy', [soma, stick, params])
-
 if sys.argv[-1]=='plot':
 
     sys.path.append('/home/yann/work/python_library/')
