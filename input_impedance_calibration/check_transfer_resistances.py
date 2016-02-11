@@ -25,8 +25,8 @@ for i in range(len(CELLS)):
     soma1, stick1, params1 = adjust_model_prop(Rm_data[i], soma, stick)
     
     EqCylinder1 = np.linspace(0, 1, stick1['B']+1)*stick1['L']
-    
-    Rtf_model[i]= get_the_transfer_resistance_to_soma(EqCylinder1, soma1, stick1, params1).mean()
+
+    Rtf_model[i]= get_the_mean_transfer_resistance_to_soma(EqCylinder1, soma1, stick1, params1)
     
 print '---------------------------------------------------'
 print 'Comparison between model and data for Tm'

@@ -17,7 +17,7 @@ def params_for_cable_theory(cable, Params):
     cable['cm'] = Params['cm']*np.pi*D # [F/m] """" NEURON 1e-2 !!!! """"
     
 
-def setup_model(EqCylinder, soma, dend, Params):
+def setup_model(EqCylinder, soma, dend, Params, verbose=False):
     """ returns the different diameters of the equivalent cylinder
     given a number of branches point"""
     cables, xtot = [], np.zeros(1)
@@ -50,8 +50,9 @@ def setup_model(EqCylinder, soma, dend, Params):
         cable['Area_per_seg'] = cable['L']*cable['D']*np.pi/cable['NSEG']
         if cable['name']!='soma':
             jj+=1
-    print "Total number of EXCITATORY synapses : ", Ke_tot
-    print "Total number of INHIBITORY synapses : ", Ki_tot
+    if verbose:
+        print "Total number of EXCITATORY synapses : ", Ke_tot
+        print "Total number of INHIBITORY synapses : ", Ki_tot
     # we store this info in the somatic comp
     cables[0]['Ke_tot'], cables[0]['Ki_tot'] = Ke_tot, Ki_tot
     return xtot, cables
@@ -355,7 +356,7 @@ def get_the_fluct_prop_at_soma(SHTN_INPUT, params, soma, stick,\
     EqCylinder = np.linspace(0,1,stick['B']+1)*stick['L']
     params_for_cable_theory(stick, params)
     setup_model(EqCylinder, soma, stick, params)
-    
+
     # check if the shtn input is an array
     n = len(SHTN_INPUT['fi_soma'])
 
@@ -371,7 +372,7 @@ def get_the_fluct_prop_at_soma(SHTN_INPUT, params, soma, stick,\
     # then temporal loop
     for i in range(n):
         
-        shtn_input = {'fi_soma':SHTN_INPUT['fi_soma'][i], 'fe_prox':SHTN_INPUT['fe_prox'][i],\
+        shtn_input = {'fi_soma':SHTN_INPUT['fi_prox'][i], 'fe_prox':SHTN_INPUT['fe_prox'][i],\
                       'fi_prox':SHTN_INPUT['fi_prox'][i], 'fe_dist':SHTN_INPUT['fe_dist'][i],\
                       'fi_dist':SHTN_INPUT['fi_dist'][i], 'synchrony':SHTN_INPUT['synchrony'][i]}
 
@@ -503,15 +504,18 @@ def get_the_transfer_resistance_to_soma(EqCylinder, soma, stick, params, precisi
             R_transfer[ix_source] = dv_X_Xsrc_Lp(0., Xsrc, 1., afP, afD, gfP, rfP, rfD, Lp, L, lbdD, lbdP)
         else:
             R_transfer[ix_source] = dv_X_Lp_Xsrc(0., Xsrc, 1., afP, afD, gfP, rfP, rfD, Lp, L, lbdD, lbdP)
-        N_synapses[ix_source] = Branch_weights[ix_source]*np.pi*DX*stick['D']
-        N_synapses[ix_source] *= (1./stick['exc_density']+1./stick['inh_density'])
+        N_synapses[ix_source] = Branch_weights[ix_source]*np.pi*DX*stick['D']*(1./stick['exc_density']+1./stick['inh_density'])
 
     ### SOMATIC SYNAPSES
     N_synapses[-1] = np.pi*soma['L']*soma['D']*(1./soma['exc_density']+1./soma['inh_density'])
     R_transfer[-1] = dv_X_Xsrc_Lp(0., 0., 1., afP, afD, gfP, rfP, rfD, Lp, L, lbdD, lbdP)
     
-    return (R_transfer*N_synapses)/N_synapses.sum()
+    return R_transfer, N_synapses
 
+def get_the_mean_transfer_resistance_to_soma(EqCylinder, soma, stick, params, precision=100):
+    R_transfer, N_synapses = get_the_transfer_resistance_to_soma(EqCylinder, soma, stick, params,\
+                                                                 precision=precision)
+    return np.sum(R_transfer*(N_synapses/N_synapses.sum()))
 
 def get_the_input_impedance_at_soma(f, EqCylinder, soma, stick, params):
 
