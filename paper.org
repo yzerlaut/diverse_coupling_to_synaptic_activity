@@ -45,6 +45,14 @@ connectivity schemes, we explore here a complementary mechanism: given
 the strong heterogeneity in electrophysiological properties of
 neocortical pyramidal cells
 
+
+[[citetext:Yang2015]] suggested that stimulus representation in barrel
+cortex is linked to the combination of circuit factors (the precise
+connectivity will likely determine the amplitude of the V_m
+deflections) and biophysical factors (the threshold
+value). Biophysical parameters are thus a key properties of stimulus
+representation in sensory cortex.
+
 \newpage
 
 * Results 
