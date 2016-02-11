@@ -49,13 +49,6 @@ def analyze_simulation(xtot, t_vec, V):
 
     muV_exp, sV_exp, Tv_exp = [], [], []
 
-    # for autocorrelation analysis
-    exp_f = lambda t, tau: np.exp(-t/tau)
-    def find_acf_time(v_acf, t_shift, criteria=0.01):
-        i_max = np.argmin(np.abs(v_acf-criteria))
-        P, pcov = curve_fit(exp_f, t_shift[:i_max], v_acf[:i_max])
-        return P[0]
-
     for i in range(len(cables)): # loop over levels
         n_level = max(1,2**(i-1)) # number of levels
         for k in range(cables[i]['NSEG']): # loop over segments first
@@ -69,8 +62,8 @@ def analyze_simulation(xtot, t_vec, V):
                 sV_exp[-1] += v.std()/n_level
                 v_acf, t_shift = autocorrel(v,\
                   sim_params['window_for_autocorrel']*1e-3, 1e-3*sim_params['dt'])
-                Tv_exp[-1] += find_acf_time(v_acf, t_shift, criteria=0.01)/n_level
-
+                Tv_exp[-1] += np.trapz(v_acf, t_shift)/n_level
+                  
     return np.array(muV_exp), np.array(sV_exp), np.array(Tv_exp)
 
 
@@ -158,9 +151,9 @@ def make_comparison_plot(x_th, muV_th, sV_th, Tv_th,\
     # membrane pot 
     fig1, AX = plt.subplots(3,1, sharex=True, figsize=(5,8))
     # numerical simulations
-    AX[0].plot(1e6*x_exp, muV_exp, 'kD', label='num. sim')
-    AX[1].plot(1e6*x_exp, sV_exp, 'kD')
-    AX[2].plot(1e6*x_exp, 1e3*Tv_exp, 'kD')
+    AX[0].plot(1e6*x_exp, muV_exp, 'kD', label='num. sim', ms=4)
+    AX[1].plot(1e6*x_exp, sV_exp, 'kD', ms=4)
+    AX[2].plot(1e6*x_exp, 1e3*Tv_exp, 'kD', ms=4)
     # analytical calculuc
     AX[0].plot(1e6*x_th, 1e3*muV_th, 'k-', label='analytic approx.', lw=3, alpha=.5)
     AX[1].plot(1e6*x_th, 1e3*sV_th, 'k-', lw=3, alpha=.5)
@@ -193,9 +186,9 @@ if __name__=='__main__':
                         help="With numerical simulation (NEURON)",
                         action="store_true")
     parser.add_argument("--fe_prox", type=float, help="excitatory synaptic frequency in proximal compartment", default=5.)
-    parser.add_argument("--fi_prox", type=float, help="inhibitory synaptic frequency in proximal compartment", default=20.)
-    parser.add_argument("--fe_dist", type=float, help="excitatory synaptic frequency in distal compartment", default=30.)
-    parser.add_argument("--fi_dist", type=float, help="inhibitory synaptic frequency in distal compartment", default=25.)
+    parser.add_argument("--fi_prox", type=float, help="inhibitory synaptic frequency in proximal compartment", default=10.)
+    parser.add_argument("--fe_dist", type=float, help="excitatory synaptic frequency in distal compartment", default=5.)
+    parser.add_argument("--fi_dist", type=float, help="inhibitory synaptic frequency in distal compartment", default=10.)
     parser.add_argument("--fe_soma", type=float, help="excitatory synaptic frequency at soma compartment", default=.0001)
     parser.add_argument("--fi_soma", type=float, help="inhibitory synaptic frequency at soma compartment", default=20.)
     parser.add_argument("--synchrony", type=float, help="synchrony of presynaptic spikes", default=0.)
@@ -204,8 +197,8 @@ if __name__=='__main__':
     parser.add_argument("--discret_th", type=int, help="discretization for theoretical evaluation",default=20)
     parser.add_argument("--seed", type=int, help="seed fo random numbers",default=3)
     # ball and stick properties
-    parser.add_argument("--L_stick", type=float, help="Length of the stick in micrometer", default=2000.)
-    parser.add_argument("--L_prox_fraction", type=float, help="fraction of tree corresponding to prox. compartment", default=2./3.)
+    parser.add_argument("--L_stick", type=float, help="Length of the stick in micrometer", default=1000.)
+    parser.add_argument("--L_prox_fraction", type=float, help="fraction of tree corresponding to prox. compartment", default=1.99/3.)
     parser.add_argument("--D_stick", type=float, help="Diameter of the stick", default=2.)
     parser.add_argument("-B", "--branches", type=int, help="Number of branches (equally spaced)", default=1)
     parser.add_argument("--EqCylinder", help="Detailed branching morphology (e.g [0.,0.1,0.25, 0.7, 1.])", nargs='+', type=float, default=[])
@@ -226,8 +219,8 @@ if __name__=='__main__':
     stick['L'] = args.L_stick*1e-6
     stick['D'] = args.D_stick*1e-6
     if not len(args.EqCylinder):
-        params['B'] = args.branches
-        EqCylinder = np.linspace(0, 1, params['B']+1)*stick['L'] # equally space branches !
+        stick['B'] = args.branches
+        EqCylinder = np.linspace(0, 1, stick['B']+1)*stick['L'] # equally space branches !
     else:
         EqCylinder = np.array(args.EqCylinder)*stick['L'] # detailed branching
 

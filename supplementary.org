@@ -1,0 +1,326 @@
+#+TITLE: Supplementary Material \\ \small{Heterogenous firing responses leads to diverse coupling to presynaptic activity in a simplified morphological model of layer V pyramidal neurons}
+#+AUTHOR: Y. Zerlaut \& A. Destexhe
+
+\newpage
+
+* Derivation of the mean membrane potential solution
+<<sec:mean-coeff>>
+
+Equation for $\mu_v(X)$:
+
+\begin{equation}
+\left\{
+\begin{split}
+& \frac{\partial^2 \mu_v}{\partial X^2} = \mu_v(X)-v_0^p \quad \forall X \in [0,L_p] \\
+&\frac{\partial^2 \mu_v}{\partial X^2} = \mu_v(X)-v_0^d \quad \forall X \in [L_p,L]  \\
+&\frac{\partial \mu_v}{\partial X}|_{X=0} = \gamma^p \, 
+\Big( \mu_v(0) - V_0  \Big) \\
+&\mu_v(X \rightarrow L_p^-) = \mu_v(X \rightarrow L_p^+) \\
+&\frac{\partial \mu_v}{\partial X}_{X \rightarrow L_p^-} = \frac{\lambda^p}{\lambda^d}
+\frac{\partial \mu_v}{\partial X}_{X \rightarrow L_p^+} \\
+&\frac{\partial \mu_v}{\partial X}_{X=L} = 0 
+\end{split}
+\right.
+\end{equation}
+
+We write the solution on the form:
+
+\begin{equation}
+\left\{
+\begin{split}
+& \mu_v(X) = v_0^p + A \, \cosh(X) + C \, \sinh(X) \quad \forall \, X \in [0,L_p] \\
+& \mu_v(X) = v_0^d + B \, \cosh(X-L) + D \, \sinh(X-L) \quad \forall \, X \in [L_pL]
+\end{split}
+\right.
+\end{equation}
+
+
+- Sealed-end boundary condition at cable end implies $D=0$
+
+- Somatic boudary condition imply: $C = \gamma^p \, (v_0^p - V_0 + A)$
+
+- Then v continuity imply :
+    \( v_0^p + A \, \cosh(L_p) +  \gamma^p \, (v_0^p - V_0 + A) \, \sinh(L_p) = v_0^d + B \, \cosh(L_p-L) \)
+
+- Then current conservation imply: 
+    \( A \, \sinh(L_p) +  \gamma^p \, (v_0^p - V_0 + A) \, \cosh(L_p) = \frac{\lambda^p}{\lambda^d} \, B \, \sinh(L_p-L) \)
+
+We rewrite those condition on a matrix form:
+
+\begin{equation}
+\Big(
+\begin{matrix}
+    \cosh(L_p)+\gamma^p \sinh(L_p) & -\cosh(L_p-L) \\
+    \sinh(L_p)+\gamma^p \cosh(L_p) & -  \frac{\lambda^p}{\lambda^d} \, \sinh(L_p-L) 
+\end{matrix}
+\Big)
+\cdot
+\Big(
+\begin{matrix}
+    A \\
+    B 
+\end{matrix}
+\Big) = 
+\Big(
+\begin{matrix}
+v_0^d - v_0^p - \gamma^p \, (v_0^p-V_0) \, \sinh(L_p) \\
+- \gamma^p \, (v_0^p-V_0) \, \cosh(L_p)
+\end{matrix}
+\Big)
+\end{equation}
+
+And we solved this equation with the =solve_linear_system_LU= method of =sympy=
+
+The coefficients $A$ and $B$ are given by:
+\begin{equation}
+A=\frac{\alpha}{\beta} \qquad \qquad B=\frac{\gamma}{\delta}
+\end{equation}
+
+where:
+
+\begin{equation}
+\begin{split}
+& \alpha = V_{0} \gamma^{P} \lambda^{D} \cosh{\left (L_{p} \right )}
+\cosh{\left (L - L_{p} \right )} + V_{0} \gamma^{P} \lambda^{P}
+\sinh{\left (L_{p} \right )} \sinh{\left (L - L_{p} \right )} \\
+& \quad - \gamma^{P} \lambda^{D} v^{d}_{0} \cosh{\left (L_{p} \right )}
+\cosh{\left (L - L_{p} \right )} - \gamma^{P} \lambda^{P} v^{d}_{0}
+\sinh{\left (L_{p} \right )} \sinh{\left (L - L_{p} \right )} \\
+& \quad - \lambda^{P} v^{d}_{0} \sinh{\left (L - L_{p} \right )}
+ + \lambda^{P} v^{p}_{0} \sinh{\left (L - L_{p} \right )} \\
+& \beta = \gamma^{P} \lambda^{D} \cosh{\left (L_{p} \right )}
+\cosh{\left (L - L_{p} \right )} + \gamma^{P} \lambda^{P} \sinh{\left
+(L_{p} \right )} \sinh{\left (L - L_{p} \right )} + \\
+& \quad \lambda^{D} \sinh{\left (L_{p} \right )} \cosh{\left (L - L_{p} \right )}
+ + \lambda^{P} \sinh{\left (L - L_{p} \right )} \cosh{\left (L_{p} \right
+)} \\
+& \gamma = \lambda^{D} \big( V_{0} \gamma^{P} + \gamma^{P} v^{d}_{0}
+\cosh{\left (L_{p} \right )} - \gamma^{P} v^{d}_{0} \\
+& \quad  - \gamma^{P}
+v^{p}_{0} \cosh{\left (L_{p} \right )} + v^{d}_{0} \sinh{\left (L_{p}
+\right )} - v^{p}_{0} \sinh{\left (L_{p} \right )} \big) \\
+& \delta = \gamma^{P}
+\lambda^{D} \cosh{\left (L_{p} \right )} \cosh{\left (L - L_{p} \right
+)} + \gamma^{P} \lambda^{P} \sinh{\left (L_{p} \right )} \sinh{\left
+(L - L_{p} \right )}  \\
+& \quad + \lambda^{D} \sinh{\left (L_{p} \right )}
+\cosh{\left (L - L_{p} \right )}  + \lambda^{P} \sinh{\left (L - L_{p}
+\right )} \cosh{\left (L_{p} \right )}
+\end{split}
+\end{equation}
+
+
+* Derivation of the post-synaptic membrane potential event
+
+For the PSP events we need to solve:
+
+\begin{equation}
+\left\{
+\begin{split}
+& \frac{\partial^2 \hat{\delta v}}{\partial X^2} =
+\big( \alpha_f^p + (\alpha_f^d-\alpha_f^p) 
+\mathcal{H}(X-L_p) \big)^2 \, 
+\hat{\delta v}  \\
+& \frac{\partial \hat{\delta v}}{\partial X}_{|X=0} = 
+ \gamma_f^p \,  \hat{\delta v}(0,f) \\
+&  \hat{\delta v}(X_{src}^-,f) = \hat{\delta v}(X_{src}^+,f) \\
+& \frac{\partial \hat{\delta v}}{\partial X}_{X_{src}^-} 
+= \frac{\partial \hat{\delta v}}{\partial X}_{X_{src}^+} 
+- \big(\mu_v(X_{src})-E_{rev}\big) \, \big( r_f^p + (r_f^d-r_f^p) \mathcal{H}(X_{src}-L_p) \big) \, \hat{g(f)} \\
+& \hat{\delta v}(L_p^-,f) = \hat{\delta v}(L_p^+,f) \\
+& \frac{\partial \hat{\delta v}}{\partial X}_{L_p^-} 
+= \frac{\lambda^p}{\lambda^d} \, 
+\frac{\partial \hat{\delta v}}{\partial X}_{L_p^+} \\
+& \frac{\partial \hat{\delta v}}{\partial X}_{X=L} = 0
+\end{split}
+\right.
+\end{equation}
+
+To obtain the solution, we need to split the solution into two cases:
+
+**** $X_{src} \leq L_p$
+
+Let's write the solution to this equation as the form (already
+including the boundary conditions at $X=0$ and $X=L$):
+
+\begin{equation}
+\begin{split}
+& \hat{\delta v}(X, X_{src}, f) = \\
+&\left\{
+\begin{split}
+& A_f(X_{src}) \, \big ( \cosh(\alpha_f^p \, X)+\gamma^p \, \sinh(\alpha_f^p \, X) \big) \\
+& \qquad \qquad \mathrm{ if: } 0 \leq X \leq X_{src} \leq L_p \leq L \\
+& B_f(X_{src})\, \cosh(\alpha_f^p \, (X-L_p))+C_f(X_{src})\, \sinh(\alpha_f^p \, (X-L_p)) \\
+& \qquad \qquad \mathrm{ if: } 0 \leq X_{src}  \leq X \leq L_p \leq L \\
+& D_f(X_{src}) \, \cosh(\alpha_f^d \, (X-L) )  \\
+& \qquad \qquad \mathrm{ if: } 0 \leq X_{src} \leq L_p  \leq X \leq L 
+\end{split}
+\right.
+\end{split}
+\end{equation}
+
+We write the 4 conditions correspondingto the conditions in $X_{src}$
+and $L_p$ to get $A_f, B_f, C_f, D_f$. On a matrix form, this gives:
+
+\begin{equation}
+\hspace{-4cm}
+\footnotesize
+M = 
+\begin{pmatrix}
+    \cosh(\alpha_f^p \, X_{src})+\gamma_f^p \sinh(\alpha_f^p \, X_{src})  
+         & -\cosh(\alpha_f^p \, (X_{src}-L_p)) & -\sinh(\alpha_f^p \, (X_{src}-L_p)) & 0 \\
+    \alpha_f^p \big ( \sinh(\alpha_f^p \, X_{src})+\gamma_f^p \cosh(\alpha_f^p \, X_{src})  \big)
+         & - \alpha_f^p \sinh(\alpha_f^p \, (X_{src}-L_p)) & -\alpha_f^p \cosh(\alpha_f^p \, (X_{src}-L_p)) & 0 \\
+    0 & 1 & 0 & - \cosh(\alpha_f^d \, (L_p-L)) \\
+    0 & 0 & \alpha_f^p & -  \alpha_f^d \frac{\lambda^p}{\lambda^d} \, \sinh(\alpha_f^d \, (L_p-L))
+\end{pmatrix}
+\end{equation}
+
+\begin{equation}
+M \cdot
+\begin{pmatrix}
+    A_f \\
+    B_f \\
+    C_f \\
+    D_f
+\end{pmatrix} = 
+\begin{pmatrix}
+0 \\
+- r_f^p I_f \\
+0 \\
+0
+\end{pmatrix}
+\end{equation}
+
+And we will solve it with the =solve_linear_system_LU= method of
+=sympy=. For the $A_f(X_{src})$ coefficient, we obtain:
+
+\begin{equation}
+A_f(X_{src}) = \frac{a^1_f(X_{src})}{a^2_f(X_{src})}
+\end{equation}
+
+with:
+
+\begin{equation}
+\begin{split}
+& a^1_f(X_{src}) = I_{f} r^{P}_{f} \left(- \alpha^{D}_{f} \lambda^{P} \cosh{\left (L \alpha^{D}_{f} - L_{p} \alpha^{D}_{f} - L_{p} \alpha^{P}_{f} + X_{s} \alpha^{P}_{f} \right )}  \\
+& \qquad + \alpha^{D}_{f} \lambda^{P} \cosh{\left (L \alpha^{D}_{f} - L_{p} \alpha^{D}_{f} + L_{p} \alpha^{P}_{f} - X_{s} \alpha^{P}_{f} \right )}  \\
+& \qquad + \alpha^{P}_{f} \lambda^{D} \cosh{\left (L \alpha^{D}_{f} - L_{p} \alpha^{D}_{f} - L_{p} \alpha^{P}_{f} + X_{s} \alpha^{P}_{f} \right )}  \\
+& \qquad + \alpha^{P}_{f} \lambda^{D} \cosh{\left (L \alpha^{D}_{f} - L_{p} \alpha^{D}_{f} + L_{p} \alpha^{P}_{f} - X_{s} \alpha^{P}_{f} \right )}\right)\\
+& a^2_f(X_{src}) = \alpha^{P}_{f} \left(- \alpha^{D}_{f} \gamma^{P}_{f} \lambda^{P} \cosh{\left (- L \alpha^{D}_{f} + L_{p} \alpha^{D}_{f} + L_{p} \alpha^{P}_{f} \right )}  \\
+& \qquad + \alpha^{D}_{f} \gamma^{P}_{f} \lambda^{P} \cosh{\left (L \alpha^{D}_{f} - L_{p} \alpha^{D}_{f} + L_{p} \alpha^{P}_{f} \right )} -  \\
+& \qquad \alpha^{D}_{f} \lambda^{P} \sinh{\left (- L \alpha^{D}_{f} + L_{p} \alpha^{D}_{f} + L_{p} \alpha^{P}_{f} \right )}  \\
+& \qquad + \alpha^{D}_{f} \lambda^{P} \sinh{\left (L \alpha^{D}_{f} - L_{p} \alpha^{D}_{f} + L_{p} \alpha^{P}_{f} \right )}  \\
+& \qquad + \alpha^{P}_{f} \gamma^{P}_{f} \lambda^{D} \cosh{\left (- L \alpha^{D}_{f} + L_{p} \alpha^{D}_{f} + L_{p} \alpha^{P}_{f} \right )}  \\
+& \qquad + \alpha^{P}_{f} \gamma^{P}_{f} \lambda^{D} \cosh{\left (L \alpha^{D}_{f} - L_{p} \alpha^{D}_{f} + L_{p} \alpha^{P}_{f} \right )}  \\
+& \qquad + \alpha^{P}_{f} \lambda^{D} \sinh{\left (- L \alpha^{D}_{f} + L_{p} \alpha^{D}_{f} + L_{p} \alpha^{P}_{f} \right )}  \\
+& \qquad + \alpha^{P}_{f} \lambda^{D} \sinh{\left (L \alpha^{D}_{f} - L_{p} \alpha^{D}_{f} + L_{p} \alpha^{P}_{f} \right )}\right)\\
+\end{split}
+\end{equation}
+
+**** $ L_p \leq X_{src}$
+
+
+Let's write the solution to this equation as the form (already
+including the boundary conditions at $X=0$ and $X=L$:
+
+\begin{equation}
+\begin{split}
+& \hat{\delta v}(X, X_{src}, f) = \\
+&\left\{
+\begin{split}
+& E_f(X_{src}) \, \big ( \cosh(\alpha_f^p \, X)+\gamma^p \, \sinh(\alpha_f^p \, X) \big) \\
+& \qquad \qquad \mathrm{ if: } 0 \leq X \leq L_p \leq X_{src} \leq L \\
+& F_f(X_{src})\, \cosh(\alpha_f^d \, (X-L_p))+G_f(X_{src})\, \sinh(\alpha_f^d \, (X-L_p)) \\
+& \qquad \qquad \mathrm{ if: } 0  \leq L_p  \leq X \leq X_{src} \leq L \\
+& H_f(X_{src}) \, \cosh(\alpha_f^d \, (X-L) )  \\
+& \qquad \qquad \mathrm{ if: } 0  \leq L_p \leq X_{src}  \leq X \leq L 
+\end{split}
+\right.
+\end{split}
+\end{equation}
+
+We write the 4 conditions correspondingto the conditions in $X_{src}$
+and $L_p$ to get $A_f, B_f, C_f, D_f$. On a matrix form, this gives:
+
+We rewrite this condition on a matrix form:
+
+\begin{equation}
+\hspace{-4cm}
+\footnotesize
+M_2 = 
+\begin{pmatrix}
+    \cosh(\alpha_f^p \, L_p)+\gamma_f^p \sinh(\alpha_f^p \, L_p) & -1 & 0 &0 & 0 \\
+    \alpha_f^p \big ( \sinh(\alpha_f^p \, L_p)+\gamma_f^p \cosh(\alpha_f^p \, L_p)  \big) 
+         & 0 & -  \alpha_f^d \frac{\lambda^p}{\lambda^d} & 0 \\
+    0 & \cosh(\alpha_f^d \, (X_{src}-L_p)) & \sinh(\alpha_f^d \, (X_{src}-L_p)) & - \cosh(\alpha_f^d \, (X_{src}-L))\\
+    0 & \alpha_f^d \, \sinh(\alpha_f^d \, (X_{src}-L_p)) & \alpha_f^d \, \cosh(\alpha_f^d \, (X_{src}-L_p))
+         & - \alpha_f^d \, \sinh(\alpha_f^d \, (X_{src}-L))\\
+\end{pmatrix}
+\end{equation}
+
+\begin{equation}
+M \cdot
+\begin{pmatrix}
+    E_f \\
+    F_f \\
+    G_f \\
+    H_f
+\end{pmatrix} = 
+\begin{pmatrix}
+0 \\
+0 \\
+0 \\
+- r_f^d I_f
+\end{pmatrix}
+\end{equation}
+
+And we will solve it with the =solve_linear_system_LU= method of
+=sympy=. For the $E_f(X_{src})$ coefficient, we obtain:
+
+\begin{equation}
+E_f(X_{src}) = \frac{e^1_f(X_{src})}{e^2_f(X_{src})}
+\end{equation}
+
+with:
+
+\begin{equation}
+\begin{split}
+& e^1_f(X_{src}) = 2 I_{f} \lambda^{P} r^{D}_{f} \cosh{\left (\alpha^{D}_{f} \left(L - X_{s}\right) \right )} \\
+& e^2_f(X_{src}) = - \alpha^{D}_{f} \gamma^{P}_{f} \lambda^{P} \cosh{\left (- L \alpha^{D}_{f} + L_{p} \alpha^{D}_{f} + L_{p} \alpha^{P}_{f} \right )} \\
+& \qquad + \alpha^{D}_{f} \gamma^{P}_{f} \lambda^{P} \cosh{\left (L \alpha^{D}_{f} - L_{p} \alpha^{D}_{f} + L_{p} \alpha^{P}_{f} \right )}  \\
+& \qquad- \alpha^{D}_{f} \lambda^{P} \sinh{\left (- L \alpha^{D}_{f} + L_{p} \alpha^{D}_{f} + L_{p} \alpha^{P}_{f} \right )}  \\
+& \qquad+ \alpha^{D}_{f} \lambda^{P} \sinh{\left (L \alpha^{D}_{f} - L_{p} \alpha^{D}_{f} + L_{p} \alpha^{P}_{f} \right )}  \\
+& \qquad+ \alpha^{P}_{f} \gamma^{P}_{f} \lambda^{D} \cosh{\left (- L \alpha^{D}_{f} + L_{p} \alpha^{D}_{f} + L_{p} \alpha^{P}_{f} \right )}  \\
+& \qquad+ \alpha^{P}_{f} \gamma^{P}_{f} \lambda^{D} \cosh{\left (L \alpha^{D}_{f} - L_{p} \alpha^{D}_{f} + L_{p} \alpha^{P}_{f} \right )}  \\
+& \qquad+ \alpha^{P}_{f} \lambda^{D} \sinh{\left (- L \alpha^{D}_{f} + L_{p} \alpha^{D}_{f} + L_{p} \alpha^{P}_{f} \right )}  \\
+& \qquad+ \alpha^{P}_{f} \lambda^{D} \sinh{\left (L \alpha^{D}_{f} - L_{p} \alpha^{D}_{f} + L_{p} \alpha^{P}_{f} \right )}
+\end{split}
+\end{equation}
+
+
+**** PSP at the soma
+
+The main text writes a solution for the PSP at soma of the form:
+
+\begin{equation}
+\hat{\delta v}(X=0, X_{src}, f) = K_f(X_{src}) \, 
+\big(\mu_v(X_{src})-E_{rev}\big) \,  \hat{g(f)} 
+\end{equation}
+
+The correspondance with the previous calculus is to take a unitary
+current \(I_f=1\) and \( K_f(X_{src}) \) given by:
+
+\begin{equation}
+K_f(X_{src}) = 
+\left\{
+\begin{split}
+& A_f(X_{src}) \forall X_{src} \in [0,L_p] \\
+& E_f(X_{src}) \forall X_{src} \in [L_p, L]
+\end{split}
+\right.
+\end{equation}
+
+
+
+

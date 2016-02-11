@@ -3,7 +3,7 @@ import os
 
 # SCRIPTS = ['paper', 'highlights', 'supplementary', 'report', 'litterature']
 # SCRIPTS = ['paper', 'presentation', 'highlights']
-SCRIPTS = ['paper']
+SCRIPTS = ['paper', 'supplementary']
 
 EXT = 'pdf' # extension for figure export : png or pdf !
 DPI = 300 # resolution for bitmap figures

@@ -22,7 +22,7 @@ def get_input_imped(soma, stick, params):
     EqCylinder2 = np.linspace(0, 1, stick['B']+1)*stick['L'] # equally space branches ! UNITLESS, multiplied only in the func by stick['L']
     params_for_cable_theory(stick, params) # setting cable membrane constants
     output = get_the_input_impedance_at_soma(f, EqCylinder2, soma, stick, params)
-    psd, phase = np.abs(output)/1e6, (np.angle(output)+np.pi/2.)%(2.*np.pi)-np.pi/2.
+    psd, phase = np.abs(output)/1e6, (np.angle(output)+np.pi)%(2.*np.pi)-np.pi
     return psd, phase
 
 def get_input_resist(soma, stick, params):
@@ -31,7 +31,7 @@ def get_input_resist(soma, stick, params):
     params_for_cable_theory(stick, params) # setting cable membrane constants
     return np.abs(get_the_input_impedance_at_soma(0., EqCylinder2, soma, stick, params))
 
-def adjust_model_prop(Rm, soma, stick, precision=2000):
+def adjust_model_prop(Rm, soma, stick, precision=2000, params2=None):
     """ Rm in Mohm !! """
     if Rm>1200 or Rm<100:
         print '---------------------------------------------------'
@@ -43,13 +43,17 @@ def adjust_model_prop(Rm, soma, stick, precision=2000):
     D_dend = .75*1e-6*BASE
     Rin = np.zeros(precision)
     for i in range(len(Rin)):
-        soma1, stick1, params1 = soma.copy(), stick.copy(), params.copy()
+        soma1, stick1 = soma.copy(), stick.copy()
+        if params2 is None:
+            params1 = params.copy()
+        else:
+            params1=params2
         soma1['L'] += L_soma[i]
         stick1['L'] += L_dend[i]
         stick1['D'] += D_dend[i]
         Rin[i] = get_input_resist(soma1, stick1, params1)
     i0 = np.argmin(np.abs(Rin/1e6-Rm))
-    soma1, stick1, params1 = soma.copy(), stick.copy(), params.copy()
+    soma1, stick1 = soma.copy(), stick.copy()
     soma1['L'] += L_soma[i0]
     stick1['L'] += L_dend[i0]
     stick1['D'] += D_dend[i0]
@@ -126,7 +130,7 @@ def make_experimental_fig():
     ### MEAN MODEL
     psd, phase = get_input_imped(soma, stick, params)
     AX[1,0].loglog(f, psd, 'k-', alpha=.8, lw=4)
-    AX[1,1].semilogx(f, -phase, 'k-', alpha=.8, lw=4, label='medium size \n   model')
+    AX[1,1].semilogx(f[:-1], -phase[:-1], 'k-', alpha=.8, lw=4, label='medium size \n   model')
 
     
     ### MODEL VARIATIONS
@@ -136,7 +140,7 @@ def make_experimental_fig():
         soma1, stick1, params1 = adjust_model_prop(Rrm, soma, stick)
         psd, phase = get_input_imped(soma1, stick1, params1)
         AX[1,0].loglog(f, psd, '-', color=mymap(b,1), ms=5)
-        AX[1,1].semilogx(f, -phase, '-', color=mymap(b,1), ms=5)
+        AX[1,1].semilogx(f[:-1], -phase[:-1], '-', color=mymap(b,1), ms=5)
 
     ### ===================== FINAL graph settings
 

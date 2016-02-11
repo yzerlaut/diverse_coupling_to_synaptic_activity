@@ -6,22 +6,22 @@
 
   \bfseries
 
-  Growing experimental evidences suggest that cortical processing of
-  sensory input relies on the differential activation of neurons
-  within cortical networks, the circuit or cellular mechanisms
-  underlying this . In a companion communication [[cite:Zerlaut2016]], we
-  reported how individual neurons differ in their excitability and
+  Neocortical processing of sensory input rely on the specific
+  activation of subpopulations within the cortical network, and
+  specific circuitry is thought to be the primary mechanism underlying
+  this feature. Nonetheless, in a companion study [[cite:Zerlaut2016]], we
+  found that individual neurons differ in their excitability and
   sensitivities to the properties of the membrane potential
   fluctuations. In the present report, we investigate how this
   heterogeneity is translated into diverse input-ouput properties
-  (i.e. in th relation from presynaptic quantities to spiking
+  (i.e. in the relation from presynaptic quantities to spiking
   probability).
 
   To this purpose, we designed a simplified morphological model of
   layer V pyramidal neurons with a dendritic tree following Rall's
   branching rule. We first show that we are able to calibrate this
   simplified model on /in vitro/ measurements of somatic input
-  impedance in layer V pyramidal neurons of juvenile mive visual
+  impedance in layer V pyramidal neurons of juvenile mice visual
   cortex. We then propose and analytical derivation for the membrane
   potential fluctuations at the soma as a function of the properties
   of the synaptic bombardment.
@@ -44,6 +44,14 @@ Though this diverse activation is likely to be due to specific
 connectivity schemes, we explore here a complementary mechanism: given
 the strong heterogeneity in electrophysiological properties of
 neocortical pyramidal cells
+
+
+[[citetext:Yang2015]] suggested that stimulus representation in barrel
+cortex is linked to the combination of circuit factors (the precise
+connectivity will likely determine the amplitude of the V_m
+deflections) and biophysical factors (the threshold
+value). Biophysical parameters are thus a key properties of stimulus
+representation in sensory cortex.
 
 \newpage
 
@@ -115,8 +123,13 @@ comparison between analytical approx and simulations in =NEURON=
 
 #+ATTR_LATEX: :width \linewidth
 #+NAME: fig:analytics-accuracy
+<<<<<<< HEAD
 #+CAPTION: *Accuracy of the analytical approximation for the properties of the membrane potential fluctuations: comparison between numerical simulations and analytical estimates*. We vary 
 [[./figures/none_yet.pdf]]
+=======
+#+CAPTION: *Accuracy of the analytical approximation for the properties of the membrane potential fluctuations: comparison between numerical simulations and analytical estimates*. 
+[[./to_be_done.pdf]]
+>>>>>>> 68257322dfb78b141745767fd992d4215e95cbba
 
 We emphasize here that even if the analytical description uses the
 reduction to the equivalent cylinder (and therefore could be seen as
@@ -247,8 +260,26 @@ constant) can be written as :
 \right.
 \end{equation}
 
+The continuity of the membrane potential and of the current at the
+boundaries between the proximal and distal part imply:
 
-At the soma, $(x=0)$, we have a lumped impedance compartment. It has leaky RC circuit properties and also receives synaptic inhibition, the somatic membrane potential therefore follows :
+\begin{equation}
+\left\{
+\begin{split}
+& v(l_p^-,t) = v(l_p^+,t) \\
+& \frac{1}{r_i} \frac{\partial v}{\partial x}_{l_p^-} 
+= \frac{1}{r_i} \frac{\partial v}{\partial x}_{l_p^+} 
+\end{split}
+\right.
+\end{equation}
+
+where the limit with upper index $\pm$ indicate the limit taken from
+the left or the right respectively.
+
+
+At the soma, $(x=0)$, we have a lumped impedance compartment. It has
+leaky RC circuit properties and also receives synaptic inhibition, the
+somatic membrane potential therefore follows :
 
 \begin{equation}
 \left\{
@@ -271,7 +302,7 @@ So:
 #+NAME: eq:soma-bound
 \begin{equation}
 \frac{\partial v}{\partial x}_{|x=0} = r_i \, 
-\Big( C_M \frac{\partial v(0,t) }{\partial t} + \frac{v(0,t)-E_L}{R_m} + G_I(t) \, ( v(0,t)-E_i) \Big)
+\Big( C_M \frac{\partial v}{\partial t}_{|x=0} + \frac{v(0,t)-E_L}{R_m} + G_I(t) \, ( v(0,t)-E_i) \Big)
 \end{equation}
 
 Finally, the last boundary condition is that all branches terminate with an infinite resistance that impede current flow (sealed-end boundary conditions):
@@ -281,10 +312,26 @@ Finally, the last boundary condition is that all branches terminate with an infi
 \frac{\partial v}{\partial x}_{x=l} = 0
 \end{equation}
 
-The set of Equations [[eq:cable]], [[eq:synaptic-currents]],
-[[eq:space-dep-quant]], [[eq:soma-bound]] and [[eq:end-bound]] together with the
-biased Poisson process for event generation (see previous
-section[[sec:correlation-generator]]) determine the model.
+Together with the biased Poisson process for event generation (see
+previous section[[sec:correlation-generator]]), the final set of equations
+that describes the model, is therefore:
+
+#+NAME: eq:model-equation
+\begin{equation}
+\left\{
+\begin{split}
+& \frac{1}{r_i} \frac{\partial^2 v}{\partial x^2} = 
+c_m \frac{\partial v}{\partial t} + \frac{v-E_L}{r_m} - i_{syn}(v,x,t)\\
+& \frac{\partial v}{\partial x}_{|x=0} = r_i \, 
+\Big( C_M \frac{\partial v}{\partial t}_{|x=0} + \\
+& \qquad \qquad \frac{v(0,t)-E_L}{R_m} + G_I(t) \, ( v(0,t)-E_i) \Big) \\
+& v(l_p^-,t) = v(l_p^+,t) \\
+& \frac{\partial v}{\partial x}_{l_p^-} 
+= \frac{\partial v}{\partial x}_{l_p^+} \\
+& \frac{\partial v}{\partial x}_{x=l} = 0
+\end{split}
+\right.
+\end{equation}
 
 ** Numerical implementation
 <<numerical-implementation>>
@@ -400,13 +447,22 @@ g_{i0}^d = \pi \, d \, \mathcal{D}_i \, \nu_i^d \, \tau_i^d \, Q_i^d
 where $\mathcal{D}_e$ and $\mathcal{D}_i$ are the excitatory and
 inhibitory synaptic densities (see Figure [[fig:model-illustration]]B).
 
+We introduce two activity-dependent electrotonic constants relative to
+the proximal and distal part respectively:
+
+\begin{equation}
+\lambda^p= \sqrt{\frac{r_m}{r_i (1 + r_m g_{e0}^p + r_m g_{i0}^p)}}
+\quad 
+\lambda^d= \sqrt{\frac{r_m}{r_i (1 + r_m g_{e0}^d + r_m g_{i0}^d)}}$
+\end{equation}
+
 For a dendritic tree of total length $l$, whose proximal part ends at
 $l_p$ and with $B$ evenly spaced generations of branches, we define
 the space-dependent electrotonic constant:
 
 \begin{equation}
  \lambda(x) = \big( \lambda^p + \mathcal{H}(x-l_p)(\lambda^d-\lambda^p) \big)
- 2^{- \frac{1}{3} \, \lfloor \frac{x}{l \, B} \rfloor}
+ 2^{- \frac{1}{3} \, \lfloor \frac{B \, x}{l} \rfloor}
 \end{equation}
 
 where \( \lfloor . \rfloor \) is the floor function. Note that
@@ -422,39 +478,22 @@ Following [[citetext:Rall1962]], we now define a dimensionless length $X$:
  X(x) = \int_0^x \frac{dx}{\lambda(x)}
 \end{equation}
 
-<<<<<<< HEAD
 We define \(L= X(l) \) and \(L_p= X(l_p) \), the total length and
 proximal part length respectively (capital letters design rescaled
 quantities).
-=======
->>>>>>> 3e50844f1bd75d7848146d6d58a992475c7d2da3
 
-** Mean membrane potential derivation
+
+** Mean membrane potential
 <<sec:mean-derivation>>
-
 
 We derive the mean membrane potential \(\mu_V(x)\) corresponding to
 the stationary response to constant densities of conductances given by
-the means of the synaptic stimulation. For a set of synaptic
-stimulation \(\{\nu^e_p, \nu_i^p, \nu_e^d, \nu_i^d, s\}\), the
-stationary densities of conductances are given by:
+the means of the synaptic stimulation. We obtain the stationary
+equations by removing temporal derivatives in Equation, the set of
+equation governing this mean membrane potential in all branches is
+therefore:
 
-\begin{equation}
-\begin{split}
-& g_{e0}^p = \pi \, d \, \mathcal{D}_e \, \nu_e^p \, \tau_e^p \, Q_e^p \quad ;  \quad
-g_{i0}^p = \pi \, d \, \mathcal{D}_i \, \nu_i^p \, \tau_i^p \, Q_i^p \\
-& g_{e0}^d = \pi \, d \, \mathcal{D}_e  \, \nu_e^d \, \tau_e^d \, Q_e^d \quad ; \quad 
-g_{i0}^d = \pi \, d \, \mathcal{D}_i \, \nu_i^d \, \tau_i^d \, Q_i^d
-\end{split}
-\end{equation}
-
-wher $\mathcal{D}_e$ and $\mathcal{D}_i$ are the excitatory and
-inhibitory synaptic densities respectively (see Figure
-1[[fig:model-illustration]]B).
-
-The set of equation governing this mean membrane potential in all
-branches is therefore:
-
+#+NAME: eq:model-equation-muV
 \begin{equation}
 \left\{
 \begin{split}
@@ -462,45 +501,258 @@ branches is therefore:
 & \qquad - g_{e0}^p \, (\mu_v(x) - E_e) - g_{0i}^p \, (\mu_v(x) - E_i) \quad \forall x \in [0,l_p] \\
 & \frac{1}{r_i} \frac{\partial^2 \mu_v}{\partial x^2} =  \frac{\mu_v(x)-E_L}{r_m} \\
 & \qquad - g_{e0}^d \, (\mu_v(x) - E_e) - g_{0i}^d \, (\mu_v(x) - E_i)  \quad \forall x \in [l_p,l]  \\
-& \frac{\partial \mu_v}{\partial x}_{x=l} = 0 \\
-& \frac{\partial \mu_v}{\partial x}_{x=0} = R_M \, r_i
-\Big( \mu_v(0) - V_0  \Big) \\
-& \mu_v(x \rightarrow l_p^-) = \mu_v(x \rightarrow l_p^+) \\
-& \frac{\partial \mu_v}{\partial x}_{x \rightarrow l_p^-} = \frac{\partial \mu_v}{\partial x}_{x \rightarrow l_p^+} 
+& \frac{\partial \mu_v}{\partial x}_{|x=0} = r_i \, \big(
+ \frac{\mu_v(0)-E_L}{R_m} + G_{i0}^S \, ( \mu_v(0)-E_i) \big)\\
+& \mu_v(l_p^-,t) = \mu_v(l_p^+,t) \\
+& \frac{\partial \mu_v}{\partial x}_{l_p^-} 
+= \frac{\partial \mu_v}{\partial x}_{l_p^+} \\
+& \frac{\partial \mu_v}{\partial x}_{x=l} = 0
 \end{split}
 \right.
 \end{equation}
 
-To obtain, 
+Because the reduction to the equivalent cylinder conserves the
+membrane area and the previous equation only depends on density of
+currents, the equation governing $\mu_v(x)$ in all branches can be
+transformed into an equation on an equivalent cylinder of length $L$.
+We rescale $x$ by $\lambda(x)$ (see Equation [[eq:x-rescale]]) and we
+obtain the equation verified by \(\mu_V(X)\):
 
-where the upper indexes $p$ and $d$ index the proximal and distal part respectively
+#+NAME: eq:model-equation-muV-rescaled
+\begin{equation}
+\left\{
+\begin{split}
+& \frac{\partial^2 \mu_v}{\partial X^2} = \mu_v(X)-v_0^p \quad \forall X \in [0,L_p] \\
+&\frac{\partial^2 \mu_v}{\partial X^2} = \mu_v(X)-v_0^d \quad \forall X \in [L_p,L]  \\
+&\frac{\partial \mu_v}{\partial X}|_{X=0} = \gamma^p \, 
+\Big( \mu_v(0) - V_0  \Big) \\
+&\mu_v(L_p^-) = \mu_v(L_p^+) \\
+&\frac{\partial \mu_v}{\partial X}_{L_p^-} = \frac{\lambda^p}{\lambda^d}
+\frac{\partial \mu_v}{\partial X}_{L_p^+} \\
+&\frac{\partial \mu_v}{\partial X}_{X=L} = 0 
+\end{split}
+\right.
+\end{equation}
 
-We introduce 
+where:
 
-$\lambda^p= \sqrt{\frac{r_m}{r_i (1 + r_m g_{e0}^p + r_m g_{i0}^p)}}$,
-$v_0^p = \frac{E_L + r_m g_{e0}^p E_e + r_m g_{i0}^p E_i}{ 1 + r_m
-g_{e0}^p + r_m g_{i0}^p }$ and $\gamma^p = \frac{C_m \, r_i
-\lambda^p}{\tau_S}$
+\begin{equation}
+\begin{split}
+& v_0^p = \frac{E_L + r_m g_{e0}^p E_e + r_m g_{i0}^p E_i}{ 1 + r_m g_{e0}^p + r_m g_{i0}^p }\\
+& v_0^d = \frac{E_L + r_m g_{e0}^d E_e + r_m g_{i0}^d E_i}{ 1 + r_m g_{e0}^d + r_m g_{i0}^d }\\
+& \gamma^p = \frac{r_i \lambda^p \, (1+ G_i^0 R_m)}{R_m}\\
+& V_0 = \frac{E_L + G_i^0 R_m E_i}{ 1 +  + G_i^0 R_m }
+\end{split}
+\end{equation}
 
-$\lambda^d= \sqrt{\frac{r_m}{r_i (1 + r_m g_{e0}^d + r_m g_{i0}^d)}}$
-and $v_0^d = \frac{E_L + r_m g_{e0}^d E_e + r_m g_{i0}^d E_i}{ 1 + r_m
-g_{e0}^d + r_m g_{i0}^d }$
+The solution for this equation is:
+\begin{equation}
+ \mu_v(X) = 
+\left\{
+\begin{split}
+v_0^p + A &\cosh(X) + (v_0^p-V_0+ A) \sinh(X), \\
+ & \quad \forall X \in [0,L_p] \\
+v_0^d + B &\cosh(X-L), \quad \forall X \in [L_p,L]
+\end{split}
+\right.
+\end{equation}
+
+with $A$ and $B$ explicited in the supplementary material. The
+accuracy of this expression can be seen on Figure
+[[fig:analytics-accuracy]].
+
+** Membane potential response to a synaptic event
+<<sec:eq-for-var-around-mean>>
+
+We now look for the response to \(n_{src}= \lfloor \frac{B \,
+x_{src}}{l} \rfloor} \) synaptic events at position \(x_{src}\) on all
+branches of the generation of \(x_src\), those events have a
+conductance $g(t)/n_{src}$ and reversal potential $E_{rev}$. We make
+the hypothesis that the initial condition correspond to the stationary
+mean membrane potential $\mu_V(x)$. This potential will also be used
+to fix the driving force at the synapse to $\mu_v(x_{src})-E_{rev}$,
+this linearizes the equation and will allow an analytical
+treatment. To derive the equation for the response around the mean
+\(\mu_v(x)\), we rewrite Equation [[eq:model-equation]] with \(v(x, t) =
+\delta v(x, t) + \mu_v(x)\), we obtain the equation for \(\delta v(x,
+t)\):
+
+#+NAME: eq:psp-equation
+\begin{equation}
+\left\{
+\begin{split}
+& \frac{1}{r_i} \frac{\partial^2 \delta v}{\partial x^2} = 
+c_m \frac{\partial \delta v}{\partial t} 
++ \frac{\delta v}{r_m} (1 + r_m \, g_{e0}^p + r_m \, g_{i0}^p) \\
+& \qquad - \delta(x-x_{src}) \, \big(\mu_v(x_{src})-E_{rev}\big) \, \frac{g(t)}{n_{src}},
+\quad \forall x \in [0,l_p] \\
+& \frac{1}{r_i} \frac{\partial^2 \delta v}{\partial x^2} = 
+c_m \frac{\partial \delta v}{\partial t} 
++ \frac{\delta v}{r_m} (1 + r_m \, g_{e0}^d + r_m \, g_{i0}^d) \\
+& \qquad
+- \delta(x-x_{src}) \, \big(\mu_v(x_{src})-E_{rev}\big) \, \frac{g(t)}{n_{src}},
+\quad   \forall x \in [l_p,l]\\
+& \frac{1}{r_i} \frac{\partial \delta v}{\partial x}_{|x=0} = 
+ C_M \frac{\partial \delta  v}{\partial t}_{|x=0} +  
+ \frac{ \delta v(0,t)}{R_m} ( 1+ R_m G_{i0}^S) \\
+&  \delta v(l_p^-,t) = \delta v(l_p^+,t) \\
+& \frac{\partial \delta v}{\partial x}_{l_p^-} 
+= \frac{\partial \delta v}{\partial x}_{l_p^+} \\
+& \frac{\partial \delta v}{\partial x}_{x=l} = 0
+\end{split}
+\right.
+\end{equation}
+
+Because this synaptic event is concomitant in all branches at distance
+$x_{src}$, we can use again the reduction to the equivalent cylinder
+(note that the event has now a weight multiplied by $n_{src}$ so that
+its conductance becomes \(g(t)\)), we obtain:
+
+#+NAME: eq:psp-equation-reduced
+\begin{equation}
+\left\{
+\begin{split}
+& \frac{\partial^2 \delta v}{\partial X^2} =
+\big( \tau_m^p + (\tau_m^d-\tau_m^p) 
+\mathcal{H}(X-L_p) \big) \frac{\partial \delta v}{\partial t} + \delta v \\
+& \qquad - \big(\mu_v(X_{src})-E_{rev}\big) \,  \delta(X-X_{src}) \times \\
+& \qquad \qquad \frac{g(t)}{c_m} 
+  \big( \frac{\tau_m^p}{\lambda^p} +
+  (\frac{\tau_m^d}{\lambda^d}-\frac{\tau_m^p}{\lambda^p}) 
+\mathcal{H}(X_{src}-L_p) \big) \\
+& \frac{\partial \delta v}{\partial X}_{|X=0} = 
+ \gamma^p \big( \tau_m^S \frac{\partial \delta  v}{\partial t}_{|X=0} +  
+ \delta v(0,t) \big) \\
+& \delta v(L_p^-,t) = \delta v(L_p^+,t) \\
+& \frac{\partial \delta v}{\partial X}_{L_p^-} 
+= \frac{\lambda^p}{\lambda^d} \, 
+\frac{\partial \delta v}{\partial X}_{L_p^+} \\
+& \frac{\partial \delta v}{\partial X}_{X=L} = 0
+\end{split}
+\right.
+\end{equation}
+
+where we have introduced the following time constants:
+
+#+NAME: eq:time-constants
+\begin{equation}
+\begin{split}
+ & \tau_m^D = \frac{r_m \, c_m}{1+r_m \, g_{e0}^d+r_m \, g_{i0}^d} \\
+ & \tau_m^P = \frac{r_m \, c_m}{1+r_m \, g_{e0}^p+r_m \, g_{i0}^p} \\
+ & \tau_m^S = \frac{R_m \, C_m}{1+R_m \, G_{i0}^S}
+\end{split}
+\end{equation}
+
+Now used distribution theory (see [[citetext:Appel2008]] for a
+comprehensive textbook) to translate the synaptic input into boundary
+conditions at $X_{src}$, physically this corresponds to: 1) the
+continuity of the membrane potential and 2) the discontinuity of the
+current resulting from the synaptic input.
 
 \begin{equation}
 \left\{
 \begin{split}
-(\lambda^p)^2 \frac{\partial^2 \mu_v}{\partial x^2} &= \mu_v(x)-v_0^p \quad \forall x \in [0,l_p] \\
-(\lambda^d)^2 \frac{\partial^2 \mu_v}{\partial x^2} &= \mu_v(x)-v_0^d \quad \forall x \in [l_p,l]  \\
-\frac{\partial \mu_v}{\partial x}_{x=l} & = 0 \\
-\frac{\partial \mu_v}{\partial x}|_{x=0} & = \frac{\gamma^p}{\lambda^p}
-\Big( \mu_v(0) - V_0  \Big) \\
-\mu_v(x \rightarrow l_p^-) & = \mu_v(x \rightarrow l_p^+) \\
-\frac{\partial \mu_v}{\partial x}_{x \rightarrow l_p^-} & = \frac{\partial \mu_v}{\partial x}_{x \rightarrow l_p^+} 
+&  \delta v(X_{src}^-,f) = \delta v(X_{src}^+,f) \\
+& \frac{\partial \delta v}{\partial X}_{X_{src}^+} 
+- \frac{\partial \delta v}{\partial X}_{X_{src}^-} 
+= - \big(\mu_v(X_{src})-E_{rev}\big) \times \\
+& \qquad \qquad \qquad 
+\big( \frac{\tau_m^p}{\lambda^p} +
+  (\frac{\tau_m^d}{\lambda^d}-\frac{\tau_m^p}{\lambda^p}) 
+ \mathcal{H}(X_{src}-L_p) \big) \, \frac{g(t)}{c_m} \\
 \end{split}
 \right.
 \end{equation}
 
+We will solve Equation [[eq:psp-equation-reduced]] by using Fourier
+analysis. We take the following convention for the Fourier transform:
 
+#+NAME: eq:fourier-convention
+\begin{equation}
+\hat{F}(f) = \int_\mathbb{R} F(t) \, e^{- 2 i \pi f t} \, dt
+\end{equation}
+
+We Fourier transform the set of Equations [[eq:psp-equation-reduced]], we
+obtain:
+
+#+NAME: eq:psp-equation-fourier
+\begin{equation}
+\left\{
+\begin{split}
+& \frac{\partial^2 \hat{\delta v}}{\partial X^2} =
+\big( \alpha_f^p + (\alpha_f^d-\alpha_f^p) 
+\mathcal{H}(X-L_p) \big)^2 \, 
+\hat{\delta v}  \\
+& \frac{\partial \hat{\delta v}}{\partial X}_{|X=0} = 
+ \gamma_f^p \,  \hat{\delta v}(0,f) \\
+&  \hat{\delta v}(X_{src}^-,f) = \hat{\delta v}(X_{src}^+,f) \\
+& \frac{\partial \hat{\delta v}}{\partial X}_{X_{src}^-} 
+= \frac{\partial \hat{\delta v}}{\partial X}_{X_{src}^+} 
+- \big(\mu_v(X_{src})-E_{rev}\big) \times \\
+& \qquad \qquad \qquad \qquad 
+\big( r_f^p + (r_f^d-r_f^p) \mathcal{H}(X_{src}-L_p) \big) \, \hat{g(f)} \\
+& \hat{\delta v}(L_p^-,f) = \hat{\delta v}(L_p^+,f) \\
+& \frac{\partial \hat{\delta v}}{\partial X}_{L_p^-} 
+= \frac{\lambda^p}{\lambda^d} \, 
+\frac{\partial \hat{\delta v}}{\partial X}_{L_p^+} \\
+& \frac{\partial \hat{\delta v}}{\partial X}_{X=L} = 0
+\end{split}
+\right.
+\end{equation}
+
+where 
+\begin{equation}
+\begin{split}
+& \alpha_f^p = \sqrt{1+ 2 i \pi f \tau_m^p} \qquad
+ r_f^p = \frac{\tau_m^p}{c_m \, \lambda^p} \\
+& \alpha_f^d = \sqrt{1+ 2 i \pi f \tau_m^d} \qquad
+ r_f^d = \frac{\tau_m^d}{c_m \, \lambda^d} \\
+& \qquad \qquad \gamma_f^p =  \gamma^p \, (1+ 2 i \pi f \tau_m^S) \\
+\end{split}
+\end{equation}
+
+This equation is solved in the supplementary material. We will use the
+solution at the soma, it can be written:
+
+\begin{equation}
+\hat{\delta v}(X=0, X_{src}, f) = K_f(X_{src}) \, 
+\big(\mu_v(X_{src})-E_{rev}\big) \,  \hat{g(f)} 
+\end{equation}
+
+** Deriving the fluctuations properties
+
+From shotnoise theory [[cite:Daley2007]] (see also
+[[citetext:ElBoustani2009a]] for an application similar to ours), we can
+obtain the power spectral density of the V_m fluctuations \( P_V(f) \)
+as a response to the stimulation Equation [[eq:fluct-eq]]:
+
+From point process theory, this can be seen as two nested point
+processes. The first point process follows a Poisson process which
+determines the cluster positions and the second one determines
+randomly the position of kz1 points within each cluster according to
+an arbitrary density probability function. The correspondance between
+both representations is straightforward and the power spectrum density
+can be computed analytically with the Neyman- Scott equation
+[23,24,51]
+
+#+NAME: eq:vm-pwd
+\begin{equation}
+\begin{split}
+ P_V(f)  = & \sum_{syn} \nu_{syn} \, \| \hat{\mathrm{PSP}}(f) \|^2 \\
+ & = 2 \nu_{in} \, \frac{Q_I^2 \, \tau_S^2 / \mu_G^2 }{
+ (1+4 \pi^2 f^2 \tau_S^2)(1+4 \pi^2 f^2 \tau_m^2)}
+\end{split}
+\end{equation}
+
+#+NAME: eq:Tv-def-with-pwd
+\begin{equation}
+  \tau_V = \frac{1}{2} \, \big( \frac{\int_\mathbb{R} P_V(f) \, d f}{ P_V(0) } \big)^{-1}
+\end{equation}
+
+#+NAME: eq:var-expr
+\begin{equation}
+  \sigma_V^2 = \int_\mathbb{R} P_V(f) \, df
+\end{equation}
 
 ** From fluctuation properties to spiking probability
 
@@ -531,12 +783,12 @@ M$\Omega$ \(\pm\) [[YY]] and a membrane time constant at rest of [[XX]] ms
  cell. The frequency range scanned was [0.1, 500] Hz. For each cell,
  we determined manually the current amplitude $I_0$ that gave a \sim
  5mV amplitude in a current step protocol, from this value, the value
- of $I$ was scaled exponentially between $I_0$ at 0.1 Hz and $50 I_0$
- at 500Hz. The reason for varying the current amplitude (and not only
- the oscillation frequency) in those input impedance protocols is to
- anticipate for the low pass filtering of the membrane and insure that
- the membrane potential response at high frequencies is far above the
- electronic noise level (\sim 0.1 mV).
+ of $I$ was scaled exponentially between $I_0$ at 0.1 Hz and \(50
+ I_0\) at 500Hz. The reason for varying the current amplitude (and not
+ only the oscillation frequency) in those input impedance protocols is
+ to anticipate for the low pass filtering of the membrane and insure
+ that the membrane potential response at high frequencies is far above
+ the electronic noise level (\sim 0.1 mV).
 
 After removing the first 3 periods of the oscillations (to avoid
 transient effects), we fitted the membrane potential response to the
@@ -546,7 +798,7 @@ form:
 V(t) = E_L + R \, I \, \sin(2\pi \, f \, t - \phi)
 \end{equation}
 
-where $E_L$, $R$ and $\phi$ were fitted with a least-square
+where \(E_L, R\) and $\phi$ were fitted with a least-square
 minimization procedure. The frequency dependent values of $R$ and
 $\phi$ give the modulus and phase shift of the input impedance
 presented in Figure [[fig:in-vitro-calib]]A
@@ -578,5 +830,7 @@ financial interests.
 * References
 
 \bibliography{tex/biblio}
+
+
 
 
