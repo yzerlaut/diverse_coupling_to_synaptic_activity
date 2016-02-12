@@ -170,7 +170,7 @@ and the morphological model has led to a relative
 |--------------------------+--------+----------+---------|
 | Membrane Parameters |
 | leak resistivity density | r_m | 10.0 | mS/cm^2 |
-| excitatory synapses density | \mathcal{D_e} | 10.000000 | synapses/cm^2 |
+| excitatory synapses density | $\mathcal{D_e}$ | 10.000000 | synapses/cm^2 |
 | leak resistivity density | r_m | 10.000000 | mS/cm^2 |
 | soma diameter | D_S | 15.0 | $\mu m$ |
 | soma length (mean model) | L_S | 10.0 | $\mu m$ |
@@ -820,7 +820,6 @@ Human Brain Project FP7-604102). The authors declare no competing
 financial interests.
 
 * References
-
 \bibliography{tex/biblio}
 
 

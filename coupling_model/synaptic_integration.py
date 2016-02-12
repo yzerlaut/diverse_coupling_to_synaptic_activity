@@ -13,10 +13,10 @@ def find_inh_cond_for_balance(feG, fiG, feI, fiI, i_nrn, balance=-60e-3):
                     ALL_CELLS[i_nrn]['stick'], balance=balance)
     return fiG, fiI
 
-def get_fluct_var(i_nrn, F, exp_type='non specific activity', balance=-58e-3):
+def get_fluct_var(i_nrn, F, exp_type='non specific activity', balance=-54e-3):
 
     synch = 0.2+0*F # baseline synchrony
-    inh_factor = 6.
+    inh_factor = 5.8
     inh_factor_balance_rupt = 4.
     
     fe0 = find_baseline_excitation(params, soma, stick,\
@@ -74,7 +74,7 @@ if __name__=='__main__':
     plt.subplots_adjust(left=.3, top=.8, wspace=.2, hspace=.2)
     fig2, AX2 = plt.subplots(4, 1, figsize=(4, 15))
     plt.subplots_adjust(left=.3, top=.8, wspace=.2, hspace=.2)
-    F = np.linspace(.01, .6,5)
+    F = np.linspace(0, .5,5)
     COLORS=['r', 'b', 'g', 'c', 'k', 'm']
 
     PROTOCOLS = ['unbalanced activity', 'proximal activity', 'distal activity',\
