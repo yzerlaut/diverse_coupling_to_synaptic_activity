@@ -1,7 +1,7 @@
 import numpy as np
 import sys
 sys.path.append('../')
-from theory.analytical_calculus import get_the_fluct_prop_at_soma, find_balance_at_soma
+from theory.analytical_calculus import *
 
 soma, stick, params = np.load('../input_impedance_calibration/mean_model.npy')
 ALL_CELLS = np.load('../input_impedance_calibration/all_cell_params.npy')
@@ -15,28 +15,33 @@ def find_inh_cond_for_balance(feG, fiG, feI, fiI, i_nrn, balance=-60e-3):
 
 def get_fluct_var(i_nrn, F, exp_type='non specific activity', balance=-58e-3):
 
-    synch = 0.5 # baseline synchrony
-    inh_factor = 7.
-    inh_factor_balance_rupt = 4.5
+    synch = 0.2+0*F # baseline synchrony
+    inh_factor = 6.
+    inh_factor_balance_rupt = 4.
+    
+    fe0 = find_baseline_excitation(params, soma, stick,\
+                             f = np.linspace(0,3,1e2),
+                             balance=balance, synch=synch)
+    
     if exp_type=='non specific activity':
-        feG, fiG, feI, fiI = F, 0.*F, F, 0.*F
-        feG, fiG, feI, fiI = F, inh_factor*F, F, inh_factor*F
+        feG, fiG, feI, fiI = fe0+F, inh_factor*F, fe0+F, inh_factor*F
         # fiG, fiI = find_inh_cond_for_balance(feG, fiG, feI, fiI, i_nrn, balance=balance)
     elif exp_type=='unbalanced activity':
         # feG, fiG, feI, fiI = EI*F, .7*(1-EI)*F, EI*F, .7*(1-EI)*F
-        feG, fiG, feI, fiI = F, inh_factor_balance_rupt*F, F, inh_factor_balance_rupt*F
+        feG, fiG, feI, fiI = fe0+F, inh_factor_balance_rupt*F, fe0+F, inh_factor_balance_rupt*F
     elif exp_type=='proximal activity':
         # feG, fiG, feI, fiI = 2.*F, 0.*F, 0*F, 0.*F
         # fiG, fiI = find_inh_cond_for_balance(feG, fiG, feI, fiI, i_nrn, balance=balance)
-        feG, fiG, feI, fiI = 2.*F, 2.*inh_factor*F, 0*F, 0*F
+        feG, fiG, feI, fiI = fe0+2.*F, 2.*inh_factor*F, fe0+0*F, 0*F
     elif exp_type=='distal activity':
         # feG, fiG, feI, fiI = 0*F, 0.*F, 2.*F, 0.*F
         # fiG, fiI = find_inh_cond_for_balance(feG, fiG, feI, fiI, i_nrn, balance=balance)
-        feG, fiG, feI, fiI = 0*F, 0*F, 2.*F, 2.*inh_factor*F
+        feG, fiG, feI, fiI = fe0+0*F, 0*F, fe0+2.*F, 2.*inh_factor*F
     elif exp_type=='synchronized activity':
         # feG, fiG, feI, fiI = EI*F, (1-EI)*F, EI*F, (1-EI)*F
-        feG, fiG, feI, fiI = F, inh_factor*F, F, inh_factor*F
-        synch = 0.99
+        synch = np.linspace(0., 1.99, len(F))
+        F = .1+0*F
+        feG, fiG, feI, fiI = fe0+F, inh_factor*F, fe0+F, inh_factor*F
     else:
         print '------------------------------------------'
         print 'problem with the protocol: ', exp_type
@@ -56,7 +61,6 @@ def sine(t, w, t0=0):
     return np.sin(2.*np.pi*(t-t0)*w)
 
 sigmoid = lambda x: 1./(1.+np.exp(-x))
-
 
 if __name__=='__main__':
 
