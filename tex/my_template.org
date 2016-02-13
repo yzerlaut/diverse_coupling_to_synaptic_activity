@@ -1,10 +1,10 @@
 
 \blfootnote{ $\,^1$ Unité de Neurosciences, Information et Complexité, Centre National de la Recherche Scientifique, FRE 3693, Gif sur Yvette, France}
-\blfootnote{ $\,^2$ European Institute fo Theoretical Neuroscience, 74 Rue du Faubourg Saint-Antoine, 75012 Paris}
+# \blfootnote{ $\,^2$ European Institute fo Theoretical Neuroscience, 74 Rue du Faubourg Saint-Antoine, 75012 Paris}
 \blfootnote{correspondance : <lastname>@unic.cnrs-gif.fr}
 
 #+LaTeX_HEADER: \def\shorttitle{Heterogenous firing response leads to diverse coupling to synaptic activity}
-#+LaTeX_HEADER: \def\shortauthor{Zerlaut \& Destexhe} 
+#+LaTeX_HEADER: \def\shortauthor{yann} 
 #+LaTeX_HEADER: \def\shortdate{\today} 
 
 # #+LaTeX_HEADER: \renewcommand{\includegraphics}[2][]{\fbox{#2}}
