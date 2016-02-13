@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pylab as plt
 
 from synaptic_integration import get_fluct_var
-
+from firing_responses import single_experiment
 from scipy.stats.stats import pearsonr
 
 import sys
@@ -25,9 +25,9 @@ def generate_population_rate(t, F0=200., SF=100., T=0.04, seed=1):
     WN = np.random.randn(len(t)) # white noise 1
     F = 1./(1.+((t-t.mean())/T)**2) # filter
     CN =np.convolve(WN, F-F.mean(), mode='same')*(t[1]-t[0]) # colored noise
-    return F0+SF/CN.std()*CN
+    return rectify(F0+SF/CN.std()*CN)
 
-def run_single_experiment(t, i_nrn, args, exp_type='control', seed=1):
+def run_single_experiment(t, i_nrn, args, exp_type='control', seed=1, F_discretization=100):
     """
     run the population stimulation protocol,
     for different paradigm :
@@ -41,12 +41,26 @@ def run_single_experiment(t, i_nrn, args, exp_type='control', seed=1):
     # setting up the experiment
     F = generate_population_rate(t, F0=args.F0, SF=args.SF, T=args.TF, seed=seed) # basis
 
-    feG, fiG, feI, fiI, synch, muV, sV, TvN, muGn = get_fluct_var(i_nrn, F, exp_type=exp_type)
+    ### We discretize the problem to avoid too long simulations
+    F_discret = np.linspace(F.min(), F.max(), F_discretization)
+    feG_discret, fiG_discret, feI_discret, fiI_discret, synch_discret,\
+      muV_discret, sV_discret, TvN_discret, muGn_discret, Fout_discret = [0*F_discret for i in range(10)]
 
-    ## FIRING RATE RESPONSE
-    Fout = final_func(ALL_CELLS[i_nrn]['P'], muV, sV, TvN,\
-                      ALL_CELLS[i_nrn]['Gl'], ALL_CELLS[i_nrn]['Cm'])
-
+    feG_discret, fiG_discret, feI_discret, fiI_discret, synch_discret,\
+      muV_discret, sV_discret, TvN_discret, muGn_discret =\
+      get_fluct_var(i_nrn, F_discret, exp_type=exp_type)
+    Fout_discret = final_func(ALL_CELLS[i_nrn]['P'], muV_discret, sV_discret, TvN_discret,\
+                  ALL_CELLS[i_nrn]['Gl'], ALL_CELLS[i_nrn]['Cm'])
+    
+    feG, fiG, feI, fiI, synch, muV, sV, TvN, muGn, Fout = [0*F for i in range(10)]
+    
+    for i in range(len(F)):
+        i0 = np.argmin((F_discret-F[i])**2)
+        feG[i], fiG[i], feI[i], fiI[i], synch[i],\
+          muV[i], sV[i], TvN[i], muGn[i], Fout[i] =\
+           feG_discret[i0], fiG_discret[i0], feI_discret[i0], fiI_discret[i0], synch_discret[i0],\
+           muV_discret[i0], sV_discret[i0], TvN_discret[i0], muGn_discret[i0], Fout_discret[i0]
+         
     return feG, fiG, feI, fiI, muV, sV, TvN, muGn, Fout
 
         
@@ -144,7 +158,7 @@ def CC_func(X, Y, steps):
     CC = np.correlate(X[steps:],Y)/steps
     return CC
     
-def get_cross_correlation_functions(args, params):
+def get_cross_correlation_functions(args):
             
     NEURONS, PROTOCOLS = list(args.NEURONS), args.PROTOCOLS
     COLORS, SEEDS = args.COLORS, args.SEEDS
@@ -163,10 +177,11 @@ def get_cross_correlation_functions(args, params):
     FOUT = np.zeros((len(NEURONS), len(PROTOCOLS), 2, len(t)))
 
     for i_nrn in range(len(NEURONS)):
+        print 'cell', i_nrn
         for ip in range(len(PROTOCOLS)):
+            print '-- protocol: ', PROTOCOLS[ip]
             feG, _, feI, _, _, _, _, _, Fout = \
-               run_single_experiment(t, NEURONS[i_nrn],\
-                        args, params, exp_type=PROTOCOLS[ip])
+               run_single_experiment(t, i_nrn, args, exp_type=PROTOCOLS[ip])
             X, Y = 1./2.*(feG+feI), Fout*(t[1]-t[0])
             CC = CC_func(X, Y, steps)
             AX[i_nrn].plot(t_shift, CC, color=COLORS[ip], lw=2)
@@ -325,8 +340,8 @@ if __name__=='__main__':
     parser.add_argument("--SEEDS", default=[32, 3, 2, 1, 13, 4, 8],\
                         help="Seeds for protocols")
     
-    parser.add_argument("--F0",type=float, default=70., help="mean input exc. frequency (Hz)")
-    parser.add_argument("--SF",type=float, default=30., help="std dev. input exc. frequency (Hz)")
+    parser.add_argument("--F0",type=float, default=1., help="mean input exc. frequency (Hz)")
+    parser.add_argument("--SF",type=float, default=.7, help="std dev. input exc. frequency (Hz)")
     parser.add_argument("--TF",type=float, default=0.04, help="correlation time of input exc. frequency (s)")
     parser.add_argument("--factor_for_unbalancing", type=float, default=.2,\
                         help="additional percentage of excitatory input that creates the break of balance")
@@ -356,18 +371,18 @@ if __name__=='__main__':
     args = parser.parse_args()
 
     if args.COUPLING:
-        fig = get_cross_correlation_functions(args, syn.params)
+        fig = get_cross_correlation_functions(args)
         plt.show()
     elif args.CORRELATIONS:
-        fig = correlating_electrophy_and_coupling(args, syn.params)
+        fig = correlating_electrophy_and_coupling(args)
         plt.show()
     elif args.HISTOGRAMS:
-        fig = histogram_of_couplings(args, syn.params, bins=args.bins_for_histograms)
+        fig = histogram_of_couplings(args, bins=args.bins_for_histograms)
         plt.show()
     elif args.ALL:
-        fig1, fig2, fig3 = make_fig(args, syn.params)
-        fig4 = get_cross_correlation_functions(args, syn.params)
-        fig5 = correlating_electrophy_and_coupling(args, syn.params)
+        fig1, fig2, fig3 = make_fig(args)
+        fig4 = get_cross_correlation_functions(args)
+        fig5 = correlating_electrophy_and_coupling(args)
         put_list_of_figs_to_svg_fig([fig1, fig2, fig3, fig4, fig5], fig_name='fig.svg')
     else:
         fig1, fig2, fig3 = make_fig(args)

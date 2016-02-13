@@ -6,22 +6,22 @@
 
   \bfseries
 
-  Growing experimental evidences suggest that cortical processing of
-  sensory input relies on the differential activation of neurons
-  within cortical networks, the circuit or cellular mechanisms
-  underlying this . In a companion communication [[cite:Zerlaut2016]], we
-  reported how individual neurons differ in their excitability and
+  Neocortical processing of sensory input rely on the specific
+  activation of subpopulations within the cortical network, and
+  specific circuitry is thought to be the primary mechanism underlying
+  this feature. Nonetheless, in a companion study [[cite:Zerlaut2016]], we
+  found that individual neurons differ in their excitability and
   sensitivities to the properties of the membrane potential
   fluctuations. In the present report, we investigate how this
   heterogeneity is translated into diverse input-ouput properties
-  (i.e. in th relation from presynaptic quantities to spiking
+  (i.e. in the relation from presynaptic quantities to spiking
   probability).
 
   To this purpose, we designed a simplified morphological model of
   layer V pyramidal neurons with a dendritic tree following Rall's
   branching rule. We first show that we are able to calibrate this
   simplified model on /in vitro/ measurements of somatic input
-  impedance in layer V pyramidal neurons of juvenile mive visual
+  impedance in layer V pyramidal neurons of juvenile mice visual
   cortex. We then propose and analytical derivation for the membrane
   potential fluctuations at the soma as a function of the properties
   of the synaptic bombardment.
@@ -44,6 +44,14 @@ Though this diverse activation is likely to be due to specific
 connectivity schemes, we explore here a complementary mechanism: given
 the strong heterogeneity in electrophysiological properties of
 neocortical pyramidal cells
+
+
+[[citetext:Yang2015]] suggested that stimulus representation in barrel
+cortex is linked to the combination of circuit factors (the precise
+connectivity will likely determine the amplitude of the V_m
+deflections) and biophysical factors (the threshold
+value). Biophysical parameters are thus a key properties of stimulus
+representation in sensory cortex.
 
 \newpage
 
@@ -124,8 +132,9 @@ equivalent to the Ball and Stick model), the described model has
 separate branches so that the fluctuations are uncorrelated from
 branches to branches unlike in the Ball and Stick model.
 
-** diverse coupling
-
+** Properties of the fluctuations for different types of presynaptic activity
+** Heterogeneous firing response imply diverse coupling to different types of presynaptic activity
+** Multiplexing of the 
 * Discussion
 
 ** An analytical model for dendritic integration in the fluctuation-driven regime
@@ -150,17 +159,22 @@ In this study, the rescaling rule between input resistance at the soma
 and the morphological model has led to a relative 
 
 ** Diverse coupling to presynaptic activity
-
+** Interaction between circuit properties and biophysical properties
+   
 * Material and Methods 
 \small
 
 #+NAME: table:Figure-1
 #+CAPTION: *Model parameters* 
-| Parameter Name          | Symbol | Value | Unit |
-|-------------------------+--------+-------+------|
-| leak resistance density | r_m    |       |      |
-|-------------------------+--------+-------+------|
-
+| Parameter Name           | Symbol |    Value | Unit    |
+|--------------------------+--------+----------+---------|
+| Membrane Parameters |
+| leak resistivity density | r_m | 10.0 | mS/cm^2 |
+| excitatory synapses density | $\mathcal{D_e}$ | 10.000000 | synapses/cm^2 |
+| leak resistivity density | r_m | 10.000000 | mS/cm^2 |
+| soma diameter | D_S | 15.0 | $\mu m$ |
+| soma length (mean model) | L_S | 10.0 | $\mu m$ |
+|--------------------------+--------+----------+---------|
 
 ** Neuronal model
 <<sec:correlation-generator>>
@@ -806,7 +820,6 @@ Human Brain Project FP7-604102). The authors declare no competing
 financial interests.
 
 * References
-
 \bibliography{tex/biblio}
 
 

@@ -17,7 +17,7 @@ def params_for_cable_theory(cable, Params):
     cable['cm'] = Params['cm']*np.pi*D # [F/m] """" NEURON 1e-2 !!!! """"
     
 
-def setup_model(EqCylinder, soma, dend, Params):
+def setup_model(EqCylinder, soma, dend, Params, verbose=False):
     """ returns the different diameters of the equivalent cylinder
     given a number of branches point"""
     cables, xtot = [], np.zeros(1)
@@ -50,8 +50,9 @@ def setup_model(EqCylinder, soma, dend, Params):
         cable['Area_per_seg'] = cable['L']*cable['D']*np.pi/cable['NSEG']
         if cable['name']!='soma':
             jj+=1
-    print "Total number of EXCITATORY synapses : ", Ke_tot
-    print "Total number of INHIBITORY synapses : ", Ki_tot
+    if verbose:
+        print "Total number of EXCITATORY synapses : ", Ke_tot
+        print "Total number of INHIBITORY synapses : ", Ki_tot
     # we store this info in the somatic comp
     cables[0]['Ke_tot'], cables[0]['Ki_tot'] = Ke_tot, Ki_tot
     return xtot, cables
@@ -73,8 +74,8 @@ def calculate_mean_conductances(shtn_input,\
     Ti_prox, Qi_prox = Params['Ti'], Params['Qi']
     Qe_dist = Qe_prox*Params['factor_for_distal_synapses_weight']
     Qi_dist = Qi_prox*Params['factor_for_distal_synapses_weight']
-    Te_dist = Te_prox*Params['factor_for_distal_synapses_weight']
-    Ti_dist = Ti_prox*Params['factor_for_distal_synapses_weight']
+    Te_dist = Te_prox*Params['factor_for_distal_synapses_tau']
+    Ti_dist = Ti_prox*Params['factor_for_distal_synapses_tau']
         
     ge_prox = Qe_prox*shtn_input['fe_prox']*Te_prox*D*np.pi/cable['exc_density']
     gi_prox = Qi_prox*shtn_input['fi_prox']*Ti_prox*D*np.pi/cable['inh_density']
@@ -84,7 +85,7 @@ def calculate_mean_conductances(shtn_input,\
     # somatic inhibitory conductance
     Ls, Ds = soma['L'], soma['D']
     Kis = np.pi*Ls*Ds/soma['inh_density']
-    Gi_soma = Qi_prox*Kis*shtn_input['fi_soma']*Ti_prox
+    Gi_soma = Qi_prox*Kis*shtn_input['fi_prox']*Ti_prox
     
     return Gi_soma, ge_prox, gi_prox, ge_dist, gi_dist
 
@@ -119,11 +120,11 @@ def cable_eq_params(f, tauS, tauP, lbdP, tauD, lbdD, Cm, cm, ri, lp, l, B):
         # proximal params
     afP = np.sqrt(1+2.*1j*np.pi*f*tauP)
     gfP = lbdP*Cm*ri/tauS*(1+2.*1j*np.pi*f*tauS)
-    rfP = tauP/cm/lbdP ## FACTOR ??
+    rfP = tauP/cm/lbdP
 
     # distal params
     afD = np.sqrt(1+2.*1j*np.pi*f*tauD)
-    rfD = tauD/cm/lbdD ## FACTOR ??
+    rfD = tauD/cm/lbdD
 
     # ball and tree rescaling
     Lp = rescale_x(lp, l, lp, B, lbdP, lbdD)
@@ -133,19 +134,13 @@ def cable_eq_params(f, tauS, tauP, lbdP, tauD, lbdD, Cm, cm, ri, lp, l, B):
 
 
 ############### INPUT FROM SYMPY ###################
-# --- muV
 
 exec(open('../theory/functions.txt'))
-
-def rescale_x(x, EqCylinder):
-    C = EqCylinder[EqCylinder<=x]
-    factor = np.power(2., 1./3.*np.arange(len(C)))
-    return np.sum(np.diff(C)*factor[:-1])+(x-C[-1])*factor[-1]
 
 def lbd(x, l, lp, B, lbdP, lbdD):
     # specific to evenly space branches !! (see older implementation with EqCylinder for more general implement.)
     branch_length = l/B # length of one branch !
-    reduction_factor =  2**(-1./3.*np.intp(x/branch_length))
+    reduction_factor =  np.power(2., -1./3.*np.intp(x/branch_length))
     new_lbd = (lbdP+(lbdD-lbdP)*.5*(np.sign(x+1e-9-lp)+1))
     return new_lbd*reduction_factor
     
@@ -197,12 +192,12 @@ def split_root_square_of_imaginary(f, tau):
     bf = np.sqrt((np.sqrt(1+(2*np.pi*f*tau)**2)-1)/2)
     return af, bf
 
-# # @jit
+@jit
 def psp_norm_square_integral_per_dend_synapse_type(x_dest, x_src, f, Gf2,\
                             Erev, shtn_input, EqCylinder,\
                             soma, stick, params,
                             precision=1e2):
-    
+
     # muV for mean driving force
     muV_X = stat_pot_function([x_src], shtn_input, EqCylinder,\
                               soma, stick, params)[0]
@@ -234,10 +229,9 @@ def psp_norm_square_integral_per_dend_synapse_type(x_dest, x_src, f, Gf2,\
             PSP = dv_Lp_X_Xsrc(Xdest, Xsrc, 1., afP, afD, gfP, rfP, rfD, Lp, L, lbdD, lbdP)
         elif Xdest>Xsrc:
             PSP = dv_Lp_Xsrc_X(Xdest, Xsrc, 1., afP, afD, gfP, rfP, rfD, Lp, L, lbdD, lbdP)
-
     return Gf2*np.abs(PSP)**2*(Erev-muV_X)**2
 
-# @jit
+@jit
 def get_the_theoretical_sV_and_Tv(shtn_input, EqCylinder,\
                                   f, x, params, soma, stick,\
                                   precision=50):
@@ -302,7 +296,7 @@ def get_the_theoretical_sV_and_Tv(shtn_input, EqCylinder,\
             Pv[ix_dest,:] += np.pi*fi*DX*stick['D']/stick['inh_density']*psp2*synch_factor
 
         # #### SOMATIC SYNAPSES, discret summation, only inhibition, no branch weighting
-        fi = shtn_input['fi_soma']
+        fi = shtn_input['fi_prox']
         fi /= synch_dividor
         Gf2 = exp_FT_mod(f, params['Qi'], params['Ti'])
         psp2 = psp_norm_square_integral_per_dend_synapse_type(\
@@ -349,22 +343,23 @@ def psp_norm_square_integral_per_dend_synapse_type_at_soma(x_src, f, Gf2,\
 
     return Gf2*np.abs(PSP)**2*(Erev-muV_X)**2
 
+@jit
 def get_the_fluct_prop_at_soma(SHTN_INPUT, params, soma, stick,\
                                precision=100, f=rfft.time_to_freq(1000, 1e-4)):
-
 
     EqCylinder = np.linspace(0,1,stick['B']+1)*stick['L']
     params_for_cable_theory(stick, params)
     setup_model(EqCylinder, soma, stick, params)
-    
+
+
     # check if the shtn input is an array
-    n = len(SHTN_INPUT['fi_soma'])
+    n = len(SHTN_INPUT['fi_prox'])
 
     muV, sV, TvN, muGn = np.zeros(n), np.zeros(n), np.zeros(n), np.zeros(n)
         
     # input resistance at rest
     Rin0 = get_the_input_resistance_at_soma(EqCylinder, soma, stick, params,
-                            {'fi_soma':0, 'fe_prox':0,'fi_prox':0,
+                            {'fi_prox':0, 'fe_prox':0,'fi_prox':0,
                              'fe_dist':0,'fi_dist':0, 'synchrony':0.})
     # membrane time constant at rest
     Tm0 = get_membrane_time_constants(EqCylinder, soma, stick, params)
@@ -372,7 +367,7 @@ def get_the_fluct_prop_at_soma(SHTN_INPUT, params, soma, stick,\
     # then temporal loop
     for i in range(n):
         
-        shtn_input = {'fi_soma':SHTN_INPUT['fi_soma'][i], 'fe_prox':SHTN_INPUT['fe_prox'][i],\
+        shtn_input = {'fi_prox':SHTN_INPUT['fi_prox'][i], 'fe_prox':SHTN_INPUT['fe_prox'][i],\
                       'fi_prox':SHTN_INPUT['fi_prox'][i], 'fe_dist':SHTN_INPUT['fe_dist'][i],\
                       'fi_dist':SHTN_INPUT['fi_dist'][i], 'synchrony':SHTN_INPUT['synchrony'][i]}
 
@@ -389,9 +384,8 @@ def get_the_fluct_prop_at_soma(SHTN_INPUT, params, soma, stick,\
         for b in EqCylinder:
             Branch_weights[np.where(Source_Array>=b)[0]] += 1
 
-
         #### DENDRITIC SYNAPSES
-        for ix_source in range(len(Source_Array)): 
+        for ix_source in range(len(Source_Array)):
 
             X_source = Source_Array[ix_source]
             if X_source<=stick['L']*params['fraction_for_L_prox']:
@@ -402,9 +396,7 @@ def get_the_fluct_prop_at_soma(SHTN_INPUT, params, soma, stick,\
                 fe, fi = shtn_input['fe_dist'], shtn_input['fi_dist']
                 weight_synapse_factor = params['factor_for_distal_synapses_weight']
                 tau_synapse_factor = params['factor_for_distal_synapses_tau']
-                
-            synchrony = shtn_input['synchrony']
-            
+
             ## weighting due to branching !
             fe, fi = fe*Branch_weights[ix_source], fi*Branch_weights[ix_source]
             fe /= synch_dividor
@@ -429,7 +421,7 @@ def get_the_fluct_prop_at_soma(SHTN_INPUT, params, soma, stick,\
             Pv += np.pi*fi*DX*stick['D']/stick['inh_density']*psp2*synch_factor
 
         # #### SOMATIC SYNAPSES, discret summation, only inhibition, no branch weighting
-        fi = shtn_input['fi_soma']
+        fi = shtn_input['fi_prox']
         Gf2 = exp_FT_mod(f, params['Qi'], params['Ti'])
         psp2 = psp_norm_square_integral_per_dend_synapse_type_at_soma(\
                         0.,\
@@ -448,21 +440,8 @@ def get_the_fluct_prop_at_soma(SHTN_INPUT, params, soma, stick,\
         TvN[i] = .5*Pv[0]/(2.*np.trapz(np.abs(Pv), f))/Tm0 # 2 times the integral to have from -infty to +infty (and methods gives [0,+infty])
 
         muGn[i] = Rin0/Rin
-
+        
     return muV, sV, TvN, muGn
-
-
-def get_the_input_and_transfer_resistance(fe, fi, f, x, params, soma, stick):
-    Rin, Rtf = np.zeros(len(x)), np.zeros(len(x))
-    Garray = calculate_mean_conductances(fe, fi, soma, stick, params)
-    
-    for ix_dest in range(len(x)):
-
-        Rtf[ix_dest] = dv_kernel_per_I(0., x[ix_dest],
-                0., Garray, stick, soma, params) # at 0 frequency
-        Rin[ix_dest] = dv_kernel_per_I(x[ix_dest], x[ix_dest],
-                0., Garray, stick, soma, params) # at 0 frequency
-    return Rin, Rtf
 
 
 def get_the_input_resistance_at_soma(EqCylinder, soma, stick, params,
@@ -482,17 +461,62 @@ def get_the_input_resistance_at_soma(EqCylinder, soma, stick, params,
     # input and recording in x=0 
     return np.abs(dv_X_Xsrc_Lp(0., 0., 1., afP, afD, gfP, rfP, rfD, Lp, L, lbdD, lbdP))
 
+def get_the_transfer_resistance_to_soma(EqCylinder, soma, stick, params, precision=100):
 
-def get_the_input_impedance_at_soma(f, EqCylinder, soma, stick, params):
-
-    # we remove the prox/dist separation, usefull only when synaptic input !!
-    stick = stick.copy()
+    shtn_input = {'fi_prox':0, 'fe_prox':0,'fi_prox':0,
+                  'fe_dist':0,'fi_dist':0}
+    params_for_cable_theory(stick, params)
+    setup_model(EqCylinder, soma, stick, params)
     
     # model parameters
     Ls, Ds, l, D, lp, Rm, Cm,\
         El, Ee, Ei, rm, cm, ri = ball_and_stick_params(soma, stick, params)
+    # activity dependent parameters
+    tauS, tauP, lbdP, tauD, lbdD = \
+            ball_and_stick_constants(shtn_input, soma, stick, params)
+    # cable constants
+    afP, gfP, rfP, afD, rfD, Lp, L = cable_eq_params(0., tauS, tauP, lbdP,\
+                                    tauD, lbdD, Cm, cm, ri, lp, l, stick['B'])
+                                    
+    Source_Array = np.linspace(0, stick['L'], precision+1)
+    Source_Array = .5*(Source_Array[1:]+Source_Array[:-1]) # discarding the soma, treated below
+    DX = Source_Array[1]-Source_Array[0]
+    Branch_weights = 0*Source_Array # initialized t0 0 !
+    for b in EqCylinder:
+        Branch_weights[np.where(Source_Array>=b)[0]] += 1
+
+    R_transfer = np.zeros(len(Source_Array)+1)
+    N_synapses = np.zeros(len(Source_Array)+1)
+    
+    #### DENDRITIC SYNAPSES
+    for ix_source in range(len(Source_Array)): 
+
+        X_source = Source_Array[ix_source]
+        Xsrc = rescale_x(X_source, l, lp, stick['B'], lbdP, lbdD) # rescaled x_source
+        if X_source<=Lp:
+            R_transfer[ix_source] = dv_X_Xsrc_Lp(0., Xsrc, 1., afP, afD, gfP, rfP, rfD, Lp, L, lbdD, lbdP)
+        else:
+            R_transfer[ix_source] = dv_X_Lp_Xsrc(0., Xsrc, 1., afP, afD, gfP, rfP, rfD, Lp, L, lbdD, lbdP)
+        N_synapses[ix_source] = Branch_weights[ix_source]*np.pi*DX*stick['D']*(1./stick['exc_density']+1./stick['inh_density'])
+
+    ### SOMATIC SYNAPSES
+    N_synapses[-1] = np.pi*soma['L']*soma['D']*(1./soma['exc_density']+1./soma['inh_density'])
+    R_transfer[-1] = dv_X_Xsrc_Lp(0., 0., 1., afP, afD, gfP, rfP, rfD, Lp, L, lbdD, lbdP)
+    
+    return R_transfer, N_synapses
+
+def get_the_mean_transfer_resistance_to_soma(EqCylinder, soma, stick, params, precision=100):
+    R_transfer, N_synapses = get_the_transfer_resistance_to_soma(EqCylinder, soma, stick, params,\
+                                                                 precision=precision)
+    return np.sum(R_transfer*(N_synapses/N_synapses.sum()))
+
+def get_the_input_impedance_at_soma(f, EqCylinder, soma, stick, params):
+
+    # model parameters
+    Ls, Ds, l, D, lp, Rm, Cm,\
+        El, Ee, Ei, rm, cm, ri = ball_and_stick_params(soma, stick, params)
         
-    shtn_input = {'fi_soma':0, 'fe_prox':0,'fi_prox':0,
+    shtn_input = {'fi_prox':0, 'fe_prox':0,'fi_prox':0,
                   'fe_dist':0,'fi_dist':0}
     
     # activity dependent parameters
@@ -505,7 +529,7 @@ def get_the_input_impedance_at_soma(f, EqCylinder, soma, stick, params):
                                     
     # PSP with unitary current input
     # input and recording in x=0 
-    return np.abs(dv_X_Xsrc_Lp(0., 0., 1., afP, afD, gfP, rfP, rfD, Lp, L, lbdD, lbdP))
+    return dv_X_Xsrc_Lp(0., 0., 1., afP, afD, gfP, rfP, rfD, Lp, L, lbdD, lbdP)
 
 def get_membrane_time_constants(EqCylinder, soma, stick, params,\
                                 f=rfft.time_to_freq(1000, 1e-4)):
@@ -525,8 +549,24 @@ def find_balance_at_soma(Fe_prox, Fe_dist, params, soma, stick,\
     muV = 0.*FI_dist
     for i in range(int(precision)):
         shtn_input['fi_prox'], shtn_input['fi_dist']= FI_prox[i], FI_dist[i]
-        shtn_input['fi_soma']= FI_prox[i]
         muV[i] = stat_pot_function([0], shtn_input, EqCylinder,\
                                 soma, stick, params)[0]
     i0 = np.argmin(np.abs(muV-balance))
     return FI_prox[i0], FI_dist[i0]
+
+def find_baseline_excitation(params, soma, stick,\
+                             f = np.linspace(0,3,1e2),
+                             balance=-60e-3, synch=0.5,
+                             precision=1e2):
+
+    EqCylinder = np.linspace(0,1,stick['B']+1)*stick['L']
+    shtn_input = {'fi_prox':0, 'fi_dist':0, 'synch':synch}
+    muV = 0.*f
+    for i in range(int(precision)):
+        shtn_input['fe_prox'], shtn_input['fe_dist']= f[i], f[i]
+        shtn_input['fi_prox'], shtn_input['fi_dist']= 0, 0
+        shtn_input['synch']= synch
+        muV[i] = stat_pot_function([0], shtn_input, EqCylinder,\
+                                soma, stick, params)[0]
+    i0 = np.argmin(np.abs(muV-balance))
+    return f[i0]
