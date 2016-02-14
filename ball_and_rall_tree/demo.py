@@ -29,7 +29,6 @@ sim_params = {#in ms
 'tstop':20000.
 }
 
-
 FACTOR_FOR_DENSITY = 1. # because Ball & Sticks sucks !!!
 
 # synaptic density  area (m2) per one synapse !!
@@ -45,7 +44,7 @@ stick = {'L': 2000*1e-6, 'D': 4*1e-6, 'NSEG': 30,\
          'Ke':100, 'Ki':100., 'name':'dend'}
 
 
-def analyze_simulation(xtot, t_vec, V):
+def analyze_simulation(xtot, cables, t, V):
 
     muV_exp, sV_exp, Tv_exp = [], [], []
 
@@ -95,10 +94,10 @@ def get_analytical_estimate(shotnoise_input, EqCylinder,
     return x_th, muV_th, sV_th, Tv_th
 
 
-def plot_time_traces(t_vec, V, cables, title='', recordings=[[0,0,0.5]]):
+def plot_time_traces(t, V, cables, EqCylinder, title='', recordings=[[0,0,0.5]]):
 
     # time window
-    i1, i2 = 0, min([int(1000/(t[1]-t[0])),len(t_vec)])
+    i1, i2 = 0, min([int(1000/(t[1]-t[0])),len(t)])
 
     # we define the points that we want to extract
 
@@ -251,11 +250,11 @@ if __name__=='__main__':
     if args.simulation:
         print 'Running simulation [...]'
         t, V = run_simulation(shotnoise_input, cables, params, tstop=args.tstop_sim*1e3, dt=0.025, seed=args.seed, synchrony=args.synchrony)
-        muV_exp, sV_exp, Tv_exp = analyze_simulation(x_exp, t, V)
+        muV_exp, sV_exp, Tv_exp = analyze_simulation(x_exp, cables, t, V)
         np.save(save_name, [x_exp, shotnoise_input, muV_exp, sV_exp, Tv_exp])
         
         # now plotting of simulated membrane potential traces
-        plot_time_traces(t, V, cables,\
+        plot_time_traces(t, V, cables, EqCylinder,\
             title='$\\nu_e^p$=  %1.2f Hz, $\\nu_e^d$=  %1.2f Hz, $\\nu^p_i$= %1.2f Hz, $\\nu^d_i$= %1.2f Hz' % (args.fe_prox,args.fe_dist,args.fi_prox,args.fi_prox))
         plt.show()
 

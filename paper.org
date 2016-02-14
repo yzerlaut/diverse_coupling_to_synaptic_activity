@@ -410,7 +410,7 @@ fluctuations: their mean $\mu_V$, their standard deviation
 \(\tau_V\). Following [[citetext:Zerlaut2016]], we emphasize that the
 /global/ autocorrelation time is a partial description of the
 autocorrelation function (as the autocorrelation function is not
-exponential) but it constitues the first order description of the
+exponential) but it constitutes the first order description of the
 temporal dynamics of the fluctuations.
 
 A commonly adopted strategy in the /fluctuation-driven/ regime to
@@ -422,7 +422,7 @@ generalizable to conductance input in an extended structure and render
 the inclusion of assymetric properties (proximal vs distal)
 complicated. We rather propose here an approach that combines
 simplifying assumptions and analytical results from shotnoise theory,
-it constitues an extension of the approach proposed in
+it constitutes an extension of the approach proposed in
 [[citetext:Kuhn2004]].
 
 For each set of synaptic stimulation \(\{\nu^e_p, \nu_i^p, \nu_e^d,
