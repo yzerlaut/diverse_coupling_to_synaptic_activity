@@ -41,7 +41,7 @@ def get_fluct_var(i_nrn, F, exp_type='non specific activity', balance=-54e-3):
         # fiG, fiI = find_inh_cond_for_balance(feG, fiG, feI, fiI, i_nrn, balance)
         feG, fiG, feI, fiI = fe0+0*F, 0*F, fe0+2.*F, 2.*inh_factor*F
         fiG, fiI = find_inh_cond_for_balance(feG, fiG, feI, fiI, i_nrn, balance+0*F)
-    elif exp_type=='synchronized activity':
+    elif exp_type=='synchrony':
         # feG, fiG, feI, fiI = EI*F, (1-EI)*F, EI*F, (1-EI)*F
         synch = np.linspace(0., 1.99, len(F))
         F = .1+0*F
@@ -83,7 +83,7 @@ if __name__=='__main__':
     COLORS=['r', 'b', 'g', 'c', 'k', 'm']
 
     PROTOCOLS = ['unbalanced activity', 'proximal activity', 'distal activity',\
-                 'synchronized activity', 'non specific activity']
+                 'synchrony', 'non specific activity']
         
     if sys.argv[-1]=='all':
 

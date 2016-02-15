@@ -58,8 +58,9 @@ neuron level in sensory cortex.
 In the present work, we investigate such interactions in the light of
 the variability in the biophysical features found in
 [[citetext:Zerlaut2016]], namely that single neurons not only vary in
-their excitability (the action potential threshold) but also in their
-sensitivity to the properties of the membrane potential fluctuations.
+their excitability (linked to the action potential threshold) but also
+in their sensitivity to the properties of the membrane potential
+fluctuations.
 
 We thus designed a theoretical model for passive dendritic integration
 that allows an analytical treatment and thus easily enables the
@@ -77,7 +78,7 @@ variations of the properties of the membrane potential fluctuations
 time). The various firing responses (as a function of the fluctuation
 properties) for individual neurons found in our companion study then
 led to diverse coupling to each activity type. Taken together, our two
-studies suggest that
+studies suggest that [...]
 
 
 # Though this diverse activation is likely to be due to specific
