@@ -184,12 +184,11 @@ if __name__=='__main__':
     parser.add_argument("-S", "--simulation",\
                         help="With numerical simulation (NEURON)",
                         action="store_true")
-    parser.add_argument("--fe_prox", type=float, help="excitatory synaptic frequency in proximal compartment", default=5.)
-    parser.add_argument("--fi_prox", type=float, help="inhibitory synaptic frequency in proximal compartment", default=10.)
-    parser.add_argument("--fe_dist", type=float, help="excitatory synaptic frequency in distal compartment", default=5.)
-    parser.add_argument("--fi_dist", type=float, help="inhibitory synaptic frequency in distal compartment", default=10.)
-    parser.add_argument("--fe_soma", type=float, help="excitatory synaptic frequency at soma compartment", default=.0001)
-    parser.add_argument("--fi_soma", type=float, help="inhibitory synaptic frequency at soma compartment", default=20.)
+    parser.add_argument("--fe_prox", type=float, help="excitatory synaptic frequency in proximal compartment", default=1.)
+    parser.add_argument("--fi_prox", type=float, help="inhibitory synaptic frequency in proximal compartment", default=4.)
+    parser.add_argument("--fe_dist", type=float, help="excitatory synaptic frequency in distal compartment", default=1.)
+    parser.add_argument("--fi_dist", type=float, help="inhibitory synaptic frequency in distal compartment", default=4.)
+    parser.add_argument("--fi_soma", type=float, help="inhibitory synaptic frequency at soma compartment", default=4.)
     parser.add_argument("--synchrony", type=float, help="synchrony of presynaptic spikes", default=0.)
     parser.add_argument("--discret_sim", type=int, help="space discretization for numerical simulation", default=20)
     parser.add_argument("--tstop_sim", type=float, help="max simulation time (s)", default=2.)
@@ -197,7 +196,7 @@ if __name__=='__main__':
     parser.add_argument("--seed", type=int, help="seed fo random numbers",default=3)
     # ball and stick properties
     parser.add_argument("--L_stick", type=float, help="Length of the stick in micrometer", default=1000.)
-    parser.add_argument("--L_prox_fraction", type=float, help="fraction of tree corresponding to prox. compartment", default=1.99/3.)
+    parser.add_argument("--L_prox_fraction", type=float, help="fraction of tree corresponding to prox. compartment", default=0.)
     parser.add_argument("--D_stick", type=float, help="Diameter of the stick", default=2.)
     parser.add_argument("-B", "--branches", type=int, help="Number of branches (equally spaced)", default=1)
     parser.add_argument("--EqCylinder", help="Detailed branching morphology (e.g [0.,0.1,0.25, 0.7, 1.])", nargs='+', type=float, default=[])
@@ -229,7 +228,7 @@ if __name__=='__main__':
     # settign up the synaptic properties
     params['Qe'] = args.Qe*1e-9
     params['Qi'] = args.Qi*1e-9
-    params['factor_for_distal_synapses_tau'] = 2.
+    params['factor_for_distal_synapses_tau'] = 1.
     params['factor_for_distal_synapses_weight'] = 2.
 
     print ' first we set up the model [...]'

@@ -1,6 +1,6 @@
 from demo import *
 
-tstop = 2000.
+tstop = 100.
 
 soma, stick, params = np.load('../input_impedance_calibration/mean_model.npy')
 EqCylinder = np.linspace(0, 1, stick['B']+1)*stick['L'] # equally space branches !

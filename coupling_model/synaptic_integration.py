@@ -6,11 +6,11 @@ from theory.analytical_calculus import *
 soma, stick, params = np.load('../input_impedance_calibration/mean_model.npy')
 ALL_CELLS = np.load('../input_impedance_calibration/all_cell_params.npy')
 
-def find_inh_cond_for_balance(feG, fiG, feI, fiI, i_nrn, balance=-60e-3):
-    for i in range(len(F)):
+def find_inh_cond_for_balance(feG, fiG, feI, fiI, i_nrn, balance):
+    for i in range(len(feG)):
         fiG[i], fiI[i] = find_balance_at_soma(feG[i], feI[i],\
                     ALL_CELLS[i_nrn]['params'], ALL_CELLS[i_nrn]['soma'],\
-                    ALL_CELLS[i_nrn]['stick'], balance=balance)
+                    ALL_CELLS[i_nrn]['stick'], balance=balance[i])
     return fiG, fiI
 
 def get_fluct_var(i_nrn, F, exp_type='non specific activity', balance=-54e-3):
@@ -25,23 +25,28 @@ def get_fluct_var(i_nrn, F, exp_type='non specific activity', balance=-54e-3):
     
     if exp_type=='non specific activity':
         feG, fiG, feI, fiI = fe0+F, inh_factor*F, fe0+F, inh_factor*F
-        # fiG, fiI = find_inh_cond_for_balance(feG, fiG, feI, fiI, i_nrn, balance=balance)
+        fiG, fiI = find_inh_cond_for_balance(feG, fiG, feI, fiI, i_nrn, balance+0*F)
     elif exp_type=='unbalanced activity':
-        # feG, fiG, feI, fiI = EI*F, .7*(1-EI)*F, EI*F, .7*(1-EI)*F
-        feG, fiG, feI, fiI = fe0+F, inh_factor_balance_rupt*F, fe0+F, inh_factor_balance_rupt*F
+        # feG, fiG, feI, fiI = fe0+F, inh_factor_balance_rupt*F, fe0+F, inh_factor_balance_rupt*F
+        feG, feI, fiG, fiI = fe0+F, fe0+F, 0*F, 0*F
+        fiG, fiI = find_inh_cond_for_balance(feG, fiG, feI, fiI, i_nrn,\
+                                             balance+8e-3*np.linspace(0,1,len(F)))
     elif exp_type=='proximal activity':
         # feG, fiG, feI, fiI = 2.*F, 0.*F, 0*F, 0.*F
-        # fiG, fiI = find_inh_cond_for_balance(feG, fiG, feI, fiI, i_nrn, balance=balance)
+        # fiG, fiI = find_inh_cond_for_balance(feG, fiG, feI, fiI, i_nrn, balance)
         feG, fiG, feI, fiI = fe0+2.*F, 2.*inh_factor*F, fe0+0*F, 0*F
+        fiG, fiI = find_inh_cond_for_balance(feG, fiG, feI, fiI, i_nrn, balance+0*F)
     elif exp_type=='distal activity':
         # feG, fiG, feI, fiI = 0*F, 0.*F, 2.*F, 0.*F
-        # fiG, fiI = find_inh_cond_for_balance(feG, fiG, feI, fiI, i_nrn, balance=balance)
+        # fiG, fiI = find_inh_cond_for_balance(feG, fiG, feI, fiI, i_nrn, balance)
         feG, fiG, feI, fiI = fe0+0*F, 0*F, fe0+2.*F, 2.*inh_factor*F
+        fiG, fiI = find_inh_cond_for_balance(feG, fiG, feI, fiI, i_nrn, balance+0*F)
     elif exp_type=='synchronized activity':
         # feG, fiG, feI, fiI = EI*F, (1-EI)*F, EI*F, (1-EI)*F
         synch = np.linspace(0., 1.99, len(F))
         F = .1+0*F
         feG, fiG, feI, fiI = fe0+F, inh_factor*F, fe0+F, inh_factor*F
+        fiG, fiI = find_inh_cond_for_balance(feG, fiG, feI, fiI, i_nrn, balance+0*F)
     else:
         print '------------------------------------------'
         print 'problem with the protocol: ', exp_type
@@ -72,7 +77,7 @@ if __name__=='__main__':
 
     fig, AX = plt.subplots(4, 1, figsize=(4, 15))
     plt.subplots_adjust(left=.3, top=.8, wspace=.2, hspace=.2)
-    fig2, AX2 = plt.subplots(4, 1, figsize=(4, 15))
+    fig2, AX2 = plt.subplots(5, 1, figsize=(4, 15))
     plt.subplots_adjust(left=.3, top=.8, wspace=.2, hspace=.2)
     F = np.linspace(0, .5,5)
     COLORS=['r', 'b', 'g', 'c', 'k', 'm']
@@ -94,31 +99,38 @@ if __name__=='__main__':
                    get_fluct_var(i_nrn, F, exp_type=PROTOCOLS[i])
 
             for ax, x in zip(AX, [1e3*MUV, 1e3*SV, 1e2*TVN, MUGN]):
-                ax.errorbar(F, x.mean(axis=0), x.std(axis=0), lw=1, color=COLORS[i])
+                ax.errorbar(F, x.mean(axis=0), x.std(axis=0), lw=3, color=COLORS[i])
                 ax.fill_between(F, x.mean(axis=0)-x.std(axis=0),\
-                                x.mean(axis=0)+x.std(axis=0), alpha=.4, color=COLORS[i])
-            for ax, x in zip(AX2, [FEG, FIG, FEI, FII]):
-                ax.errorbar(F, x.mean(axis=0), x.std(axis=0), lw=1, color=COLORS[i])
+                                x.mean(axis=0)+x.std(axis=0), alpha=.2, color=COLORS[i])
+            for ax, x in zip(AX2, [FEG, FIG, FEI, FII, SYNCH]):
+                ax.errorbar(F, x.mean(axis=0), x.std(axis=0), lw=3, color=COLORS[i])
                 ax.fill_between(F, x.mean(axis=0)-x.std(axis=0),\
-                                x.mean(axis=0)+x.std(axis=0), alpha=.4, color=COLORS[i])
+                                x.mean(axis=0)+x.std(axis=0), alpha=.2, color=COLORS[i])
     else:
         for i in range(len(PROTOCOLS)):
             feG, fiG, feI, fiI, synch, muV, sV, TvN, muGn = get_fluct_var(i_nrn, F,\
                                           exp_type=PROTOCOLS[i])
             for ax, x in zip(AX, [1e3*muV, 1e3*sV, 1e2*TvN, muGn]):
-                ax.plot(F, x, lw=2, color=COLORS[i], label=PROTOCOLS[i])
-            for ax, x in zip(AX2, [feG, fiG, feI, fiI]):
-                ax.plot(F, x, lw=.5, color=COLORS[i], label=PROTOCOLS[i])
+                ax.plot(F, x, lw=3, color=COLORS[i], label=PROTOCOLS[i])
+            for ax, x in zip(AX2, [feG, fiG, feI, fiI, synch]):
+                ax.plot(F, x, lw=3, color=COLORS[i], label=PROTOCOLS[i])
 
     LABELS = ['$\mu_V$ (mV)', '$\sigma_V$ (mV)',\
               '$\\tau_V / \\tau_m^0$ (%)', '$g_{tot}^{soma} / g_L$']
+    LABELS2 = ['$\\nu_e^{prox}$ (Hz)', '$\\nu_e^{dist}$ (Hz)',
+               '$\\nu_i^{prox}$ (Hz)', '$\\nu_i^{dist}$ (Hz)',
+               'synchrony']
     
     if sys.argv[-1]!='all':
         AX[0].legend(prop={'size':'xx-small'}, bbox_to_anchor=(1., 2.))
         
     for ax, ylabel in zip(AX[:-1], LABELS[:-1]):
         set_plot(ax, ['left'], ylabel=ylabel, xticks=[])
+    for ax, ylabel in zip(AX2[:-1], LABELS2[:-1]):
+        set_plot(ax, ['left'], ylabel=ylabel, xticks=[])
     set_plot(AX[-1], ['bottom','left'],\
-             ylabel=LABELS[-1], xlabel='synaptic activity (Hz)')
+             ylabel=LABELS[-1], xticks=[], xlabel='increasing \n presynaptic quantity')
+    set_plot(AX2[-1], ['bottom','left'],\
+             ylabel=LABELS2[-1], xticks=[], xlabel='increasing \n presynaptic quantity')
              
     plt.show()
