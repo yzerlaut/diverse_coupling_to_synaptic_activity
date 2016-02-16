@@ -333,15 +333,15 @@ if __name__=='__main__':
     #     default= ['non specific activity', 'unbalanced activity', 'proximal activity', 'distal activity'],
     #     help="Different paradigm tested")
     parser.add_argument("--PROTOCOLS",\
-        default= ['non specific activity', 'unbalanced activity', 'proximal activity', 'distal activity', 'synchronized activity'],
+        default= ['non specific activity', 'unbalanced activity', 'proximal activity', 'distal activity', 'synchrony'],
         help="Different paradigm tested")
     parser.add_argument("--COLORS", default=['k', 'r', 'b', 'g', 'c'],\
                         help="Colors for protocols")
     parser.add_argument("--SEEDS", default=[32, 3, 2, 1, 13, 4, 8],\
                         help="Seeds for protocols")
     
-    parser.add_argument("--F0",type=float, default=1., help="mean input exc. frequency (Hz)")
-    parser.add_argument("--SF",type=float, default=.7, help="std dev. input exc. frequency (Hz)")
+    parser.add_argument("--F0",type=float, default=.3, help="mean input exc. frequency (Hz)")
+    parser.add_argument("--SF",type=float, default=.15, help="std dev. input exc. frequency (Hz)")
     parser.add_argument("--TF",type=float, default=0.04, help="correlation time of input exc. frequency (s)")
     parser.add_argument("--factor_for_unbalancing", type=float, default=.2,\
                         help="additional percentage of excitatory input that creates the break of balance")

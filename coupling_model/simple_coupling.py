@@ -10,26 +10,30 @@ from scipy.stats.stats import pearsonr
 soma, stick, params = np.load('../input_impedance_calibration/mean_model.npy')
 ALL_CELLS = np.load('../input_impedance_calibration/all_cell_params.npy')
 
-def single_experiment(F, i_nrn):
+def single_experiment(i_nrn, balance=-54e-3):
     
     ## FIRING RATE RESPONSE for control
-    feG, fiG, feI, fiI, synch, muV, sV, TvN, muGn = get_fluct_var(i_nrn, F)
+    feG, fiG, feI, fiI, synch, muV, sV, TvN, muGn = get_fluct_var(i_nrn, balance=balance)
     Fout0 = final_func(ALL_CELLS[i_nrn]['P'], muV, sV, TvN,\
                       ALL_CELLS[i_nrn]['Gl'], ALL_CELLS[i_nrn]['Cm'])
 
     ## Then for other protocols
-    
     PROTOCOLS = ['unbalanced activity', 'proximal activity', 'distal activity', 'synchrony']
     coupling = np.zeros(len(PROTOCOLS)+2)
     coupling[0] = Fout0.mean()
-    coupling[1] = np.diff(Fout0).mean()/np.diff(F).mean()
+    coupling[1] = np.diff(Fout0).mean()
     
-    for p, i  in zip(PROTOCOLS, range(1,len(coupling))):
-        feG, fiG, feI, fiI, synch, muV, sV, TvN, muGn = get_fluct_var(i_nrn, F, exp_type=p)
-        Fout = final_func(ALL_CELLS[i_nrn]['P'], muV, sV, TvN,\
+    for p, i  in zip(PROTOCOLS, range(2,len(coupling))):
+        feG, fiG, feI, fiI, synch, muV, sV, TvN, muGn = get_fluct_var(i_nrn, exp_type=p, balance=balance)
+        Fout2 = final_func(ALL_CELLS[i_nrn]['P'], muV, sV, TvN,\
                           ALL_CELLS[i_nrn]['Gl'], ALL_CELLS[i_nrn]['Cm'])
-        if np.diff(Fout0).mean()>0:
-            coupling[i] = (np.diff(Fout).mean()-np.diff(Fout0).mean())/np.diff(Fout0).mean()
+        # coupling[i] = (np.diff(Fout).mean()-np.diff(Fout0).mean())#/np.diff(Fout0).mean()
+        # coupling[i] = np.diff(Fout2).mean()#-coupling[1]
+        if np.mean(Fout0)>0:
+            coupling[i] = np.mean(Fout2-Fout0)
+            # coupling[i] = 100.*np.mean(Fout2-Fout0)/Fout0.mean()
+        else:
+            print '0 value on cell', i_nrn
     return coupling
 
 def correlating_electrophy_and_coupling(COUPLINGS, BIOPHYSICS):
@@ -39,9 +43,9 @@ def correlating_electrophy_and_coupling(COUPLINGS, BIOPHYSICS):
     
     PROTOCOLS = ['unbalanced activity', 'proximal activity', 'distal activity', 'synchrony']
     
-    YLABELS1 = [r"$\langle \nu_\mathrm{out}\rangle$"]+\
-               [r"gain (Hz)"]+\
-               ['gain increase (%) \n for '+p for p in PROTOCOLS]
+    YLABELS1 = [r"mean response level \\n $\langle \nu_\mathrm{out}\rangle$ (Hz)"]+\
+               [r"gain (Hz$^{-1}$)"]+\
+               ['change of gain (Hz$^{-1}$) \n for increasing \n '+p for p in PROTOCOLS]
     
     E_LABELS = [r"$\langle V_\mathrm{thre}^\mathrm{eff} \rangle_\mathcal{D}$ (mV)",\
                 r"$\langle \partial \nu / \partial \mu_V \rangle_\mathcal{D}$ (Hz/mV)",\
@@ -51,10 +55,10 @@ def correlating_electrophy_and_coupling(COUPLINGS, BIOPHYSICS):
     X = [BIOPHYSICS[i,:] for i in range(BIOPHYSICS.shape[0])]
     Y = [COUPLINGS[i,:] for i in range(COUPLINGS.shape[0])]
 
-    INDEXES, MARKER, SIZE = range(4), ['^', 'd', '*', 's'], [12, 11, 17, 10]
+    INDEXES, MARKER, SIZE = [21, 2, 27, 1], ['^', 'd', '*', 's'], [12, 11, 17, 10]
 
-    fig, AX = plt.subplots(len(Y), len(X), figsize=(20,18))
-    fig.subplots_adjust(wspace=.3, hspace=.3)
+    fig, AX = plt.subplots(len(Y), len(X), figsize=(20,30))
+    fig.subplots_adjust(wspace=.6, hspace=1.)
     for i in range(len(X)):
         for j in range(len(Y)):
             for k in range(len(MARKER)):
@@ -63,10 +67,12 @@ def correlating_electrophy_and_coupling(COUPLINGS, BIOPHYSICS):
                         label='cell '+str(k+1), ms=SIZE[k])
                 AX[j, i].plot([X[i][INDEXES[k]]], [Y[j][INDEXES[k]]],\
                         lw=0, color='k', marker='o')
-            AX[j, i].scatter(X[i], Y[j], color='k', marker='o')
-            cc, pp = pearsonr(X[i], Y[j])
-            x = np.linspace(X[i].min(), X[i].max())
-            AX[j, i].plot(x, np.polyval(np.polyfit(np.array(X[i], dtype='f8'), np.array(Y[j], dtype='f8'), 1), x), 'k--', lw=.5)
+            cond = (Y[j]>0)# and (Y[j]<30)
+            xx, y = X[i][cond], Y[j][cond]
+            AX[j, i].scatter(xx, y, color='k', marker='o')
+            cc, pp = pearsonr(xx, y)
+            x = np.linspace(xx.min(), xx.max())
+            AX[j, i].plot(x, np.polyval(np.polyfit(np.array(xx, dtype='f8'), np.array(y, dtype='f8'), 1), x), 'k--', lw=.5)
             AX[j, i].annotate('c='+str(np.round(cc,1))+', p='+'%.1e' % pp,\
                          (0.15,1), xycoords='axes fraction')
             if i in [0,3]:
@@ -77,8 +83,6 @@ def correlating_electrophy_and_coupling(COUPLINGS, BIOPHYSICS):
 
 if __name__=='__main__':
 
-    F = np.linspace(.01, .6, 4)
-    
     import matplotlib.pylab as plt
     sys.path.append('/home/yann/work/python_library/')
     from my_graph import set_plot, put_list_of_figs_to_svg_fig
@@ -87,7 +91,7 @@ if __name__=='__main__':
     BIOPHYSICS = np.zeros((4, len(ALL_CELLS)))
     for i_nrn in range(len(ALL_CELLS)):
         print 'cell', i_nrn+1
-        COUPLINGS[:,i_nrn] = single_experiment(F, i_nrn)
+        COUPLINGS[:,i_nrn] = single_experiment(i_nrn)
         BIOPHYSICS[:,i_nrn] = ALL_CELLS[i_nrn]['E']        
 
     fig = correlating_electrophy_and_coupling(COUPLINGS, BIOPHYSICS)

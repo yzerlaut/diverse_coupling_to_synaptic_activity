@@ -13,8 +13,11 @@ def find_inh_cond_for_balance(feG, fiG, feI, fiI, i_nrn, balance):
                     ALL_CELLS[i_nrn]['stick'], balance=balance[i])
     return fiG, fiI
 
-def get_fluct_var(i_nrn, F, exp_type='non specific activity', balance=-54e-3):
+def get_fluct_var(i_nrn, F=None, exp_type='non specific activity', balance=-54e-3, len_f=5):
 
+    if F is None:
+        F = np.linspace(0, .45, len_f)
+        
     synch = 0.2+0*F # baseline synchrony
     inh_factor = 5.8
     inh_factor_balance_rupt = 4.
@@ -24,27 +27,22 @@ def get_fluct_var(i_nrn, F, exp_type='non specific activity', balance=-54e-3):
                              balance=balance, synch=synch)
     
     if exp_type=='non specific activity':
-        feG, fiG, feI, fiI = fe0+F, inh_factor*F, fe0+F, inh_factor*F
+        feG, fiG, feI, fiI = fe0+.5*F, inh_factor*.5*F, fe0+.5*F, inh_factor*.5*F
         fiG, fiI = find_inh_cond_for_balance(feG, fiG, feI, fiI, i_nrn, balance+0*F)
     elif exp_type=='unbalanced activity':
         # feG, fiG, feI, fiI = fe0+F, inh_factor_balance_rupt*F, fe0+F, inh_factor_balance_rupt*F
-        feG, feI, fiG, fiI = fe0+F, fe0+F, 0*F, 0*F
+        feG, feI, fiG, fiI = fe0+.5*F, fe0+.5*F, 0*F, 0*F
         fiG, fiI = find_inh_cond_for_balance(feG, fiG, feI, fiI, i_nrn,\
-                                             balance+8e-3*np.linspace(0,1,len(F)))
+                                             balance+4e-3*np.linspace(0,1,len(F)))
     elif exp_type=='proximal activity':
-        # feG, fiG, feI, fiI = 2.*F, 0.*F, 0*F, 0.*F
-        # fiG, fiI = find_inh_cond_for_balance(feG, fiG, feI, fiI, i_nrn, balance)
         feG, fiG, feI, fiI = fe0+2.*F, 2.*inh_factor*F, fe0+0*F, 0*F
         fiG, fiI = find_inh_cond_for_balance(feG, fiG, feI, fiI, i_nrn, balance+0*F)
     elif exp_type=='distal activity':
-        # feG, fiG, feI, fiI = 0*F, 0.*F, 2.*F, 0.*F
-        # fiG, fiI = find_inh_cond_for_balance(feG, fiG, feI, fiI, i_nrn, balance)
         feG, fiG, feI, fiI = fe0+0*F, 0*F, fe0+2.*F, 2.*inh_factor*F
         fiG, fiI = find_inh_cond_for_balance(feG, fiG, feI, fiI, i_nrn, balance+0*F)
     elif exp_type=='synchrony':
-        # feG, fiG, feI, fiI = EI*F, (1-EI)*F, EI*F, (1-EI)*F
-        synch = np.linspace(0., 1.99, len(F))
-        F = .1+0*F
+        synch = np.linspace(0., 1.4, len(F))
+        F = .15+0*F
         feG, fiG, feI, fiI = fe0+F, inh_factor*F, fe0+F, inh_factor*F
         fiG, fiI = find_inh_cond_for_balance(feG, fiG, feI, fiI, i_nrn, balance+0*F)
     else:
@@ -79,12 +77,12 @@ if __name__=='__main__':
     plt.subplots_adjust(left=.3, top=.8, wspace=.2, hspace=.2)
     fig2, AX2 = plt.subplots(5, 1, figsize=(4, 15))
     plt.subplots_adjust(left=.3, top=.8, wspace=.2, hspace=.2)
-    F = np.linspace(0, .5,5)
     COLORS=['r', 'b', 'g', 'c', 'k', 'm']
 
     PROTOCOLS = ['unbalanced activity', 'proximal activity', 'distal activity',\
                  'synchrony', 'non specific activity']
-        
+    len_f = 5
+    F = np.linspace(0,1, len_f)
     if sys.argv[-1]=='all':
 
         for i in range(len(PROTOCOLS)):
@@ -96,7 +94,7 @@ if __name__=='__main__':
                 print 'cell: ', i_nrn
                 FEG[i_nrn,:], FIG[i_nrn,:], FEI[i_nrn,:], FII[i_nrn,:], SYNCH[i_nrn,:],\
                    MUV[i_nrn,:], SV[i_nrn,:], TVN[i_nrn,:], MUGN[i_nrn,:] =\
-                   get_fluct_var(i_nrn, F, exp_type=PROTOCOLS[i])
+                   get_fluct_var(i_nrn, exp_type=PROTOCOLS[i], len_f=len_f)
 
             for ax, x in zip(AX, [1e3*MUV, 1e3*SV, 1e2*TVN, MUGN]):
                 ax.errorbar(F, x.mean(axis=0), x.std(axis=0), lw=3, color=COLORS[i])
@@ -108,8 +106,8 @@ if __name__=='__main__':
                                 x.mean(axis=0)+x.std(axis=0), alpha=.2, color=COLORS[i])
     else:
         for i in range(len(PROTOCOLS)):
-            feG, fiG, feI, fiI, synch, muV, sV, TvN, muGn = get_fluct_var(i_nrn, F,\
-                                          exp_type=PROTOCOLS[i])
+            feG, fiG, feI, fiI, synch, muV, sV, TvN, muGn = get_fluct_var(i_nrn,\
+                                          exp_type=PROTOCOLS[i], len_f=len_f)
             for ax, x in zip(AX, [1e3*muV, 1e3*sV, 1e2*TvN, muGn]):
                 ax.plot(F, x, lw=3, color=COLORS[i], label=PROTOCOLS[i])
             for ax, x in zip(AX2, [feG, fiG, feI, fiI, synch]):
@@ -117,8 +115,8 @@ if __name__=='__main__':
 
     LABELS = ['$\mu_V$ (mV)', '$\sigma_V$ (mV)',\
               '$\\tau_V / \\tau_m^0$ (%)', '$g_{tot}^{soma} / g_L$']
-    LABELS2 = ['$\\nu_e^{prox}$ (Hz)', '$\\nu_e^{dist}$ (Hz)',
-               '$\\nu_i^{prox}$ (Hz)', '$\\nu_i^{dist}$ (Hz)',
+    LABELS2 = ['$\\nu_e^{prox}$ (Hz)', '$\\nu_i^{prox}$ (Hz)',\
+               '$\\nu_e^{dist}$ (Hz)', '$\\nu_i^{dist}$ (Hz)',
                'synchrony']
     
     if sys.argv[-1]!='all':
