@@ -22,18 +22,12 @@ def single_experiment(i_nrn, balance=-54e-3):
     coupling = np.zeros(len(PROTOCOLS)+2)
     coupling[0] = Fout0.mean()
     coupling[1] = np.diff(Fout0).mean()
-    
+
     for p, i  in zip(PROTOCOLS, range(2,len(coupling))):
         feG, fiG, feI, fiI, synch, muV, sV, TvN, muGn = get_fluct_var(i_nrn, exp_type=p, balance=balance)
         Fout2 = final_func(ALL_CELLS[i_nrn]['P'], muV, sV, TvN,\
-                          ALL_CELLS[i_nrn]['Gl'], ALL_CELLS[i_nrn]['Cm'])
-        # coupling[i] = (np.diff(Fout).mean()-np.diff(Fout0).mean())#/np.diff(Fout0).mean()
-        # coupling[i] = np.diff(Fout2).mean()#-coupling[1]
-        if np.mean(Fout0)>0:
-            coupling[i] = np.mean(Fout2-Fout0)
-            # coupling[i] = 100.*np.mean(Fout2-Fout0)/Fout0.mean()
-        else:
-            print '0 value on cell', i_nrn
+                           ALL_CELLS[i_nrn]['Gl'], ALL_CELLS[i_nrn]['Cm'])
+        coupling[i] = np.mean(Fout2-Fout0)
     return coupling
 
 def correlating_electrophy_and_coupling(COUPLINGS, BIOPHYSICS):
@@ -67,7 +61,7 @@ def correlating_electrophy_and_coupling(COUPLINGS, BIOPHYSICS):
                         label='cell '+str(k+1), ms=SIZE[k])
                 AX[j, i].plot([X[i][INDEXES[k]]], [Y[j][INDEXES[k]]],\
                         lw=0, color='k', marker='o')
-            cond = (Y[j]>0)# and (Y[j]<30)
+            cond = [True for i in range(len(BIOPHYSICS.shape[1]))] # (Y[j]>0)# and (Y[j]<30)
             xx, y = X[i][cond], Y[j][cond]
             AX[j, i].scatter(xx, y, color='k', marker='o')
             cc, pp = pearsonr(xx, y)
