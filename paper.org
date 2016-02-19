@@ -52,7 +52,7 @@ potential threshold for action potential triggering) that determine
 the response of a single neuron to sensory input. Therefore
 highlighting the role of the interaction between circuit afference and
 biophysics for stimulus representation at the single neuron level in
-sensory cortex.
+sensory cortex. [[maybe in discussion]]
 
 In the present paper, we investigate such interactions in the light of
 the variability in the biophysical features found in
@@ -67,7 +67,6 @@ on a symmetrical morphology where branching follows the Rall's 3/2
 exponent rule [[cite:Rall1962]], the analytical approximation consists in
 adapting the equivalent cylinder transformation [[cite:Rall1962]] to the
 properties of the high conductance state [[cite:Destexhe2003]].
-
 
 # Though this diverse activation is likely to be due to specific
 # connectivity schemes, we explore here a complementary mechanism: given
@@ -89,8 +88,14 @@ The paper is organized as follows
 
 ** A theoretical framework for single cell computation
 
-We formulated 
-[[taken from previous paper, to be adapted]]
+In our companion communication [[cite:Zerlaut2016]], we formulated a two
+step procedure to characterize single cell computation
+
+
+
+for single cell
+
+formulated [[taken from previous paper, to be adapted]]
 
 Determining the cellular input-output functions is complex because
 input of neocortical neurons are mostly in dendrites and output spikes
@@ -200,10 +205,14 @@ models.
 In this study, the rescaling rule between input resistance at the soma
 and the morphological model has led to a relative 
 
-
 ** Limitations of the proposed theoretical framework for single-cell computation
 
-Only enables to scan sensory processing
+- Only enables to scan sensory processing in the fluctuation-driven
+regime, no temporal coding. Mostly suited to investigate population
+dynamics associated to netowrk processing
+
+- no active properties in dendrites, purely passive. could be
+  implemented thoug
 
 ** Diverse coupling to presynaptic activity
 
