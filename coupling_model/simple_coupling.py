@@ -28,7 +28,7 @@ def single_experiment(i_nrn, balance=-54e-3):
         Fout2 = final_func(ALL_CELLS[i_nrn]['P'], muV, sV, TvN,\
                            ALL_CELLS[i_nrn]['Gl'], ALL_CELLS[i_nrn]['Cm'])
         # coupling[i] = np.mean(Fout2-Fout0)
-        coupling[i] = np.mean(Fout2)/np.mean(Fout0)-1
+        coupling[i] = np.mean(Fout2)/np.mean(Fout0)#-1
     return coupling
 
 
@@ -75,6 +75,7 @@ def correlating_electrophy_and_coupling(COUPLINGS, BIOPHYSICS):
                          (0.15,1), xycoords='axes fraction')
             if i in [0,3]:
                 AX[j, i].invert_xaxis()
+            AX[j,i].set_scale('log')
             set_plot(AX[j, i], ['left', 'bottom'], ylabel=YLABELS1[j], xlabel=E_LABELS[i])
     return fig
 

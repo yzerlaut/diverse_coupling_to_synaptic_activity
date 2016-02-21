@@ -41,8 +41,8 @@ def get_fluct_var(i_nrn, F=None, exp_type='non specific activity', balance=-54e-
         feG, fiG, feI, fiI = fe0+0*F, 0*F, fe0+2.*F, 2.*inh_factor*F
         fiG, fiI = find_inh_cond_for_balance(feG, fiG, feI, fiI, i_nrn, balance+0*F)
     elif exp_type=='synchrony':
-        synch = np.linspace(0., 1.4, len(F))
-        F = .15+0*F
+        synch = np.linspace(0., 0.7, len(F))
+        F = .13+0*F
         feG, fiG, feI, fiI = fe0+F, inh_factor*F, fe0+F, inh_factor*F
         fiG, fiI = find_inh_cond_for_balance(feG, fiG, feI, fiI, i_nrn, balance+0*F)
     else:
@@ -97,11 +97,11 @@ if __name__=='__main__':
                    get_fluct_var(i_nrn, exp_type=PROTOCOLS[i], len_f=len_f)
 
             for ax, x in zip(AX, [1e3*MUV, 1e3*SV, 1e2*TVN, MUGN]):
-                ax.errorbar(F, x.mean(axis=0), x.std(axis=0), lw=3, color=COLORS[i])
+                ax.plot(F, x.mean(axis=0), lw=3, color=COLORS[i])
                 ax.fill_between(F, x.mean(axis=0)-x.std(axis=0),\
                                 x.mean(axis=0)+x.std(axis=0), alpha=.2, color=COLORS[i])
             for ax, x in zip(AX2, [FEG, FIG, FEI, FII, SYNCH]):
-                ax.errorbar(F, x.mean(axis=0), x.std(axis=0), lw=3, color=COLORS[i])
+                ax.plot(F, x.mean(axis=0), lw=3, color=COLORS[i])
                 ax.fill_between(F, x.mean(axis=0)-x.std(axis=0),\
                                 x.mean(axis=0)+x.std(axis=0), alpha=.2, color=COLORS[i])
     else:
