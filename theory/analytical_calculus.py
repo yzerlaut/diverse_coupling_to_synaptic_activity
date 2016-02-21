@@ -6,7 +6,6 @@ import sys
 sys.path.append('/home/yann/work/python_library/')
 import fourier_for_real as rfft
 
-
 def params_for_cable_theory(cable, Params):
     """
     applies the radial symmetry, to get the linear cable theory parameters
@@ -243,8 +242,11 @@ def get_the_theoretical_sV_and_Tv(shtn_input, EqCylinder,\
     Branch_weights = 0*Source_Array # initialized t0 0 !
 
     synchrony = shtn_input['synchrony']
-    synch_factor = 1.+3.*synchrony # factor for the PSP event
-    synch_dividor = 1.+synchrony # dividor for the real frequency
+    synch_factor = (1-synchrony)+2**2*(synchrony**2-synchrony)+\
+      3**2*(synchrony**3-synchrony**2)+4**2*synchrony**3
+    synch_dividor= 1+synchrony+synchrony**2+synchrony**3
+    # synch_factor = 1.+3.*synchrony # factor for the PSP event
+    # synch_dividor = 1.+synchrony # dividor for the real frequency
     # rational: new_freq = freq/(1.+synchrony)
     # we generate spikes with frequency : new_freq
     # then we duplicate each spike with a probability : 'synchrony'
@@ -371,9 +373,10 @@ def get_the_fluct_prop_at_soma(SHTN_INPUT, params, soma, stick,\
                       'fi_prox':SHTN_INPUT['fi_prox'][i], 'fe_dist':SHTN_INPUT['fe_dist'][i],\
                       'fi_dist':SHTN_INPUT['fi_dist'][i], 'synchrony':SHTN_INPUT['synchrony'][i]}
 
-        synchrony = shtn_input['synchrony']
-        synch_factor = 1.+3.*synchrony # factor for the PSP event
-        synch_dividor = 1.+synchrony # dividor for the real frequency
+        synchrony = shtn_input['synchrony'] # Note 4 events maximum !!!
+        synch_factor = (1-synchrony)+2**2*(synchrony**2-synchrony)+\
+          3**2*(synchrony**3-synchrony**2)+4**2*synchrony**3
+          synch_dividor= 1+synchrony+synchrony**2+synchrony**3
 
         Pv = np.zeros(len(f)) # power spectral density of Vm for each position
 

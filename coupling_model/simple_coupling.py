@@ -27,8 +27,10 @@ def single_experiment(i_nrn, balance=-54e-3):
         feG, fiG, feI, fiI, synch, muV, sV, TvN, muGn = get_fluct_var(i_nrn, exp_type=p, balance=balance)
         Fout2 = final_func(ALL_CELLS[i_nrn]['P'], muV, sV, TvN,\
                            ALL_CELLS[i_nrn]['Gl'], ALL_CELLS[i_nrn]['Cm'])
-        coupling[i] = np.mean(Fout2-Fout0)
+        # coupling[i] = np.mean(Fout2-Fout0)
+        coupling[i] = np.mean(Fout2)/np.mean(Fout0)-1
     return coupling
+
 
 def correlating_electrophy_and_coupling(COUPLINGS, BIOPHYSICS):
     """ plot of the correlation function"""
@@ -48,7 +50,8 @@ def correlating_electrophy_and_coupling(COUPLINGS, BIOPHYSICS):
 
     X = [BIOPHYSICS[i,:] for i in range(BIOPHYSICS.shape[0])]
     Y = [COUPLINGS[i,:] for i in range(COUPLINGS.shape[0])]
-
+    print X
+    
     INDEXES, MARKER, SIZE = [21, 2, 27, 1], ['^', 'd', '*', 's'], [12, 11, 17, 10]
 
     fig, AX = plt.subplots(len(Y), len(X), figsize=(20,30))
@@ -61,9 +64,10 @@ def correlating_electrophy_and_coupling(COUPLINGS, BIOPHYSICS):
                         label='cell '+str(k+1), ms=SIZE[k])
                 AX[j, i].plot([X[i][INDEXES[k]]], [Y[j][INDEXES[k]]],\
                         lw=0, color='k', marker='o')
-            cond = [True for i in range(len(BIOPHYSICS.shape[1]))] # (Y[j]>0)# and (Y[j]<30)
-            xx, y = X[i][cond], Y[j][cond]
-            AX[j, i].scatter(xx, y, color='k', marker='o')
+            # cond = (Y[j]>0)# and (Y[j]<30)
+            # xx, y = X[i][cond], Y[j][cond]
+            xx, y = X[i], Y[j]
+            AX[j, i].plot(xx, y, 'ko')
             cc, pp = pearsonr(xx, y)
             x = np.linspace(xx.min(), xx.max())
             AX[j, i].plot(x, np.polyval(np.polyfit(np.array(xx, dtype='f8'), np.array(y, dtype='f8'), 1), x), 'k--', lw=.5)
@@ -85,8 +89,10 @@ if __name__=='__main__':
     BIOPHYSICS = np.zeros((4, len(ALL_CELLS)))
     for i_nrn in range(len(ALL_CELLS)):
         print 'cell', i_nrn+1
+        BIOPHYSICS[:,i_nrn] = ALL_CELLS[i_nrn]['E']
+        print BIOPHYSICS[:,i_nrn]
         COUPLINGS[:,i_nrn] = single_experiment(i_nrn)
-        BIOPHYSICS[:,i_nrn] = ALL_CELLS[i_nrn]['E']        
+        print COUPLINGS[:,i_nrn]
 
     fig = correlating_electrophy_and_coupling(COUPLINGS, BIOPHYSICS)
     fig.savefig('correlation.svg')
