@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pylab as plt
 import os, sys
-sys.path.append('/home/yann/work/python_library/')
+sys.path.append('../code')
 import my_graph as graph
 sys.path.append('../')
 from theory.analytical_calculus import * # where the core calculus lies
