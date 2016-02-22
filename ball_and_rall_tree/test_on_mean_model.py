@@ -2,12 +2,11 @@ from demo import *
 import sys
 
 soma, stick, params = np.load('../input_impedance_calibration/mean_model.npy')
-EqCylinder = np.linspace(0, 1, stick['B']+1)*stick['L'] # equally space branches !
 
 if sys.argv[-1]=='run':
     tstop = 10000.
 
-    x_exp, cables = setup_model(EqCylinder, soma, stick, params)    
+    x_exp, cables = setup_model(soma, stick, params)    
 
     x_stick = np.linspace(0,stick['L'],30)
     x_stick = .5*(x_stick[1:]+x_stick[:-1])
@@ -25,16 +24,17 @@ if sys.argv[-1]=='run':
     t, V = run_simulation(shotnoise_input, cables, params, tstop=tstop)
     muV_exp, sV_exp, Tv_exp = analyze_simulation(x_exp, cables, t, V)
     np.save('data_mean_model_sim.npy', [x_exp, shotnoise_input, muV_exp, sV_exp, Tv_exp])
-    plot_time_traces(t, V, cables, EqCylinder)
+    fig = plot_time_traces(t, V, cables, params['EqCylinder'])
+    fig.savefig('fig.svg', format='svg')
     plt.show()
-
+    
 else:
     x_exp, shotnoise_input, muV_exp, sV_exp, Tv_exp = \
       np.load('data_mean_model_sim.npy')
       
     # constructing the space-dependent shotnoise input for the simulation
     x_th, muV_th, sV_th, Tv_th  = \
-                get_analytical_estimate(shotnoise_input, EqCylinder,
+                get_analytical_estimate(shotnoise_input,
                                         soma, stick, params,
                                         discret=20)
     make_comparison_plot(x_th, muV_th, sV_th, Tv_th,\

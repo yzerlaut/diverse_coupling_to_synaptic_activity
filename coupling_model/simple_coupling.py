@@ -66,16 +66,16 @@ def correlating_electrophy_and_coupling(COUPLINGS, BIOPHYSICS):
                         lw=0, color='k', marker='o')
             # cond = (Y[j]>0)# and (Y[j]<30)
             # xx, y = X[i][cond], Y[j][cond]
-            xx, y = X[i], Y[j]
+            xx, y = X[i], np.log(Y[j])
             AX[j, i].plot(xx, y, 'ko')
             cc, pp = pearsonr(xx, y)
-            x = np.linspace(xx.min(), xx.max())
-            AX[j, i].plot(x, np.polyval(np.polyfit(np.array(xx, dtype='f8'), np.array(y, dtype='f8'), 1), x), 'k--', lw=.5)
+            # x = np.linspace(xx.min(), xx.max())
+            # AX[j, i].plot(x, np.polyval(np.polyfit(np.array(xx, dtype='f8'), np.array(y, dtype='f8'), 1), x), 'k--', lw=.5)
             AX[j, i].annotate('c='+str(np.round(cc,1))+', p='+'%.1e' % pp,\
                          (0.15,1), xycoords='axes fraction')
             if i in [0,3]:
                 AX[j, i].invert_xaxis()
-            AX[j,i].set_scale('log')
+            AX[j,i].set_yscale('log')
             set_plot(AX[j, i], ['left', 'bottom'], ylabel=YLABELS1[j], xlabel=E_LABELS[i])
     return fig
 

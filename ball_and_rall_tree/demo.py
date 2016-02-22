@@ -1,9 +1,9 @@
 import numpy as np
 import matplotlib
 import matplotlib.pylab as plt
-import sys
+import sys, time
 sys.path.append('/home/yann/work/python_library')
-# from my_graph import set_plot
+from my_graph import set_plot
 import fourier_for_real as rfft
 from signanalysis import autocorrel
 sys.path.append('../')
@@ -44,10 +44,11 @@ stick = {'L': 2000*1e-6, 'D': 4*1e-6, 'NSEG': 30,\
          'Ke':100, 'Ki':100., 'name':'dend'}
 
 
-def analyze_simulation(xtot, cables, t, V):
+def analyze_simulation(xtot, cables, t, V, window_for_autocorrel=50):
 
     muV_exp, sV_exp, Tv_exp = [], [], []
 
+    # plt.figure()
     for i in range(len(cables)): # loop over levels
         n_level = max(1,2**(i-1)) # number of levels
         for k in range(cables[i]['NSEG']): # loop over segments first
@@ -59,14 +60,14 @@ def analyze_simulation(xtot, cables, t, V):
                 v = np.array([V[it][i][j][k] for it in range(int(.1*len(t)), len(t))]).flatten()
                 muV_exp[-1] += v.mean()/n_level
                 sV_exp[-1] += v.std()/n_level
-                v_acf, t_shift = autocorrel(v,\
-                  sim_params['window_for_autocorrel']*1e-3, 1e-3*sim_params['dt'])
+                v_acf, t_shift = autocorrel(v, window_for_autocorrel, (t[1]-t[0]))
                 Tv_exp[-1] += np.trapz(v_acf, t_shift)/n_level
-                  
+    #             plt.plot(t_shift, v_acf)
+    # plt.show()
     return np.array(muV_exp), np.array(sV_exp), np.array(Tv_exp)
 
 
-def get_analytical_estimate(shotnoise_input, EqCylinder,
+def get_analytical_estimate(shotnoise_input,
                             soma, stick, params, discret=20):
 
     print '----------------------------------------------------'
@@ -79,10 +80,10 @@ def get_analytical_estimate(shotnoise_input, EqCylinder,
     f = rfft.time_to_freq(len(t), dt)
 
     muV_th = 0*x_th
-    muV_th = stat_pot_function(x_th, shotnoise_input, EqCylinder,
+    muV_th = stat_pot_function(x_th, shotnoise_input,
                                soma, stick, params)
     sV_th, Tv_th = 0*muV_th, 0*muV_th
-    sV_th, Tv_th = get_the_theoretical_sV_and_Tv(shotnoise_input, EqCylinder, f,\
+    sV_th, Tv_th = get_the_theoretical_sV_and_Tv(shotnoise_input, f,\
                                   x_th, params, soma, stick,
                                   precision=discret)
     # Rin, Rtf = get_the_input_and_transfer_resistance(fe, fi, f, x_th, params, soma, stick)
@@ -152,7 +153,7 @@ def make_comparison_plot(x_th, muV_th, sV_th, Tv_th,\
     # numerical simulations
     AX[0].plot(1e6*x_exp, muV_exp, 'kD', label='num. sim', ms=4)
     AX[1].plot(1e6*x_exp, sV_exp, 'kD', ms=4)
-    AX[2].plot(1e6*x_exp, 1e3*Tv_exp, 'kD', ms=4)
+    AX[2].plot(1e6*x_exp, Tv_exp, 'kD', ms=4)
     # analytical calculuc
     AX[0].plot(1e6*x_th, 1e3*muV_th, 'k-', label='analytic approx.', lw=3, alpha=.5)
     AX[1].plot(1e6*x_th, 1e3*sV_th, 'k-', lw=3, alpha=.5)
@@ -192,35 +193,36 @@ if __name__=='__main__':
     parser.add_argument("--synchrony", type=float, help="synchrony of presynaptic spikes", default=0.)
     parser.add_argument("--discret_sim", type=int, help="space discretization for numerical simulation", default=20)
     parser.add_argument("--tstop_sim", type=float, help="max simulation time (s)", default=2.)
+    parser.add_argument("--dt", type=float, help="simulation time step (ms)", default=0.025)
     parser.add_argument("--discret_th", type=int, help="discretization for theoretical evaluation",default=20)
     parser.add_argument("--seed", type=int, help="seed fo random numbers",default=3)
     # ball and stick properties
+    parser.add_argument("--L_soma", type=float, help="Length of the soma in micrometer", default=10.)
+    parser.add_argument("--D_soma", type=float, help="Diameter of the soma in micrometer", default=10.)
     parser.add_argument("--L_stick", type=float, help="Length of the stick in micrometer", default=1000.)
-    parser.add_argument("--L_prox_fraction", type=float, help="fraction of tree corresponding to prox. compartment", default=0.)
+    parser.add_argument("--L_prox_fraction", type=float, help="fraction of tree corresponding to prox. compartment",\
+                        default=1.)
     parser.add_argument("--D_stick", type=float, help="Diameter of the stick", default=2.)
     parser.add_argument("-B", "--branches", type=int, help="Number of branches (equally spaced)", default=1)
-    parser.add_argument("--EqCylinder", help="Detailed branching morphology (e.g [0.,0.1,0.25, 0.7, 1.])", nargs='+', type=float, default=[])
     # synaptic properties
     parser.add_argument("--Qe", type=float, help="Excitatory synaptic weight (nS)", default=1.)
-    parser.add_argument("--Qi", type=float, help="Inhibitory synaptic weight (nS)", default=3.)
+    parser.add_argument("--Qi", type=float, help="Inhibitory synaptic weight (nS)", default=1.5)
 
-    parser.add_argument("--save_name",default='')
+    parser.add_argument("--file",default='')
     
     args = parser.parse_args()
 
-    if args.save_name=='':
-        save_name = "data/fe_prox_%1.2f_fe_dist_%1.2f_fi_prox_%1.2f_fi_dist_%1.2f_synch_%1.2f.npy" % (args.fe_prox,args.fe_dist,args.fi_prox,args.fi_prox,1e3*args.synchrony)
+    if args.file=='':
+        file = 'data/'+time.strftime("%d.%m.%Y_%H.%M")+'.npy'
     else:
-        save_name = args.save_name
+        file = args.file
     
     # setting up the stick properties
     stick['L'] = args.L_stick*1e-6
     stick['D'] = args.D_stick*1e-6
-    if not len(args.EqCylinder):
-        stick['B'] = args.branches
-        EqCylinder = np.linspace(0, 1, stick['B']+1)*stick['L'] # equally space branches !
-    else:
-        EqCylinder = np.array(args.EqCylinder)*stick['L'] # detailed branching
+    stick['B'] = args.branches
+    stick['NSEG'] = args.discret_sim
+    params['EqCylinder'] = np.linspace(0, 1, stick['B']+1)*stick['L'] # equally space branches !
 
     # fraction L_prox
     params['fraction_for_L_prox'] = args.L_prox_fraction
@@ -232,8 +234,7 @@ if __name__=='__main__':
     params['factor_for_distal_synapses_weight'] = 2.
 
     print ' first we set up the model [...]'
-    stick['NSEG'] = args.discret_sim
-    x_exp, cables = setup_model(EqCylinder, soma, stick, params)    
+    x_exp, cables = setup_model(soma, stick, params)    
 
     x_stick = np.linspace(0,args.L_stick*1e-6, args.discret_sim+1) # then :
     x_stick = .5*(x_stick[1:]+x_stick[:-1])
@@ -248,33 +249,31 @@ if __name__=='__main__':
     # then we run the simulation if needed
     if args.simulation:
         print 'Running simulation [...]'
-        t, V = run_simulation(shotnoise_input, cables, params, tstop=args.tstop_sim*1e3, dt=0.025, seed=args.seed, synchrony=args.synchrony)
+        t, V = run_simulation(shotnoise_input, cables, params, tstop=args.tstop_sim*1e3, dt=0.025, seed=args.seed)
         muV_exp, sV_exp, Tv_exp = analyze_simulation(x_exp, cables, t, V)
-        np.save(save_name, [x_exp, shotnoise_input, muV_exp, sV_exp, Tv_exp])
+        np.save(file, [x_exp, shotnoise_input, muV_exp, sV_exp, Tv_exp, soma, stick, params])
         
         # now plotting of simulated membrane potential traces
-        plot_time_traces(t, V, cables, EqCylinder,\
+        plot_time_traces(t, V, cables, params['EqCylinder'],\
             title='$\\nu_e^p$=  %1.2f Hz, $\\nu_e^d$=  %1.2f Hz, $\\nu^p_i$= %1.2f Hz, $\\nu^d_i$= %1.2f Hz' % (args.fe_prox,args.fe_dist,args.fi_prox,args.fi_prox))
         plt.show()
 
     # ===== now analytical calculus ========
-
-    # constructing the space-dependent shotnoise input for the simulation
-    x_th, muV_th, sV_th, Tv_th  = \
-                get_analytical_estimate(shotnoise_input, EqCylinder,
+    try:
+        x_exp, shotnoise_input, muV_exp, sV_exp, Tv_exp, soma, stick, params = np.load(file)
+        # constructing the space-dependent shotnoise input for the simulation
+        x_th, muV_th, sV_th, Tv_th  = \
+                get_analytical_estimate(shotnoise_input,
                                         soma, stick, params,
                                         discret=args.discret_th)
-    try:
-        x_exp, shotnoise_input, muV_exp, sV_exp, Tv_exp = np.load(save_name)
+        make_comparison_plot(x_th, muV_th, sV_th, Tv_th,\
+                         x_exp, muV_exp, sV_exp, Tv_exp, shotnoise_input)    
+        plt.show()
     except IOError:
         print '======================================================'
         print 'no numerical data available !!!  '
-        print 'you should run the simulation with the --simulation option !' 
+        print 'either you run the simulation with the --simulation option !' 
+        print 'either you provide a datafile through the --file option !' 
         print '======================================================'
-        x_exp, muV_exp, sV_exp, Tv_exp = x_th.mean()+0*x_th,\
-          muV_th.mean()+0*x_th, sV_th.mean()+0*x_th, Tv_th.mean()+0*x_th
     
-    make_comparison_plot(x_th, muV_th, sV_th, Tv_th,\
-                         x_exp, muV_exp, sV_exp, Tv_exp, shotnoise_input)    
-    plt.show()
 

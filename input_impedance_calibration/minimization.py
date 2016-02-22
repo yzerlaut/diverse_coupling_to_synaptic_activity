@@ -44,9 +44,8 @@ RA = np.linspace(10., 90., N)*1e-2
 
 def get_input_imped(soma, stick, params):
     # branching properties
-    EqCylinder2 = np.linspace(0, 1, stick['B']+1)*stick['L'] # equally space branches ! UNITLESS, multiplied only in the func by stick['L']
     params_for_cable_theory(stick, params) # setting cable membrane constants
-    output = get_the_input_impedance_at_soma(f, EqCylinder2, soma, stick, params)
+    output = get_the_input_impedance_at_soma(f, soma, stick, params)
     psd, phase = np.abs(output)/1e6, (np.angle(output)+np.pi/2.)%(2.*np.pi)-np.pi/2.
     return psd, -phase
 

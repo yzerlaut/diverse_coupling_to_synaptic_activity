@@ -10,7 +10,6 @@ from input_impedance_calibration.get_calib import adjust_model_prop
 
 # loading mean model
 soma, stick, params = np.load('../input_impedance_calibration/mean_model.npy')
-EqCylinder = np.linspace(0, 1, stick['B']+1)*stick['L']
 
 CELLS = np.load('../data_firing_response/reduced_data.npy')
 
@@ -25,9 +24,7 @@ for i in range(len(CELLS))[::5]:
     Rm_data[i] = 1e-6/CELLS[i]['Gl']
     soma1, stick1, params1 = adjust_model_prop(Rm_data[i], soma, stick)
     
-    EqCylinder1 = np.linspace(0, 1, stick1['B']+1)*stick1['L']
-    
-    Rtf_model, N_synapses = get_the_transfer_resistance_to_soma(EqCylinder1, soma1, stick1, params1)
+    Rtf_model, N_synapses = get_the_transfer_resistance_to_soma(soma1, stick1, params1)
 
     ax.hist(1e-6*Rtf_model, label='cell'+str(i))
     

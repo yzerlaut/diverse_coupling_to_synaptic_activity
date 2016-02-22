@@ -19,17 +19,15 @@ f = rfft.time_to_freq(len(t), dt)
 
 def get_input_imped(soma, stick, params):
     # branching properties
-    EqCylinder2 = np.linspace(0, 1, stick['B']+1)*stick['L'] # equally space branches ! UNITLESS, multiplied only in the func by stick['L']
     params_for_cable_theory(stick, params) # setting cable membrane constants
-    output = get_the_input_impedance_at_soma(f, EqCylinder2, soma, stick, params)
+    output = get_the_input_impedance_at_soma(f, soma, stick, params)
     psd, phase = np.abs(output)/1e6, (np.angle(output)+np.pi)%(2.*np.pi)-np.pi
     return psd, phase
 
 def get_input_resist(soma, stick, params):
     # branching properties
-    EqCylinder2 = np.linspace(0, 1, stick['B']+1)*stick['L'] # equally space branches ! UNITLESS, multiplied only in the func by stick['L']
     params_for_cable_theory(stick, params) # setting cable membrane constants
-    return np.abs(get_the_input_impedance_at_soma(0., EqCylinder2, soma, stick, params))
+    return np.abs(get_the_input_impedance_at_soma(0., soma, stick, params))
 
 def adjust_model_prop(Rm, soma, stick, precision=.5, params2=None, maxiter=1000):
     """ Rm in Mohm !! """
