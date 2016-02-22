@@ -194,8 +194,6 @@ def make_experimental_fig():
                    yticks_labels=[0,'$\pi/4$', '$\pi/2$'],
                    xlabel=xlabel, ylabel='phase shift (Rd)')
 
-
-    
     fig2, ax = make_fig(np.linspace(0, 1, stick['B']+1)*stick['L'],
              stick['D'], xscale=1e-6, yscale=50e-6)
     fig2.set_size_inches(3, 5, forward=True)
@@ -245,7 +243,6 @@ if __name__=='__main__':
 
     from theory.brt_drawing import make_fig # where the core calculus lies
     
-
     fig, fig2, fig3 = make_experimental_fig()
     plt.show()
     graph.put_list_of_figs_to_svg_fig([fig, fig2, fig3])

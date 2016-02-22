@@ -155,7 +155,8 @@ if __name__=='__main__':
     else:
         MIN_PHASE, MIN_PSD, MIN_BOTH = find_minimum()
         make_fig(MIN_PHASE, MIN_PSD, MIN_BOTH)
-        plt.show()
+        if not sys.argv[-1]=='noshow':
+            plt.show()
         np.save('mean_model.npy', MIN_BOTH)
 
 
