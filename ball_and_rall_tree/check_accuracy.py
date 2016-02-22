@@ -19,22 +19,38 @@ fi_vector = np.array([.7,1.,1.3])*7.
 synchrony_vector = np.array([0., 0.3, 0.6])
 
 SET_OF_EXPS = [\
-               {'label':'increasing excitation',
-                'xlabel':'$\\nu_e^p=\\nu_e^d$ (Hz)',
+               {'label':'increasing prox. exc. \n $\\nu_e^p$ (Hz)',
                 'xticks':fe_vector,
                 'fe_prox':fe_vector,
+                'fe_dist':np.ones(N_POINTS)*fe_vector[1],
+                'fi_prox':np.ones(N_POINTS)*fi_vector[1],
+                'fi_dist':np.ones(N_POINTS)*fi_vector[1],
+                'synchrony':np.ones(N_POINTS)*synchrony_vector[1],
+                'muV_exp':np.zeros(N_POINTS), 'sV_exp':np.zeros(N_POINTS), 'Tv_exp':np.zeros(N_POINTS)
+                },
+               {'label':'increasing distal exc. \n $\\nu_e^d$ (Hz)',
+                'xticks':fe_vector,
+                'fe_prox':np.ones(N_POINTS)*fe_vector[1],
                 'fe_dist':fe_vector,
                 'fi_prox':np.ones(N_POINTS)*fi_vector[1],
                 'fi_dist':np.ones(N_POINTS)*fi_vector[1],
                 'synchrony':np.ones(N_POINTS)*synchrony_vector[1],
                 'muV_exp':np.zeros(N_POINTS), 'sV_exp':np.zeros(N_POINTS), 'Tv_exp':np.zeros(N_POINTS)
                 },
-               {'label':'increasing inhibition',
-                'xlabel':'$\\nu_i^p=\\nu_i^d$ (Hz)',
+               {'label':'increasing prox. inh. \n $\\nu_i^p$ (Hz)',
                 'xticks':fi_vector,
                 'fe_prox':np.ones(N_POINTS)*fe_vector[1],
                 'fe_dist':np.ones(N_POINTS)*fe_vector[1],
                 'fi_prox':fi_vector,
+                'fi_dist':np.ones(N_POINTS)*fi_vector[1],
+                'synchrony':np.ones(N_POINTS)*synchrony_vector[1],
+                'muV_exp':np.zeros(N_POINTS), 'sV_exp':np.zeros(N_POINTS), 'Tv_exp':np.zeros(N_POINTS)
+                },
+               {'label':'increasing distal inh. \n $\\nu_i^d$ (Hz)',
+                'xticks':fe_vector,
+                'fe_prox':np.ones(N_POINTS)*fe_vector[1],
+                'fe_dist':np.ones(N_POINTS)*fe_vector[1],
+                'fi_prox':np.ones(N_POINTS)*fi_vector[1],
                 'fi_dist':fi_vector,
                 'synchrony':np.ones(N_POINTS)*synchrony_vector[1],
                 'muV_exp':np.zeros(N_POINTS), 'sV_exp':np.zeros(N_POINTS), 'Tv_exp':np.zeros(N_POINTS)
