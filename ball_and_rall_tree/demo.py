@@ -29,7 +29,6 @@ sim_params = {#in ms
 'tstop':20000.
 }
 
-
 FACTOR_FOR_DENSITY = 1. # because Ball & Sticks sucks !!!
 
 # synaptic density  area (m2) per one synapse !!
@@ -45,7 +44,7 @@ stick = {'L': 2000*1e-6, 'D': 4*1e-6, 'NSEG': 30,\
          'Ke':100, 'Ki':100., 'name':'dend'}
 
 
-def analyze_simulation(xtot, t_vec, V):
+def analyze_simulation(xtot, cables, t, V):
 
     muV_exp, sV_exp, Tv_exp = [], [], []
 
@@ -95,10 +94,10 @@ def get_analytical_estimate(shotnoise_input, EqCylinder,
     return x_th, muV_th, sV_th, Tv_th
 
 
-def plot_time_traces(t_vec, V, cables, title='', recordings=[[0,0,0.5]]):
+def plot_time_traces(t, V, cables, EqCylinder, title='', recordings=[[0,0,0.5]]):
 
     # time window
-    i1, i2 = 0, min([int(1000/(t[1]-t[0])),len(t_vec)])
+    i1, i2 = 0, min([int(1000/(t[1]-t[0])),len(t)])
 
     # we define the points that we want to extract
 
@@ -185,12 +184,11 @@ if __name__=='__main__':
     parser.add_argument("-S", "--simulation",\
                         help="With numerical simulation (NEURON)",
                         action="store_true")
-    parser.add_argument("--fe_prox", type=float, help="excitatory synaptic frequency in proximal compartment", default=5.)
-    parser.add_argument("--fi_prox", type=float, help="inhibitory synaptic frequency in proximal compartment", default=10.)
-    parser.add_argument("--fe_dist", type=float, help="excitatory synaptic frequency in distal compartment", default=5.)
-    parser.add_argument("--fi_dist", type=float, help="inhibitory synaptic frequency in distal compartment", default=10.)
-    parser.add_argument("--fe_soma", type=float, help="excitatory synaptic frequency at soma compartment", default=.0001)
-    parser.add_argument("--fi_soma", type=float, help="inhibitory synaptic frequency at soma compartment", default=20.)
+    parser.add_argument("--fe_prox", type=float, help="excitatory synaptic frequency in proximal compartment", default=1.)
+    parser.add_argument("--fi_prox", type=float, help="inhibitory synaptic frequency in proximal compartment", default=4.)
+    parser.add_argument("--fe_dist", type=float, help="excitatory synaptic frequency in distal compartment", default=1.)
+    parser.add_argument("--fi_dist", type=float, help="inhibitory synaptic frequency in distal compartment", default=4.)
+    parser.add_argument("--fi_soma", type=float, help="inhibitory synaptic frequency at soma compartment", default=4.)
     parser.add_argument("--synchrony", type=float, help="synchrony of presynaptic spikes", default=0.)
     parser.add_argument("--discret_sim", type=int, help="space discretization for numerical simulation", default=20)
     parser.add_argument("--tstop_sim", type=float, help="max simulation time (s)", default=2.)
@@ -198,7 +196,7 @@ if __name__=='__main__':
     parser.add_argument("--seed", type=int, help="seed fo random numbers",default=3)
     # ball and stick properties
     parser.add_argument("--L_stick", type=float, help="Length of the stick in micrometer", default=1000.)
-    parser.add_argument("--L_prox_fraction", type=float, help="fraction of tree corresponding to prox. compartment", default=1.99/3.)
+    parser.add_argument("--L_prox_fraction", type=float, help="fraction of tree corresponding to prox. compartment", default=0.)
     parser.add_argument("--D_stick", type=float, help="Diameter of the stick", default=2.)
     parser.add_argument("-B", "--branches", type=int, help="Number of branches (equally spaced)", default=1)
     parser.add_argument("--EqCylinder", help="Detailed branching morphology (e.g [0.,0.1,0.25, 0.7, 1.])", nargs='+', type=float, default=[])
@@ -230,7 +228,7 @@ if __name__=='__main__':
     # settign up the synaptic properties
     params['Qe'] = args.Qe*1e-9
     params['Qi'] = args.Qi*1e-9
-    params['factor_for_distal_synapses_tau'] = 2.
+    params['factor_for_distal_synapses_tau'] = 1.
     params['factor_for_distal_synapses_weight'] = 2.
 
     print ' first we set up the model [...]'
@@ -251,11 +249,11 @@ if __name__=='__main__':
     if args.simulation:
         print 'Running simulation [...]'
         t, V = run_simulation(shotnoise_input, cables, params, tstop=args.tstop_sim*1e3, dt=0.025, seed=args.seed, synchrony=args.synchrony)
-        muV_exp, sV_exp, Tv_exp = analyze_simulation(x_exp, t, V)
+        muV_exp, sV_exp, Tv_exp = analyze_simulation(x_exp, cables, t, V)
         np.save(save_name, [x_exp, shotnoise_input, muV_exp, sV_exp, Tv_exp])
         
         # now plotting of simulated membrane potential traces
-        plot_time_traces(t, V, cables,\
+        plot_time_traces(t, V, cables, EqCylinder,\
             title='$\\nu_e^p$=  %1.2f Hz, $\\nu_e^d$=  %1.2f Hz, $\\nu^p_i$= %1.2f Hz, $\\nu^d_i$= %1.2f Hz' % (args.fe_prox,args.fe_dist,args.fi_prox,args.fi_prox))
         plt.show()
 

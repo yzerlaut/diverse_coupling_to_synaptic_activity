@@ -1,7 +1,7 @@
 import numpy as np
 
 from template_and_fitting import erfc_func, final_threshold_func,\
-    derivatives_template, derivative_muV, derivative_sV
+     derivatives_template
 
 low_rate_fluct_domain  = {
 'Ts_ratio':.15,
@@ -31,7 +31,7 @@ def find_excitability_region(P, El, Gl, Cm,\
     muV0 = np.linspace(pp['muV_min'], pp['muV_max'], 5*discret) # high discret
     muV, sV, TvN = np.meshgrid(muV0, sV0, TvN0) 
 
-    Vthre = final_threshold_func(P, muV, sV, TvN, Gl, El)
+    Vthre = final_threshold_func(P, muV, sV, TvN, Gl)
     Fout = erfc_func(muV, sV, TvN, Vthre, Gl, Cm)
 
     dmuV, dsV, dTvN = derivatives_template(\

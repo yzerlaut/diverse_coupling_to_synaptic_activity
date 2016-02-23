@@ -543,8 +543,8 @@ def find_balance_at_soma(Fe_prox, Fe_dist, params, soma, stick,\
     EqCylinder = np.linspace(0,1,stick['B']+1)*stick['L']
     
     shtn_input = {'fe_prox':Fe_prox, 'fe_dist':Fe_dist}
-    FI_prox = np.linspace(Fe_prox/2., 10.*Fe_prox, int(precision))
-    FI_dist = np.linspace(Fe_dist/2., 10.*Fe_dist, int(precision))
+    FI_prox = np.linspace(0., 10.*Fe_prox, int(precision))
+    FI_dist = np.linspace(0., 10.*Fe_dist, int(precision))
 
     muV = 0.*FI_dist
     for i in range(int(precision)):
