@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pylab as plt
 import os, sys
-sys.path.append('/home/yann/work/python_library/')
+sys.path.append('../code')
 import my_graph as graph
 
 
@@ -25,8 +25,8 @@ def make_experimental_fig():
             all_psd = np.concatenate([all_psd, MICE[-1]['psd']])
             all_phase = np.concatenate([all_phase, MICE[-1]['phase']])
 
-        psd_boundaries[0] = min([psd_boundaries[0], psd.max()])
-        psd_boundaries[1] = max([psd_boundaries[1], psd.max()])
+            psd_boundaries[0] = min([psd_boundaries[0], psd.max()])
+            psd_boundaries[1] = max([psd_boundaries[1], psd.max()])
 
     np.save('full_data.npy',\
         [all_freq[all_freq<HIGH_BOUND], all_psd[all_freq<HIGH_BOUND], all_phase[all_freq<HIGH_BOUND]])
@@ -63,4 +63,5 @@ def make_experimental_fig():
 if __name__=='__main__':
 
     fig = make_experimental_fig()
-    plt.show()
+    if not sys.argv[-1]=='noshow':
+        plt.show()

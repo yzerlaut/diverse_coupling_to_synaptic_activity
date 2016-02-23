@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pylab as plt
 import os, sys
-sys.path.append('/home/yann/work/python_library/')
+sys.path.append('../code')
 import my_graph as graph
 sys.path.append('../')
 from theory.analytical_calculus import * # where the core calculus lies
@@ -19,44 +19,76 @@ f = rfft.time_to_freq(len(t), dt)
 
 def get_input_imped(soma, stick, params):
     # branching properties
-    EqCylinder2 = np.linspace(0, 1, stick['B']+1)*stick['L'] # equally space branches ! UNITLESS, multiplied only in the func by stick['L']
     params_for_cable_theory(stick, params) # setting cable membrane constants
-    output = get_the_input_impedance_at_soma(f, EqCylinder2, soma, stick, params)
+    output = get_the_input_impedance_at_soma(f, soma, stick, params)
     psd, phase = np.abs(output)/1e6, (np.angle(output)+np.pi)%(2.*np.pi)-np.pi
     return psd, phase
 
 def get_input_resist(soma, stick, params):
     # branching properties
-    EqCylinder2 = np.linspace(0, 1, stick['B']+1)*stick['L'] # equally space branches ! UNITLESS, multiplied only in the func by stick['L']
     params_for_cable_theory(stick, params) # setting cable membrane constants
-    return np.abs(get_the_input_impedance_at_soma(0., EqCylinder2, soma, stick, params))
+    return np.abs(get_the_input_impedance_at_soma(0., soma, stick, params))
 
-def adjust_model_prop(Rm, soma, stick, precision=2000, params2=None):
+def adjust_model_prop(Rm, soma, stick, precision=.5, params2=None, maxiter=1000):
     """ Rm in Mohm !! """
     if Rm>1200 or Rm<100:
         print '---------------------------------------------------'
         print '/!\ Rm value too high or too low for the conversion'
         print '---------------------------------------------------'
-    BASE = np.linspace(-1,2.,precision)
-    L_soma = 2e-6*BASE
-    L_dend = 150e-6*BASE
-    D_dend = .75*1e-6*BASE
-    Rin = np.zeros(precision)
-    for i in range(len(Rin)):
+
+    # comodulation values :
+    L_soma_base = 2e-6
+    L_dend_base = 150e-6
+    D_dend_base = .8*1e-6
+
+    def get_Rm_from_factor(b):
         soma1, stick1 = soma.copy(), stick.copy()
         if params2 is None:
             params1 = params.copy()
         else:
             params1=params2
-        soma1['L'] += L_soma[i]
-        stick1['L'] += L_dend[i]
-        stick1['D'] += D_dend[i]
-        Rin[i] = get_input_resist(soma1, stick1, params1)
-    i0 = np.argmin(np.abs(Rin/1e6-Rm))
+        soma1['L'] += b*L_soma_base
+        stick1['L'] += b*L_dend_base
+        stick1['D'] += b*D_dend_base
+        return get_input_resist(soma1, stick1, params1)
+    
+    b, delta_b = 0., .3
+    n, n_same = 0, 0
+    diff = Rm-1e-6*get_Rm_from_factor(b)
+    previous_diff = diff
+    while abs(diff)>precision and n<maxiter:
+        diff = Rm-1e-6*get_Rm_from_factor(b)
+
+        if diff*previous_diff<0: # if we jumped over the value
+            delta_b /=2. # need to make the bin smaller
+            n_same = 0 # we changed side
+        else:
+            n_same +=1
+            if n_same>20:
+                delta_b = 0.1
+            
+        if diff>0: # if model cell too big, but we got closer
+            b -= delta_b # we make the same jump than before
+        elif diff<0: # if model cell too big, but we got closer
+            b += delta_b # we make the same jump than before
+
+        previous_b = b
+        previous_diff = diff
+        n+=1
+    if n==maxiter:
+        print delta_b
+        print n_same
+        print 'minimization not achieved !!!'
+        print Rm, 1e-6*get_Rm_from_factor(b)
+        
+    if params2 is None:
+        params1 = params.copy()
+    else:
+        params1=params2
     soma1, stick1 = soma.copy(), stick.copy()
-    soma1['L'] += L_soma[i0]
-    stick1['L'] += L_dend[i0]
-    stick1['D'] += D_dend[i0]
+    soma1['L'] += b*L_soma_base
+    stick1['L'] += b*L_dend_base
+    stick1['D'] += b*D_dend_base
     return soma1.copy(), stick1.copy(), params1.copy()
 
 #### ================================================== ##
@@ -135,8 +167,7 @@ def make_experimental_fig():
     
     ### MODEL VARIATIONS
     base = np.linspace(0,1,4)
-    for b in base:
-        Rrm = 300.+500.*b
+    for Rrm, b in zip([300, 370, 670, 900], base):
         soma1, stick1, params1 = adjust_model_prop(Rrm, soma, stick)
         psd, phase = get_input_imped(soma1, stick1, params1)
         AX[1,0].loglog(f, psd, '-', color=mymap(b,1), ms=5)
@@ -163,8 +194,6 @@ def make_experimental_fig():
                    yticks_labels=[0,'$\pi/4$', '$\pi/2$'],
                    xlabel=xlabel, ylabel='phase shift (Rd)')
 
-
-    
     fig2, ax = make_fig(np.linspace(0, 1, stick['B']+1)*stick['L'],
              stick['D'], xscale=1e-6, yscale=50e-6)
     fig2.set_size_inches(3, 5, forward=True)
@@ -173,10 +202,12 @@ def make_experimental_fig():
     
     return fig, fig2, fig3
 
+from data_firing_response.analyze_data import get_Rm_range
 def make_conversion_fig(Rm0=None):
         # we plot here the conversion between input resistance
         # and dendritic tree properties
-        Rm = np.linspace(150, 900)
+        Rm_exp = get_Rm_range()
+        Rm = np.linspace(Rm_exp.min(), Rm_exp.max())
         LS, LD, DD = 0*Rm, 0*Rm, 0*Rm
 
         for i in range(len(Rm)):
@@ -184,26 +215,34 @@ def make_conversion_fig(Rm0=None):
             LS[i] = 1e6*soma1['L']
             DD[i], LD[i] = 1e6*stick1['D'], 1e6*stick1['L']
 
-        fig, AX = plt.subplots(3, figsize=(4.5,6))
-        AX[0].set_title('resizing rule')
+        fig, AX = plt.subplots(4, figsize=(4.5,8))
         plt.subplots_adjust(left=.4, bottom=.15, hspace=.3)
-        for ax, y, label in zip(AX[:2], [LS, DD],\
+        
+        AX[0].set_title('resizing rule')
+        AX[0].hist(Rm_exp, bins=np.linspace(Rm.min(), Rm.max(), 10),\
+                   color='lightgray', edgecolor='k', lw=2)
+        graph.set_plot(AX[0], ['left'], ylabel='cell #', xticks=[])
+                   
+        for ax, y, label in zip(AX[1:3], [LS, DD],\
              ['length of \n soma ($\mu$m)', 'root branch \n diameter ($\mu$m)']):
             ax.plot(Rm, y, 'k-', lw=2)
             graph.set_plot(ax, ['left'], ylabel=label, xticks=[])
-        AX[2].plot(Rm, LD, 'k-', lw=2)
-        graph.set_plot(AX[2], ylabel='tree length \n ($\mu$m)', xlabel='somatic input \n resistance (M$\Omega$)')
+        AX[3].plot(Rm, LD, 'k-', lw=2)
+        graph.set_plot(AX[3], ylabel='tree length \n ($\mu$m)',\
+                       xlabel='somatic input \n resistance (M$\Omega$)',\
+                       xticks=[100,500,900])
 
         if Rm0 is not None:
-            AX[0].plot([Rm0], [1e6*soma['L']], 'kD');AX[1].plot([Rm0], [1e6*stick['D']], 'kD')
-            AX[2].plot([Rm0], [1e6*stick['L']], 'kD')
+            AX[1].plot([Rm0], [1e6*soma['L']], 'kD')
+            AX[2].plot([Rm0], [1e6*stick['D']], 'kD')
+            AX[3].plot([Rm0], [1e6*stick['L']], 'kD')
+            
         return fig
 
 if __name__=='__main__':
 
     from theory.brt_drawing import make_fig # where the core calculus lies
     
-
     fig, fig2, fig3 = make_experimental_fig()
     plt.show()
     graph.put_list_of_figs_to_svg_fig([fig, fig2, fig3])

@@ -17,6 +17,15 @@ def get_Rm_range(plot=False):
     return Rm
 
 
+def get_coefficients():
+    fig, AX = plt.subplots(4, figsize=(20,7))
+
+    ALL_CELLS = np.load('../input_impedance_calibration/all_cell_params.npy')
+    for i in range(len(ALL_CELLS)):
+        for ax, x in zip(AX, ALL_CELLS[i]['E']):
+            ax.plot(i, x, 'kD')
+
+    plt.show()
 ##### FITTING OF THE PHENOMENOLOGICAL THRESHOLD #####
 # two-steps procedure, see template_and_fitting.py
 # need SI units !!!
@@ -27,4 +36,8 @@ def get_Rm_range(plot=False):
 
 
 if __name__=='__main__':
-    get_Rm_range(plot=True)
+    import sys
+    if sys.argv[-1]=='TF':
+        get_coefficients()
+    else:
+        get_Rm_range(plot=True)

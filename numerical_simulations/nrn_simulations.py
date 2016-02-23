@@ -89,36 +89,38 @@ def Constructing_the_ball_and_tree(params, cables,
                 ## --- SPREADING THE SYNAPSES (bis)
                 for seg in section:
 
+                    tree_fraction = np.max([0,float(seg.x)/(len(cables)-1)+float(level-1)/(len(cables)-1)])
+                    print tree_fraction
+                    if tree_fraction>=params['fraction_for_L_prox']:
+                        print 'strengthen synapse !'
+                        Ftau = params['factor_for_distal_synapses_tau']
+                        Fq = params['factor_for_distal_synapses_weight']
+                    else:
+                        Ftau = 1.
+                        Fq = 1.
+
                     # in each segment, we insert an excitatory synapse
                     syn = nrn.ExpSyn(seg.x, sec=section)
-                    syn.tau, syn.e = params['Te']*1e3, params['Ee']*1e3
+                    syn.tau, syn.e = Ftau*params['Te']*1e3, params['Ee']*1e3
                     exc_synapse.append(syn)
                     netcon = nrn.NetCon(nrn.nil, syn)
-                    netcon.weight[0] = params['Qe']*1e6
+                    netcon.weight[0] = Fq*params['Qe']*1e6
                     exc_netcon.append(netcon)
                     exc_K.append(cables[level]['Ke_per_seg'])
                     exc_spike_train.append([])
 
                     syn = nrn.ExpSyn(seg.x, sec=section)
-                    syn.tau, syn.e = params['Ti']*1e3, params['Ei']*1e3
+                    syn.tau, syn.e = Ftau*params['Ti']*1e3, params['Ei']*1e3
                     inh_synapse.append(syn)
                     inh_K.append(cables[level]['Ki_per_seg'])
                     inh_spike_train.append([])
                     netcon = nrn.NetCon(nrn.nil, syn)
-                    netcon.weight[0] = params['Qi']*1e6
+                    netcon.weight[0] = Fq*params['Qi']*1e6
                     inh_netcon.append(netcon)
 
                     # then just the area to check
                     area_tot+=nrn.area(seg.x, sec=section)
                     area_list.append(nrn.area(seg.x, sec=section))
-
-                    tree_fraction = float(seg.x)/(len(cables)-1)+float(level-1)/(len(cables)-1)
-                    if tree_fraction>params['fraction_for_L_prox']:
-                        print 'strengthen synapse !'
-                        exc_synapse[-1].tau *= params['factor_for_distal_synapses_tau']
-                        inh_synapse[-1].tau *= params['factor_for_distal_synapses_tau']
-                        exc_netcon[-1].weight[0] *= params['factor_for_distal_synapses_weight']
-                        inh_netcon[-1].weight[0] *= params['factor_for_distal_synapses_weight']
                         
 
         exc_synapses.append(exc_synapse)
@@ -176,7 +178,9 @@ def get_v(cables):
 
 def set_presynaptic_spikes_manually(shotnoise_input, cables, params,\
                                     exc_spike_trains, exc_Ks,
-                                    inh_spike_trains, inh_Ks, tstop, seed=2, synchrony=0.):
+                                    inh_spike_trains, inh_Ks, tstop, seed=2):
+
+    synchrony = shotnoise_input['synchrony']
     
     for i in range(len(cables)):
         for j in range(len(exc_spike_trains[i])):
@@ -196,7 +200,7 @@ def set_presynaptic_spikes_manually(shotnoise_input, cables, params,\
                                       tstop=tstop, seed=seed+i*(+j**2), synchrony=synchrony)
 
 def run_simulation(shotnoise_input, cables, params, tstop=2000.,\
-                   dt=0.025, seed=3, synchrony = 0., recordings='full'):
+                   dt=0.025, seed=3, recordings='full'):
     """
     recordings is a set of tuple of the form : [branch_generation, branch_number, xseg]
     """
@@ -207,8 +211,7 @@ def run_simulation(shotnoise_input, cables, params, tstop=2000.,\
     # then synapses manually
     set_presynaptic_spikes_manually(shotnoise_input, cables, params,\
                                     exc_spike_trains, exc_Ks,
-                                    inh_spike_trains, inh_Ks,
-                                    tstop, seed=seed, synchrony=synchrony)
+                                    inh_spike_trains, inh_Ks, tstop, seed=seed)
     
     ## QUEUING OF PRESYNAPTIC EVENTS
     init_spike_train = queue_presynaptic_events_in_NEURON([exc_netcons, exc_spike_trains, inh_netcons, inh_spike_trains])

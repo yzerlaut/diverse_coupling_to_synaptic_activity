@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pylab as plt
 import os, sys
-sys.path.append('/home/yann/work/python_library/')
+sys.path.append('../code')
 import my_graph as graph
 sys.path.append('../')
 from theory.analytical_calculus import * # where the core calculus lies
@@ -44,9 +44,8 @@ RA = np.linspace(10., 90., N)*1e-2
 
 def get_input_imped(soma, stick, params):
     # branching properties
-    EqCylinder2 = np.linspace(0, 1, stick['B']+1)*stick['L'] # equally space branches ! UNITLESS, multiplied only in the func by stick['L']
     params_for_cable_theory(stick, params) # setting cable membrane constants
-    output = get_the_input_impedance_at_soma(f, EqCylinder2, soma, stick, params)
+    output = get_the_input_impedance_at_soma(f, soma, stick, params)
     psd, phase = np.abs(output)/1e6, (np.angle(output)+np.pi/2.)%(2.*np.pi)-np.pi/2.
     return psd, -phase
 
@@ -156,7 +155,8 @@ if __name__=='__main__':
     else:
         MIN_PHASE, MIN_PSD, MIN_BOTH = find_minimum()
         make_fig(MIN_PHASE, MIN_PSD, MIN_BOTH)
-        plt.show()
+        if not sys.argv[-1]=='noshow':
+            plt.show()
         np.save('mean_model.npy', MIN_BOTH)
 
 

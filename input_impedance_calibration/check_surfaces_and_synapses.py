@@ -10,7 +10,6 @@ from data_firing_response.analyze_data import get_Rm_range
 from input_impedance_calibration.get_calib import adjust_model_prop
 
 soma, stick, params = np.load('../input_impedance_calibration/mean_model.npy')
-EqCylinder = np.linspace(0, 1, stick['B']+1)*stick['L']
 
 Rm = get_Rm_range()
 
@@ -19,10 +18,8 @@ Ke, Ki = 0*Rm, 0*Rm
 
 for i in range(len(Rm)):
     soma1, stick1, params1 = adjust_model_prop(Rm[i], soma, stick)
-    EqCylinder1 = np.linspace(0, 1, stick1['B']+1)*stick1['L']
-    xtot1, cables1 = setup_model(EqCylinder1, soma1, stick1, params1)
+    xtot1, cables1 = setup_model(soma1, stick1, params1)
     Ke[i], Ki[i] = cables1[0]['Ke_tot'], cables1[0]['Ki_tot']
-
 
 print '-----------------------------------------------------------------'    
 print 'mean number of synapses: ', np.mean(Ke+Ki), '+/-', np.std(Ke+Ki)

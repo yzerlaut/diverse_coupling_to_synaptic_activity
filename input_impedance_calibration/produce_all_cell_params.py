@@ -13,13 +13,13 @@ soma, stick, params = np.load('../input_impedance_calibration/mean_model.npy')
 
 ## SYNAPTIC SCALING
 
-def Qe_rule(Rm):
-    Qe0 = 1e-9
+def Qe_rule(Rm, params):
+    Qe0 = params['Qe']
     Rm0 = 250e6 # Mohm
     return Qe0*Rm0/Rm
 
-def Qi_rule(Rm):
-    Qi0 = 1.2e-9
+def Qi_rule(Rm, params):
+    Qi0 = params['Qi']
     Rm0 = 250e6 # Mohm
     return Qi0*Rm0/Rm
 
@@ -55,8 +55,8 @@ if sys.argv[-1]=='plot':
     fig3, ax = plt.subplots(2, 1, figsize=(3,4))
     plt.subplots_adjust(left=.3, bottom=.3)
     Rm0 = np.linspace(200,800)*1e6
-    ax[0].plot(Rm0, 1e9*Qe_rule(Rm0), 'g', lw=2)
-    ax[1].plot(Rm0, 1e9*Qi_rule(Rm0), 'r', lw=2)
+    ax[0].plot(Rm0, 1e9*Qe_rule(Rm0, params), 'g', lw=2)
+    ax[1].plot(Rm0, 1e9*Qi_rule(Rm0, params), 'r', lw=2)
     set_plot(ax[0], ['left'], ylabel='$Q_e$ (nS)', xticks=[])
     set_plot(ax[1], ylabel='$Q_i$ (nS)', xlabel='$R_{TF}^{soma}$ $(M \Omega)$')
     plt.show()
@@ -67,13 +67,11 @@ else:
     for cell in ALL_CELLS:
         cell['Rm'] = 1e-6/cell['Gl']
         soma1, stick1, params1 = adjust_model_prop(cell['Rm'], soma, stick, params2=params.copy())
-        EqCylinder1 = np.linspace(0, 1, stick1['B']+1)*stick1['L']
-        cell['R_tf_soma'] = get_the_mean_transfer_resistance_to_soma(EqCylinder1, soma1, stick1, params1)
+        cell['R_tf_soma'] = get_the_mean_transfer_resistance_to_soma(soma1, stick1, params1)
         
         cell['soma'], cell['stick'], cell['params'] = soma1, stick1, params1
-        cell['params']['Qe'] = Qe_rule(cell['R_tf_soma'])
-        cell['params']['Qi'] = Qi_rule(cell['R_tf_soma'])
-        print 1e9*cell['params']['Qe'], 1e9*cell['params']['Qi']
+        cell['params']['Qe'] = Qe_rule(cell['R_tf_soma'], params)
+        cell['params']['Qi'] = Qi_rule(cell['R_tf_soma'], params)
 
     np.save('all_cell_params.npy', ALL_CELLS)
 
