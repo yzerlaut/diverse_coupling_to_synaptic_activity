@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pylab as plt
 import os, sys
-sys.path.append('/home/yann/work/python_library/')
+sys.path.append('../code')
 import my_graph as graph
 sys.path.append('../')
 from theory.analytical_calculus import * # where the core calculus lies
@@ -19,17 +19,15 @@ f = rfft.time_to_freq(len(t), dt)
 
 def get_input_imped(soma, stick, params):
     # branching properties
-    EqCylinder2 = np.linspace(0, 1, stick['B']+1)*stick['L'] # equally space branches ! UNITLESS, multiplied only in the func by stick['L']
     params_for_cable_theory(stick, params) # setting cable membrane constants
-    output = get_the_input_impedance_at_soma(f, EqCylinder2, soma, stick, params)
+    output = get_the_input_impedance_at_soma(f, soma, stick, params)
     psd, phase = np.abs(output)/1e6, (np.angle(output)+np.pi)%(2.*np.pi)-np.pi
     return psd, phase
 
 def get_input_resist(soma, stick, params):
     # branching properties
-    EqCylinder2 = np.linspace(0, 1, stick['B']+1)*stick['L'] # equally space branches ! UNITLESS, multiplied only in the func by stick['L']
     params_for_cable_theory(stick, params) # setting cable membrane constants
-    return np.abs(get_the_input_impedance_at_soma(0., EqCylinder2, soma, stick, params))
+    return np.abs(get_the_input_impedance_at_soma(0., soma, stick, params))
 
 def adjust_model_prop(Rm, soma, stick, precision=.5, params2=None, maxiter=1000):
     """ Rm in Mohm !! """
@@ -196,8 +194,6 @@ def make_experimental_fig():
                    yticks_labels=[0,'$\pi/4$', '$\pi/2$'],
                    xlabel=xlabel, ylabel='phase shift (Rd)')
 
-
-    
     fig2, ax = make_fig(np.linspace(0, 1, stick['B']+1)*stick['L'],
              stick['D'], xscale=1e-6, yscale=50e-6)
     fig2.set_size_inches(3, 5, forward=True)
@@ -247,7 +243,6 @@ if __name__=='__main__':
 
     from theory.brt_drawing import make_fig # where the core calculus lies
     
-
     fig, fig2, fig3 = make_experimental_fig()
     plt.show()
     graph.put_list_of_figs_to_svg_fig([fig, fig2, fig3])

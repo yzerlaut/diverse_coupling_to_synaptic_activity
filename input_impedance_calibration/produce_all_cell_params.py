@@ -67,8 +67,7 @@ else:
     for cell in ALL_CELLS:
         cell['Rm'] = 1e-6/cell['Gl']
         soma1, stick1, params1 = adjust_model_prop(cell['Rm'], soma, stick, params2=params.copy())
-        EqCylinder1 = np.linspace(0, 1, stick1['B']+1)*stick1['L']
-        cell['R_tf_soma'] = get_the_mean_transfer_resistance_to_soma(EqCylinder1, soma1, stick1, params1)
+        cell['R_tf_soma'] = get_the_mean_transfer_resistance_to_soma(soma1, stick1, params1)
         
         cell['soma'], cell['stick'], cell['params'] = soma1, stick1, params1
         cell['params']['Qe'] = Qe_rule(cell['R_tf_soma'], params)

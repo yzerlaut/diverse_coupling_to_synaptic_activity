@@ -178,7 +178,9 @@ def get_v(cables):
 
 def set_presynaptic_spikes_manually(shotnoise_input, cables, params,\
                                     exc_spike_trains, exc_Ks,
-                                    inh_spike_trains, inh_Ks, tstop, seed=2, synchrony=0.):
+                                    inh_spike_trains, inh_Ks, tstop, seed=2):
+
+    synchrony = shotnoise_input['synchrony']
     
     for i in range(len(cables)):
         for j in range(len(exc_spike_trains[i])):
@@ -198,7 +200,7 @@ def set_presynaptic_spikes_manually(shotnoise_input, cables, params,\
                                       tstop=tstop, seed=seed+i*(+j**2), synchrony=synchrony)
 
 def run_simulation(shotnoise_input, cables, params, tstop=2000.,\
-                   dt=0.025, seed=3, synchrony = 0., recordings='full'):
+                   dt=0.025, seed=3, recordings='full'):
     """
     recordings is a set of tuple of the form : [branch_generation, branch_number, xseg]
     """
@@ -209,8 +211,7 @@ def run_simulation(shotnoise_input, cables, params, tstop=2000.,\
     # then synapses manually
     set_presynaptic_spikes_manually(shotnoise_input, cables, params,\
                                     exc_spike_trains, exc_Ks,
-                                    inh_spike_trains, inh_Ks,
-                                    tstop, seed=seed, synchrony=synchrony)
+                                    inh_spike_trains, inh_Ks, tstop, seed=seed)
     
     ## QUEUING OF PRESYNAPTIC EVENTS
     init_spike_train = queue_presynaptic_events_in_NEURON([exc_netcons, exc_spike_trains, inh_netcons, inh_spike_trains])

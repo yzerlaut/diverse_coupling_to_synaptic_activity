@@ -33,15 +33,16 @@ def produce_reduced_data():
 if __name__=='__main__':
 
     import matplotlib.pylab as plt
-    sys.path.append('/home/yann/work/python_library/')
-    from my_graph import set_plot
+    sys.path.append('../code')
+    import my_graph as graph
     
     OUTPUT = produce_reduced_data()
     fig, AX = plt.subplots(1, 8, figsize=(15,3))
     # plt.subplots_adjust(bottom=.3)
     for i in range(8):
         AX[i].hist(OUTPUT[i,:])
-        set_plot(AX[i], ylabel='cell #')
-    plt.show()
+        graph.set_plot(AX[i], ylabel='cell #')
+    if not sys.argv[-1]=='noshow':
+        plt.show()
 
     
