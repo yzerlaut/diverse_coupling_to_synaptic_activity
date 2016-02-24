@@ -1,5 +1,5 @@
 #+TITLE: Heterogenous firing responses leads to diverse coupling to presynaptic activity in a simplified morphological model of layer V pyramidal neurons
-# #+AUTHOR: Y. Zerlaut^{1} \& A. Destexhe^{1}
+#+AUTHOR: Y. Zerlaut^{1} \& A. Destexhe^{1}
 #+INCLUDE: my_template.org 
 
 * Abstract
@@ -251,8 +251,9 @@ Only enables to scan sensory processing
 * Material and Methods 
 \small
 
-** Neuronal model
-<<sec:correlation-generator>>
+** Morphological model
+<<sec:morphology>>
+
 
 The model is illustrated on Figure [[fig:model-illustration]]B.
 
@@ -264,29 +265,38 @@ The model is illustrated on Figure [[fig:model-illustration]]B.
   the soma [[cite:Macgee2000]].
 
 
-#+ATTR_LATEX: :float multicolumn
-#+NAME: table:Figure-1
-#+CAPTION: *Model parameters* 
-|                                 | Parameter Name              | Symbol                 |                                             Value | Unit                      |
-|---------------------------------+-----------------------------+------------------------+---------------------------------------------------+---------------------------|
-| /                               | <>                          | <>                     |                                                <> | <>                        |
-| *Membrane parameters*           |                             |                        |                                                   |                           |
-|                                 | leak resistivity density    | \(r_m\)                |                                              10.0 | \(mS/cm^2\)               |
-|                                 | specific capacitance        | \(c_m\)                |                                              1.05 | \(\mu F /cm^2 \)          |
-|                                 | excitatory synapses density | $\mathcal{D}_e^{dist}$ |                                              30.0 | synapses/(100$\mu m^{2}$) |
-|                                 | inhibitory synapses density | $\mathcal{D}_i^{dist}$ |                                               8.0 | synapses/(100$\mu m^{2}$) |
-|                                 | inhibitory synapses density | $\mathcal{D}_i^{prox}$ |                                              20.0 | synapses/(100$\mu m^{2}$) |
-| *Mean morphology*               |                             |                        |                                                   |                           |
-|                                 | soma diameter               | D_S                    |                                              15.0 | $\mu m$                   |
-|                                 | soma length (mean model)    | L_S                    |                                              10.0 | $\mu m$                   |
-|                                 | excitatory synaptic weight  | Q_e^0                  |                                               1.0 | \(nS \)                   |
-|                                 | inhibitory synaptic weight  | Q_i^0                  |                                               1.2 | \(nS \)                   |
-| *Rescaling rules*               |                             |                        |                                                   |                           |
-|                                 | soma diameter               | D_S                    |                                              15.0 | $\mu m$                   |
-|                                 | soma length (mean model)    | L_S                    |                                              10.0 | $\mu m$                   |
-| for a model of somatic input    | excitatory synaptic weight  | \(Q_e^0\)              | \( Q_e^0 \cdot (400 M \Omega) / R_{in}^{soma}  \) | \(nS \)                   |
-| resistance: \(  R_{in}^{soma}\) | inhibitory synaptic weight  | \(Q_i^0\)              | \( Q_i^0 \cdot (400 M \Omega) / R_{in}^{soma}  \) | \(nS \)                   |
+The parameters of the model are presented on Table [[table:params]].
 
+#+ATTR_LATEX: :float multicolumn
+#+NAME: table:params
+#+CAPTION: *Model parameters* 
+| *Parameters*      | Parameter Name                | Symbol                 | Value | Unit                      |
+|-------------------+-------------------------------+------------------------+-------+---------------------------|
+| /                 | <>                            | <>                     |    <> | /                         |
+|                   |                               |                        |       |                           |
+| *passive*         |                               |                        |       |                           |
+|                   | leak resistivity density      | \(r_m\)                |  10.0 | mS/cm^2                   |
+|                   | specific capacitance          | \(c_m\)                |  1.05 | \mu F /cm^2               |
+|                   | leak reversal potential       | E_L                    |   -65 | mV                        |
+| *synaptic*        |                               |                        |       |                           |
+|                   | inhibitory reversal potential | E_i                    |   -80 | mV                        |
+|                   | excitatory reversal potential | E_e                    |     0 | mV                        |
+|                   | somatic inhibitory density    | $\mathcal{D}_i^{soma}$ |    20 | synapses/(100$\mu m^{2}$) |
+|                   | tree excitatory density       | $\mathcal{D}_e$        |    30 | synapses/(100$\mu m^{2}$) |
+|                   | tree inhibitory density       | $\mathcal{D}_i$        |     8 | synapses/(100$\mu m^{2}$) |
+|                   | prox. excitatory weight       | Q_e^{0,p}              |   1.0 | nS                        |
+|                   | prox. inhibitory weight       | Q_i^{0,p}              |   1.2 | nS                        |
+|                   | distal excitatory weight      | Q_e^{0,d}              |   1.0 | nS                        |
+|                   | distal inhibitory weight      | Q_i^{0,d}              |   1.2 | nS                        |
+|                   | excitatory decay              | \tau_e                 |     4 | ms                        |
+|                   | inhibitory decay              | \tau_i                 |   1.2 | ms                        |
+| *Mean morphology* |                               |                        |       |                           |
+|                   | soma diameter                 | D_S                    |  15.0 | \(\mu\)m                  |
+|                   | soma length                   | L_S                    |  10.0 | \(\mu\)m                  |
+|                   | root branch diameter          | D_t                    |  15.0 | \(\mu\)m                  |
+|                   | tree length                   | L_t                    |  15.0 | \(\mu\)m                  |
+|                   | branch number                 | B                      |     5 |                           |
+|                   | Proximal tree fraction        | f_{prox}               |   5/6 |                           |
 
 ** Model equations: synaptic input and passive properties
 <<sec:model-equations>>
@@ -300,9 +310,21 @@ of the membrane potential along the branches of the dendritic tree
 \frac{1}{r_i} \frac{\partial^2 v}{\partial x^2} = i_m(v, x, t) = c_m \frac{\partial v}{\partial t} + \frac{v-E_L}{r_m} - i_{syn}(v,x,t)
 \end{equation}
 
-the membrane current $i_m(v, x, t)$ is a linear density of current (the presented cable equation already includes the radial symmetry). Though the modeled system has several branches, the equation can be written as a single spatial dependency $x$ because the symmetry of the model across branches imply that the properties of the input are identical at a given distance to the soma.
+the membrane current $i_m(v, x, t)$ is a linear density of current
+(the presented cable equation already includes the radial
+symmetry). Though the modeled system has several branches, the
+equation can be written as a single spatial dependency $x$ because the
+symmetry of the model across branches imply that the properties of the
+input are identical at a given distance to the soma.
 
-Synaptic input is modeled by local (infinitely small) and transient changes of membrane permeability to selective ionic channels. Both excitatory (accounting for AMPA synapses) and inhibitory synapses (accounting for GABAa synapses) are considered, their reversal potential is E_e=0mV and E_i=-80mV respectively. Each synaptic event is generated by a shotnoise and its effect on the conductance is a jump followed by an exponential decay. The form of the synaptic current is therefore:
+Synaptic input is modeled by local (infinitely small) and transient
+changes of membrane permeability to selective ionic channels. Both
+excitatory (accounting for AMPA synapses) and inhibitory synapses
+(accounting for GABAa synapses) are considered, their reversal
+potential is E_e=0mV and E_i=-80mV respectively. Each synaptic event
+is generated by a shotnoise and its effect on the conductance is a
+jump followed by an exponential decay. The form of the synaptic
+current is therefore:
 
 #+NAME: eq:synaptic-currents
 \begin{equation}
@@ -322,7 +344,7 @@ events \(\{t_s\}\), hence the iteration over \( \big\{x_s, \{t_s\}
 type. $\mathcal{H}$ is the Heaviside step function. The presynaptic
 events $\{t_s\}$ are generated by point processes at fixed frequencies
 $\nu_s$ with a given degree of synchrony, see details in the next
-section[[sec:correlation-generator]].
+section[[sec:presyn-point-process]].
 
 The model distinguishes two domains : a proximal domain with the upper
 index $p$ and a distal domain with the upper index $d$ (see Figure
@@ -360,7 +382,6 @@ boundaries between the proximal and distal part imply:
 where the limit with upper index $\pm$ indicate the limit taken from
 the left or the right respectively.
 
-
 At the soma, $(x=0)$, we have a lumped impedance compartment. It has
 leaky RC circuit properties and also receives synaptic inhibition, the
 somatic membrane potential therefore follows :
@@ -374,9 +395,18 @@ somatic membrane potential therefore follows :
 \right.
 \end{equation}
 
-where $I(t)$ is the time-dependent input current from the soma into the dendrite. $R_M$ and $C_M$ are the RC properties of the lumped compartment (capital letters will indicate the somatic properties throughout the calculus). $N_i$ is the number of somatic synapses, each of them generates a point process $\{t_i\}$ of inhibitory synaptic events. The properties of the somatic synapses $(\nu_i^d, Q_i^d, \tau_i^d)$ are equivalent to the proximal ones.
+where $I(t)$ is the time-dependent input current from the soma into
+the dendrite. $R_M$ and $C_M$ are the RC properties of the lumped
+compartment (capital letters will indicate the somatic properties
+throughout the calculus). $N_i$ is the number of somatic synapses,
+each of them generates a point process $\{t_i\}$ of inhibitory
+synaptic events. The properties of the somatic synapses $(\nu_i^S,
+Q_i^S)$ are equivalent to the proximal ones.
 
-This equation with the membrane potential continuity will determine the boundary condition at the soma (x=0). We identify $V(t)=v(0,t)$, then $I(t)$ is the current input into the dendritic tree at $x=0$ so it verifies:
+This equation with the membrane potential continuity will determine
+the boundary condition at the soma (x=0). We identify $V(t)=v(0,t)$,
+then $I(t)$ is the current input into the dendritic tree at $x=0$ so
+it verifies:
 
 \begin{equation}
 \frac{\partial v}{\partial x}_{|x=0}} = - r_i \, I(t)
@@ -397,7 +427,7 @@ Finally, the last boundary condition is that all branches terminate with an infi
 \end{equation}
 
 Together with the biased Poisson process for event generation (see
-the next section[[sec:correlation-generator]]), the final set of equations
+the next section[[sec:presyn-point-process]]), the final set of equations
 that describes the model, is therefore:
 
 #+NAME: eq:model-equation
@@ -417,8 +447,8 @@ c_m \frac{\partial v}{\partial t} + \frac{v-E_L}{r_m} - i_{syn}(v,x,t)\\
 \right.
 \end{equation}
 
-** Generator for presynaptic synchrony
-<<sec:correlation-generator>>
+** Model of presynaptic activity
+<<sec:presyn-point-process>>
 
 Presynaptic activity is modelled as a discrete set of presynaptic
 events. Because of the apparent random spiking activity in the
@@ -600,7 +630,6 @@ Following [[citetext:Rall1962]], we now define a dimensionless length $X$:
 We define \(L= X(l) \) and \(L_p= X(l_p) \), the total length and
 proximal part length respectively (capital letters design rescaled
 quantities).
-
 
 ** Mean membrane potential
 <<sec:mean-derivation>>
@@ -881,7 +910,11 @@ Focus of a previous communication, see [[citetext:Zerlaut2016]].
 ** Experimental preparation and electrophysiological recordings
 <<sec:exp-prep>>
 
-Experimental methods were identical to those presented in
+Experiments were perforamed at Unité de Neurosciences, Information et
+Complexité, Gif sur Yvette, France. Experimental procedures with
+animals were performed following the instructions of the European
+Council Directive 2010 86/609/EEC and its French transposition (Décret
+2013/118). Experimental methods were identical to those presented in
 [[citetext:Zerlaut2016]]. Very briefly, we performed intracellular
 patch-clamp recordings using the perforated patch technique on layer V
 pyramidal neurons of coronal slices of juvenile mice primary visual

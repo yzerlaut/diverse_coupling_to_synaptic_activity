@@ -4,7 +4,7 @@
 \blfootnote{correspondance : <lastname>@unic.cnrs-gif.fr}
 
 #+LaTeX_HEADER: \def\shorttitle{Heterogenous firing response leads to diverse coupling to synaptic activity}
-#+LaTeX_HEADER: \def\shortauthor{yann} 
+#+LaTeX_HEADER: \def\shortauthor{Zerlaut \& Destexhe} 
 #+LaTeX_HEADER: \def\shortdate{\today} 
 
 # #+LaTeX_HEADER: \renewcommand{\includegraphics}[2][]{\fbox{#2}}
