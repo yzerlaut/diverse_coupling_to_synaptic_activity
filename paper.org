@@ -215,7 +215,6 @@ see Figure [[fig:coupling-correlation]]
 #+NAME: fig:coupling-correlation
 #+CAPTION: *Correlating specific synaptic coupling to biophysical features.*
 [[./figures/coupling_correlations.pdf]]
->>>>>>> 006c6dd68ec262752a5635511fea387017e8d2bc
 
 * Discussion
 

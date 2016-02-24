@@ -31,8 +31,10 @@ def single_experiment(i_nrn, balance=-54e-3):
         feG, fiG, feI, fiI, synch, muV, sV, TvN, muGn = get_fluct_var(i_nrn, exp_type=p, balance=balance)
         Fout2 = final_func(ALL_CELLS[i_nrn]['P'], muV, sV, TvN,\
                            ALL_CELLS[i_nrn]['Gl'], ALL_CELLS[i_nrn]['Cm'])
-        if Fout0.mean()>1e-2:
-            coupling[i] = Fout2[-1]/Fout0[0]#)/np.mean(Fout0)#-1
+        if Fout0[0]>1e-2:
+            # coupling[i] = (np.diff(Fout2).mean()-np.diff(Fout0).mean())/np.diff(Fout0).mean()
+            coupling[i] = (Fout2.mean()-Fout0[0])/np.mean(Fout0)
+            # coupling[i] = Fout2[-1]/Fout0[0]#)/np.mean(Fout0)#-1
         else:
             coupling[i] = 1e5
             print 'discarded cell !'
@@ -71,15 +73,15 @@ def correlating_electrophy_and_coupling(COUPLINGS, BIOPHYSICS, scale='lin'):
     fig.subplots_adjust(wspace=.6, hspace=1.)
     for i in range(len(X)):
         for j in range(len(Y)):
-            for k in range(len(MARKER)):
-                if scale=='log' and (Y[j][INDEXES[k]])>0:
-                    AX[j, i].plot([X[i][INDEXES[k]]], [np.log(Y[j][INDEXES[k]])/np.log(10)],\
-                            lw=0, color='lightgray', marker=MARKER[k],
-                            label='cell '+str(k), ms=SIZE[k])
-                else:
-                    AX[j, i].plot([X[i][INDEXES[k]]], [Y[j][INDEXES[k]]],\
-                            lw=0, color='lightgray', marker=MARKER[k],
-                            label='cell '+str(k), ms=SIZE[k])
+            # for k in range(len(MARKER)):
+            #     if scale=='log' and (Y[j][INDEXES[k]])>0:
+            #         AX[j, i].plot([X[i][INDEXES[k]]], [np.log(Y[j][INDEXES[k]])/np.log(10)],\
+            #                 lw=0, color='lightgray', marker=MARKER[k],
+            #                 label='cell '+str(k), ms=SIZE[k])
+            #     else:
+            #         AX[j, i].plot([X[i][INDEXES[k]]], [Y[j][INDEXES[k]]],\
+            #                 lw=0, color='lightgray', marker=MARKER[k],
+            #                 label='cell '+str(k), ms=SIZE[k])
             
             cond = (Y[j]!=0) & (np.abs(Y[j])<1e4)
             xx, y = np.array(X[i][cond]), np.array(Y[j][cond])
