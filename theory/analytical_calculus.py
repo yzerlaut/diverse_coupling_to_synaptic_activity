@@ -535,10 +535,12 @@ def get_membrane_time_constants(soma, stick, params,\
     return .5*psd[0]/(2.*np.trapz(np.abs(psd), f))
 
 
-def find_balance_at_soma(Fe_prox, Fe_dist, params, soma, stick,\
+def find_balance_at_soma(Fe_prox, Fe_dist, fe0, params, soma, stick,\
                          balance=-60e-3, precision=1e2):
 
-    shtn_input = {'fe_prox':Fe_prox, 'fe_dist':Fe_dist}
+    # fe0 is a baseline excitation shared between prox and distal
+    
+    shtn_input = {'fe_prox':fe0+Fe_prox, 'fe_dist':fe0+Fe_dist}
     FI_prox = np.linspace(0., 10.*Fe_prox, int(precision))
     FI_dist = np.linspace(0., 10.*Fe_dist, int(precision))
 
@@ -550,16 +552,15 @@ def find_balance_at_soma(Fe_prox, Fe_dist, params, soma, stick,\
     return FI_prox[i0], FI_dist[i0]
 
 def find_baseline_excitation(params, soma, stick,\
-                             f = np.linspace(0,3,1e2),
+                             f_min=0, f_max=3.,
                              balance=-60e-3, synch=0.5,
                              precision=1e2):
 
-    shtn_input = {'fi_prox':0, 'fi_dist':0, 'synch':synch}
+    f = np.linspace(f_min, f_max, precision)
+    shtn_input = {'fi_prox':0., 'fi_dist': 0, 'synch':synch}
     muV = 0.*f
     for i in range(int(precision)):
         shtn_input['fe_prox'], shtn_input['fe_dist']= f[i], f[i]
-        shtn_input['fi_prox'], shtn_input['fi_dist']= 0, 0
-        shtn_input['synch']= synch
         muV[i] = stat_pot_function([0], shtn_input, soma, stick, params)[0]
     i0 = np.argmin(np.abs(muV-balance))
     return f[i0]

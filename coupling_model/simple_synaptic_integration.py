@@ -13,12 +13,15 @@ def find_inh_cond_for_balance(feG, fiG, feI, fiI, fe0, i_nrn, balance):
                     ALL_CELLS[i_nrn]['stick'], balance=balance[i])
     return fiG, fiI
 
-def get_fluct_var(i_nrn, F=None, exp_type='non specific activity', balance=-54e-3, len_f=5):
+def get_fluct_var(i_nrn, F=None, exp_type='non specific activity',\
+                  balance=-55e-3, len_f=2):
 
     if F is None:
-        F = np.linspace(0., .25, len_f)
+        F = np.linspace(0., .15, len_f)
         
-    synch = 0.2+0*F # baseline synchrony
+    synch = 0.1+0*F # baseline synchrony
+    F0 = 0.05+0*F
+    
     inh_factor = 5.8
     inh_factor_balance_rupt = 4.
     
@@ -26,23 +29,21 @@ def get_fluct_var(i_nrn, F=None, exp_type='non specific activity', balance=-54e-
                                    balance=balance, synch=synch)
     
     if exp_type=='non specific activity':
-        feG, fiG, feI, fiI = F, inh_factor*F, F, inh_factor*F
+        feG, fiG, feI, fiI = 0*F+F0, inh_factor*(0*F+F0), 0*F+F0, inh_factor*(0*F+F0)
         fiG, fiI = find_inh_cond_for_balance(feG, fiG, feI, fiI, fe0,i_nrn, balance+0*F)
     elif exp_type=='unbalanced activity':
-        # feG, fiG, feI, fiI = F, inh_factor_balance_rupt*F, F, inh_factor_balance_rupt*F
-        feG, feI, fiG, fiI = F, F, 0*F, 0*F
+        feG, feI, fiG, fiI = (F+F0), (F+F0), 0*F, 0*F
         fiG, fiI = find_inh_cond_for_balance(feG, fiG, feI, fiI, fe0,i_nrn,\
-                                             balance+4e-3*np.linspace(0,1,len(F)))
+                                             balance+3e-3*np.linspace(0,1,len(F)))
     elif exp_type=='proximal activity':
-        feG, fiG, feI, fiI = 4.*F, 4.*inh_factor*F, 0*F, 0*F
+        feG, fiG, feI, fiI = F0+4.*F, 4.*inh_factor*(F+F0), F0, 0*F
         fiG, fiI = find_inh_cond_for_balance(feG, fiG, feI, fiI, fe0,i_nrn, balance+0*F)
     elif exp_type=='distal activity':
-        feG, fiG, feI, fiI = 0*F, 0*F, 4.*F, 4.*inh_factor*F
+        feG, fiG, feI, fiI = F0, 0*F, F0+3.*F, 3.*inh_factor*(F+F0)
         fiG, fiI = find_inh_cond_for_balance(feG, fiG, feI, fiI, fe0,i_nrn, balance+0*F)
     elif exp_type=='synchrony':
-        synch = np.linspace(0., 0.7, len(F))
-        F = F.mean()+0*F
-        feG, fiG, feI, fiI = F, inh_factor*F, F, inh_factor*F
+        synch = np.linspace(0.1, 0.3, len(F))
+        feG, feI, fiG, fiI = F0, F0, 0*F, 0*F
         fiG, fiI = find_inh_cond_for_balance(feG, fiG, feI, fiI, fe0,i_nrn, balance+0*F)
     else:
         print '------------------------------------------'
@@ -56,7 +57,6 @@ def get_fluct_var(i_nrn, F=None, exp_type='non specific activity', balance=-54e-
        ALL_CELLS[i_nrn]['params'], ALL_CELLS[i_nrn]['soma'],\
             ALL_CELLS[i_nrn]['stick'])
             
-
     return feG+fe0, fiG, feI+fe0, fiI, synch, muV, sV, TvN, muGn
 
 def sine(t, w, t0=0):
