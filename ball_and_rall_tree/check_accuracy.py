@@ -13,57 +13,59 @@ from demo import *
 from firing_response_description.template_and_fitting import final_func
 
 N_POINTS = 3
+SEED = 3
 
-fe_vector = np.array([.7,1.,1.3])
-fi_vector = np.array([.7,1.,1.3])*7.
-synchrony_vector = np.array([0., 0.3, 0.6])
+fe_baseline, fi_baseline, synch_baseline = 0.3, 0.3*7., 0.1
+fe_vector = np.array([.15,fe_baseline,0.45])
+fi_vector = np.array([.15,fe_baseline,0.45])*7.
+synch_vector = np.array([0., synch_baseline, 0.2])
 
 SET_OF_EXPS = [\
                {'label':'increasing prox. exc. \n $\\nu_e^p$ (Hz)',
                 'xticks':fe_vector,
                 'fe_prox':fe_vector,
-                'fe_dist':np.ones(N_POINTS)*fe_vector[1],
-                'fi_prox':np.ones(N_POINTS)*fi_vector[1],
-                'fi_dist':np.ones(N_POINTS)*fi_vector[1],
-                'synchrony':np.ones(N_POINTS)*synchrony_vector[1],
-                'muV_exp':np.zeros(N_POINTS), 'sV_exp':np.zeros(N_POINTS), 'Tv_exp':np.zeros(N_POINTS)
+                'fe_dist':np.ones(N_POINTS)*fe_baseline,
+                'fi_prox':np.ones(N_POINTS)*fi_baseline,
+                'fi_dist':np.ones(N_POINTS)*fi_baseline,
+                'synchrony':np.ones(N_POINTS)*synch_baseline,
+                'muV_exp':np.zeros((N_POINTS, SEED)), 'sV_exp':np.zeros((N_POINTS, SEED)), 'Tv_exp':np.zeros((N_POINTS, SEED))
                 },
                {'label':'increasing distal exc. \n $\\nu_e^d$ (Hz)',
                 'xticks':fe_vector,
-                'fe_prox':np.ones(N_POINTS)*fe_vector[1],
+                'fe_prox':np.ones(N_POINTS)*fe_baseline,
                 'fe_dist':fe_vector,
-                'fi_prox':np.ones(N_POINTS)*fi_vector[1],
-                'fi_dist':np.ones(N_POINTS)*fi_vector[1],
-                'synchrony':np.ones(N_POINTS)*synchrony_vector[1],
-                'muV_exp':np.zeros(N_POINTS), 'sV_exp':np.zeros(N_POINTS), 'Tv_exp':np.zeros(N_POINTS)
+                'fi_prox':np.ones(N_POINTS)*fi_baseline,
+                'fi_dist':np.ones(N_POINTS)*fi_baseline,
+                'synchrony':np.ones(N_POINTS)*synch_baseline,
+                'muV_exp':np.zeros((N_POINTS, SEED)), 'sV_exp':np.zeros((N_POINTS, SEED)), 'Tv_exp':np.zeros((N_POINTS, SEED))
                 },
                {'label':'increasing prox. inh. \n $\\nu_i^p$ (Hz)',
                 'xticks':fi_vector,
-                'fe_prox':np.ones(N_POINTS)*fe_vector[1],
-                'fe_dist':np.ones(N_POINTS)*fe_vector[1],
+                'fe_prox':np.ones(N_POINTS)*fe_baseline,
+                'fe_dist':np.ones(N_POINTS)*fe_baseline,
                 'fi_prox':fi_vector,
-                'fi_dist':np.ones(N_POINTS)*fi_vector[1],
-                'synchrony':np.ones(N_POINTS)*synchrony_vector[1],
-                'muV_exp':np.zeros(N_POINTS), 'sV_exp':np.zeros(N_POINTS), 'Tv_exp':np.zeros(N_POINTS)
+                'fi_dist':np.ones(N_POINTS)*fi_baseline,
+                'synchrony':np.ones(N_POINTS)*synch_baseline,
+                'muV_exp':np.zeros((N_POINTS, SEED)), 'sV_exp':np.zeros((N_POINTS, SEED)), 'Tv_exp':np.zeros((N_POINTS, SEED))
                 },
                {'label':'increasing distal inh. \n $\\nu_i^d$ (Hz)',
                 'xticks':fe_vector,
-                'fe_prox':np.ones(N_POINTS)*fe_vector[1],
-                'fe_dist':np.ones(N_POINTS)*fe_vector[1],
-                'fi_prox':np.ones(N_POINTS)*fi_vector[1],
+                'fe_prox':np.ones(N_POINTS)*fe_baseline,
+                'fe_dist':np.ones(N_POINTS)*fe_baseline,
+                'fi_prox':np.ones(N_POINTS)*fi_baseline,
                 'fi_dist':fi_vector,
-                'synchrony':np.ones(N_POINTS)*synchrony_vector[1],
-                'muV_exp':np.zeros(N_POINTS), 'sV_exp':np.zeros(N_POINTS), 'Tv_exp':np.zeros(N_POINTS)
+                'synchrony':np.ones(N_POINTS)*synch_baseline,
+                'muV_exp':np.zeros((N_POINTS, SEED)), 'sV_exp':np.zeros((N_POINTS, SEED)), 'Tv_exp':np.zeros((N_POINTS, SEED))
                 },
                {'label':'increasing synchrony',
                 'xlabel':'synchrony',
-                'xticks':synchrony_vector,
-                'fe_prox':np.ones(N_POINTS)*fe_vector[1],
-                'fe_dist':np.ones(N_POINTS)*fe_vector[1],
-                'fi_prox':np.ones(N_POINTS)*fi_vector[1],
-                'fi_dist':np.ones(N_POINTS)*fi_vector[1],
-                'synchrony':synchrony_vector,
-                'muV_exp':np.zeros(N_POINTS), 'sV_exp':np.zeros(N_POINTS), 'Tv_exp':np.zeros(N_POINTS)
+                'xticks':synch_vector,
+                'fe_prox':np.ones(N_POINTS)*fe_baseline,
+                'fe_dist':np.ones(N_POINTS)*fe_baseline,
+                'fi_prox':np.ones(N_POINTS)*fi_baseline,
+                'fi_dist':np.ones(N_POINTS)*fi_baseline,
+                'synchrony':synch_vector,
+                'muV_exp':np.zeros((N_POINTS, SEED)), 'sV_exp':np.zeros((N_POINTS, SEED)), 'Tv_exp':np.zeros((N_POINTS, SEED))
                 }]
              
 
@@ -115,7 +117,7 @@ if __name__=='__main__':
     parser.add_argument("--SIM", action='store_true') # flag for running simuluation !
     parser.add_argument("--seed", type=int, help="seed fo random numbers",default=3)
     parser.add_argument("--discret_sim", type=int, help="space discretization for numerical simulation", default=20)
-    parser.add_argument("--tstop_sim", type=float, help="max simulation time (s)", default=2.)
+    parser.add_argument("--tstop", type=float, help="max simulation time (s)", default=2.)
     parser.add_argument("--dt", type=float, help="simulation time step (ms)", default=0.025)
     parser.add_argument("--discret_th", type=int, help="discretization for theoretical evaluation",default=20)
     
@@ -136,18 +138,32 @@ if __name__=='__main__':
         else:
             soma, stick, params = get_model(args)
 
-        x_exp, cables = setup_model(soma, stick, params)    
+        x_exp, cables = setup_model(soma, stick, params)
         ii=0
+
+        ## MAKING THE BASELINE EXPERIMENT
+        shtn_input = {'synchrony':synch_baseline,
+                      'fe_prox':fe_baseline, 'fi_prox':fi_baseline,
+                      'fe_dist':fe_baseline, 'fi_dist':fi_baseline}
+        for s in range(SEED):
+            t, V = run_simulation(shtn_input, cables, params,\
+                    tstop=args.tstop*1e3, dt=args.dt, seed=(ii+args.seed+s*(s+1))**3)
+            muV_exp, sV_exp, Tv_exp = analyze_simulation(x_exp, cables, t, V)
+            for EXP in SET_OF_EXPS:
+                EXP['muV_exp'][int(N_POINTS/2.),s], EXP['sV_exp'][int(N_POINTS/2.),s],\
+                  EXP['Tv_exp'][int(N_POINTS/2.),s] = muV_exp[0], sV_exp[0], Tv_exp[0]
+
         for EXP in SET_OF_EXPS:
-            for i in range(N_POINTS):
+            for i in np.delete(np.arange(N_POINTS), int(N_POINTS/2.)):
                 shtn_input = {'synchrony':EXP['synchrony'][i],
                               'fe_prox':EXP['fe_prox'][i], 'fi_prox':EXP['fi_prox'][i],
                               'fe_dist':EXP['fe_dist'][i], 'fi_dist':EXP['fi_dist'][i]}
-                t, V = run_simulation(shtn_input, cables, params,\
-                                      tstop=args.tstop_sim*1e3, dt=args.dt, seed=(ii+args.seed)**3)
-                muV_exp, sV_exp, Tv_exp = analyze_simulation(x_exp, cables, t, V)
+                for s in range(SEED):
+                    t, V = run_simulation(shtn_input, cables, params,\
+                                          tstop=args.tstop*1e3, dt=args.dt, seed=(ii+args.seed+s*(s+1))**3)
+                    muV_exp, sV_exp, Tv_exp = analyze_simulation(x_exp, cables, t, V)
 
-                EXP['muV_exp'][i], EXP['sV_exp'][i], EXP['Tv_exp'][i] = muV_exp[0], sV_exp[0], Tv_exp[0]
+                    EXP['muV_exp'][i,s], EXP['sV_exp'][i,s], EXP['Tv_exp'][i,s] = muV_exp[0], sV_exp[0], Tv_exp[0]
                                                       
                 # # keeping a trace of the full spatial profile, and the theoretical comparison
                 fig = plot_time_traces(t, V, cables, params['EqCylinder'])
@@ -161,9 +177,21 @@ if __name__=='__main__':
                          x_exp, muV_exp, sV_exp, Tv_exp, shtn_input)    
                 fig.savefig('data/spatial_profile_'+str(ii)+'.svg')
                 ii+=1
-                plt.close()
+                plt.close('all')
         np.save(file, [soma, stick, params, SET_OF_EXPS])
 
+    import os
+    if not os.path.isfile(file):
+        print '--------------------> input file DOES NOT EXIST'
+        print '--------------------> taking the last one !'
+        file, i, flist ='', 0, os.listdir("data")
+        while (file=='') and (i<1e3):
+            f = flist[i]
+            i+=1
+            if len(f.split("vars_"))>1:
+                file = 'data/'+f
+        print file
+  
     # now theoretical plot
     soma, stick, params, SET_OF_EXPS = np.load(file)
     Tm0 = get_membrane_time_constants(soma, stick, params)
@@ -179,7 +207,8 @@ if __name__=='__main__':
         muV_th, sV_th, Tv_th, muG_th = get_the_fluct_prop_at_soma(SHTN_INPUT, params, soma, stick)
         for ax, x, y in zip(AX, [1e3*muV_th, 1e3*sV_th, 1e3*Tm0*Tv_th],\
                             [EXP['muV_exp'], EXP['sV_exp'], EXP['Tv_exp']]):
-            ax.plot(np.linspace(-.2,.2,len(y))+ii, y, 'kD')
+            ax.errorbar(np.linspace(-.2,.2,len(y))+ii, np.array(y).mean(axis=1),\
+                        yerr=np.array(y).std(axis=1), marker='D', color='k')
             ax.plot(np.linspace(-.2,.2,len(x))+ii, x, '-', color='lightgray', lw=3)
             Xticks = np.concatenate([Xticks, np.linspace(-.2,.2,len(x))+ii])
             for i in range(len(EXP['muV_exp'])):
