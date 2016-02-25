@@ -21,27 +21,22 @@ def single_experiment(i_nrn, balance=-54e-3):
     
     ## Then for other protocols
     PROTOCOLS = ['unbalanced activity', 'proximal activity', 'distal activity', 'synchrony']
-    coupling = np.zeros(len(PROTOCOLS)+1)
-    coupling[0] = Fout0.mean()
+    coupling = np.zeros(len(PROTOCOLS)+2)
+    coupling[0] = Fout0[0]
+    coupling[1] = Fout0.mean()
 
     ax.plot(Fout0, 'k-', lw=2)
-    COLORS=['', 'r', 'b', 'g', 'c']
+    COLORS=['r', 'b', 'g', 'c']
 
-    for p, i  in zip(PROTOCOLS, range(1,len(coupling))):
+    ii=0
+    for p, i  in zip(PROTOCOLS, range(2,len(coupling))):
         feG, fiG, feI, fiI, synch, muV, sV, TvN, muGn = get_fluct_var(i_nrn, exp_type=p, balance=balance)
         Fout2 = final_func(ALL_CELLS[i_nrn]['P'], muV, sV, TvN,\
                            ALL_CELLS[i_nrn]['Gl'], ALL_CELLS[i_nrn]['Cm'])
-        if Fout0[0]>1e-2:
-            # coupling[i] = (np.diff(Fout2).mean()-np.diff(Fout0).mean())/np.diff(Fout0).mean()
-            coupling[i] = (Fout2.mean()-Fout0[0])#/np.mean(Fout0)
-            # coupling[i] = Fout2[-1]/Fout0[0]#)/np.mean(Fout0)#-1
-        else:
-            coupling[i] = 1e5
-            print 'discarded cell !'
-            print 1e-6/ALL_CELLS[i_nrn]['Gl']
-            
-        ax.plot(Fout2, '-', lw=2, color=COLORS[i])
-
+        coupling[i] = Fout2.mean()
+        ax.plot(Fout2, '-', lw=2, color=COLORS[ii])
+        ii+=1
+        
     ax.set_title('cell'+str(i_nrn))
     set_plot(ax, xticks=[])
     fig.savefig('data/'+str(i_nrn)+'.svg')
@@ -118,7 +113,7 @@ if __name__=='__main__':
     from my_graph import set_plot, put_list_of_figs_to_svg_fig
 
     if sys.argv[-1]=='sim':
-        COUPLINGS = np.zeros((5, len(ALL_CELLS)))
+        COUPLINGS = np.zeros((6, len(ALL_CELLS)))
         BIOPHYSICS = np.zeros((4, len(ALL_CELLS)))
         for i_nrn in range(len(ALL_CELLS)):
             print 'cell', i_nrn

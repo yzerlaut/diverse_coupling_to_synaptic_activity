@@ -42,7 +42,7 @@ def get_fluct_var(i_nrn, F=None, exp_type='non specific activity',\
         feG, fiG, feI, fiI = F0, 0*F, F0+2.*F, 2.*inh_factor*(F+F0)
         fiG, fiI = find_inh_cond_for_balance(feG, fiG, feI, fiI, fe0,i_nrn, balance+0*F)
     elif exp_type=='synchrony':
-        synch = synch+np.linspace(0., 0.2, len(F))
+        synch = synch+np.linspace(0., 0.3, len(F))
         feG, feI, fiG, fiI = F0, F0, 0*F, 0*F
         fiG, fiI = find_inh_cond_for_balance(feG, fiG, feI, fiI, fe0,i_nrn, balance+0*F)
     else:
@@ -64,6 +64,12 @@ def sine(t, w, t0=0):
 
 sigmoid = lambda x: 1./(1.+np.exp(-x))
 
+LABELS = ['$\mu_V$ (mV)', '$\sigma_V$ (mV)',\
+          '$\\tau_V / \\tau_m^0$ (%)', '$g_{tot}^{soma} / g_L$']
+LABELS2 = ['$\\nu_e^{prox}$ (Hz)', '$\\nu_i^{prox}$ (Hz)',\
+           '$\\nu_e^{dist}$ (Hz)', '$\\nu_i^{dist}$ (Hz)',
+           'synchrony']
+
 if __name__=='__main__':
 
     import matplotlib.pylab as plt
@@ -80,29 +86,35 @@ if __name__=='__main__':
 
     PROTOCOLS = ['unbalanced activity', 'proximal activity', 'distal activity',\
                  'synchrony', 'non specific activity']
-    len_f = 5
+    len_f = 10
     F = np.linspace(0,1, len_f)
     if sys.argv[-1]=='all':
 
+        FEG, FIG, FEI, FII, SYNCH, MUV, SV, TVN, MUGN, FOUT =\
+           [np.zeros((len(PROTOCOLS), len(ALL_CELLS), len(F))) for j in range(10)]
+           
         for i in range(len(PROTOCOLS)):
-
-            FEG, FIG, FEI, FII, SYNCH, MUV, SV, TVN, MUGN, FOUT =\
-               [np.zeros((len(ALL_CELLS), len(F))) for j in range(10)]
 
             for i_nrn in range(len(ALL_CELLS)):
                 print 'cell: ', i_nrn
-                FEG[i_nrn,:], FIG[i_nrn,:], FEI[i_nrn,:], FII[i_nrn,:], SYNCH[i_nrn,:],\
-                   MUV[i_nrn,:], SV[i_nrn,:], TVN[i_nrn,:], MUGN[i_nrn,:] =\
+                FEG[i, i_nrn,:], FIG[i, i_nrn,:], FEI[i, i_nrn,:], FII[i, i_nrn,:], SYNCH[i, i_nrn,:],\
+                   MUV[i, i_nrn,:], SV[i, i_nrn,:], TVN[i, i_nrn,:], MUGN[i, i_nrn,:] =\
                    get_fluct_var(i_nrn, exp_type=PROTOCOLS[i], len_f=len_f)
 
-            for ax, x in zip(AX, [1e3*MUV, 1e3*SV, 1e2*TVN, MUGN]):
-                ax.plot(F, x.mean(axis=0), lw=3, color=COLORS[i])
-                ax.fill_between(F, x.mean(axis=0)-x.std(axis=0),\
-                                x.mean(axis=0)+x.std(axis=0), alpha=.2, color=COLORS[i])
-            for ax, x in zip(AX2, [FEG, FIG, FEI, FII, SYNCH]):
-                ax.plot(F, x.mean(axis=0), lw=3, color=COLORS[i])
-                ax.fill_between(F, x.mean(axis=0)-x.std(axis=0),\
-                                x.mean(axis=0)+x.std(axis=0), alpha=.2, color=COLORS[i])
+            np.save('data/synaptic_data.npy', [FEG, FIG, FEI, FII, SYNCH, MUV, SV, TVN, MUGN, FOUT])
+            
+    elif sys.argv[-1]=='plot':
+                
+        FEG, FIG, FEI, FII, SYNCH, MUV, SV, TVN, MUGN, FOUT = np.load('data/synaptic_data.npy')
+            
+        for ax, x in zip(AX, [1e3*MUV[i,:,:], 1e3*SV[i,:,:], 1e2*TVN[i,:,:], MUGN[i,:,:]]):
+            ax.plot(F, x.mean(axis=0), lw=3, color=COLORS[i])
+            ax.fill_between(F, x.mean(axis=0)-x.std(axis=0),\
+                            x.mean(axis=0)+x.std(axis=0), alpha=.2, color=COLORS[i])
+        for ax, x in zip(AX2, [FEG[i,:,:], FIG[i,:,:], FEI[i,:,:], FII[i,:,:], SYNCH[i,:,:]]):
+            ax.plot(F, x.mean(axis=0), lw=3, color=COLORS[i])
+            ax.fill_between(F, x.mean(axis=0)-x.std(axis=0),\
+                            x.mean(axis=0)+x.std(axis=0), alpha=.2, color=COLORS[i])
     else:
         for i in range(len(PROTOCOLS)):
             feG, fiG, feI, fiI, synch, muV, sV, TvN, muGn = get_fluct_var(i_nrn,\
@@ -112,15 +124,7 @@ if __name__=='__main__':
             for ax, x in zip(AX2, [feG, fiG, feI, fiI, synch]):
                 ax.plot(F, x, lw=3, color=COLORS[i], label=PROTOCOLS[i])
 
-    LABELS = ['$\mu_V$ (mV)', '$\sigma_V$ (mV)',\
-              '$\\tau_V / \\tau_m^0$ (%)', '$g_{tot}^{soma} / g_L$']
-    LABELS2 = ['$\\nu_e^{prox}$ (Hz)', '$\\nu_i^{prox}$ (Hz)',\
-               '$\\nu_e^{dist}$ (Hz)', '$\\nu_i^{dist}$ (Hz)',
-               'synchrony']
-    
-    if sys.argv[-1]!='all':
-        AX[0].legend(prop={'size':'xx-small'}, bbox_to_anchor=(1., 2.))
-        
+                
     for ax, ylabel in zip(AX[:-1], LABELS[:-1]):
         set_plot(ax, ['left'], ylabel=ylabel, xticks=[])
     for ax, ylabel in zip(AX2[:-1], LABELS2[:-1]):
@@ -129,5 +133,9 @@ if __name__=='__main__':
              ylabel=LABELS[-1], xticks=[], xlabel='increasing \n presynaptic quantity')
     set_plot(AX2[-1], ['bottom','left'],\
              ylabel=LABELS2[-1], xticks=[], xlabel='increasing \n presynaptic quantity')
+
+    if sys.argv[-1]!='all':
+        AX[0].legend(prop={'size':'xx-small'}, bbox_to_anchor=(1., 2.))
+        
              
     plt.show()
