@@ -13,13 +13,13 @@ from demo import *
 from firing_response_description.template_and_fitting import final_func
 
 N_POINTS = 3
-SEED = 3
+SEED = 4
 inh_factor = 5.8
 
-fe_baseline, fi_baseline, synch_baseline = 0.3, 0.3*inh_factor, 0.1
-fe_vector = np.array([.15,fe_baseline,0.45])
-fi_vector = np.array([.15,fe_baseline,0.45])*inh_factor
-synch_vector = np.array([0., synch_baseline, 0.2])
+fe_baseline, fi_baseline, synch_baseline = 0.15, 0.15*inh_factor, 0.05
+fe_vector = np.array([.05,fe_baseline,0.25])
+fi_vector = np.array([.05,fe_baseline,0.25])*inh_factor
+synch_vector = np.array([0., synch_baseline, 0.1])
 
 SET_OF_EXPS = [\
                {'label':'increasing prox. exc. \n $\\nu_e^p$ (Hz)',
