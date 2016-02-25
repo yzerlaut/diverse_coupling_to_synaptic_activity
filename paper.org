@@ -906,6 +906,20 @@ can be computed analytically with the Neyman- Scott equation
 
 Focus of a previous communication, see [[citetext:Zerlaut2016]].
 
+** Numerical tools
+<<sec:numerical-tools>>
+
+All numerical simulations of single cell dynamics have been performed
+with custom code written in the numerical library of =python=: =numpy=
+and optimized with the =numba= library. For the neuronal model, each
+point (a mean output frequency and its standard deviation across
+trials) corresponds to numerical simulations running with a time step
+dt=0.01ms, for a duration of 10s and repeated 4 times with different
+seeds (one simulation duration: $\sim$ 2s of real time on a Dell
+Optiplex 9020 desktop computer). Experimental protocols and
+online-analysis have been written in =Elphy2=. Plots and data analysis
+have been done thanks to the =SciPy= package.
+
 ** Experimental preparation and electrophysiological recordings
 <<sec:exp-prep>>
 
@@ -953,20 +967,6 @@ where \(E_L, R\) and $\phi$ were fitted with a least-square
 minimization procedure. The frequency dependent values of $R$ and
 $\phi$ give the modulus and phase shift of the input impedance
 presented in Figure [[fig:in-vitro-calib]]A
-
-** Numerical tools
-<<sec:numerical-tools>>
-
-All numerical simulations of single cell dynamics have been performed
-with custom code written in the numerical library of =python=: =numpy=
-and optimized with the =numba= library. For the neuronal model, each
-point (a mean output frequency and its standard deviation across
-trials) corresponds to numerical simulations running with a time step
-dt=0.01ms, for a duration of 10s and repeated 4 times with different
-seeds (one simulation duration: $\sim$ 2s of real time on a Dell
-Optiplex 9020 desktop computer). Experimental protocols and
-online-analysis have been written in =Elphy2=. Plots and data analysis
-have been done thanks to the =SciPy= package.
 
 ** Acknowledgments
 <<sec:acknowledgments>>

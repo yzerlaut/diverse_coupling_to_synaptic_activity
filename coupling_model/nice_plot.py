@@ -1,0 +1,206 @@
+import numpy as np
+import sys
+sys.path.append('../')
+from scipy.stats.stats import pearsonr
+import matplotlib.pylab as plt
+sys.path.append('/home/yann/work/python_library/')
+from my_graph import set_plot, put_list_of_figs_to_svg_fig
+
+
+COUPLINGS, BIOPHYSICS = np.load('data/elctrophy_vs_coupling.npy')
+E_LABELS = [r"$\langle V_\mathrm{thre}^\mathrm{eff} \rangle_\mathcal{D}$ (mV)",\
+            r"$\langle \partial \nu / \partial \mu_V \rangle_\mathcal{D}$ (Hz/mV)",\
+            r"$\langle \partial \nu / \partial \sigma_V \rangle_\mathcal{D}$ (Hz/mV)",\
+            r"$\langle \partial \nu / \partial \tau_V^{N} \rangle_\mathcal{D}$ (Hz/%)"]
+
+VTHRE, DMUV, DTSV, DTV = [BIOPHYSICS[i,:] for i in range(BIOPHYSICS.shape[0])]
+NU, UNBALANCED, PROX, DIST, SYNCH = [COUPLINGS[i,:] for i in range(COUPLINGS.shape[0])]
+
+# special plot of the highlighted cells !!
+INDEXES, MARKER, SIZE = [22, 2, 27, 1], ['^', 'd', '*', 's'], [12, 11, 17, 10]
+NUs, UNBALANCEDs, PROXs, DISTs, SYNCHs = NU[INDEXES], UNBALANCED[INDEXES], PROX[INDEXES], DIST[INDEXES], SYNCH[INDEXES]
+VTHREs, DMUVs, DTSVs, DTVs = VTHRE[INDEXES], DMUV[INDEXES], DTSV[INDEXES], DTV[INDEXES]
+
+## discarding too low firing that can't be analyzed...
+cond = (NU>1e-2) & (UNBALANCED<1e4)# & (NU<12)
+NU, UNBALANCED, PROX, DIST, SYNCH = NU[cond], UNBALANCED[cond], PROX[cond], DIST[cond], SYNCH[cond]
+VTHRE, DMUV, DTSV, DTV = VTHRE[cond], DMUV[cond], DTSV[cond], DTV[cond]
+
+
+def plot_all(ax, X, Y, lin_fit, Xs, Ys, cc, pp, invert_axis=False):
+    for k in range(len(Xs)):
+        ax.plot([Xs[k]], [Ys[k]], color='lightgray', marker=MARKER[k], label='cell '+str(k), ms=SIZE[k])
+    x = np.linspace(X.min(), X.max())
+    y = np.polyval(lin_fit, x)
+    ax.plot(x, y, 'k--', lw=.5)
+    ax.plot(X, Y, 'ko')
+    ax.annotate('c='+str(np.round(cc,1))+', p='+'%.1e' % pp,\
+                         (0.15,1), xycoords='axes fraction')
+    if invert_axis:
+        ax.invert_xaxis()
+
+    
+fig, AX = plt.subplots(6, 5, figsize=(24,30))
+fig.subplots_adjust(wspace=.6, hspace=1.)
+
+######################################################################
+######## baseline activity
+######################################################################
+
+## mean response -- HISTOGRAM
+y = np.log(NU)/np.log(10)
+ys = np.log(NUs)/np.log(10)
+AX[0,0].hist(y, bins=9, color='lightgray', edgecolor='k', lw=2)
+set_plot(AX[0,0], ['left', 'bottom'], ylabel='cell #',\
+    xlabel='baseline level \n'+r' $ \nu_\mathrm{bsl}$ (Hz)',\
+    xticks=[-1,0,1], yticks=[0,3,6],xlim=[-2.1,2.5],\
+    xticks_labels=['0.1', '1 ', '10'])
+## mean response -- CORRELATION WITH VTHRE
+cc, pp = pearsonr(VTHRE, y)
+lin_fit = np.polyfit(np.array(VTHRE, dtype='f8'), np.array(y, dtype='f8'), 1)
+plot_all(AX[0,1], VTHRE, y, lin_fit, VTHREs, ys,\
+         cc, pp, invert_axis=True)
+set_plot(AX[0,1], ['left', 'bottom'], xlabel=E_LABELS[0],\
+    ylabel=r'$ \nu_\mathrm{bsl}$ (Hz)',yticks=[-1,0,1],\
+    yticks_labels=['0.1', '1 ', '10'], xticks=[-40, -50, -60])
+## unbalanced activity -- CORRELATION WITH THE REST
+for X, Xs, ax, label in zip([DMUV, DTSV, DTV], [DMUVs, DTSVs, DTVs], AX[0,2:], E_LABELS[1:]):
+    cc, pp = pearsonr(X, y)
+    lin_fit = np.polyfit(np.array(X, dtype='f8'),np.array(y, dtype='f8'), 1)
+    plot_all(ax, X, y, lin_fit, Xs,\
+             ys, cc, pp, invert_axis=(label==E_LABELS[-1]))
+    set_plot(ax, ['left', 'bottom'], xlabel=label,\
+             ylabel=r'residual $ \nu_\mathrm{bsl}$ (Hz)',yticks=[-1,0,1],\
+             yticks_labels=['0.1', '1 ', '10'])
+ax.set_xticks([0., -0.08, -0.16])
+
+######################################################################
+######## unbalanced activity
+######################################################################
+
+## unbalanced activity -- HISTOGRAM
+y = np.log(UNBALANCED)/np.log(10)
+AX[1,0].hist(y, bins=9, color='lightgray', edgecolor='k', lw=2)
+set_plot(AX[1,0], ['left', 'bottom'], ylabel='cell #',\
+    xlabel='response to unbalanced \n'+r' activity, $\delta \nu_\mathrm{ubl}$ (Hz)',\
+    xticks=[-1,0,1], yticks=[0,3,6], xlim=[-1.5,2.],\
+    xticks_labels=['0.1', '1 ', '10'])
+## unbalanced activity -- CORRELATION WITH VTHRE
+cc, pp = pearsonr(VTHRE, y)
+lin_fit = np.polyfit(np.array(VTHRE, dtype='f8'),\
+                     np.array(y, dtype='f8'), 1)
+plot_all(AX[1,1], VTHRE, y, lin_fit, VTHREs,\
+         np.log(UNBALANCEDs)/np.log(10), cc, pp, invert_axis=True)
+set_plot(AX[1,1], ['left', 'bottom'], xlabel=E_LABELS[0],ylabel=r'$\delta \nu_\mathrm{ubl}$ (Hz)',\
+    yticks=[-1,0,1], yticks_labels=['0.1', '1 ', '10'], xticks=[-40, -50, -60])
+## unbalanced activity -- CORRELATION WITH THE REST
+y -= np.polyval(lin_fit, VTHRE)
+ys = np.log(UNBALANCEDs)/np.log(10) - np.polyval(lin_fit, VTHREs)
+for X, Xs, ax, label in zip([DMUV, DTSV, DTV], [DMUVs, DTSVs, DTVs], AX[1,2:], E_LABELS[1:]):
+    cc, pp = pearsonr(X, y)
+    lin_fit = np.polyfit(np.array(X, dtype='f8'),\
+                         np.array(y, dtype='f8'), 1)
+    plot_all(ax, X, y, lin_fit, Xs,\
+             ys, cc, pp, invert_axis=(label==E_LABELS[-1]))
+    set_plot(ax, ['left', 'bottom'], xlabel=label,\
+             ylabel=r'residual $\delta \nu_\mathrm{ubl}$ (Hz)',yticks=[-1,0,1],\
+             yticks_labels=['0.1', '1 ', '10'])
+ax.set_xticks([0., -0.08, -0.16])
+
+######################################################################
+######## proximal activity
+######################################################################
+
+y = PROX/NU
+ys = PROXs/NUs
+
+AX[2,0].hist(y, bins=9, color='lightgray', edgecolor='k', lw=2)
+set_plot(AX[2,0], ['left', 'bottom'], ylabel='cell #',\
+    xlabel='response to proximal \n'+r' activity, $\delta \nu_\mathrm{prox}$ (Hz)')
+## unbalanced activity -- CORRELATION WITH VTHRE
+cc, pp = pearsonr(VTHRE, y)
+lin_fit = np.polyfit(np.array(VTHRE, dtype='f8'), np.array(y, dtype='f8'), 1)
+plot_all(AX[2,1], VTHRE, y, lin_fit, VTHREs, ys, cc, pp, invert_axis=True)
+set_plot(AX[2,1], ['left', 'bottom'], xlabel=E_LABELS[0],\
+         ylabel=r'$\delta \nu_\mathrm{prox}$ (Hz)', xticks=[-40, -50, -60])
+## unbalanced activity -- CORRELATION WITH THE REST
+# y /= NU #np.polyval(lin_fit, VTHRE[PROX<10])
+#y -= np.polyval(lin_fit, VTHRE[PROX<10])
+for X, Xs, ax, label in zip([DMUV, DTSV, DTV], [DMUVs, DTSVs, DTVs], AX[2,2:], E_LABELS[1:]):
+    cc, pp = pearsonr(X, y)
+    lin_fit = np.polyfit(np.array(X, dtype='f8'),\
+                         np.array(y, dtype='f8'), 1)
+    plot_all(ax, X, y, lin_fit, Xs,\
+             ys, cc, pp, invert_axis=(label==E_LABELS[-1]))
+    set_plot(ax, ['left', 'bottom'], xlabel=label,\
+             ylabel=r'$\delta \nu_\mathrm{prox}$/$\nu_\mathrm{bsl}$')
+ax.set_xticks([0., -0.08, -0.16])
+             
+
+######################################################################
+######## distal activity
+######################################################################
+
+y = np.log(DIST)/np.log(10)
+ys = np.log(DISTs)/np.log(10)
+
+AX[3,0].hist(y, bins=9, color='lightgray', edgecolor='k', lw=2)
+set_plot(AX[3,0], ['left', 'bottom'], ylabel='cell #',\
+         xticks=[-1,0,1], xticks_labels=['0.1', '1 ', '10'],
+         xlabel='response to distal \n'+r' activity, $\nu_\mathrm{dist}$ (Hz)')
+## unbalanced activity -- CORRELATION WITH VTHRE
+cc, pp = pearsonr(VTHRE, y)
+lin_fit = np.polyfit(np.array(VTHRE, dtype='f8'), np.array(y, dtype='f8'), 1)
+plot_all(AX[3,1], VTHRE, y, lin_fit, VTHREs, ys, cc, pp, invert_axis=True)
+set_plot(AX[3,1], ['left', 'bottom'], xlabel=E_LABELS[0],\
+         yticks=[-1,0,1], yticks_labels=['0.1', '1 ', '10'],
+         xticks=[-40, -50, -60], ylabel=r'$\nu_\mathrm{dist}$ (Hz)')
+## unbalanced activity -- CORRELATION WITH THE REST
+y -= np.polyval(lin_fit, VTHRE)
+ys -= np.polyval(lin_fit, VTHREs)
+for X, Xs, ax, label in zip([DMUV, DTSV, DTV], [DMUVs, DTSVs, DTVs], AX[3,2:], E_LABELS[1:]):
+    cc, pp = pearsonr(X, y)
+    lin_fit = np.polyfit(np.array(X, dtype='f8'),\
+                         np.array(y, dtype='f8'), 1)
+    plot_all(ax, X, y, lin_fit, Xs,\
+             ys, cc, pp, invert_axis=(label==E_LABELS[-1]))
+    set_plot(ax, ['left', 'bottom'], xlabel=label,\
+             yticks=[-1,0,1], yticks_labels=['0.1', '1 ', '10'],
+             ylabel=r'residual $\nu_\mathrm{dist}$ (Hz)')
+ax.set_xticks([0., -0.08, -0.16])
+             
+######################################################################
+######## synchronyzed activity
+######################################################################
+
+y = np.log(SYNCH)/np.log(10)
+ys = np.log(SYNCHs)/np.log(10)
+
+AX[4,0].hist(y, bins=9, color='lightgray', edgecolor='k', lw=2)
+set_plot(AX[4,0], ['left', 'bottom'], ylabel='cell #',\
+         xticks=[-1,0,1], xticks_labels=['0.1', '1 ', '10'],
+         xlabel='response to synchrony \n'+r'$\delta \nu_\mathrm{synch}$ (Hz)')
+## unbalanced activity -- CORRELATION WITH VTHRE
+cc, pp = pearsonr(VTHRE, y)
+lin_fit = np.polyfit(np.array(VTHRE, dtype='f8'), np.array(y, dtype='f8'), 1)
+plot_all(AX[4,1], VTHRE, y, lin_fit, VTHREs, ys, cc, pp, invert_axis=True)
+set_plot(AX[4,1], ['left', 'bottom'], xlabel=E_LABELS[0],\
+         yticks=[-1,0,1], yticks_labels=['0.1', '1 ', '10'],
+         xticks=[-40, -50, -60], ylabel=r'$\delta \nu_\mathrm{synch}$ (Hz)')
+## unbalanced activity -- CORRELATION WITH THE REST
+y -= np.polyval(lin_fit, VTHRE)
+ys -= np.polyval(lin_fit, VTHREs)
+for X, Xs, ax, label in zip([DMUV, DTSV, DTV], [DMUVs, DTSVs, DTVs], AX[4,2:], E_LABELS[1:]):
+    cc, pp = pearsonr(X, y)
+    lin_fit = np.polyfit(np.array(X, dtype='f8'),\
+                         np.array(y, dtype='f8'), 1)
+    plot_all(ax, X, y, lin_fit, Xs,\
+             ys, cc, pp, invert_axis=(label==E_LABELS[-1]))
+    set_plot(ax, ['left', 'bottom'], xlabel=label,\
+             yticks=[-1,0,1], yticks_labels=['0.1', '1 ', '10'],
+             ylabel=r'residual $\delta \nu_\mathrm{synch}$ (Hz)')
+ax.set_xticks([0., -0.08, -0.16])
+             
+             
+fig.savefig('final_fig.svg')
+
