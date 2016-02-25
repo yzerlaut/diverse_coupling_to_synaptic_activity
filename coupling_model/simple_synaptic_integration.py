@@ -107,14 +107,17 @@ if __name__=='__main__':
                 
         FEG, FIG, FEI, FII, SYNCH, MUV, SV, TVN, MUGN, FOUT = np.load('data/synaptic_data.npy')
             
-        for ax, x in zip(AX, [1e3*MUV[i,:,:], 1e3*SV[i,:,:], 1e2*TVN[i,:,:], MUGN[i,:,:]]):
-            ax.plot(F, x.mean(axis=0), lw=3, color=COLORS[i])
-            ax.fill_between(F, x.mean(axis=0)-x.std(axis=0),\
-                            x.mean(axis=0)+x.std(axis=0), alpha=.2, color=COLORS[i])
-        for ax, x in zip(AX2, [FEG[i,:,:], FIG[i,:,:], FEI[i,:,:], FII[i,:,:], SYNCH[i,:,:]]):
-            ax.plot(F, x.mean(axis=0), lw=3, color=COLORS[i])
-            ax.fill_between(F, x.mean(axis=0)-x.std(axis=0),\
-                            x.mean(axis=0)+x.std(axis=0), alpha=.2, color=COLORS[i])
+        for i in range(len(PROTOCOLS)):
+            for ax, x in zip(AX, [1e3*MUV[i,:,:], 1e3*SV[i,:,:], 1e2*TVN[i,:,:], MUGN[i,:,:]]):
+                ax.plot(F, x.mean(axis=0), lw=3, color=COLORS[i])
+                if sys.argv[-2]=='with_variations':
+                    ax.fill_between(F, x.mean(axis=0)-x.std(axis=0),\
+                                    x.mean(axis=0)+x.std(axis=0), alpha=.2, color=COLORS[i])
+            for ax, x in zip(AX2, [FEG[i,:,:], FIG[i,:,:], FEI[i,:,:], FII[i,:,:], SYNCH[i,:,:]]):
+                ax.plot(F, x.mean(axis=0), lw=3, color=COLORS[i])
+                if sys.argv[-2]=='with_variations':
+                    ax.fill_between(F, x.mean(axis=0)-x.std(axis=0),\
+                                x.mean(axis=0)+x.std(axis=0), alpha=.2, color=COLORS[i])
     else:
         for i in range(len(PROTOCOLS)):
             feG, fiG, feI, fiI, synch, muV, sV, TvN, muGn = get_fluct_var(i_nrn,\
@@ -137,5 +140,6 @@ if __name__=='__main__':
     if sys.argv[-1]!='all':
         AX[0].legend(prop={'size':'xx-small'}, bbox_to_anchor=(1., 2.))
         
+    fig.savefig('fig.svg')
+    fig2.savefig('fig2.svg')
              
-    plt.show()
