@@ -22,7 +22,10 @@ NUs, UNBALANCEDs, PROXs, DISTs, SYNCHs = NU[INDEXES], UNBALANCED[INDEXES], PROX[
 VTHREs, DMUVs, DTSVs, DTVs = VTHRE[INDEXES], DMUV[INDEXES], DTSV[INDEXES], DTV[INDEXES]
 
 ## discarding too low firing that can't be analyzed...
-cond = (NU>1e-2) & (UNBALANCED<1e4)# & (NU<12)
+
+cond = (NU>1e-2) & (UNBALANCED<1e4) & (UNBALANCED>0) & (NU<100)
+
+
 NU, UNBALANCED, PROX, DIST, SYNCH = NU[cond], UNBALANCED[cond], PROX[cond], DIST[cond], SYNCH[cond]
 VTHRE, DMUV, DTSV, DTV = VTHRE[cond], DMUV[cond], DTSV[cond], DTV[cond]
 
@@ -34,8 +37,8 @@ def plot_all(ax, X, Y, lin_fit, Xs, Ys, cc, pp, invert_axis=False):
     y = np.polyval(lin_fit, x)
     ax.plot(x, y, 'k--', lw=.5)
     ax.plot(X, Y, 'ko')
-    ax.annotate('c='+str(np.round(cc,1))+', p='+'%.1e' % pp,\
-                         (0.15,1), xycoords='axes fraction')
+    ax.annotate('c='+str(np.round(cc,2))+',\n'+'p='+'%.1e' % pp,\
+                         (0.15,1.), xycoords='axes fraction')
     if invert_axis:
         ax.invert_xaxis()
 
@@ -79,7 +82,10 @@ ax.set_xticks([0., -0.08, -0.16])
 ######################################################################
 
 ## unbalanced activity -- HISTOGRAM
+print UNBALANCED
 y = np.log(UNBALANCED)/np.log(10)
+ys = np.log(UNBALANCEDs)/np.log(10)
+print y
 AX[1,0].hist(y, bins=9, color='lightgray', edgecolor='k', lw=2)
 set_plot(AX[1,0], ['left', 'bottom'], ylabel='cell #',\
     xlabel='response to unbalanced \n'+r' activity, $\delta \nu_\mathrm{ubl}$ (Hz)',\
@@ -90,12 +96,12 @@ cc, pp = pearsonr(VTHRE, y)
 lin_fit = np.polyfit(np.array(VTHRE, dtype='f8'),\
                      np.array(y, dtype='f8'), 1)
 plot_all(AX[1,1], VTHRE, y, lin_fit, VTHREs,\
-         np.log(UNBALANCEDs)/np.log(10), cc, pp, invert_axis=True)
+         ys, cc, pp, invert_axis=True)
 set_plot(AX[1,1], ['left', 'bottom'], xlabel=E_LABELS[0],ylabel=r'$\delta \nu_\mathrm{ubl}$ (Hz)',\
     yticks=[-1,0,1], yticks_labels=['0.1', '1 ', '10'], xticks=[-40, -50, -60])
 ## unbalanced activity -- CORRELATION WITH THE REST
-y -= np.polyval(lin_fit, VTHRE)
-ys = np.log(UNBALANCEDs)/np.log(10) - np.polyval(lin_fit, VTHREs)
+# y -= np.polyval(lin_fit, VTHRE)
+# ys -= np.polyval(lin_fit, VTHREs)
 for X, Xs, ax, label in zip([DMUV, DTSV, DTV], [DMUVs, DTSVs, DTVs], AX[1,2:], E_LABELS[1:]):
     cc, pp = pearsonr(X, y)
     lin_fit = np.polyfit(np.array(X, dtype='f8'),\
@@ -122,7 +128,7 @@ cc, pp = pearsonr(VTHRE, y)
 lin_fit = np.polyfit(np.array(VTHRE, dtype='f8'), np.array(y, dtype='f8'), 1)
 plot_all(AX[2,1], VTHRE, y, lin_fit, VTHREs, ys, cc, pp, invert_axis=True)
 set_plot(AX[2,1], ['left', 'bottom'], xlabel=E_LABELS[0],\
-         ylabel=r'$\delta \nu_\mathrm{prox}$ (Hz)', xticks=[-40, -50, -60])
+         ylabel=r'$\delta \nu_\mathrm{prox}$/$\nu_\mathrm{bsl}$', xticks=[-40, -50, -60])
 ## unbalanced activity -- CORRELATION WITH THE REST
 # y /= NU #np.polyval(lin_fit, VTHRE[PROX<10])
 #y -= np.polyval(lin_fit, VTHRE[PROX<10])
@@ -156,8 +162,8 @@ set_plot(AX[3,1], ['left', 'bottom'], xlabel=E_LABELS[0],\
          yticks=[-1,0,1], yticks_labels=['0.1', '1 ', '10'],
          xticks=[-40, -50, -60], ylabel=r'$\nu_\mathrm{dist}$ (Hz)')
 ## unbalanced activity -- CORRELATION WITH THE REST
-y -= np.polyval(lin_fit, VTHRE)
-ys -= np.polyval(lin_fit, VTHREs)
+# y -= np.polyval(lin_fit, VTHRE)
+# ys -= np.polyval(lin_fit, VTHREs)
 for X, Xs, ax, label in zip([DMUV, DTSV, DTV], [DMUVs, DTSVs, DTVs], AX[3,2:], E_LABELS[1:]):
     cc, pp = pearsonr(X, y)
     lin_fit = np.polyfit(np.array(X, dtype='f8'),\
@@ -188,8 +194,8 @@ set_plot(AX[4,1], ['left', 'bottom'], xlabel=E_LABELS[0],\
          yticks=[-1,0,1], yticks_labels=['0.1', '1 ', '10'],
          xticks=[-40, -50, -60], ylabel=r'$\delta \nu_\mathrm{synch}$ (Hz)')
 ## unbalanced activity -- CORRELATION WITH THE REST
-y -= np.polyval(lin_fit, VTHRE)
-ys -= np.polyval(lin_fit, VTHREs)
+# y -= np.polyval(lin_fit, VTHRE)
+# ys -= np.polyval(lin_fit, VTHREs)
 for X, Xs, ax, label in zip([DMUV, DTSV, DTV], [DMUVs, DTSVs, DTVs], AX[4,2:], E_LABELS[1:]):
     cc, pp = pearsonr(X, y)
     lin_fit = np.polyfit(np.array(X, dtype='f8'),\

@@ -14,10 +14,11 @@ from firing_response_description.template_and_fitting import final_func
 
 N_POINTS = 3
 SEED = 3
+inh_factor = 5.8
 
-fe_baseline, fi_baseline, synch_baseline = 0.3, 0.3*7., 0.1
+fe_baseline, fi_baseline, synch_baseline = 0.3, 0.3*inh_factor, 0.1
 fe_vector = np.array([.15,fe_baseline,0.45])
-fi_vector = np.array([.15,fe_baseline,0.45])*7.
+fi_vector = np.array([.15,fe_baseline,0.45])*inh_factor
 synch_vector = np.array([0., synch_baseline, 0.2])
 
 SET_OF_EXPS = [\
