@@ -3,7 +3,7 @@ import sys
 sys.path.append('../')
 from scipy.stats.stats import pearsonr
 import matplotlib.pylab as plt
-sys.path.append('/home/yann/work/python_library/')
+sys.path.append('../code')
 from my_graph import set_plot, put_list_of_figs_to_svg_fig
 
 
