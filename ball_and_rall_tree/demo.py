@@ -160,8 +160,8 @@ def make_comparison_plot(x_th, muV_th, sV_th, Tv_th,\
     AX[2].plot(1e6*x_th, 1e3*Tv_th, 'k-', lw=3, alpha=.5)
     AX[0].legend(loc='best', prop={'size':'small'}, frameon=False)
     AX[2].set_xlabel('distance from soma ($\mu$m)')
-    AX[2].set_ylim([min(1e3*Tv_exp.min()-1,1e3*Tv_th.min()-1),
-                   max(1e3*Tv_exp.max()+1,1e3*Tv_th.max()+1)])
+    # AX[2].set_ylim([min(1e3*Tv_exp.min()-1,1e3*Tv_th.min()-1),
+    #                max(1e3*Tv_exp.max()+1,1e3*Tv_th.max()+1)])
 
     YLABELS = ['$\mu_V$ (mV)', '$\sigma_V$ (mV)', '$\tau_V$ (ms)']
     # for ax, ylabel in zip([AX, YLABELS]):

@@ -11,6 +11,8 @@ from theory.analytical_calculus import * # where the core calculus lies
 #### ================================================== ##
 
 soma, stick, params = np.load('../input_impedance_calibration/mean_model.npy')
+kept_cells = np.load('../coupling_model/kept_cells.npy')
+
 
 # common to all plots, the frequency range we will look at [0.1,1000] Hz
 dt, tstop = 1.3e-3, 10.
@@ -167,7 +169,7 @@ def make_experimental_fig():
     
     ### MODEL VARIATIONS
     base = np.linspace(0,1,4)
-    for Rrm, b in zip([300, 370, 670, 900], base):
+    for Rrm, b in zip([250, 350, 600, 800], base):
         soma1, stick1, params1 = adjust_model_prop(Rrm, soma, stick)
         psd, phase = get_input_imped(soma1, stick1, params1)
         AX[1,0].loglog(f, psd, '-', color=mymap(b,1), ms=5)
@@ -206,12 +208,12 @@ from data_firing_response.analyze_data import get_Rm_range
 def make_conversion_fig(Rm0=None):
         # we plot here the conversion between input resistance
         # and dendritic tree properties
-        Rm_exp = get_Rm_range()
-        Rm = np.linspace(Rm_exp.min(), Rm_exp.max())
+        Rm_exp = get_Rm_range()[kept_cells]
+        Rm = np.linspace(0.9*Rm_exp.min(), 1.2*Rm_exp.max(), 20)
         LS, LD, DD = 0*Rm, 0*Rm, 0*Rm
 
         for i in range(len(Rm)):
-            soma1, stick1, params1 = adjust_model_prop(Rm[i], soma, stick)
+            soma1, stick1, params1 = adjust_model_prop(Rm[i], soma, stick, precision=.1, maxiter=1e4)
             LS[i] = 1e6*soma1['L']
             DD[i], LD[i] = 1e6*stick1['D'], 1e6*stick1['L']
 
@@ -230,12 +232,14 @@ def make_conversion_fig(Rm0=None):
         AX[3].plot(Rm, LD, 'k-', lw=2)
         graph.set_plot(AX[3], ylabel='tree length \n ($\mu$m)',\
                        xlabel='somatic input \n resistance (M$\Omega$)',\
-                       xticks=[100,500,900])
+                       xticks=[200,400,600])
 
+        soma0, stick0, params0 = adjust_model_prop(Rm_exp.mean(),\
+                                                   soma, stick, precision=.1, maxiter=1e4)
         if Rm0 is not None:
-            AX[1].plot([Rm0], [1e6*soma['L']], 'kD')
-            AX[2].plot([Rm0], [1e6*stick['D']], 'kD')
-            AX[3].plot([Rm0], [1e6*stick['L']], 'kD')
+            AX[1].plot([Rm_exp.mean()], [1e6*soma0['L']], 'kD')
+            AX[2].plot([Rm_exp.mean()], [1e6*stick0['D']], 'kD')
+            AX[3].plot([Rm_exp.mean()], [1e6*stick0['L']], 'kD')
             
         return fig
 
@@ -245,4 +249,4 @@ if __name__=='__main__':
     
     fig, fig2, fig3 = make_experimental_fig()
     plt.show()
-    graph.put_list_of_figs_to_svg_fig([fig, fig2, fig3])
+    graph.put_list_of_figs_to_svg_fig([fig, fig2, fig3], visualize=False)

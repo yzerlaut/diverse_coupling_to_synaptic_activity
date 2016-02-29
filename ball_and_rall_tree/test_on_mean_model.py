@@ -3,8 +3,12 @@ import sys
 
 soma, stick, params = np.load('../input_impedance_calibration/mean_model.npy')
 
+inh_factor = 5.8
+fe_baseline, fi_baseline, synch_baseline = 0.15, 0.15*inh_factor, 0.05
+
+
 if sys.argv[-1]=='run':
-    tstop = 10000.
+    tstop = 1000.
 
     x_exp, cables = setup_model(soma, stick, params)    
 
@@ -16,28 +20,31 @@ if sys.argv[-1]=='run':
     F = 0.2
     synch = 0. # baseline synchrony
     inh_factor = 7.
-    shotnoise_input = {'synchrony':synch,
-                       'fe_prox':F,'fi_prox':inh_factor*F,
-                       'fe_dist':F,'fi_dist':inh_factor*F}
+    ## MAKING THE BASELINE EXPERIMENT
+    shtn_input = {'synchrony':synch_baseline,
+                  'fe_prox':fe_baseline, 'fi_prox':fi_baseline,
+                  'fe_dist':fe_baseline, 'fi_dist':fi_baseline}
 
     print 'Running simulation [...]'
-    t, V = run_simulation(shotnoise_input, cables, params, tstop=tstop)
-    muV_exp, sV_exp, Tv_exp = analyze_simulation(x_exp, cables, t, V)
-    np.save('data_mean_model_sim.npy', [x_exp, shotnoise_input, muV_exp, sV_exp, Tv_exp])
-    fig = plot_time_traces(t, V, cables, params['EqCylinder'])
-    fig.savefig('fig.svg', format='svg')
-    plt.show()
+    t, V = run_simulation(shtn_input, cables, params, tstop=tstop)
+    np.save('data_mean_model_sim.npy', [x_exp, shtn_input, cables, t, V])
     
 else:
-    x_exp, shotnoise_input, muV_exp, sV_exp, Tv_exp = \
+    x_exp, shtn_input, cables, t, V = \
       np.load('data_mean_model_sim.npy')
+    x_exp, cables = setup_model(soma, stick, params)    
       
+    muV_exp, sV_exp, Tv_exp = analyze_simulation(x_exp, cables, t, V)
+    fig = plot_time_traces(t, V, cables, params['EqCylinder'])
+    plt.show()
+    fig.savefig('fig.svg', format='svg')
+    
     # constructing the space-dependent shotnoise input for the simulation
     x_th, muV_th, sV_th, Tv_th  = \
-                get_analytical_estimate(shotnoise_input,
+                get_analytical_estimate(shtn_input,
                                         soma, stick, params,
                                         discret=20)
     make_comparison_plot(x_th, muV_th, sV_th, Tv_th,\
-                         x_exp, muV_exp, sV_exp, Tv_exp, shotnoise_input)    
+                         x_exp, muV_exp, sV_exp, Tv_exp, shtn_input)    
     plt.show()
 
