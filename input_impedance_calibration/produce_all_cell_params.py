@@ -10,6 +10,9 @@ from theory.analytical_calculus import *
 #### ================================================== ##
 
 soma, stick, params = np.load('../input_impedance_calibration/mean_model.npy')
+kept_cells = np.load('../coupling_model/kept_cells.npy')
+from data_firing_response.analyze_data import get_Rm_range
+Rm_exp = get_Rm_range()[kept_cells]
 
 ## SYNAPTIC SCALING
 
@@ -30,35 +33,39 @@ if sys.argv[-1]=='plot':
     from my_graph import *
     import matplotlib.pylab as plt
     
-    fig1, ax = plt.subplots(1,2, figsize=(6,3))
-    ax[0].fill_between([0,1],[0,0],np.ones(2)*(1e-5)**2/soma['inh_density'], color='r')
-    ax[0].fill_between([0,1],[0,0],np.ones(2)*(1e-5)**2/soma['exc_density'], color='g', lw=4)
-    ax[1].fill_between([0,1],[0,0],np.ones(2)*(1e-5)**2/stick['exc_density'], color='g')
-    ax[1].fill_between([0,1],[0,0],np.ones(2)*(1e-5)**2/stick['inh_density'], color='r')
-    set_plot(ax[0], ['left'], ylabel='synaptic densities \n synapses/100$\mu m^2$', xticks=[])
-    set_plot(ax[1], ['left'], ylabel='synaptic densities \n synapses/100$\mu m^2$', xticks=[])
+    fig1, ax = plt.subplots(1, figsize=(6,3))
+    ax.fill_between([0,1],[0,0],np.ones(2)*(1e-5)**2/soma['inh_density'], color='r')
+    ax.fill_between([0,1],[0,0],np.ones(2)*(1e-5)**2/soma['exc_density'], color='g', lw=4)
+    ax.fill_between([3,4],[0,0],np.ones(2)*(1e-5)**2/stick['exc_density'], color='g')
+    ax.fill_between([3,4],[0,0],np.ones(2)*(1e-5)**2/stick['inh_density'], color='r')
+    set_plot(ax, ['left'], ylabel='synaptic densities \n synapses/100$\mu m^2$',\
+             xticks=[], yticks=[0,15,30])
+    # set_plot(ax[1], ['left'], ylabel='synaptic densities \n synapses/100$\mu m^2$', xticks=[])
 
     fig2, ax = plt.subplots(1,2, figsize=(8,3))
     fig2.suptitle('synaptic event')
-    t = np.linspace(-1,30, 1e3)*1e-3
+    t = np.linspace(-5,25, 1e4)*1e-3
     g = lambda Q,tau: Q*np.array([np.exp(-tt/tau) if tt>0 else 0 for tt in t])
-    ax[0].plot(1e3*t, 1e9*g(params['Qe'], params['Te']), 'g-', lw=2)
-    ax[0].plot(1e3*t, 1e9*g(params['Qi'], params['Ti']), 'r-', lw=2)
+    Qe, Qi = Qe_rule(Rm_exp.mean()*1e6, params), Qi_rule(Rm_exp.mean()*1e6, params)
+    ax[0].plot(1e3*t, 1e9*g(Qi, params['Ti']), 'r-', lw=3)
+    ax[0].plot(1e3*t, 1e9*g(Qe, params['Te']), 'g-', lw=3)
     ax[0].set_title('somatic and proximal')
     set_plot(ax[0], ylabel='G (nS)', xticks=[0,15,30], xlabel='time (ms)', ylim=[0,4], yticks=[0,2,4])
 
-    ax[1].plot(1e3*t, 1e9*g(params['factor_for_distal_synapses_weight']*params['Qe'], params['factor_for_distal_synapses_tau']*params['Te']), 'g-', lw=2)
-    ax[1].plot(1e3*t, 1e9*g(params['factor_for_distal_synapses_weight']*params['Qi'], params['factor_for_distal_synapses_tau']*params['Ti']), 'r-', lw=2)
+    ax[1].plot(1e3*t, 1e9*g(params['factor_for_distal_synapses_weight']*Qi, params['factor_for_distal_synapses_tau']*params['Ti']), 'r-', lw=3, label='inh.')
+    ax[1].plot(1e3*t, 1e9*g(params['factor_for_distal_synapses_weight']*Qe, params['factor_for_distal_synapses_tau']*params['Te']), 'g-', lw=3, label='exc.')
     ax[1].set_title('distal')
+    ax[1].legend()
     set_plot(ax[1], ylabel='G (nS)', xticks=[0,15,30], xlabel='time (ms)', ylim=[0,4], yticks=[0,2,4])
 
     fig3, ax = plt.subplots(2, 1, figsize=(3,4))
     plt.subplots_adjust(left=.3, bottom=.3)
-    Rm0 = np.linspace(200,800)*1e6
-    ax[0].plot(Rm0, 1e9*Qe_rule(Rm0, params), 'g', lw=2)
-    ax[1].plot(Rm0, 1e9*Qi_rule(Rm0, params), 'r', lw=2)
+    Rm0 = np.linspace(0.9*Rm_exp.min(), 1.2*Rm_exp.max(), 20)
+    ax[0].plot(Rm0, 1e9*Qe_rule(Rm0*1e6, params), 'g', lw=2)
+    ax[1].plot(Rm0, 1e9*Qi_rule(Rm0*1e6, params), 'r', lw=2)
     set_plot(ax[0], ['left'], ylabel='$Q_e$ (nS)', xticks=[])
-    set_plot(ax[1], ylabel='$Q_i$ (nS)', xlabel='$R_{TF}^{soma}$ $(M \Omega)$')
+    set_plot(ax[1], ylabel='$Q_i$ (nS)', xlabel='somatic input \n resistance $(M\Omega)$',\
+             xticks=[200,400,600], yticks=[1,2,3])
     plt.show()
 else:
     # data of the reduced morphologies

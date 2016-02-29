@@ -529,7 +529,7 @@ def get_the_input_impedance_at_soma(f, soma, stick, params):
     # input and recording in x=0 
     return dv_X_Xsrc_Lp(0., 0., 1., afP, afD, gfP, rfP, rfD, Lp, L, lbdD, lbdP)
 
-def get_membrane_time_constants(soma, stick, params,\
+def get_membrane_time_constants(soma, stick, params,
                                 f=rfft.time_to_freq(1000, 1e-4)):
     psd = np.abs(get_the_input_impedance_at_soma(f, soma, stick, params))**2
     return .5*psd[0]/(2.*np.trapz(np.abs(psd), f))

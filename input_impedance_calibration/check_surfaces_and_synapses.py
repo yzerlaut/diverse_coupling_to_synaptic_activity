@@ -15,7 +15,6 @@ Rm = get_Rm_range()
 
 Ke, Ki = 0*Rm, 0*Rm
 
-
 for i in range(len(Rm)):
     soma1, stick1, params1 = adjust_model_prop(Rm[i], soma, stick)
     xtot1, cables1 = setup_model(soma1, stick1, params1)
@@ -26,7 +25,6 @@ print 'mean number of synapses: ', np.mean(Ke+Ki), '+/-', np.std(Ke+Ki)
 print 'max number of synapses: ', np.max(Ke+Ki)
 print 'min number of synapses: ', np.min(Ke+Ki)
 print 'excitatory/inhibitory : ', np.mean(Ke/Ki), '+/-', np.std(Ke/Ki)
-
 
 fig, ax = plt.subplots(1, 3, figsize=(10,3))
 plt.subplots_adjust(bottom=.3)

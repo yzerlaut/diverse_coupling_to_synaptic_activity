@@ -27,6 +27,7 @@ VTHREs, DMUVs, DTSVs, DTVs = VTHRE[INDEXES], DMUV[INDEXES], DTSV[INDEXES], DTV[I
 ## discarding too low firing that can't be analyzed...
 
 cond = (NU0>1e-3) & (NU0<8)
+np.save('kept_cells.npy', cond)
 
 NU0, NU, UNBALANCED, PROX, DIST, SYNCH = NU0[cond], NU[cond], UNBALANCED[cond], PROX[cond], DIST[cond], SYNCH[cond]
 VTHRE, DMUV, DTSV, DTV = VTHRE[cond], DMUV[cond], DTSV[cond], DTV[cond]

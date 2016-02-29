@@ -5,7 +5,7 @@ import os
 # SCRIPTS = ['paper', 'presentation', 'highlights']
 SCRIPTS = ['paper', 'supplementary']
 
-EXT = 'pdf' # extension for figure export : png or pdf !
+EXT = 'png' # extension for figure export : png or pdf !
 DPI = 300 # resolution for bitmap figures
 
 SVG_FILES =[]
