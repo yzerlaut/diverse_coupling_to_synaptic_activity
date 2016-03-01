@@ -10,7 +10,10 @@ from theory.analytical_calculus import *
 #### ================================================== ##
 
 soma, stick, params = np.load('../input_impedance_calibration/mean_model.npy')
-kept_cells = np.load('../coupling_model/kept_cells.npy')
+try:
+    kept_cells = np.load('../coupling_model/kept_cells.npy')
+except IOError:
+    kept_cells = [True for i in range(30)]
 from data_firing_response.analyze_data import get_Rm_range
 Rm_exp = get_Rm_range()[kept_cells]
 

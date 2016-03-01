@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib
 import matplotlib.pylab as plt
 import sys, time
-sys.path.append('/home/yann/work/python_library')
+sys.path.append('../code/')
 from my_graph import set_plot
 import fourier_for_real as rfft
 from signanalysis import autocorrel

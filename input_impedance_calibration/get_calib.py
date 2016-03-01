@@ -11,7 +11,10 @@ from theory.analytical_calculus import * # where the core calculus lies
 #### ================================================== ##
 
 soma, stick, params = np.load('../input_impedance_calibration/mean_model.npy')
-kept_cells = np.load('../coupling_model/kept_cells.npy')
+try:
+    kept_cells = np.load('../coupling_model/kept_cells.npy')
+except IOError:
+    kept_cells = [True for i in range(30)]
 
 
 # common to all plots, the frequency range we will look at [0.1,1000] Hz

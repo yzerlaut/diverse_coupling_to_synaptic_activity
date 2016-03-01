@@ -8,18 +8,15 @@ fe_baseline, fi_baseline, synch_baseline = 0.15, 0.15*inh_factor, 0.05
 
 
 if sys.argv[-1]=='run':
-    tstop = 1000.
+    tstop = 2000.
 
     x_exp, cables = setup_model(soma, stick, params)    
-
+    stick['NSEG'] = 10
     x_stick = np.linspace(0,stick['L'],30)
     x_stick = .5*(x_stick[1:]+x_stick[:-1])
 
     # constructing the space-dependent shotnoise input for the simulation
 
-    F = 0.2
-    synch = 0. # baseline synchrony
-    inh_factor = 7.
     ## MAKING THE BASELINE EXPERIMENT
     shtn_input = {'synchrony':synch_baseline,
                   'fe_prox':fe_baseline, 'fi_prox':fi_baseline,
