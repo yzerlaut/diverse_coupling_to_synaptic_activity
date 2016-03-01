@@ -90,9 +90,8 @@ def Constructing_the_ball_and_tree(params, cables,
                 for seg in section:
 
                     tree_fraction = np.max([0,float(seg.x)/(len(cables)-1)+float(level-1)/(len(cables)-1)])
-                    print tree_fraction
                     if tree_fraction>=params['fraction_for_L_prox']:
-                        print 'strengthen synapse !'
+                        # print 'strengthen synapse !'
                         Ftau = params['factor_for_distal_synapses_tau']
                         Fq = params['factor_for_distal_synapses_weight']
                     else:
@@ -197,7 +196,7 @@ def set_presynaptic_spikes_manually(shotnoise_input, cables, params,\
                                       tstop=tstop, seed=i*(seed**2+j), synchrony=synchrony)
             ## inhibition
             build_poisson_spike_train(inh_spike_trains[i][j], fi, inh_Ks[i][j], units='ms',\
-                                      tstop=tstop, seed=seed+i*(+j**2), synchrony=synchrony)
+                                      tstop=tstop, seed=seed+i*j**2, synchrony=synchrony)
 
 def run_simulation(shotnoise_input, cables, params, tstop=2000.,\
                    dt=0.025, seed=3, recordings='full'):

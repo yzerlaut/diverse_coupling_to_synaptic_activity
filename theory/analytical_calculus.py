@@ -16,7 +16,7 @@ def params_for_cable_theory(cable, params):
     cable['cm'] = params['cm']*np.pi*D # [F/m] """" NEURON 1e-2 !!!! """"
     
 
-def setup_model(soma, stick, params, verbose=False):
+def setup_model(soma, stick, params, verbose=True):
     """ returns the different diameters of the equivalent cylinder
     given a number of branches point"""
     params['EqCylinder'] = np.linspace(0, 1, stick['B']+1)*stick['L'] # equally space branches !
@@ -34,6 +34,7 @@ def setup_model(soma, stick, params, verbose=False):
         cable['x'] = .5*(x[1:]+x[:-1])
         xtot = np.concatenate([xtot, cable['x']])
         cable['D'] = D*2**(-2*(i-1)/3.)
+        print cable['D']
         cable['inh_density'] = stick['inh_density']
         cable['exc_density'] = stick['exc_density']
         cables.append(cable)
@@ -258,7 +259,8 @@ def get_the_theoretical_sV_and_Tv(shtn_input,\
     
     for b in params['EqCylinder']:
         Branch_weights[np.where(Source_Array>=b)[0]] += 1
-
+    print Branch_weights
+    
     for ix_dest in range(len(x)):
 
         #### DENDRITIC SYNAPSES
