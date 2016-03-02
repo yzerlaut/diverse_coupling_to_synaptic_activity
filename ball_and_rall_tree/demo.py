@@ -22,13 +22,6 @@ params = {
     'seed' : 0}
 
     
-sim_params = {#in ms
-'dt':0.025,
-'initial_discard':200.,
-'window_for_autocorrel':40.,
-'tstop':20000.
-}
-
 FACTOR_FOR_DENSITY = 1. # because Ball & Sticks sucks !!!
 
 # synaptic density  area (m2) per one synapse !!
@@ -249,7 +242,7 @@ if __name__=='__main__':
     # then we run the simulation if needed
     if args.simulation:
         print 'Running simulation [...]'
-        t, V = run_simulation(shotnoise_input, cables, params, tstop=args.tstop_sim*1e3, dt=0.025, seed=args.seed)
+        t, V = run_simulation(shotnoise_input, cables, params, tstop=args.tstop_sim, dt=args.dt, seed=args.seed)
         muV_exp, sV_exp, Tv_exp = analyze_simulation(x_exp, cables, t, V)
         np.save(file, [x_exp, shotnoise_input, muV_exp, sV_exp, Tv_exp, soma, stick, params])
         

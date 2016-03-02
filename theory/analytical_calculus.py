@@ -259,8 +259,7 @@ def get_the_theoretical_sV_and_Tv(shtn_input,\
     
     for b in params['EqCylinder']:
         Branch_weights[np.where(Source_Array>=b)[0]] += 1
-    print Branch_weights
-    
+
     for ix_dest in range(len(x)):
 
         #### DENDRITIC SYNAPSES
