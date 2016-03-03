@@ -259,6 +259,8 @@ def get_the_theoretical_sV_and_Tv(shtn_input,\
     
     for b in params['EqCylinder']:
         Branch_weights[np.where(Source_Array>=b)[0]] += 1
+        
+    Branch_weights = np.power(2., Branch_weights-1) # NUMBER OF BRANCHES
 
     for ix_dest in range(len(x)):
 
@@ -386,6 +388,7 @@ def get_the_fluct_prop_at_soma(SHTN_INPUT, params, soma, stick,\
         Branch_weights = 0*Source_Array # initialized t0 0 !
         for b in params['EqCylinder']:
             Branch_weights[np.where(Source_Array>=b)[0]] += 1
+        Branch_weights = np.power(2., Branch_weights-1) # NUMBER OF BRANCHES
 
         #### DENDRITIC SYNAPSES
         for ix_source in range(len(Source_Array)):
@@ -484,6 +487,8 @@ def get_the_transfer_resistance_to_soma(soma, stick, params, precision=100):
     Branch_weights = 0*Source_Array # initialized t0 0 !
     for b in params['EqCylinder']:
         Branch_weights[np.where(Source_Array>=b)[0]] += 1
+        
+    Branch_weights = np.power(2., Branch_weights-1) # NUMBER OF BRANCHES
 
     R_transfer = np.zeros(len(Source_Array)+1)
     N_synapses = np.zeros(len(Source_Array)+1)
