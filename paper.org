@@ -41,7 +41,7 @@
 
 Neocortical processing of sensory input rely on the specific
 activation of subpopulations within the cortical network. The details
-of how such specific activation happens are a key question in systems
+of how such specific activations happens are key questions in systems
 neuroscience.
 
 [...]

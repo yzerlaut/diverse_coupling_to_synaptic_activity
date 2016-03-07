@@ -15,8 +15,8 @@ params['Te'], params['Ti'] = 5e-3, 5e-3
 params['Ee'], params['Ei'] = 0e-3, -80e-3
 params['El'] = -65e-3#0e-3, -80e-3
 
-params['fraction_for_L_prox'] = 5./6.
-params['factor_for_distal_synapses_weight'] = 2.
+params['fraction_for_L_prox'] = 7./8.
+params['factor_for_distal_synapses_weight'] = 1.5
 params['factor_for_distal_synapses_tau'] = 1.
 
 def format_params(soma, stick, params):

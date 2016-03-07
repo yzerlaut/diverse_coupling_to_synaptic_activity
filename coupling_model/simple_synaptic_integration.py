@@ -17,10 +17,10 @@ def get_fluct_var(i_nrn, F=None, exp_type='non specific activity',\
                   balance=-55e-3, len_f=5, precision=1e2):
 
     if F is None:
-        F = np.linspace(0., .15, len_f)
+        F = np.linspace(0., .4, len_f)
         
     synch = 0.05+0*F # baseline synchrony
-    F0 = 0.05+0*F
+    F0 = 0.04+0*F
     
     inh_factor = 5.8
     inh_factor_balance_rupt = 4.
@@ -29,7 +29,7 @@ def get_fluct_var(i_nrn, F=None, exp_type='non specific activity',\
                                    balance=balance, synch=synch)
     
     if exp_type=='non specific activity':
-        feG, fiG, feI, fiI = F+F0, inh_factor*(0*F+F0), F+F0, inh_factor*(0*F+F0)
+        feG, fiG, feI, fiI = 1.1*F+F0, inh_factor*(0*F+F0), 1.1*F+F0, inh_factor*(0*F+F0)
         fiG, fiI = find_inh_cond_for_balance(feG, fiG, feI, fiI, fe0,i_nrn, balance+0*F, precision=precision)
     elif exp_type=='unbalanced activity':
         feG, feI, fiG, fiI = (F+F0), (F+F0), 0*F, 0*F
@@ -39,10 +39,10 @@ def get_fluct_var(i_nrn, F=None, exp_type='non specific activity',\
         feG, fiG, feI, fiI = F0+4.*F, 4.*inh_factor*(F+F0), F0, 0*F
         fiG, fiI = find_inh_cond_for_balance(feG, fiG, feI, fiI, fe0,i_nrn, balance+0*F, precision=precision)
     elif exp_type=='distal activity':
-        feG, fiG, feI, fiI = F0, 0*F, F0+2.*F, 2.*inh_factor*(F+F0)
+        feG, fiG, feI, fiI = F0, 0*F, F0+1.3*F, 1.3*inh_factor*(F+F0)
         fiG, fiI = find_inh_cond_for_balance(feG, fiG, feI, fiI, fe0,i_nrn, balance+0*F, precision=precision)
     elif exp_type=='synchrony':
-        synch = synch+np.linspace(0., 0.3, len(F))
+        synch = synch+np.linspace(0., 0.63, len(F))
         feG, feI, fiG, fiI = F0, F0, 0*F, 0*F
         fiG, fiI = find_inh_cond_for_balance(feG, fiG, feI, fiI, fe0,i_nrn, balance+0*F, precision=precision)
     else:
@@ -77,15 +77,18 @@ if __name__=='__main__':
     from my_graph import set_plot
 
     i_nrn = 2 # index of the neuron
-
+    precision = 1e4
+    
     fig, AX = plt.subplots(4, 1, figsize=(3.5, 9))
     plt.subplots_adjust(left=.45, top=.9, wspace=.2, hspace=.2)
     fig2, AX2 = plt.subplots(5, 1, figsize=(3.5, 10))
     plt.subplots_adjust(left=.45, top=.9, wspace=.2, hspace=.2)
     COLORS=['r', 'b', 'g', 'c', 'k', 'm']
 
+    # PROTOCOLS = ['unbalanced activity', 'proximal activity', 'distal activity',\
+    #              'synchrony', 'non specific activity']
     PROTOCOLS = ['unbalanced activity', 'proximal activity', 'distal activity',\
-                 'synchrony', 'non specific activity']
+                 'synchrony']
                  
     len_f = 30
     F = np.linspace(0,1, len_f)
@@ -100,9 +103,9 @@ if __name__=='__main__':
                 print 'cell: ', i_nrn
                 FEG[i, i_nrn,:], FIG[i, i_nrn,:], FEI[i, i_nrn,:], FII[i, i_nrn,:], SYNCH[i, i_nrn,:],\
                    MUV[i, i_nrn,:], SV[i, i_nrn,:], TVN[i, i_nrn,:], MUGN[i, i_nrn,:] =\
-                   get_fluct_var(i_nrn, exp_type=PROTOCOLS[i], len_f=len_f)
+                   get_fluct_var(i_nrn, exp_type=PROTOCOLS[i], len_f=len_f, precision=precision)
 
-            np.save('data/synaptic_data.npy', [FEG, FIG, FEI, FII, SYNCH, MUV, SV, TVN, MUGN, FOUT])
+        np.save('data/synaptic_data.npy', [FEG, FIG, FEI, FII, SYNCH, MUV, SV, TVN, MUGN, FOUT])
             
     elif sys.argv[-1]=='plot':
                 
@@ -110,43 +113,43 @@ if __name__=='__main__':
             
         for i in range(len(PROTOCOLS)):
             for ax, x in zip(AX, [1e3*MUV[i,:,:], 1e3*SV[i,:,:], 1e2*TVN[i,:,:], MUGN[i,:,:]]):
-                ax.plot(F, x.mean(axis=0), color=COLORS[i], lw=3)
+                ax.plot(F, x.mean(axis=0), color=COLORS[i], lw=5)
                 if sys.argv[-2]=='with_variations':
                     ax.fill_between(F, x.mean(axis=0)-x.std(axis=0),\
                                     x.mean(axis=0)+x.std(axis=0), alpha=.2, color=COLORS[i])
             for ax, x in zip(AX2, [FEG[i,:,:], FIG[i,:,:], FEI[i,:,:], FII[i,:,:], SYNCH[i,:,:]]):
-                ax.plot(F, x.mean(axis=0), color=COLORS[i], lw=3)
+                ax.plot(F, x.mean(axis=0), color=COLORS[i], lw=5)
                 if sys.argv[-2]=='with_variations':
                     ax.fill_between(F, x.mean(axis=0)-x.std(axis=0),\
                                 x.mean(axis=0)+x.std(axis=0), alpha=.2, color=COLORS[i])
     else:
         for i in range(len(PROTOCOLS)):
             feG, fiG, feI, fiI, synch, muV, sV, TvN, muGn = get_fluct_var(i_nrn,\
-                                          exp_type=PROTOCOLS[i], len_f=len_f)
+                                          exp_type=PROTOCOLS[i], len_f=len_f, precision=precision)
             for ax, x in zip(AX, [1e3*muV, 1e3*sV, 1e2*TvN, muGn]):
-                ax.plot(F, x, lw=3, color=COLORS[i], label=PROTOCOLS[i])
+                ax.plot(F, x, lw=4, color=COLORS[i], label=PROTOCOLS[i])
             for ax, x in zip(AX2, [feG, fiG, feI, fiI, synch]):
-                ax.plot(F, x, lw=3, color=COLORS[i], label=PROTOCOLS[i])
+                ax.plot(F, x, lw=4, color=COLORS[i], label=PROTOCOLS[i])
 
                 
     for ax, ylabel in zip(AX[:-1], LABELS[:-1]):
         set_plot(ax, ['left'], ylabel=ylabel, xticks=[], num_yticks=4)
     for ax, ylabel in zip(AX2[:-1], LABELS2[:-1]):
         set_plot(ax, ['left'], ylabel=ylabel, xticks=[], num_yticks=4)
-    set_plot(AX[-2], ['left'], ylabel=LABELS[-2], xticks=[], yticks=[30,50,70])
+    set_plot(AX[-2], ['left'], ylabel=LABELS[-2], xticks=[], num_yticks=4)
     set_plot(AX[-1], ['bottom','left'],\
              ylabel=LABELS[-1], xticks=[], xlabel='increasing \n presynaptic quantity')
-    set_plot(AX2[-2], ['left'], ylabel=LABELS2[-2], xticks=[], yticks=[0,1,2])
-    set_plot(AX2[1], ['left'], ylabel=LABELS2[1], xticks=[], yticks=[0,2,4])
-    set_plot(AX2[0], ['left'], ylabel=LABELS2[0], xticks=[], yticks=[0,0.3,0.6])
-    set_plot(AX2[2], ['left'], ylabel=LABELS2[2], xticks=[], yticks=[0,0.15,0.3])
+    set_plot(AX2[-2], ['left'], ylabel=LABELS2[-2], xticks=[], num_yticks=4)#, yticks=[0,1,2])
+    set_plot(AX2[1], ['left'], ylabel=LABELS2[1], xticks=[], num_yticks=4)#, yticks=[0,2,4])
+    set_plot(AX2[0], ['left'], ylabel=LABELS2[0], xticks=[], num_yticks=4)#, yticks=[0,0.3,0.6])
+    set_plot(AX2[2], ['left'], ylabel=LABELS2[2], xticks=[], num_yticks=4)#, yticks=[0,0.15,0.3])
     set_plot(AX2[-1], ['bottom','left'],\
-             ylabel=LABELS2[-1], xticks=[], xlabel='increasing \n presynaptic quantity',\
-             yticks=[0,0.15,0.3])
+             ylabel=LABELS2[-1], xticks=[], xlabel='increasing \n presynaptic quantity', num_yticks=4)
 
     # if sys.argv[-1]!='all':
     #     AX[0].legend(prop={'size':'xx-small'}, bbox_to_anchor=(1., 2.))
         
     fig.savefig('fig.svg')
     fig2.savefig('fig2.svg')
+    plt.show()
              
