@@ -153,7 +153,7 @@ if __name__=='__main__':
         for s in range(args.SEED):
             print 'baseline sim. , seed=', s
             t, V = run_simulation(shtn_input, cables, params,\
-                    tstop=args.tstop, dt=args.dt, seed=(ii+args.seed+s*(s+1))**3)
+                                  tstop=args.tstop, dt=args.dt, seed=(ii+args.seed+s*(s+1))**3%10000)
             muV_exp, sV_exp, Tv_exp = analyze_simulation(x_exp, cables, t, V)
             for EXP in SET_OF_EXPS:
                 EXP['muV_exp'][int(N_POINTS/2.),s], EXP['sV_exp'][int(N_POINTS/2.),s],\
@@ -167,7 +167,7 @@ if __name__=='__main__':
                 for s in range(args.SEED):
                     print 'sim=', i, ', seed=', s
                     t, V = run_simulation(shtn_input, cables, params,\
-                                          tstop=args.tstop, dt=args.dt, seed=(ii+args.seed+s*(s+1))**3)
+                                          tstop=args.tstop, dt=args.dt, seed=(ii+args.seed+s*(s+2))**3%10000)
                     muV_exp, sV_exp, Tv_exp = analyze_simulation(x_exp, cables, t, V)
 
                     EXP['muV_exp'][i,s], EXP['sV_exp'][i,s], EXP['Tv_exp'][i,s] = muV_exp[0], sV_exp[0], Tv_exp[0]
