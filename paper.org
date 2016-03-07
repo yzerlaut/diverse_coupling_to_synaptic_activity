@@ -1,4 +1,5 @@
-#+TITLE: Heterogenous firing responses leads to diverse coupling to presynaptic activity in a simplified morphological model of layer V pyramidal neurons
+#+TITLE: Do heterogenous firing responses lead to diverse couplings to presynaptic activity ?
+# A theoretical study in a simplified morphological model of layer V pyramidal neurons
 #+AUTHOR: Y. Zerlaut^{1} \& A. Destexhe^{1}
 #+INCLUDE: my_template.org 
 

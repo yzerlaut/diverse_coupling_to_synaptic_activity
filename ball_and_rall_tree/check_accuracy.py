@@ -13,61 +13,62 @@ from demo import *
 from firing_response_description.template_and_fitting import final_func
 
 N_POINTS = 3
-SEED = 4
 inh_factor = 5.8
 
 fe_baseline, fi_baseline, synch_baseline = 0.15, 0.15*inh_factor, 0.05
-fe_vector = np.array([.05,fe_baseline,0.25])
-fi_vector = np.array([.05,fe_baseline,0.25])*inh_factor
+fe_vector = np.array([.0,fe_baseline,0.3])
+fi_vector = fe_vector*inh_factor
 synch_vector = np.array([0., synch_baseline, 0.1])
 
-SET_OF_EXPS = [\
-               {'label':'increasing prox. exc. \n $\\nu_e^p$ (Hz)',
-                'xticks':fe_vector,
-                'fe_prox':fe_vector,
-                'fe_dist':np.ones(N_POINTS)*fe_baseline,
-                'fi_prox':np.ones(N_POINTS)*fi_baseline,
-                'fi_dist':np.ones(N_POINTS)*fi_baseline,
-                'synchrony':np.ones(N_POINTS)*synch_baseline,
-                'muV_exp':np.zeros((N_POINTS, SEED)), 'sV_exp':np.zeros((N_POINTS, SEED)), 'Tv_exp':np.zeros((N_POINTS, SEED))
-                },
-               {'label':'increasing distal exc. \n $\\nu_e^d$ (Hz)',
-                'xticks':fe_vector,
-                'fe_prox':np.ones(N_POINTS)*fe_baseline,
-                'fe_dist':fe_vector,
-                'fi_prox':np.ones(N_POINTS)*fi_baseline,
-                'fi_dist':np.ones(N_POINTS)*fi_baseline,
-                'synchrony':np.ones(N_POINTS)*synch_baseline,
-                'muV_exp':np.zeros((N_POINTS, SEED)), 'sV_exp':np.zeros((N_POINTS, SEED)), 'Tv_exp':np.zeros((N_POINTS, SEED))
-                },
-               {'label':'increasing prox. inh. \n $\\nu_i^p$ (Hz)',
-                'xticks':fi_vector,
-                'fe_prox':np.ones(N_POINTS)*fe_baseline,
-                'fe_dist':np.ones(N_POINTS)*fe_baseline,
-                'fi_prox':fi_vector,
-                'fi_dist':np.ones(N_POINTS)*fi_baseline,
-                'synchrony':np.ones(N_POINTS)*synch_baseline,
-                'muV_exp':np.zeros((N_POINTS, SEED)), 'sV_exp':np.zeros((N_POINTS, SEED)), 'Tv_exp':np.zeros((N_POINTS, SEED))
-                },
-               {'label':'increasing distal inh. \n $\\nu_i^d$ (Hz)',
-                'xticks':fe_vector,
-                'fe_prox':np.ones(N_POINTS)*fe_baseline,
-                'fe_dist':np.ones(N_POINTS)*fe_baseline,
-                'fi_prox':np.ones(N_POINTS)*fi_baseline,
-                'fi_dist':fi_vector,
-                'synchrony':np.ones(N_POINTS)*synch_baseline,
-                'muV_exp':np.zeros((N_POINTS, SEED)), 'sV_exp':np.zeros((N_POINTS, SEED)), 'Tv_exp':np.zeros((N_POINTS, SEED))
-                },
-               {'label':'increasing synchrony',
-                'xlabel':'synchrony',
-                'xticks':synch_vector,
-                'fe_prox':np.ones(N_POINTS)*fe_baseline,
-                'fe_dist':np.ones(N_POINTS)*fe_baseline,
-                'fi_prox':np.ones(N_POINTS)*fi_baseline,
-                'fi_dist':np.ones(N_POINTS)*fi_baseline,
-                'synchrony':synch_vector,
-                'muV_exp':np.zeros((N_POINTS, SEED)), 'sV_exp':np.zeros((N_POINTS, SEED)), 'Tv_exp':np.zeros((N_POINTS, SEED))
-                }]
+def create_set_of_exps(args):
+    SET_OF_EXPS = [\
+                   {'label':'prox. exc. \n $\\nu_e^p$ (Hz)',
+                    'xticks':fe_vector,
+                    'fe_prox':fe_vector,
+                    'fe_dist':np.ones(N_POINTS)*fe_baseline,
+                    'fi_prox':np.ones(N_POINTS)*fi_baseline,
+                    'fi_dist':np.ones(N_POINTS)*fi_baseline,
+                    'synchrony':np.ones(N_POINTS)*synch_baseline,
+                    'muV_exp':np.zeros((N_POINTS, args.SEED)), 'sV_exp':np.zeros((N_POINTS, args.SEED)), 'Tv_exp':np.zeros((N_POINTS, args.SEED))
+                    },
+                   {'label':'distal exc. \n $\\nu_e^d$ (Hz)',
+                    'xticks':fe_vector,
+                    'fe_prox':np.ones(N_POINTS)*fe_baseline,
+                    'fe_dist':fe_vector,
+                    'fi_prox':np.ones(N_POINTS)*fi_baseline,
+                    'fi_dist':np.ones(N_POINTS)*fi_baseline,
+                    'synchrony':np.ones(N_POINTS)*synch_baseline,
+                    'muV_exp':np.zeros((N_POINTS, args.SEED)), 'sV_exp':np.zeros((N_POINTS, args.SEED)), 'Tv_exp':np.zeros((N_POINTS, args.SEED))
+                    },
+                   {'label':'prox. inh. \n $\\nu_i^p$ (Hz)',
+                    'xticks':fi_vector,
+                    'fe_prox':np.ones(N_POINTS)*fe_baseline,
+                    'fe_dist':np.ones(N_POINTS)*fe_baseline,
+                    'fi_prox':fi_vector,
+                    'fi_dist':np.ones(N_POINTS)*fi_baseline,
+                    'synchrony':np.ones(N_POINTS)*synch_baseline,
+                    'muV_exp':np.zeros((N_POINTS, args.SEED)), 'sV_exp':np.zeros((N_POINTS, args.SEED)), 'Tv_exp':np.zeros((N_POINTS, args.SEED))
+                    },
+                   {'label':'distal inh. \n $\\nu_i^d$ (Hz)',
+                    'xticks':fi_vector,
+                    'fe_prox':np.ones(N_POINTS)*fe_baseline,
+                    'fe_dist':np.ones(N_POINTS)*fe_baseline,
+                    'fi_prox':np.ones(N_POINTS)*fi_baseline,
+                    'fi_dist':fi_vector,
+                    'synchrony':np.ones(N_POINTS)*synch_baseline,
+                    'muV_exp':np.zeros((N_POINTS, args.SEED)), 'sV_exp':np.zeros((N_POINTS, args.SEED)), 'Tv_exp':np.zeros((N_POINTS, args.SEED))
+                    },
+                   {'label':'synchrony',
+                    'xlabel':'synchrony',
+                    'xticks':synch_vector,
+                    'fe_prox':np.ones(N_POINTS)*fe_baseline,
+                    'fe_dist':np.ones(N_POINTS)*fe_baseline,
+                    'fi_prox':np.ones(N_POINTS)*fi_baseline,
+                    'fi_dist':np.ones(N_POINTS)*fi_baseline,
+                    'synchrony':synch_vector,
+                    'muV_exp':np.zeros((N_POINTS, args.SEED)), 'sV_exp':np.zeros((N_POINTS, args.SEED)), 'Tv_exp':np.zeros((N_POINTS, args.SEED))
+                    }]
+    return SET_OF_EXPS
              
 
 def get_model(args):
@@ -116,10 +117,11 @@ if __name__=='__main__':
 
 
     parser.add_argument("--SIM", action='store_true') # flag for running simuluation !
-    parser.add_argument("--seed", type=int, help="seed fo random numbers",default=3)
+    parser.add_argument("--seed", type=int, help="seed fo random numbers",default=23)
+    parser.add_argument("--SEED", type=int, help="number of changed SEEDS",default=2)
     parser.add_argument("--discret_sim", type=int, help="space discretization for numerical simulation", default=20)
-    parser.add_argument("--tstop", type=float, help="max simulation time (s)", default=2.)
-    parser.add_argument("--dt", type=float, help="simulation time step (ms)", default=0.025)
+    parser.add_argument("--tstop", type=float, help="max simulation time (s)", default=3000.)
+    parser.add_argument("--dt", type=float, help="simulation time step (ms)", default=0.1)
     parser.add_argument("--discret_th", type=int, help="discretization for theoretical evaluation",default=20)
     
     parser.add_argument("--MEAN_MODEL", action='store_true')
@@ -127,6 +129,8 @@ if __name__=='__main__':
 
     args = parser.parse_args()
 
+    SET_OF_EXPS = create_set_of_exps(args)
+    
     if args.file=='':
         file = 'data/vars_'+time.strftime("%d.%m.%Y_%H.%M")+'.npy'
     else:
@@ -146,9 +150,10 @@ if __name__=='__main__':
         shtn_input = {'synchrony':synch_baseline,
                       'fe_prox':fe_baseline, 'fi_prox':fi_baseline,
                       'fe_dist':fe_baseline, 'fi_dist':fi_baseline}
-        for s in range(SEED):
+        for s in range(args.SEED):
+            print 'baseline sim. , seed=', s
             t, V = run_simulation(shtn_input, cables, params,\
-                    tstop=args.tstop*1e3, dt=args.dt, seed=(ii+args.seed+s*(s+1))**3)
+                    tstop=args.tstop, dt=args.dt, seed=(ii+args.seed+s*(s+1))**3)
             muV_exp, sV_exp, Tv_exp = analyze_simulation(x_exp, cables, t, V)
             for EXP in SET_OF_EXPS:
                 EXP['muV_exp'][int(N_POINTS/2.),s], EXP['sV_exp'][int(N_POINTS/2.),s],\
@@ -159,9 +164,10 @@ if __name__=='__main__':
                 shtn_input = {'synchrony':EXP['synchrony'][i],
                               'fe_prox':EXP['fe_prox'][i], 'fi_prox':EXP['fi_prox'][i],
                               'fe_dist':EXP['fe_dist'][i], 'fi_dist':EXP['fi_dist'][i]}
-                for s in range(SEED):
+                for s in range(args.SEED):
+                    print 'sim=', i, ', seed=', s
                     t, V = run_simulation(shtn_input, cables, params,\
-                                          tstop=args.tstop*1e3, dt=args.dt, seed=(ii+args.seed+s*(s+1))**3)
+                                          tstop=args.tstop, dt=args.dt, seed=(ii+args.seed+s*(s+1))**3)
                     muV_exp, sV_exp, Tv_exp = analyze_simulation(x_exp, cables, t, V)
 
                     EXP['muV_exp'][i,s], EXP['sV_exp'][i,s], EXP['Tv_exp'][i,s] = muV_exp[0], sV_exp[0], Tv_exp[0]
@@ -179,7 +185,7 @@ if __name__=='__main__':
                 fig.savefig('data/spatial_profile_'+str(ii)+'.svg')
                 ii+=1
                 plt.close('all')
-        np.save(file, [soma, stick, params, SET_OF_EXPS])
+        np.save(file, [soma, stick, params, SET_OF_EXPS, args])
 
     import os
     if not os.path.isfile(file):
@@ -194,30 +200,43 @@ if __name__=='__main__':
         print file
   
     # now theoretical plot
-    soma, stick, params, SET_OF_EXPS = np.load(file)
+    soma, stick, params, SET_OF_EXPS, args = np.load(file)
     Tm0 = get_membrane_time_constants(soma, stick, params)
 
-    fig, AX = plt.subplots(3, figsize=(15,10))
-    
-    Xticks, Xticks_Labels = np.zeros(0), []
+    fig, AX = plt.subplots(3, 5, figsize=(15,10))
+
+    # plotting all points in all plots so that they have the same boundaries !!
+    for EXP in SET_OF_EXPS:
+        for y, i in zip([EXP['muV_exp'], EXP['sV_exp'], EXP['Tv_exp']], range(3)):
+            for ax in AX[i,:]:
+                ax.plot(-0.+0*y, y, 'wD', lw=0, ms=0.1, alpha=0.)
+
     for EXP, ii in zip(SET_OF_EXPS, range(len(SET_OF_EXPS))):
         SHTN_INPUT =  {'synchrony':EXP['synchrony'],
                         'fe_prox':EXP['fe_prox'], 'fi_prox':EXP['fi_prox'],
                         'fe_dist':EXP['fe_dist'], 'fi_dist':EXP['fi_dist']}
-        get_the_fluct_prop_at_soma(SHTN_INPUT, params, soma, stick)
         muV_th, sV_th, Tv_th, muG_th = get_the_fluct_prop_at_soma(SHTN_INPUT, params, soma, stick)
-        for ax, x, y in zip(AX, [1e3*muV_th, 1e3*sV_th, 1e3*Tm0*Tv_th],\
+        for ax, x, y in zip(AX[:,ii], [1e3*muV_th, 1e3*sV_th, 1e3*Tm0*Tv_th],\
                             [EXP['muV_exp'], EXP['sV_exp'], EXP['Tv_exp']]):
-            ax.errorbar(np.linspace(-.2,.2,len(y))+ii, np.array(y).mean(axis=1),\
+            ax.errorbar(np.linspace(-.2,.2,len(y)), np.array(y).mean(axis=1),\
                         yerr=np.array(y).std(axis=1), marker='D', color='k')
-            ax.plot(np.linspace(-.2,.2,len(x))+ii, x, '-', color='lightgray', lw=3)
-            Xticks = np.concatenate([Xticks, np.linspace(-.2,.2,len(x))+ii])
-            for i in range(len(EXP['muV_exp'])):
-                Xticks_Labels.append(str(round(EXP['xticks'][i],1)))
+            ax.plot(np.linspace(-.2,.2,len(x)), x, '-', color='lightgray', lw=3)
+            if (ax==AX[-1,0]):
+                set_plot(ax, xticks=np.linspace(-.2,.2,len(x)), xlim=[-.3,.3],\
+                         xlabel=EXP['label'],
+                         xticks_labels=[str(round(EXP['xticks'][i],2)) for i in range(N_POINTS)])
+            elif (ax==AX[-1,ii]):
+                set_plot(ax, xticks=np.linspace(-.2,.2,len(x)), yticks_labels=[], xlim=[-.3,.3],\
+                         xlabel=EXP['label'],
+                         xticks_labels=[str(round(EXP['xticks'][i],2)) for i in range(N_POINTS)])
+            elif ax in AX[:,0]:
+                set_plot(ax, xticks=np.linspace(-.2,.2,len(x)),\
+                         xticks_labels=[], xlim=[-.3,.3])
+            else:
+                set_plot(ax, xticks=np.linspace(-.2,.2,len(x)),yticks_labels=[], xlim=[-.3,.3])
             
-    for ax, ylabel in zip(AX, ['$\mu_V$ (mV)', '$\sigma_V$ (mV)', '$\\tau_V$ (ms)']):
-        set_plot(ax, ylabel=ylabel, xticks=[])
-    set_plot(ax, ylabel=ylabel, xticks=Xticks, xticks_labels=Xticks_Labels)
+    for ax, ylabel in zip(AX[:,0], ['$\mu_V$ (mV)', '$\sigma_V$ (mV)', '$\\tau_V$ (ms)']):
+        ax.set_ylabel(ylabel)
 
     plt.show()
     

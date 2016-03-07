@@ -3,17 +3,15 @@ import sys
 
 soma, stick, params = np.load('../input_impedance_calibration/mean_model.npy')
 stick['NSEG'] = 20
-params['Qe'], params['Qi'] = 0.9e-9, 1.2e-9
 
 inh_factor = 5.8
-fe_baseline, fi_baseline, synch_baseline = 0.15, 0.15*inh_factor, 0.0
+fe_baseline, fi_baseline, synch_baseline = 0.15, 0.15*inh_factor, 0.05
 shtn_input = {'synchrony':synch_baseline,
                 'fe_prox':fe_baseline, 'fi_prox':fi_baseline,
                   'fe_dist':fe_baseline, 'fi_dist':fi_baseline}
 
-
 if sys.argv[-1]=='run':
-    tstop = 5000.
+    tstop = 2000.
 
     x_exp, cables = setup_model(soma, stick, params)    
     x_stick = np.linspace(0,stick['L'],30)
@@ -22,9 +20,8 @@ if sys.argv[-1]=='run':
     # constructing the space-dependent shotnoise input for the simulation
 
     ## MAKING THE BASELINE EXPERIMENT
-
     print 'Running simulation [...]'
-    t, V = run_simulation(shtn_input, cables, params, tstop=tstop, dt=0.1)
+    t, V = run_simulation(shtn_input, cables, params, tstop=tstop, dt=0.05)
     np.save('data/data_mean_model_sim.npy', [x_exp, shtn_input, cables, t, V])
     
 elif sys.argv[-1]=='analyze':

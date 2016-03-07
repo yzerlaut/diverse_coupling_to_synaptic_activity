@@ -34,7 +34,6 @@ def setup_model(soma, stick, params, verbose=True):
         cable['x'] = .5*(x[1:]+x[:-1])
         xtot = np.concatenate([xtot, cable['x']])
         cable['D'] = D*2**(-2*(i-1)/3.)
-        print cable['D']
         cable['inh_density'] = stick['inh_density']
         cable['exc_density'] = stick['exc_density']
         cables.append(cable)
@@ -257,10 +256,9 @@ def get_the_theoretical_sV_and_Tv(shtn_input,\
     # new_freq*(1-synchrony+4*synchrony)
 
     
-    for b in params['EqCylinder']:
-        Branch_weights[np.where(Source_Array>=b)[0]] += 1
-        
-    Branch_weights = np.power(2., Branch_weights-1) # NUMBER OF BRANCHES
+    # for b in params['EqCylinder']:
+    #     Branch_weights[np.where(Source_Array>=b)[0]] += 1
+    # Branch_weights = np.power(2., Branch_weights-1) # NUMBER OF BRANCHES
 
     for ix_dest in range(len(x)):
 
@@ -280,9 +278,8 @@ def get_the_theoretical_sV_and_Tv(shtn_input,\
             fe /= synch_dividor
             fi /= synch_dividor
             ## weighting due to branching !
-            fe, fi = fe*Branch_weights[ix_source], fi*Branch_weights[ix_source]
-            Qe, Qi = weight_synapse_factor*params['Qe']/Branch_weights[ix_source],\
-                     weight_synapse_factor*params['Qi']/Branch_weights[ix_source]
+            Qe, Qi = weight_synapse_factor*params['Qe'],\
+                     weight_synapse_factor*params['Qi']
 
             # excitatory synapse at dendrites
             Gf2 = exp_FT_mod(f, Qe, params['Te']*tau_synapse_factor)
@@ -385,10 +382,10 @@ def get_the_fluct_prop_at_soma(SHTN_INPUT, params, soma, stick,\
         Source_Array = np.linspace(0, stick['L'], precision+1)
         Source_Array = .5*(Source_Array[1:]+Source_Array[:-1]) # discarding the soma, treated below
         DX = Source_Array[1]-Source_Array[0]
-        Branch_weights = 0*Source_Array # initialized t0 0 !
-        for b in params['EqCylinder']:
-            Branch_weights[np.where(Source_Array>=b)[0]] += 1
-        Branch_weights = np.power(2., Branch_weights-1) # NUMBER OF BRANCHES
+        # Branch_weights = 0*Source_Array # initialized t0 0 !
+        # for b in params['EqCylinder']:
+        #     Branch_weights[np.where(Source_Array>=b)[0]] += 1
+        # Branch_weights = np.power(2., Branch_weights-1) # NUMBER OF BRANCHES
 
         #### DENDRITIC SYNAPSES
         for ix_source in range(len(Source_Array)):
@@ -404,11 +401,13 @@ def get_the_fluct_prop_at_soma(SHTN_INPUT, params, soma, stick,\
                 tau_synapse_factor = params['factor_for_distal_synapses_tau']
 
             ## weighting due to branching !
-            fe, fi = fe*Branch_weights[ix_source], fi*Branch_weights[ix_source]
+            # fe, fi = fe*Branch_weights[ix_source], fi*Branch_weights[ix_source]
             fe /= synch_dividor
             fi /= synch_dividor
-            Qe, Qi = weight_synapse_factor*params['Qe']/Branch_weights[ix_source],\
-                     weight_synapse_factor*params['Qi']/Branch_weights[ix_source]
+            Qe, Qi = weight_synapse_factor*params['Qe'],\
+                     weight_synapse_factor*params['Qi']
+            # Qe, Qi = weight_synapse_factor*params['Qe']/Branch_weights[ix_source],\
+            #          weight_synapse_factor*params['Qi']/Branch_weights[ix_source]
 
             # excitatory synapse at dendrites
             Gf2 = exp_FT_mod(f, Qe, params['Te']*tau_synapse_factor)

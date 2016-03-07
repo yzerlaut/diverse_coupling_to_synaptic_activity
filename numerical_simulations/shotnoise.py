@@ -38,15 +38,15 @@ def build_poisson_spike_train(spk_train, f, K, units='ms', tstop=2000., seed=1, 
         for i in np.arange(N)[uniform_rdm<synchrony**3]:
             for j in range(4):
                 spk_train.insert(i, spk_train[i]) # 4 events
-            print '4 events'
+            # print '4 events'
         for i in np.arange(N)[(uniform_rdm>synchrony**3) & (uniform_rdm<synchrony**2)]:
             for j in range(3):
                 spk_train.insert(i, spk_train[i]) # 3 events
-            print '3 events'
+            # print '3 events'
         for i in np.arange(N)[(uniform_rdm>synchrony**2) & (uniform_rdm<synchrony)]:
             for j in range(2):
                 spk_train.insert(i, spk_train[i]) # 2 events
-            print '2 events'
+            # print '2 events'
 
 def queue_presynaptic_events_in_NEURON(ALL):
     """ we queue here the presynaptic events """

@@ -10,7 +10,7 @@ stick = {'L': 500*1e-6, 'D': 1.*1e-6, 'B':10, 'NSEG': 30,\
 params = {'g_pas': 1e-4*1e4, 'cm' : 1.*1e-2, 'Ra' : 200.*1e-2}
 
 # now synaptic properties
-params['Qe'], params['Qi'] = 1.6e-9, 2.2e-9
+params['Qe'], params['Qi'] = 0.7e-9, 1e-9
 params['Te'], params['Ti'] = 5e-3, 5e-3
 params['Ee'], params['Ei'] = 0e-3, -80e-3
 params['El'] = -65e-3#0e-3, -80e-3
