@@ -15,14 +15,14 @@ from firing_response_description.template_and_fitting import final_func
 N_POINTS = 3
 inh_factor = 5.8
 
-fe_baseline, fi_baseline, synch_baseline = 0.15, 0.15*inh_factor, 0.05
-fe_vector = np.array([.0,fe_baseline,0.3])
+fe_baseline, fi_baseline, synch_baseline = 0.4, 0.4*inh_factor, 0.2
+fe_vector = np.array([0.1,fe_baseline,0.7])
 fi_vector = fe_vector*inh_factor
-synch_vector = np.array([0., synch_baseline, 0.1])
+synch_vector = np.array([0., synch_baseline, 0.4])
 
 def create_set_of_exps(args):
     SET_OF_EXPS = [\
-                   {'label':'prox. exc. \n $\\nu_e^p$ (Hz)',
+                   {'label':'$\\nu_e^p$ (Hz) \n prox. exc. ',
                     'xticks':fe_vector,
                     'fe_prox':fe_vector,
                     'fe_dist':np.ones(N_POINTS)*fe_baseline,
@@ -31,16 +31,7 @@ def create_set_of_exps(args):
                     'synchrony':np.ones(N_POINTS)*synch_baseline,
                     'muV_exp':np.zeros((N_POINTS, args.SEED)), 'sV_exp':np.zeros((N_POINTS, args.SEED)), 'Tv_exp':np.zeros((N_POINTS, args.SEED))
                     },
-                   {'label':'distal exc. \n $\\nu_e^d$ (Hz)',
-                    'xticks':fe_vector,
-                    'fe_prox':np.ones(N_POINTS)*fe_baseline,
-                    'fe_dist':fe_vector,
-                    'fi_prox':np.ones(N_POINTS)*fi_baseline,
-                    'fi_dist':np.ones(N_POINTS)*fi_baseline,
-                    'synchrony':np.ones(N_POINTS)*synch_baseline,
-                    'muV_exp':np.zeros((N_POINTS, args.SEED)), 'sV_exp':np.zeros((N_POINTS, args.SEED)), 'Tv_exp':np.zeros((N_POINTS, args.SEED))
-                    },
-                   {'label':'prox. inh. \n $\\nu_i^p$ (Hz)',
+                   {'label':'$\\nu_i^p$ (Hz) \n prox. inh. ',
                     'xticks':fi_vector,
                     'fe_prox':np.ones(N_POINTS)*fe_baseline,
                     'fe_dist':np.ones(N_POINTS)*fe_baseline,
@@ -49,7 +40,16 @@ def create_set_of_exps(args):
                     'synchrony':np.ones(N_POINTS)*synch_baseline,
                     'muV_exp':np.zeros((N_POINTS, args.SEED)), 'sV_exp':np.zeros((N_POINTS, args.SEED)), 'Tv_exp':np.zeros((N_POINTS, args.SEED))
                     },
-                   {'label':'distal inh. \n $\\nu_i^d$ (Hz)',
+                   {'label':'$\\nu_e^d$ (Hz) \n distal exc. ',
+                    'xticks':fe_vector,
+                    'fe_prox':np.ones(N_POINTS)*fe_baseline,
+                    'fe_dist':fe_vector,
+                    'fi_prox':np.ones(N_POINTS)*fi_baseline,
+                    'fi_dist':np.ones(N_POINTS)*fi_baseline,
+                    'synchrony':np.ones(N_POINTS)*synch_baseline,
+                    'muV_exp':np.zeros((N_POINTS, args.SEED)), 'sV_exp':np.zeros((N_POINTS, args.SEED)), 'Tv_exp':np.zeros((N_POINTS, args.SEED))
+                    },
+                   {'label':'$\\nu_i^d$ (Hz) \n distal inh.',
                     'xticks':fi_vector,
                     'fe_prox':np.ones(N_POINTS)*fe_baseline,
                     'fe_dist':np.ones(N_POINTS)*fe_baseline,
@@ -117,11 +117,11 @@ if __name__=='__main__':
 
 
     parser.add_argument("--SIM", action='store_true') # flag for running simuluation !
-    parser.add_argument("--seed", type=int, help="seed fo random numbers",default=23)
-    parser.add_argument("--SEED", type=int, help="number of changed SEEDS",default=2)
+    parser.add_argument("--seed", type=int, help="seed fo random numbers",default=37)
+    parser.add_argument("--SEED", type=int, help="number of changed SEEDS",default=3)
     parser.add_argument("--discret_sim", type=int, help="space discretization for numerical simulation", default=20)
-    parser.add_argument("--tstop", type=float, help="max simulation time (s)", default=3000.)
-    parser.add_argument("--dt", type=float, help="simulation time step (ms)", default=0.1)
+    parser.add_argument("--tstop", type=float, help="max simulation time (s)", default=5000.)
+    parser.add_argument("--dt", type=float, help="simulation time step (ms)", default=0.025)
     parser.add_argument("--discret_th", type=int, help="discretization for theoretical evaluation",default=20)
     
     parser.add_argument("--MEAN_MODEL", action='store_true')
