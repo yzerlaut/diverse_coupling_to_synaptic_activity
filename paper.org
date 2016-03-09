@@ -10,36 +10,51 @@
   Neocortical processing of sensory input rely on the specific
   activation of subpopulations within the cortical network. Though
   specific circuitry is thought to be the primary mechanism underlying
-  this property, we investigate here how diverse biophysical features
-  in single neuron might contribute to such specific activation. In a
-  companion study [[cite:Zerlaut2016]], we reported that, in young mice
-  visual cortex, individual neurons differ not only in their
-  excitability but also to their sensitivities to the properties of
+  this functional principle, we investigate here how diverse
+  biophysical features in single neuron might contribute to such
+  specific activation. 
+
+  In a companion study [[cite:Zerlaut2016]], we reported that, in young
+  mice visual cortex, individual neurons differ not only in their
+  excitability but also in their sensitivities to the properties of
   the membrane potential fluctuations. In the present work, we analyze
   how this heterogeneity is translated into diverse input-ouput
   properties (i.e. in the relation from presynaptic quantities to
-  spiking probability). To this purpose, we designed a simplified
-  morphological model of layer V pyramidal neurons with a dendritic
-  tree following Rall's branching rule. We first show that we are able
-  to calibrate this simplified model on /in vitro/ measurements of
-  somatic input impedance. We then propose an analytical derivation
-  for the membrane potential fluctuations at the soma as a function of
-  the properties of the synaptic bombardment. This mathematical
-  description allows to easily emulate various forms of presynaptic
-  activities: either unbalanced, synchronized, purely proximal or
-  purely distal. We found that, because of their various firing
-  responses, individual neurons differentially couple to each type of
-  presynaptic activity. The main contribution to this heterogenous
-  coupling were the different levels of cellular excitability (action
-  potential threshold). 
+  spiking probability). 
 
-  The present study therefore introduce a new functional impact of
-  biophysical heterogeneity: specific coupling to particular types of
-  synaptic activity.
+  We designed a simplified morphological model of layer V pyramidal
+  neurons with a dendritic tree following Rall's branching rule. We
+  first show that we are able to calibrate this simplified model on
+  /in vitro/ measurements of somatic input impedance. We then propose
+  an analytical derivation for the membrane potential fluctuations at
+  the soma as a function of the properties of the synaptic
+  bombardment. This mathematical description allows to easily emulate
+  various forms of presynaptic activities: either balanced,
+  unbalanced, synchronized, purely proximal or purely distal synaptic
+  activity. We found that those different forms of activity led to
+  various comodulations of the membrane potential fluctuation
+  properties, thus raising the question whether individual neurons
+  might differentially couple to specific forms of activity because of
+  their various firing responses to fluctuations [[cite:Zerlaut2016]]. We
+  indeed found such an heterogenous response, but trivially, the only
+  significant contribution to the various firing response was the
+  different levels of cellular excitability (linked to the action
+  potential threshold level). A notable exception appeared for
+  proximal activity: increasing proximal activity could either promote
+  firing response in some cells or suppress it in some other cells
+  whatever their individual excitability. This behavior could only be
+  explained by various sensitivities to the speed of the fluctuations,
+  that was previously linked to heterogenous levels of sodium
+  inactivation and sodium channels density.
+
+  In addition to giving quantitative insight on the impact of various
+  excitability levels in individual neurons, the present study
+  suggests a new functional impact of biophysical heterogeneity:
+  various levels of density of sodium channels and sodium inactivation
+  will control the response of individual neurons to proximal
+  activity.
 
 \normalfont
-
-\newpage
 
 * Introduction
 
@@ -77,7 +92,9 @@ the variability in the biophysical features reported in
 [[citetext:Zerlaut2016]], namely that single neurons in juvenile mice
 cortex not only vary in their excitability (linked to the action
 potential threshold) but also in their sensitivity to the properties
-of the membrane potential fluctuations.
+of the membrane potential fluctuations. We introduced new dimensions
+in the /biophysical specificity/ and we now aim at understanding their
+functional impact.
 
 We thus designed a theoretical model for passive dendritic integration
 that allows an analytical treatment and thus easily enables the
@@ -107,10 +124,7 @@ studies suggest that [...]
 # deflections) and biophysical factors (the threshold
 # value). Biophysical parameters are thus a key properties of 
 
-\newpage
-
 * Results 
-<<sec:results>>
 \normalsize
 
 The results are organized as follows. We first formulate our
@@ -120,16 +134,14 @@ probability. Then we present our simplified model of dendritic
 morphology which we calibrated on /in vitro/ measurements. We derive
 an analytical approximation for the membrane potential fluctuations at
 the soma that we compare to numerical simulations using standard
-compartemental modeling. We 
+compartemental modeling. We [[xx]]
 
 ** A theoretical framework for single cell computation in the fluctuation-driven regime
-
 
 #+ATTR_LATEX: :width \linewidth
 #+NAME: fig:model-illustration
 #+CAPTION: *A theoretical framework for single cell computation in the fluctuation-driven regime*. *(A)* Theoretical paradigm: to get the input-output function of a single cell, we split the relation from presynaptic quantities (the input) to the spiking probability (the output) into two steps. 1) passive dendritic integration shape the membrane potential at the soma and 2) how those fluctuations are translated into spikes is captured by a firing response function determined /in vitro/ [[cite:Zerlaut2016]] *(B)* Theoretical model for dendritic integration. A single cell is made of a lumped impedance somatic compartment and a dendritic tree. The dendritic tree is composed of B branches (here B=5), the branching is symmetric and follow Rall's 3/2 rule for the branch diameters. Synapses are then spread all over the membrane according to physiological synaptic densities. We define 3 domains: a somatic and proximal domain as well as a distal domain, excitatory and inhibitory synaptic input can vary independently in those domains. An additional variable: synaptic synchrony controls the degree of coincidents synaptic inputs.
 [[file:./figures/model_illustration.png]]
-
 
 Determining the cellular input-output functions is complex because
 input of neocortical neurons are mostly in dendrites and output spikes
@@ -157,8 +169,6 @@ Because the spike initiation site lies electrotonically close to the
 soma [[cite:Debanne2011]], we assume that those three purely somatic
 variables will define the firing rate uniquely. In this study we
 investigate the firing response in terms of those somatic variables.
-
-
 
 ** Morphological model and calibration on /in vitro/ measurements
 <<sec:in-vitro-calib>>
@@ -198,11 +208,12 @@ branches to branches unlike in the Ball and Stick model.
 
 ** Properties of the fluctuations for different types of presynaptic activity
 
+
 Updating [[citetext:Kuhn2004]] to dendritic structures.
 
 #+ATTR_LATEX: :width .8\linewidth
 #+NAME: fig:synaptic-integration
-#+CAPTION: *Properties of the membrane potential fluctuations for different types of presynaptic activity: either unbalanced, purely proximal, purely distal, synchronized or non specific (i.e. a mix of all)*. Errorbars represent the variations across neurons (having all a different mmorphology). *(A)* Model variables to achieve varying levels of those different types of activity. *(B)* Membrane potential fluctuations properties and somatic input conductance for the different protocols.
+#+CAPTION: *Properties of the membrane potential fluctuations for different types of presynaptic activity: either unbalanced, purely proximal, purely distal, synchronized (color code)*. A common baseline configuration of low balanced proximal and distal activity gives rise to baseline fluctuations properties, then we increase a given type of activity. *(A)* Model variables to achieve varying levels of those different types of activity. *(B)* Membrane potential fluctuations properties and somatic input conductance at the soma for the different protocols. Shown for the medium-size model, see Supplementary Material for the variability introduced by variations in cell morphologies.
 [[./figures/synaptic_integration.png]]
 
 ** Heterogeneous firing response induce diverse coupling to the types of synaptic activity
@@ -231,6 +242,11 @@ see Figure [[fig:coupling-correlation]]
 
 * Discussion
 
+In this communication, by introducing an analytically tractable
+dendritic model, we presented the final form of our theoretical
+framework for single cell computation in the fluctuation-driven
+regime.
+
 ** An analytical model for dendritic integration in the fluctuation-driven regime
 
 we provided a stratey for the analytical treatment of dendritic
@@ -251,6 +267,10 @@ Rely on calculating PSP events and opens the way toward event based
 simulations of dendritic integration in the high conductance state
 (though including approximation).
 
+** Limitations of the proposed theoretical framework for single-cell computation
+
+Only enables to scan sensory processing
+
 ** Heterogeneity of morpological and passive neuronal properties
 
 In this study, the rescaling rule between input resistance at the soma
@@ -265,15 +285,14 @@ sizes) had very little effects on the heterogeneity of cell responses.
 
 The reason for 
 
-** Limitations of the proposed theoretical framework for single-cell computation
+** Diverse coupling to proximal activity
 
-Only enables to scan sensory processing
-
-** Diverse coupling to presynaptic activity
-
+Let's speculate about the
 blabla
 
 ** Interaction between circuit properties and biophysical properties
+
+blabla 
 
 ** Sodium inactivation and sensitivities to $\tau_V$
 
@@ -281,54 +300,6 @@ blabla
 
 * Material and Methods 
 \small
-
-** Experimental preparation and electrophysiological recordings
-<<sec:exp-prep>>
-
-Experiments were performed at Unité de Neurosciences, Information et
-Complexité, Gif sur Yvette, France. Experimental procedures with
-animals were performed following the instructions of the European
-Council Directive 2010 86/609/EEC and its French transposition (Décret
-2013/118). Experimental methods were identical to those presented in
-[[citetext:Zerlaut2016]]. Very briefly, we performed intracellular
-recordings in the current-clamp mode using the perforated patch
-technique on layer V pyramidal neurons of coronal slices of juvenile
-mice primary visual cortex. For the n=13 cells presented in this
-study, the access resistance R_S was [[XX]] M\(\Omega\) \(\pm\) [[YY]], the
-leak current at -75mV was [[XX]] pA \(\pm\) [[YY]], cells had an input
-resistance R_m of [[XX]] M$\Omega$ \(\pm\) [[YY]] and a membrane time constant
-at rest of [[XX]] ms \(\pm\) [[YY]].
-
-** Input impedance characterization
-<<sec:measured-quant>>
-
- To determine the input impedance at the soma, we injected sinusoidal
- currents in the current-clamp mode of the amplifier (Multiclamp 700B,
- Molecular Devices), we recorded the membrane potential response to a
- current input of the form \(I(t)=I \, \sin(2\pi \, f \, t) \), we
- varied the frequencies $f$ and amplitudes $I over 40 episodes per
- cell. The frequency range scanned was [0.1, 500] Hz. For each cell,
- we determined manually the current amplitude $I_0$ that gave a \sim
- 5mV amplitude in a current step protocol, from this value, the value
- of $I$ was scaled exponentially between $I_0$ at 0.1 Hz and \(50
- I_0\) at 500Hz. The reason for varying the current amplitude (and not
- only the oscillation frequency) in those input impedance protocols is
- to anticipate for the low pass filtering of the membrane and insure
- that the membrane potential response at high frequencies is far above
- the electronic noise level (\sim 0.1 mV).
-
-After removing the first 3 periods of the oscillations (to avoid
-transient effects), we fitted the membrane potential response to the
-form:
-
-\begin{equation}
-V(t) = E_L + R \, I \, \sin(2\pi \, f \, t - \phi)
-\end{equation}
-
-where \(E_L, R\) and $\phi$ were fitted with a least-square
-minimization procedure. The frequency dependent values of $R$ and
-$\phi$ give the modulus and phase shift of the input impedance
-presented in Figure [[fig:in-vitro-calib]]A
 
 ** Morphological model
 <<sec:morphology>>
@@ -653,8 +624,56 @@ that presents the full derivation is available on the following [[http://nbviewe
 
 Focus of a previous communication, see [[citetext:Zerlaut2016]].
 
+** Experimental preparation and electrophysiological recordings
+<<sec:exp-prep>>
+
+Experiments were performed at Unité de Neurosciences, Information et
+Complexité, Gif sur Yvette, France. Experimental procedures with
+animals were performed following the instructions of the European
+Council Directive 2010 86/609/EEC and its French transposition (Décret
+2013/118). Experimental methods were identical to those presented in
+[[citetext:Zerlaut2016]]. Very briefly, we performed intracellular
+recordings in the current-clamp mode using the perforated patch
+technique on layer V pyramidal neurons of coronal slices of juvenile
+mice primary visual cortex. For the n=13 cells presented in this
+study, the access resistance R_S was [[XX]] M\(\Omega\) \(\pm\) [[YY]], the
+leak current at -75mV was [[XX]] pA \(\pm\) [[YY]], cells had an input
+resistance R_m of [[XX]] M$\Omega$ \(\pm\) [[YY]] and a membrane time constant
+at rest of [[XX]] ms \(\pm\) [[YY]].
+
+** Input impedance characterization
+<<sec:measured-quant>>
+
+ To determine the input impedance at the soma, we injected sinusoidal
+ currents in the current-clamp mode of the amplifier (Multiclamp 700B,
+ Molecular Devices), we recorded the membrane potential response to a
+ current input of the form \(I(t)=I \, \sin(2\pi \, f \, t) \), we
+ varied the frequencies $f$ and amplitudes $I over 40 episodes per
+ cell. The frequency range scanned was [0.1, 500] Hz. For each cell,
+ we determined manually the current amplitude $I_0$ that gave a \sim
+ 5mV amplitude in a current step protocol, from this value, the value
+ of $I$ was scaled exponentially between $I_0$ at 0.1 Hz and \(50
+ I_0\) at 500Hz. The reason for varying the current amplitude (and not
+ only the oscillation frequency) in those input impedance protocols is
+ to anticipate for the low pass filtering of the membrane and insure
+ that the membrane potential response at high frequencies is far above
+ the electronic noise level (\sim 0.1 mV).
+
+After removing the first 3 periods of the oscillations (to avoid
+transient effects), we fitted the membrane potential response to the
+form:
+
+\begin{equation}
+V(t) = E_L + R \, I \, \sin(2\pi \, f \, t - \phi)
+\end{equation}
+
+where \(E_L, R\) and $\phi$ were fitted with a least-square
+minimization procedure. The frequency dependent values of $R$ and
+$\phi$ give the modulus and phase shift of the input impedance
+presented in Figure [[fig:in-vitro-calib]]A
+
+** Calibration of the morphologies
 ** Numerical tools
-<<sec:numerical-tools>>
 
 All numerical simulations of single cell dynamics have been performed
 with custom code written in the numerical library of =python=: =numpy=
@@ -668,7 +687,6 @@ online-analysis have been written in =Elphy2=. Plots and data analysis
 have been done thanks to the =SciPy= package.
 
 ** Acknowledgments
-<<sec:acknowledgments>>
 
 Y.Z was supported by fellowships from the Initiative d'Excellence
 Paris-Saclay and the Fondation pour la Recherche Médicale (FDT
@@ -676,6 +694,11 @@ Paris-Saclay and the Fondation pour la Recherche Médicale (FDT
 project) and the European Community (BrainScales FP7-269921 and the
 Human Brain Project FP7-604102). The authors declare no competing
 financial interests.
+
+** Author contributions
+
+Y.Z. and A.D. designed research. Y.Z performed research and wrote the
+present draft.
 
 * References
 \bibliography{tex/biblio}
