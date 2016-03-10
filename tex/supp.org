@@ -1,0 +1,9 @@
+#+LATEX_CLASS: article
+#+LaTeX_CLASS_OPTIONS: [colorlinks]
+#+LaTeX_HEADER: \hypersetup{allcolors = blue} % to have all the hyperlinks in 1 color
+# # we delete the references name
+#+LaTeX_HEADER: \renewcommand{\refname}{\vspace{-.8cm}}
+#+LaTeX_HEADER: \usepackage{jneurosci}
+#+LaTeX_HEADER: \bibliographystyle{tex/jneurosci}
+
+
