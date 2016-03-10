@@ -697,13 +697,26 @@ again adjusted to keep the balance at the soma. Here, we get a
 different picture than in the proximal case, the increase in activity
 leads to negligible increase of the somatic input conductance as
 expected from electrotonically distant input
-[[cite:syn-visibility-koch]]. The decrease of the speed of the
-fluctuations is also much attenuated, . On the other hand the
-amplitude of the fluctuations
+[[cite:syn-visibility-koch]]. Also, the decrease of the speed of the
+fluctuations is much attenuated, the reason for this is that only the
+distal part has a high conductance, consequently post-synaptic events
+are strongly low-pass filtered by the proximal part of the
+arborization before reaching the soma. Here, the amplitude of the
+fluctuations strongly increases as a function of the input and do not
+show the non-monotonic relation found for proximal input. This is
+explain by the combination of the fact that 1) distal events are of
+higher amplitude and 2) the shunting of post-synaptic events is much
+reduced due to the relatively narrow localization of the synaptic
+conductances.
 
-resulting
-
-Finally, we emulate an increase in the presynaptic synchrony
+Finally, we emulate an increase in the presynaptic synchrony. Here,
+all synaptic frequencies are kept constant with respect to the
+baseline level and we simply increase the probability of coincident
+events for each synaptic spike train. Because there is no change in
+synaptic activity, this stimulation does not affect the input
+conductance ratio, neither the mean membrane potential or the speed of
+the fluctuations. However, presynaptic synchrony strongly affects the
+amplitude of the fluctuations in a near linear manner.
 
 Note, that in addition to the sparse activity constraints or the
 balance constraints, the criteria for the ranges of the model
@@ -713,8 +726,16 @@ distal part than for the proximal part to avoid an explosion of
 \sigma_V, the range for the synchrony increase follow the same
 criteria.
 
-** Heterogeneous firing response induce diverse coupling to the types of synaptic activity
+We thus demonstrated here, that, in a theoretical model of dendritic
+integration, the properties of the fluctuations (\mu_V, \sigma_V,
+\tau_V) can follow various comodulations, depending on the properties
+of the synaptic stimulation. This behavior is what motivated to fully
+scan the three dimensional space (\mu_V, \sigma_V, \tau_V) in our
+companion study and not only one comodulation type, see
+[[citetext:Rauch2003]] as an example [[find better]], it would correspond to
+the single-compartment approximation with current-based synapses .
 
+** Heterogeneous firing response induce diverse coupling to the types of synaptic activity
 
 We take here the dataset of our companion study [[cite:Zerlaut2016]]
 
