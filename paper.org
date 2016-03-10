@@ -12,7 +12,7 @@
   specific circuitry is thought to be the primary mechanism underlying
   this functional principle, we investigate here how diverse
   biophysical features in single neuron might contribute to such
-  specific activation. 
+  differential activation.
 
   In a companion study [[cite:Zerlaut2016]], we reported that, in young
   mice visual cortex, individual neurons differ not only in their
@@ -20,32 +20,31 @@
   the membrane potential fluctuations. In the present work, we analyze
   how this heterogeneity is translated into diverse input-ouput
   properties (i.e. in the relation from presynaptic quantities to
-  spiking probability). 
-
-  We designed a simplified morphological model of layer V pyramidal
-  neurons with a dendritic tree following Rall's branching rule. We
-  first show that we are able to calibrate this simplified model on
-  /in vitro/ measurements of somatic input impedance. We then propose
-  an analytical derivation for the membrane potential fluctuations at
-  the soma as a function of the properties of the synaptic
-  bombardment. This mathematical description allows to easily emulate
-  various forms of presynaptic activities: either balanced,
-  unbalanced, synchronized, purely proximal or purely distal synaptic
-  activity. We found that those different forms of activity led to
-  various comodulations of the membrane potential fluctuation
-  properties, thus raising the question whether individual neurons
-  might differentially couple to specific forms of activity because of
-  their various firing responses to fluctuations [[cite:Zerlaut2016]]. We
-  indeed found such an heterogenous response, but trivially, the only
-  significant contribution to the various firing response was the
-  different levels of cellular excitability (linked to the action
-  potential threshold level). A notable exception appeared for
-  proximal activity: increasing proximal activity could either promote
-  firing response in some cells or suppress it in some other cells
-  whatever their individual excitability. This behavior could only be
-  explained by various sensitivities to the speed of the fluctuations,
-  that was previously linked to heterogenous levels of sodium
-  inactivation and sodium channels density.
+  spiking probability). To this purpose, we designed a simplified
+  morphological model of layer V pyramidal neurons with a dendritic
+  tree following Rall's branching rule. We first show that we are able
+  to calibrate this simplified model on /in vitro/ measurements of
+  somatic input impedance. We then propose an analytical derivation
+  for the membrane potential fluctuations at the soma as a function of
+  the properties of the synaptic bombardment. This mathematical
+  description allows to easily emulate various forms of presynaptic
+  activities: either balanced, unbalanced, synchronized, purely
+  proximal or purely distal synaptic activity. We found that those
+  different forms of activity led to various comodulations of the
+  membrane potential fluctuation properties, thus raising the question
+  whether individual neurons might differentially couple to specific
+  forms of activity because of their various firing responses to
+  fluctuations [[cite:Zerlaut2016]]. We indeed found such an heterogenous
+  response, but trivially, the only significant contribution to the
+  various firing response was the different levels of cellular
+  excitability (linked to the action potential threshold level). A
+  notable exception appeared for proximal activity: increasing
+  proximal activity could either promote firing response in some cells
+  or suppress it in some other cells whatever their individual
+  excitability. This behavior could only be explained by various
+  sensitivities to the speed of the fluctuations, that was previously
+  linked to heterogenous levels of sodium inactivation and sodium
+  channels density.
 
   In addition to giving quantitative insight on the impact of various
   excitability levels in individual neurons, the present study
@@ -62,26 +61,28 @@ Neocortical processing of sensory input rely on the specific
 activation of subpopulations within the cortical network. The details
 of how such specific activations happens are key questions in systems
 neuroscience.
+# Though this diverse activation is likely to be due to specific
+# connectivity schemes, we explore here a complementary mechanism: given
 
 Neocortical neurons differ in their afferent connectivity. For
-example, in the somato-sensory cortex of rodents, neurons in two
-different barrels sample inputs from different locations in the
-thalamus nucleus. Neocortical neurons also vary in their
+example, in the somato-sensory cortex of rodents, layer IV neurons in
+two different barrels sample inputs from different locations in the
+thalamus nucleus [[ref?]]. Neocortical neurons also vary in their
 electrophysiological properties. For example, heterogenous levels in
 the action potential threshold are routinely measured both in vivo
 [[Nowak, etc]] and in vitro [[refs]]. An emerging picture is that the
 sensitivity of a neuron to a given feature results from the
-combination of its circuit specificity (relative to this feature) and
-its biophysical specificity.  The somato-sensory cortex study of
+combination of its /circuit specificity/ (relative to this feature)
+and its /biophysical specificity/.  The somato-sensory cortex study of
 [[citetext:Crochet2011]] illustrates this point precisely.  During active
 touch, the response probability of a neuron (its sensitivity to
 whisker touch) follows from the combination of the reached level of
 synaptically-driven membrane potential deflection (resulting from its
-circuit-specificity) and its threshold for action potential triggering
-(its biophysical specificity). The same result hold for texture
-recognition in the study of [[citetext:Yang2015]] where the combination of
-the two mentionned effect correlated with the [[xx, to be checked]] in
-barrel cortex neurons.
+/circuit-specificity/) and its threshold for action potential
+triggering (its /biophysical specificity/). The same result hold for
+texture recognition in the study of [[citetext:Yang2015]] where the
+combination of the two mentionned effect correlated with the [[xx, to be
+checked]] in barrel cortex neurons.
 
 # Therefore highlighting the role of the interaction between circuit
 # afference and biophysics for stimulus representation at the single
@@ -92,9 +93,16 @@ the variability in the biophysical features reported in
 [[citetext:Zerlaut2016]], namely that single neurons in juvenile mice
 cortex not only vary in their excitability (linked to the action
 potential threshold) but also in their sensitivity to the properties
-of the membrane potential fluctuations. We introduced new dimensions
-in the /biophysical specificity/ and we now aim at understanding their
-functional impact.
+of the membrane potential fluctuations. Our previous communication
+introduced new dimensions in the /biophysical specificity/ and we now
+aim at understanding their functional impact.
+
+[[crucial part]] We investigate such interactions in the context of
+population dynamics, where the neuronal response can be described as a
+spiking probability and the input can be described by stationary
+firing rates (or slowly modulated firing rates compared to the
+membrane time constant).
+
 
 We thus designed a theoretical model for passive dendritic integration
 that allows an analytical treatment and thus easily enables the
@@ -111,8 +119,9 @@ variations of the properties of the membrane potential fluctuations
 (mean depolarization, standard deviation and autocorrelation
 time). The various firing responses (as a function of the fluctuation
 properties) for individual neurons found in our companion study then
-led to diverse coupling to each activity type. Taken together, our two
-studies suggest that [...]
+led to diverse coupling to each activity type. 
+
+# Taken together, our two studies suggest that [...]
 
 # Though this diverse activation is likely to be due to specific
 # connectivity schemes, we explore here a complementary mechanism: given
@@ -123,180 +132,6 @@ studies suggest that [...]
 # connectivity will likely determine the amplitude of the V_m
 # deflections) and biophysical factors (the threshold
 # value). Biophysical parameters are thus a key properties of 
-
-* Results 
-\normalsize
-
-The results are organized as follows. We first formulate our
-theoretical framework for cellular computation which arbitrarily
-separate the question of dendritic integration and spiking
-probability. Then we present our simplified model of dendritic
-morphology which we calibrated on /in vitro/ measurements. We derive
-an analytical approximation for the membrane potential fluctuations at
-the soma that we compare to numerical simulations using standard
-compartemental modeling. We [[xx]]
-
-** A theoretical framework for single cell computation in the fluctuation-driven regime
-
-#+ATTR_LATEX: :width \linewidth
-#+NAME: fig:model-illustration
-#+CAPTION: *A theoretical framework for single cell computation in the fluctuation-driven regime*. *(A)* Theoretical paradigm: to get the input-output function of a single cell, we split the relation from presynaptic quantities (the input) to the spiking probability (the output) into two steps. 1) passive dendritic integration shape the membrane potential at the soma and 2) how those fluctuations are translated into spikes is captured by a firing response function determined /in vitro/ [[cite:Zerlaut2016]] *(B)* Theoretical model for dendritic integration. A single cell is made of a lumped impedance somatic compartment and a dendritic tree. The dendritic tree is composed of B branches (here B=5), the branching is symmetric and follow Rall's 3/2 rule for the branch diameters. Synapses are then spread all over the membrane according to physiological synaptic densities. We define 3 domains: a somatic and proximal domain as well as a distal domain, excitatory and inhibitory synaptic input can vary independently in those domains. An additional variable: synaptic synchrony controls the degree of coincidents synaptic inputs.
-[[file:./figures/model_illustration.png]]
-
-Determining the cellular input-output functions is complex because
-input of neocortical neurons are mostly in dendrites and output spikes
-are generated in initial segments of an axon as reviewed in
-[[citetext:Stuart2015]] and [[citetext:Debanne2011]] input will therefore
-crucially shape their input-output relationship. Various parameters of
-presynaptic activity can arbitrarily control the properties of the
-membrane potential fluctuations at the soma. Those properties can be
-quantified by identifying three somatic variables that provide a
-reduced description of the dynamical state at the soma in the
-/fluctuation-driven/ regime: the mean \mu_V, the standard deviation
-\sigma_V of the membrane potential fluctuations and their typical
-autocorrelation time $\tau_V$. For example, the excitatory/inhibitory
-balance controls the mean depolarization at the soma \mu_V, the mean
-synaptic bombardment impacts the standard deviation \sigma_V and the
-speed of the membrane potential fluctuations \tau_V. Other effects
-such as synchrony in the presynaptic spike trains or ratio between
-distally and proximally targeting synaptic activity also affect the
-statistical properties of the fluctuations. The effects of synaptic
-input and its dendritic integration on somatic variables can be
-investigated theoretically using cable theory [[cite:Tuckwell2002]] and
-will be the focus of a future communication.
-
-Because the spike initiation site lies electrotonically close to the
-soma [[cite:Debanne2011]], we assume that those three purely somatic
-variables will define the firing rate uniquely. In this study we
-investigate the firing response in terms of those somatic variables.
-
-** Morphological model and calibration on /in vitro/ measurements
-<<sec:in-vitro-calib>>
-
-#+ATTR_LATEX: :width \linewidth
-#+NAME: fig:in-vitro-calib
-#+CAPTION: *Calibrating the model on /in vitro/ measurements: the simplified model and its size variations provides an approximation for the somatic input impedance and its heterogeneity*. *(A)* Input impedance (left: modulus and right: phase shift) measured at the soma in intracellular recordings with sine-wave protocols in current-clamp (inset). The color code indicates the input resistance and is likely to result from size variations of individual cells. *(B)* A medium size model accounts for the average data and varying the size of the dendritic tree and soma reproduces the trend in the individual measurements. Large cells (blue) have a lower modulus and a lower phase shift while small cells (red) have both a higher modulus and phase shift. *(C)* Left: We obtain a map between input resistance and size of the morphological model. Right: Representation of the medium-size model. *(D)* Additionally the synaptic weights are rescaled according the the transfer resistance to soma [[to be changed for input resist]]
-[[file:./figures/calibration_on_input_imped.png]]
-
-The morphology of our theoretical model is a lumped impedance somatic
-compartment in parallel with a dendritic arborization of symmetric
-branching following Rall's 3/2 branching rule (see Figure
-[[fig:model-illustration]]B and Methods[[sec:morphology]]). This morphology is
-of course a very reductive description of pyramidal cells: it does not
-discriminate between the distinct apical trunk and the very dense
-basal arborization. Also branching in pyramidal cell morphologies have
-been shown to deviate from Rall's 3/2 branching rule. Nonetheless
-
-** An analytical approximation for the properties of the membrane potential fluctuations at the soma
-
-Needed because simulations of morphologies are computationally very
-expensive, very limited scan of input space is allowed.
-
-comparison between analytical approx and simulations in =NEURON=
-
-#+ATTR_LATEX: :width \linewidth
-#+NAME: fig:analytics-accuracy
-#+CAPTION: *Accuracy of the analytical approximation for the properties of the membrane potential fluctuations: comparison between numerical simulations and analytical estimates*. *(A)* Morphology corresponding to the mean model, with the 3 points where the membrane potential is recorded. *(B)* Membrane potential fluctuations for the 3 recorded locations. Note the very weal level of correlation of the membrane potential between different branches. *(C)* Properties of the membrane potential fluctuations for different configuration of presynaptic activity: analytical predictions and output from numerical simulations in =NEURON=.
-[[./figures/comparison_analytics_and_sim.png]]
-
-We emphasize here that even if the analytical description uses the
-reduction to the equivalent cylinder (and therefore could be seen as
-equivalent to the Ball and Stick model), the described model has
-separate branches so that the fluctuations are uncorrelated from
-
-branches to branches unlike in the Ball and Stick model.
-
-** Properties of the fluctuations for different types of presynaptic activity
-
-
-Updating [[citetext:Kuhn2004]] to dendritic structures.
-
-#+ATTR_LATEX: :width .8\linewidth
-#+NAME: fig:synaptic-integration
-#+CAPTION: *Properties of the membrane potential fluctuations for different types of presynaptic activity: either unbalanced, purely proximal, purely distal, synchronized (color code)*. A common baseline configuration of low balanced proximal and distal activity gives rise to baseline fluctuations properties, then we increase a given type of activity. *(A)* Model variables to achieve varying levels of those different types of activity. *(B)* Membrane potential fluctuations properties and somatic input conductance at the soma for the different protocols. Shown for the medium-size model, see Supplementary Material for the variability introduced by variations in cell morphologies.
-[[./figures/synaptic_integration.png]]
-
-** Heterogeneous firing response induce diverse coupling to the types of synaptic activity
-
-
-We take here the dataset of our companion study [[cite:Zerlaut2016]]
-
-#+ATTR_LATEX: :width \linewidth
-#+NAME: fig:analytics-accuracy
-#+CAPTION: *Examples of the firing response of 4 different cells for the input shown in Figure [[fig:synaptic-integration]]. The cells 1 to 4 are identical as those presented in Figure 5 of [[citetext:Zerlaut2016]].*
-[[./figures/firing_response_examples.png]]
-
-\newpage
-
-** Biophysical origin of the heterogenous couplings to presynaptic activities
-
-Because we want to focus on the specificity of each cell, being either
-couple to one or the
-
-see Figure [[fig:coupling-correlation]]
-
-#+ATTR_LATEX: :width \linewidth :float multicolumn
-#+NAME: fig:coupling-correlation
-#+CAPTION: *Correlating specific synaptic coupling to biophysical features.*
-[[./figures/coupling_correlations.png]]
-
-* Discussion
-
-In this communication, by introducing an analytically tractable
-dendritic model, we presented the final form of our theoretical
-framework for single cell computation in the fluctuation-driven
-regime.
-
-** An analytical model for dendritic integration in the fluctuation-driven regime
-
-we provided a stratey for the analytical treatment of dendritic
-integration in the fluctuation-driven regime that relies on 1)
-shotnoise theory, 2) cable theory and 3) adequate approximations.
-
-The main advantage of this model is that you can very naturall plug in
-physiological parameters (because surface area is physiological as
-well as transfer resistance to soma) and still it remains analytical.
-
-Literature suffers from the reduction to single-compartment
-
-The current model provides a tool to make network dynamics question
-amenable to mathematical analysis with morphologically detailed
-models.
-
-Rely on calculating PSP events and opens the way toward event based
-simulations of dendritic integration in the high conductance state
-(though including approximation).
-
-** Limitations of the proposed theoretical framework for single-cell computation
-
-Only enables to scan sensory processing
-
-** Heterogeneity of morpological and passive neuronal properties
-
-In this study, the rescaling rule between input resistance at the soma
-and the size of the morphological model has led to the invariance in
-the relation between input (presynaptic variables) and the fluctuation
-properties. Thus the heterogeneity in morpholgies (here only cell
-sizes) had very little effects on the heterogeneity of cell responses.
-
-
-
- a rescaling of the
-
-The reason for 
-
-** Diverse coupling to proximal activity
-
-Let's speculate about the
-blabla
-
-** Interaction between circuit properties and biophysical properties
-
-blabla 
-
-** Sodium inactivation and sensitivities to $\tau_V$
-
-blabla   
 
 * Material and Methods 
 \small
@@ -686,7 +521,300 @@ Optiplex 9020 desktop computer). Experimental protocols and
 online-analysis have been written in =Elphy2=. Plots and data analysis
 have been done thanks to the =SciPy= package.
 
+* Results 
+\normalsize
+
+The results are organized as follows. We first formulate our
+theoretical framework for cellular computation which arbitrarily
+separate the question of dendritic integration and spiking
+probability. Then we present our simplified model of dendritic
+morphology which we calibrated on /in vitro/ measurements. We derive
+an analytical approximation for the membrane potential fluctuations at
+the soma that we compare to numerical simulations using standard
+compartemental modeling. We implement various types of presynaptic
+activity and [[xx]]
+
+** A theoretical framework for single cell computation in the fluctuation-driven regime
+
+#+ATTR_LATEX: :width \linewidth
+#+NAME: fig:model-illustration
+#+CAPTION: *A theoretical framework for single cell computation in the fluctuation-driven regime*. *(A)* Theoretical paradigm: to get the input-output function of a single cell, we split the relation from presynaptic quantities (the input) to the spiking probability (the output) into two steps. 1) passive dendritic integration shape the membrane potential at the soma and 2) how those fluctuations are translated into spikes is captured by a firing response function determined /in vitro/ [[cite:Zerlaut2016]] *(B)* Theoretical model for dendritic integration. A single cell is made of a lumped impedance somatic compartment and a dendritic tree. The dendritic tree is composed of B branches (here B=5), the branching is symmetric and follow Rall's 3/2 rule for the branch diameters. Synapses are then spread all over the membrane according to physiological synaptic densities. We define 3 domains: a somatic and proximal domain as well as a distal domain, excitatory and inhibitory synaptic input can vary independently in those domains. An additional variable: synaptic synchrony controls the degree of coincidents synaptic inputs.
+[[file:./figures/model_illustration.png]]
+
+In the fluctuation-driven regime, the cellular input-output function
+of a neocortical neuron corresponds to the function that maps the
+presynaptic variables to the spiking probability of the neuron (this
+is true both in a rate coding paradigm [[cite:Adrian, Shadlen]] or in a
+stochastic temporal coding paradigm [[cite:Rossant]]). In addition,
+because our study focuses on effects resulting from population
+dynamics, the presynaptic variables will have a simple description:
+firing rates and a synchrony degree.
+
+Determining the cellular input-output functions is complex because
+input of neocortical neurons are mostly in dendrites and output spikes
+are generated in initial segments of an axon as reviewed in
+[[citetext:Stuart2015]] and [[citetext:Debanne2011]] input will therefore
+crucially shape their input-output relationship. Various parameters of
+presynaptic activity can arbitrarily control the properties of the
+membrane potential fluctuations at the soma. Those properties can be
+quantified by identifying three somatic variables that provide a
+reduced description of the dynamical state at the soma in the
+/fluctuation-driven/ regime: the mean \mu_V, the standard deviation
+\sigma_V of the membrane potential fluctuations and their typical
+autocorrelation time $\tau_V$. For example, the excitatory/inhibitory
+balance controls the mean depolarization at the soma \mu_V, the mean
+synaptic bombardment impacts the standard deviation \sigma_V and the
+speed of the membrane potential fluctuations \tau_V. Other effects
+such as synchrony in the presynaptic spike trains or ratio between
+distally and proximally targeting synaptic activity also affect the
+statistical properties of the fluctuations. The effects of synaptic
+input and its dendritic integration on somatic variables can be
+investigated theoretically using cable theory [[cite:Tuckwell2002]] and
+will be the focus of a future communication.
+
+Because the spike initiation site lies electrotonically close to the
+soma [[cite:Debanne2011]], we assume that those three purely somatic
+variables will define the firing rate uniquely. In this study we
+investigate the firing response in terms of those somatic variables.
+
+** Morphological model and calibration on /in vitro/ measurements
+<<sec:in-vitro-calib>>
+
+#+ATTR_LATEX: :width \linewidth
+#+NAME: fig:in-vitro-calib
+#+CAPTION: *Calibrating the model on /in vitro/ measurements: the simplified model and its size variations provides an approximation for the somatic input impedance and its heterogeneity*. *(A)* Input impedance (left: modulus and right: phase shift) measured at the soma in intracellular recordings with sine-wave protocols in current-clamp (inset). The color code indicates the input resistance and is likely to result from size variations of individual cells. *(B)* A medium size model accounts for the average data and varying the size of the dendritic tree and soma reproduces the trend in the individual measurements. Large cells (blue) have a lower modulus and a lower phase shift while small cells (red) have both a higher modulus and phase shift. *(C)* Left: We obtain a map between input resistance and size of the morphological model. Right: Representation of the medium-size model. *(D)* Additionally the synaptic weights are rescaled according the the transfer resistance to soma [[to be changed for input resist]]
+[[file:./figures/calibration_on_input_imped.png]]
+
+The morphology of our theoretical model is a lumped impedance somatic
+compartment in parallel with a dendritic arborization of symmetric
+branching following Rall's 3/2 branching rule (see Figure
+[[fig:model-illustration]]B and Methods[[sec:morphology]]). This morphology is
+of course a very reductive description of pyramidal cells: it does not
+discriminate between the distinct apical trunk and the very dense
+basal arborization. Also branching in pyramidal cell morphologies have
+been shown to deviate from Rall's 3/2 branching rule. Nonetheless
+
+** An analytical approximation for the properties of the membrane potential fluctuations at the soma
+
+Needed because simulations of morphologies are computationally very
+expensive, very limited scan of input space is allowed.
+
+comparison between analytical approx and simulations in =NEURON=
+
+#+ATTR_LATEX: :width \linewidth
+#+NAME: fig:analytics-accuracy
+#+CAPTION: *Accuracy of the analytical approximation for the properties of the membrane potential fluctuations: comparison between numerical simulations and analytical estimates*. *(A)* Morphology corresponding to the mean model, with the 3 points where the membrane potential is recorded. *(B)* Membrane potential fluctuations for the 3 recorded locations. Note the very weal level of correlation of the membrane potential between different branches. *(C)* Properties of the membrane potential fluctuations for different configuration of presynaptic activity: analytical predictions and output from numerical simulations in =NEURON=.
+[[./figures/comparison_analytics_and_sim.png]]
+
+We emphasize here that even if the analytical description uses the
+reduction to the equivalent cylinder (and therefore could be seen as
+equivalent to the Ball and Stick model), the described model has
+separate branches so that the fluctuations are uncorrelated from
+
+branches to branches unlike in the Ball and Stick model.
+
+** Properties of the fluctuations for different types of presynaptic activity
+
+We now implement various types of presynaptic activity and investigate
+the properties of the resulting membrane potential fluctuations at the
+soma. In addition, we represent the variations of the somatic input
+conductance (relative to the leak input conductance) because it is
+routinely measured in intracellular studies /in vivo/, this quantity
+therefore allows a comparison between the model and experimentally
+observed activity levels. On Figure [[fig:synaptic-integration]], we
+present those different protocols, on the left one can see how the
+five variables of the model are comodulated for each protocol (color
+coded, see bottom legend) and one the left, one can see the resulting
+properties of the membrane potential fluctuations. We present those
+results only for the medium-size model, but it was calculated for the
+morphologies associated to all cells. The variability introduced by
+the various morphologies is studied in the Supplementary Material and
+we found that the qualitative behavior discussed in this section was
+preserved in all cells.
+
+#+ATTR_LATEX: :width .8\linewidth
+#+NAME: fig:synaptic-integration
+#+CAPTION: *Properties of the membrane potential fluctuations for different types of presynaptic activity: either unbalanced, purely proximal, purely distal, synchronized (color code)*. A common baseline configuration of low balanced proximal and distal activity gives rise to baseline fluctuations properties, then we increase a given type of activity. *(A)* Model variables to achieve varying levels of those different types of activity. *(B)* Membrane potential fluctuations properties and somatic input conductance at the soma for the different protocols. Shown for the medium-size model, see Supplementary Material for the variability introduced by variations in cell morphologies.
+[[./figures/synaptic_integration.png]]
+
+We first introduce a baseline level of presynaptic activity
+corresponding to a low level of network activity: g_{tot}^{soma}/g_L
+\sim 1.7, compared to \sim 3-4 in activated states, reviewed in
+[[citetext:Destexhe2003]]. This baseline activity is a mix of proximal and
+distal activity with a low degree of synchrony (s=0.05). Similarly to
+[[cite:Kuhn2004]], the inhibitory activity is adjusted to obtain a balance
+of the V_m fluctuations at -55mV. The firing values of this baseline
+level are very low (\nu_e^d=\nu_e^p=[[xx]] for the excitation and
+\nu_i^d=\nu_i^p=[[xx]] for the inhibition) in accordance with the sparse
+activity characterizing mammalian neocortical dynamics [[refs]]. On top of
+this non-specific background activity, we will now add a specific
+stimulation.
+
+We start with unbalanced activity. We define it as a stimulation that
+brings the mean membrane potential above -55mV corresponding to the
+previously defined balance. The stimulation corresponds to an increase
+of the excitatory synaptic activity (still running within a very
+sparse range of activity, \(\nu_e^d=\nu_e^p \in [0.05, 0.5]\)Hz) with
+an increasing inhibitory activity adjusted to linearly disrupt nthe
+balance between -55mV and -52mV (see Figure
+[[fig:synaptic-integration]]). The synchrony is kept constant and the
+activity indifferentially raises in the proximal and distal part. This
+increase of total activity raises the input conductance ratio close to
+4. In this moderate range, the variations of the amplitude of the
+fluctuations \sigma_V remains a monotonic increase (unlike the
+non-monotonic variations found in the single-compartment study of
+[[citetext:Kuhn2004]] and the case of a proximal stimulation, see below),
+the fluctuations gets approximately twice faster (the normalized
+autocorrelation time \tau_V/\tau_m^0 decays from 100% to 50%) and, of
+course (by design), the mean depolarization has a linear increase of
+3mV.
+
+We now emulate purely proximal activity. To this purpose, we fix the
+distal presynaptic firing frequencies (\nu_e^d and \nu_i^d) as well as
+the synchrony to their baseline levels. To remain in a sparse activity
+level, we increase the proximal excitatory activity from the baseline
+level to 1.7Hz and we adjust proximal and somatic inhibitory activity
+to keep the balance at the soma.  This would nonethless correspond to
+large network activity level, as can be seen from the input
+conductance ratio (that raises up to 8). This situation gives results
+comparable to the single-compartment study of [[citetext:Kuhn2004]]. The
+amplitude of the fluctuations has a non-monotonic profile and the
+autocorrelation time strongly decreases. A notable difference is that,
+even if we investigated high activity levels, the autocorrelation time
+does not goes to zero and the amplitude of the fluctuations has only a
+moderate decrease. This discrepancy is due to 1) the choice of
+non-negligible synaptic time constants compared to the membrane time
+constants (here \tau_{syn}=5ms and \tau_m^0 \sim 25ms, then
+\tau_V/tau_m^0 would saturate at \tau_{syn}/tau_m^0 = 20%) and 2) the
+fact that the synaptic input is distributed attenuates the strong
+shunting effects observed in the single compartment case.
+
+For distal activity, we keep the proximal presynaptic frequencies
+(\nu_e^p and \nu_i^p) as well as the synchrony to their baseline
+levels. We increase the distal excitatory activity from the baseline
+level to a moderate level: 0.7Hz. The distal inhibitory frequency is
+again adjusted to keep the balance at the soma. Here, we get a
+different picture than in the proximal case, the increase in activity
+leads to negligible increase of the somatic input conductance as
+expected from electrotonically distant input
+[[cite:syn-visibility-koch]]. The decrease of the speed of the
+fluctuations is also much attenuated, . On the other hand the
+amplitude of the fluctuations
+
+resulting
+
+Finally, we emulate an increase in the presynaptic synchrony
+
+Note, that in addition to the sparse activity constraints or the
+balance constraints, the criteria for the ranges of the model
+variables was manually choosen to have the fluctuations in the same
+domain. For example, we investigated a lower activity range for the
+distal part than for the proximal part to avoid an explosion of
+\sigma_V, the range for the synchrony increase follow the same
+criteria.
+
+** Heterogeneous firing response induce diverse coupling to the types of synaptic activity
+
+
+We take here the dataset of our companion study [[cite:Zerlaut2016]]
+
+#+ATTR_LATEX: :width \linewidth
+#+NAME: fig:analytics-accuracy
+#+CAPTION: *Examples of the firing response of 4 different cells for the input shown in Figure [[fig:synaptic-integration]]. The cells 1 to 4 are identical as those presented in Figure 5 of [[citetext:Zerlaut2016]].*
+[[./figures/firing_response_examples.png]]
+
+\newpage
+
+** Biophysical origin of the heterogenous couplings to presynaptic activities
+
+Because we want to focus on the specificity of each cell, being either
+couple to one or the
+
+see Figure [[fig:coupling-correlation]]
+
+#+ATTR_LATEX: :width \linewidth :float multicolumn
+#+NAME: fig:coupling-correlation
+#+CAPTION: *Correlating specific synaptic coupling to biophysical features.*
+[[./figures/coupling_correlations.png]]
+
+* Discussion
+
+In this communication, by introducing an analytically tractable
+dendritic model, we presented the final form of our theoretical
+framework for single cell computation in the fluctuation-driven
+regime.
+
+** An analytical model for dendritic integration in the fluctuation-driven regime
+
+we provided a stratey for the analytical treatment of dendritic
+integration in the fluctuation-driven regime that relies on 1)
+shotnoise theory, 2) cable theory and 3) adequate approximations.
+
+The main advantage of this model is that you can very naturall plug in
+physiological parameters (because surface area is physiological as
+well as transfer resistance to soma) and still it remains analytical.
+
+Literature suffers from the reduction to single-compartment
+
+The current model provides a tool to make network dynamics question
+amenable to mathematical analysis with morphologically detailed
+models.
+
+Rely on calculating PSP events and opens the way toward event based
+simulations of dendritic integration in the high conductance state
+(though including approximation).
+
+** Limitations of the proposed theoretical framework for single-cell computation
+
+Only enables to scan sensory processing
+
+** Heterogeneity of morpological and passive neuronal properties
+
+In this study, the rescaling rule between input resistance at the soma
+and the size of the morphological model has led to the invariance in
+the relation between input (presynaptic variables) and the fluctuation
+properties. Thus the heterogeneity in morpholgies (here only cell
+sizes) had very little effects on the heterogeneity of cell responses.
+
+
+
+ a rescaling of the
+
+The reason for 
+
+** Diverse coupling to proximal activity
+
+Note that proximal activity in our theoretical model has a rather
+large extent, six seventh of the dendritic tree belongs to the
+proximal part.
+
+
+Let's speculate about the
+blabla
+
+** Interaction between circuit properties and biophysical properties
+
+blabla 
+
+** Sodium inactivation and sensitivities to $\tau_V$
+
+blabla   
+
+* Supplementary information
+
+** Supplementary material
+
+Supplementary material contains the detailed mathematical derivation
+of the membrane potential fluctuations
+
 ** Acknowledgments
+
+We would like to thank Gilles Ouanounou for his help during
+electrophysiological recordings and Gérard Sadoc for assistance with
+the acquisistion software. We also thank Manon Richard and Aurélie
+Daret for animal facilities.
+
+** Funding
 
 Y.Z was supported by fellowships from the Initiative d'Excellence
 Paris-Saclay and the Fondation pour la Recherche Médicale (FDT
@@ -702,7 +830,4 @@ present draft.
 
 * References
 \bibliography{tex/biblio}
-
-
-
 

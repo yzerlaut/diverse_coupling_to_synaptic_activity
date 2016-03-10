@@ -654,5 +654,10 @@ can be computed analytically with the Neyman-Scott equation
   \sigma_V^2 = \int_\mathbb{R} P_V(f) \, df
 \end{equation}
 
+* Variability in the fluctuations properties introduced by the different morphologies
+
+Here we 
+
+* Residual correlations after accounting for the excitability effects
 * References
 \bibliography{tex/biblio}
