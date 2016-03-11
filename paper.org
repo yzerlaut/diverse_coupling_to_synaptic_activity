@@ -92,12 +92,17 @@ In the present work, we investigate such interactions in the light of
 the variability in the biophysical features reported in
 [[citetext:Zerlaut2016]], namely that single neurons in juvenile mice
 cortex not only vary in their excitability (linked to the action
-potential threshold) but also in their sensitivity to the properties
-of the membrane potential fluctuations. Our previous communication
-introduced new dimensions in the /biophysical specificity/ and we now
-aim at understanding their functional impact.
+potential threshold, see [[xx]]) but also in their sensitivity to the
+properties of the membrane potential fluctuations. Our previous
+communication introduced new dimensions in the /biophysical
+specificity/: the various sensitivities to the properties of the
+fluctuations, and we now aim at understanding their functional impact.
 
-[[crucial part]] We investigate such interactions in the context of
+To highlight the impact of the /biophysical specificity/, we will
+investigate single neuron response in a framework where the /circuit
+specificity/ is null, i.e. all neurons sample 
+
+ The context of
 population dynamics, where the neuronal response can be described as a
 spiking probability and the input can be described by stationary
 firing rates (or slowly modulated firing rates compared to the
@@ -643,7 +648,7 @@ its introduction as a variable.
 
 #+ATTR_LATEX: :width \linewidth
 #+NAME: fig:in-vitro-calib
-#+CAPTION: *Calibrating the model on /in vitro/ measurements: the simplified model and its size variations provides an approximation for the somatic input impedance and its heterogeneity*. *(A)* Input impedance (left: modulus and right: phase shift) measured at the soma in intracellular recordings with sine-wave protocols in current-clamp (inset). The color code indicates the input resistance and is likely to result from size variations of individual cells. *(B)* A medium size model accounts for the average data and varying the size of the dendritic tree and soma reproduces the trend in the individual measurements. Large cells (blue) have a lower modulus and a lower phase shift while small cells (red) have both a higher modulus and phase shift. *(C)* Left: We obtain a map between input resistance and size of the morphological model. Right: Representation of the medium-size model. *(D)* Additionally the synaptic weights are rescaled according the the transfer resistance to soma [[to be changed for input resist]]
+#+CAPTION: *Calibrating the model on /in vitro/ measurements: the simplified model and its size variations provides an approximation for the somatic input impedance and its heterogeneity*. *(A)* Input impedance (left: modulus and right: phase shift) measured at the soma in intracellular recordings with sine-wave protocols in current-clamp (inset). The color code indicates the input resistance and is likely to result from size variations of individual cells. *(B)* A medium size model accounts for the average data and varying the size of the dendritic tree and soma reproduces the trend in the individual measurements. Large cells (blue) have a lower modulus and a lower phase shift while small cells (red) have both a higher modulus and phase shift. *(C)* Left: We obtain a map between input resistance and size of the morphological model. Right: Representation of the medium-size model. *(D)* Additionally the synaptic weights are rescaled with respect to the cell's somatic input resistance. Because the mean transfer resistance to soma is linked to the input resistance, this rescalings insures that the mean synaptic efficacy at soms is the same for all cells.
 [[file:./figures/calibration_on_input_imped.png]]
 
 We will use the firing response function of our companion study, we
@@ -799,19 +804,19 @@ tool to study dendritic integration in the fluctuation-driven regime.
 We now implement various types of presynaptic activity and investigate
 the properties of the resulting membrane potential fluctuations at the
 soma. In addition, we represent the variations of the somatic input
-conductance (relative to the leak input conductance) because it is
+conductance (relative to the leak input conductance) because, as it is
 routinely measured in intracellular studies /in vivo/, this quantity
-therefore allows a comparison between the model and experimentally
-observed activity levels. On Figure [[fig:synaptic-integration]], we
-present those different protocols, on the left one can see how the
-five variables of the model are comodulated for each protocol (color
-coded, see bottom legend) and one the left, one can see the resulting
-properties of the membrane potential fluctuations. We present those
-results only for the medium-size model, but it was calculated for the
-morphologies associated to all cells. The variability introduced by
-the various morphologies is studied in the Supplementary Material and
-we found that the qualitative behavior discussed in this section was
-preserved in all cells.
+allows a comparison between the model and experimentally observed
+activity levels. On Figure [[fig:synaptic-integration]], we present those
+different protocols, on the left one can see how the five variables of
+the model are comodulated for each protocol (color coded, see bottom
+legend) and one the left, one can see the resulting properties of the
+membrane potential fluctuations. We present those results only for the
+medium-size model, but it was calculated for the morphologies
+associated to all cells. The variability introduced by the various
+morphologies is studied in the Supplementary Material and we found
+that the qualitative behavior discussed in this section was preserved
+in all cells.
 
 #+ATTR_LATEX: :width .8\linewidth
 #+NAME: fig:synaptic-integration
@@ -916,16 +921,27 @@ companion study and not only one comodulation type, see
 [[citetext:Rauch2003]] as an example [[find better]], it would correspond to
 the single-compartment approximation with current-based synapses .
 
-** Heterogeneous firing response induce diverse coupling to the types of synaptic activity
+** Heterogeneous firing responses induce diverse coupling to presynaptic activity
 
-We take here the dataset of our companion study [[cite:Zerlaut2016]]
+For each one of the n=27 cells of our companion study
+[[cite:Zerlaut2016]], we now have 1) a morphological model and 2) a firing
+response function \( \nu_{out} = \mathcal{F}(\mu_V, \sigma_V, \tau_V /
+\tau_m^0) \). Thanks to the analytical approximation, we can translate
+the five model variables \((\nu_e^p, \nu_i^p, \nu_e^d, \nu_i^d, s)\)
+into the stationary fluctuations properties \((\mu_V, \sigma_V,
+\tau_V)\) so that we finally get the full /input-output/ function
+(within our theoretical framework) as illustrated on Figure
+[[fig:model-illustration]]A.
+
+We show on Figure [[fig:cell-examples]] the response of four cells to the
+different types of presynaptic activity described in the previous
+section. First, we can see that individual cells have a very different
+level of response to the baseline level.
 
 #+ATTR_LATEX: :width \linewidth
-#+NAME: fig:analytics-accuracy
-#+CAPTION: *Examples of the firing response of 4 different cells for the input shown in Figure [[fig:synaptic-integration]]. The cells 1 to 4 are identical as those presented in Figure 5 of [[citetext:Zerlaut2016]].*
+#+NAME: fig:cell-examples
+#+CAPTION: *Examples of the firing response of 4 different cells for the different synaptic inputs (color-coded) shown in Figure [[fig:synaptic-integration]].* The abcissa corresponds to the variations of the model variables shown in Figure [[fig:synaptic-integration]]A
 [[./figures/firing_response_examples.png]]
-
-\newpage
 
 ** Biophysical origin of the heterogenous couplings to presynaptic activities
 
@@ -933,6 +949,8 @@ Because we want to focus on the specificity of each cell, being either
 couple to one or the
 
 see Figure [[fig:coupling-correlation]]
+
+variation of the excitability would 
 
 #+ATTR_LATEX: :width \linewidth :float multicolumn
 #+NAME: fig:coupling-correlation
@@ -948,6 +966,12 @@ regime.
 
 We used a second dataset to characterize the morphology, so that we
 could do it on the "firing response dataset"
+
+To highlight the impact of the /biophysical specificity/, we
+investigated single neuron response in a framework where the /circuit
+specificity/ was null (all neurons had the same afferent connections)
+
+implemented an hypothesis 
 
 ** An analytical model for dendritic integration in the fluctuation-driven regime
 
