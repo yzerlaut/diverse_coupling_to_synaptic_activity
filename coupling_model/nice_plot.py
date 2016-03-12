@@ -26,10 +26,11 @@ VTHREs, DMUVs, DTSVs, DTVs = VTHRE[INDEXES], DMUV[INDEXES], DTSV[INDEXES], DTV[I
 
 ## discarding too low firing that can't be analyzed...
 
-cond = (NU0>1e-3) & (NU0<8)
+# cond = (NU0>1e-3) & (NU0<8)
+cond = (NU0>0)# to have all cells !!
 cond = (NU0>1e-4)
 np.save('kept_cells.npy', cond)
-
+print 'number of kept cells:',  len(NU0[cond])
 NU0, NU, UNBALANCED, PROX, DIST, SYNCH = NU0[cond], NU[cond], UNBALANCED[cond], PROX[cond], DIST[cond], SYNCH[cond]
 VTHRE, DMUV, DTSV, DTV = VTHRE[cond], DMUV[cond], DTSV[cond], DTV[cond]
 
@@ -71,7 +72,7 @@ plot_all(AX[0,1], VTHRE, y, lin_fit, VTHREs, ys,\
          cc, pp, invert_axis=True)
 set_plot(AX[0,1], ['left', 'bottom'],\
     ylabel=r'$ \nu_\mathrm{bsl}$ (Hz)',yticks=[-1,0,1],\
-    yticks_labels=['0.1', '1 ', '10'], xticks=[-40, -47, -54],\
+    yticks_labels=['0.1', '1 ', '10'], xticks=[-40, -50, -60],\
     xticks_labels=[])
 ## -- CORRELATION WITH THE REST
 for X, Xs, ax, label in zip([DMUV, DTSV, DTV], [DMUVs, DTSVs, DTVs], AX[0,2:], E_LABELS[1:]):
@@ -104,10 +105,8 @@ lin_fit = np.polyfit(np.array(VTHRE, dtype='f8'),\
 plot_all(AX[1,1], VTHRE, y, lin_fit, VTHREs,\
          ys, cc, pp, invert_axis=True)
 set_plot(AX[1,1], ['left', 'bottom'],ylabel=r'$\delta \nu_\mathrm{ubl}$ (Hz)',\
-    yticks=[-1,0,1], yticks_labels=['0.1', '1 ', '10'], xticks=[-40, -47, -54], xticks_labels=[])
+    yticks=[-1,0,1], yticks_labels=['0.1', '1 ', '10'], xticks=[-40, -50, -60], xticks_labels=[])
 ## unbalanced activity -- CORRELATION WITH THE REST
-# y -= np.polyval(lin_fit, VTHRE)
-# ys -= np.polyval(lin_fit, VTHREs)
 for X, Xs, ax, label in zip([DMUV, DTSV, DTV], [DMUVs, DTSVs, DTVs], AX[1,2:], E_LABELS[1:]):
     cc, pp = pearsonr(X, y)
     lin_fit = np.polyfit(np.array(X, dtype='f8'),\
@@ -137,7 +136,7 @@ cc, pp = pearsonr(VTHRE, y)
 lin_fit = np.polyfit(np.array(VTHRE, dtype='f8'), np.array(y, dtype='f8'), 1)
 plot_all(AX[2,1], VTHRE, y, lin_fit, VTHREs, ys, cc, pp, invert_axis=True)
 set_plot(AX[2,1], ['left', 'bottom'], num_yticks=3,\
-         ylabel=r'$\delta \nu_\mathrm{prox}$/$\nu_\mathrm{bsl}$ (%)', xticks=[-40, -47, -54],\
+         ylabel=r'$\delta \nu_\mathrm{prox}$/$\nu_\mathrm{bsl}$ (%)', xticks=[-40, -50, -60],\
          xticks_labels=[])
 ##  -- CORRELATION WITH THE REST
 for X, Xs, ax, label in zip([DMUV, DTSV, DTV], [DMUVs, DTSVs, DTVs], AX[2,2:], E_LABELS[1:]):
@@ -167,11 +166,9 @@ lin_fit = np.polyfit(np.array(VTHRE, dtype='f8'), np.array(y, dtype='f8'), 1)
 plot_all(AX[3,1], VTHRE, y, lin_fit, VTHREs, ys, cc, pp, invert_axis=True)
 set_plot(AX[3,1], ['left', 'bottom'],\
          yticks=[-1,0,1], yticks_labels=['0.1', '1 ', '10'],
-         xticks=[-40, -47, -54], xticks_labels=[],\
+         xticks=[-40, -50, -60], xticks_labels=[],\
          ylabel=r'$\delta \nu_\mathrm{dist}$ (Hz)')
 ## unbalanced activity -- CORRELATION WITH THE REST
-# y -= np.polyval(lin_fit, VTHRE)
-# ys -= np.polyval(lin_fit, VTHREs)
 for X, Xs, ax, label in zip([DMUV, DTSV, DTV], [DMUVs, DTSVs, DTVs], AX[3,2:], E_LABELS[1:]):
     cc, pp = pearsonr(X, y)
     lin_fit = np.polyfit(np.array(X, dtype='f8'),\
@@ -199,10 +196,8 @@ lin_fit = np.polyfit(np.array(VTHRE, dtype='f8'), np.array(y, dtype='f8'), 1)
 plot_all(AX[4,1], VTHRE, y, lin_fit, VTHREs, ys, cc, pp, invert_axis=True)
 set_plot(AX[4,1], ['left', 'bottom'], xlabel=E_LABELS[0],\
          yticks=[-1,0,1], yticks_labels=['0.1', '1 ', '10'],
-         xticks=[-40, -47, -54], ylabel=r'$\delta \nu_\mathrm{synch}$ (Hz)')
+         xticks=[-40, -50, -60], ylabel=r'$\delta \nu_\mathrm{synch}$ (Hz)')
 ##  -- CORRELATION WITH THE REST
-# y -= np.polyval(lin_fit, VTHRE)
-# ys -= np.polyval(lin_fit, VTHREs)
 for X, Xs, ax, label in zip([DMUV, DTSV, DTV], [DMUVs, DTSVs, DTVs], AX[4,2:], E_LABELS[1:]):
     cc, pp = pearsonr(X, y)
     lin_fit = np.polyfit(np.array(X, dtype='f8'),\
@@ -220,4 +215,5 @@ plt.annotate('increasing \n sensitivity to $\tau_V$', (0.1,0.1), xycoords='figur
 
 # plt.show()
 fig.savefig('final_fig.svg')
+fig.savefig('final_fig.png')
 
