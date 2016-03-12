@@ -4,6 +4,13 @@
 
 \newpage
 
+* Heterogeneity in the morphologies
+
+#+ATTR_LATEX: :float H! :width .6\linewidth
+#+NAME: fig:two-extrems
+#+CAPTION: *Representaiton of the biggest and smallest cells.*
+[[file:../figures/two_extremes_cells.png]]
+
 * Reduction to the equivalent cylinder
 <<sec:reduction-to-eq-cyl>>
 
@@ -659,5 +666,25 @@ can be computed analytically with the Neyman-Scott equation
 Here we 
 
 * Residual correlations after accounting for the excitability effects
+
+#+ATTR_LATEX: :float H!
+#+NAME: fig:two-extrems
+#+CAPTION: *Residual correaltions after removing the dependency on the excitatbility (see null correlation with excitability).*
+[[file:../figures/residual_correlations.png]]
+
+* Including cells of very low excitability in the analysis
+
+In this section, we re-include the n=3 cells of very low
+excitabilities that have been discarded in the analysis presented in
+the main text.
+
+#+ATTR_LATEX: :float H!
+#+NAME: fig:two-extrems
+#+CAPTION: *Including all cells in the correlating responses with biophysical features*. (i.e. the very low firing rates: \nu<10^{-4})
+[[file:../figures/all_coupling_correlations.png]]
+
+The global trend is conserved but their very low values of the firing
+rate render data visualization poorly informative.
+
 * References
 \bibliography{tex/biblio}

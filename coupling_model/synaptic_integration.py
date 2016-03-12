@@ -71,6 +71,8 @@ if __name__=='__main__':
     from my_graph import set_plot
 
     i_nrn = 2 # index of the neuron
+    i_nrn = 11 # largest cell
+    i_nrn = 17 # smallest cell
 
     fig, AX = plt.subplots(4, 1, figsize=(4, 15))
     plt.subplots_adjust(left=.3, top=.8, wspace=.2, hspace=.2)
@@ -80,8 +82,8 @@ if __name__=='__main__':
 
     PROTOCOLS = ['unbalanced activity', 'proximal activity', 'distal activity',\
                  'synchrony', 'non specific activity']
-    len_f = 5
-    F = np.linspace(0,1, len_f)
+    len_f = 20
+    F = np.linspace(0.01,1, len_f)
     if sys.argv[-1]=='all':
 
         for i in range(len(PROTOCOLS)):

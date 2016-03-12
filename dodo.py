@@ -54,10 +54,10 @@ def build_task_to_generate_tex(filename):
     DEPS = SVG_FILES
     DEPS = DEPS+[filename+".org", 'tex/biblio.bib']
     if filename=='presentation':
-        org_cmd0 = 'emacs --batch -l tex/org-config.el'
+        org_cmd0 = 'emacs --batch -l tex/org-config-'+filename+'.el'
         org_cmd = 'org-beamer-export-to-latex'
     else:
-        org_cmd0 = 'emacs --batch -l tex/org-config.el'
+        org_cmd0 = 'emacs --batch -l tex/org-config-'+filename+'.el'
         org_cmd = 'org-latex-export-to-latex'
     return {'actions': [CmdAction("cp "+filename+".org tex/"+filename+".org"),
                         CmdAction(org_cmd0+" --file tex/"+filename+".org -f "+org_cmd)],\
