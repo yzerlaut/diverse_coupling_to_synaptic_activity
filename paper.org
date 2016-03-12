@@ -1,7 +1,7 @@
 #+TITLE: Do heterogenous firing responses lead to diverse couplings to presynaptic activity ?
 # A theoretical study in a simplified morphological model of layer V pyramidal neurons
 #+AUTHOR: Y. Zerlaut^{1} \& A. Destexhe^{1}
-#+INCLUDE: my_template_draft.org 
+#+INCLUDE: my_template.org 
 
 * Abstract
 
@@ -20,31 +20,32 @@
   the membrane potential fluctuations. In the present work, we analyze
   how this heterogeneity is translated into diverse input-ouput
   properties (i.e. in the relation from presynaptic quantities to
-  spiking probability). To this purpose, we designed a simplified
-  morphological model of layer V pyramidal neurons with a dendritic
-  tree following Rall's branching rule. We first show that we are able
-  to calibrate this simplified model on /in vitro/ measurements of
-  somatic input impedance. We then propose an analytical derivation
-  for the membrane potential fluctuations at the soma as a function of
-  the properties of the synaptic bombardment. This mathematical
-  description allows to easily emulate various forms of presynaptic
-  activities: either balanced, unbalanced, synchronized, purely
-  proximal or purely distal synaptic activity. We found that those
-  different forms of activity led to various comodulations of the
-  membrane potential fluctuation properties, thus raising the question
-  whether individual neurons might differentially couple to specific
-  forms of activity because of their various firing responses to
-  fluctuations [[cite:Zerlaut2016]]. We indeed found such an heterogenous
-  response, but trivially, the only significant contribution to the
-  various firing response was the different levels of cellular
-  excitability (linked to the action potential threshold level). A
-  notable exception appeared for proximal activity: increasing
-  proximal activity could either promote firing response in some cells
-  or suppress it in some other cells whatever their individual
-  excitability. This behavior could only be explained by various
-  sensitivities to the speed of the fluctuations, that was previously
-  linked to heterogenous levels of sodium inactivation and sodium
-  channels density.
+  spiking probability) in the context of low synchrony population
+  dynamics. 
+
+  To this purpose, we designed a simplified morphological model of
+  layer V pyramidal neurons with a dendritic tree following Rall's
+  branching rule. We first show that we are able to calibrate this
+  simplified model on /in vitro/ measurements of somatic input
+  impedance. We then propose an analytical derivation for the membrane
+  potential fluctuations at the soma as a function of the properties
+  of the synaptic bombardment. This mathematical description allows to
+  easily emulate various forms of presynaptic activities: either
+  balanced, unbalanced, synchronized, purely proximal or purely distal
+  synaptic activity. We found that those different forms of activity
+  led to various comodulations of the membrane potential fluctuation
+  properties, thus raising the question whether individual neurons
+  might differentially couple to specific forms of activity because of
+  their various firing responses to fluctuation. We indeed found such
+  an heterogenous response, but trivially, the only significant
+  contribution to the various firing response was the different levels
+  of cellular excitability. A notable exception appeared for proximal
+  activity: increasing proximal activity could either promote firing
+  response in some cells or suppress it in some other cells whatever
+  their individual excitability. This behavior could only be explained
+  by various sensitivities to the speed of the fluctuations, that was
+  previously linked to heterogenous levels of sodium inactivation and
+  sodium channels density.
 
   In addition to giving quantitative insight on the impact of various
   excitability levels in individual neurons, the present study
@@ -81,11 +82,11 @@ membrane potential deflection (resulting from its
 /circuit-specificity/) and its threshold for action potential
 triggering (its /biophysical specificity/). The same result hold for
 texture recognition in the study of [[citetext:Yang2015]] where the
-combination of the two mentionned effect correlated with the [[xx, to be
-checked]] in barrel cortex neurons. Those results therefore suggest that
-heterogeneity in the electrophysiological or biophysical properties of
-neocortical neurons might have an impact on their functional role
-during sensory processing.
+combination of the two mentionned effect correlated with the [[xx, to
+be checked]] in barrel cortex neurons. Those results therefore suggest
+that heterogeneity in the electrophysiological or biophysical
+properties of neocortical neurons might have an impact on their
+functional role during sensory processing [[factor 2-3 between ranges]].
 
 In the present work, we further investigate this hypothesis in the
 light of the variability in the biophysical features reported in

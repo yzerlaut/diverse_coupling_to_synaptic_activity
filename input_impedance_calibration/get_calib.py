@@ -216,7 +216,8 @@ def make_conversion_fig(Rm0=None):
         LS, LD, DD = 0*Rm, 0*Rm, 0*Rm
 
         for i in range(len(Rm)):
-            soma1, stick1, params1 = adjust_model_prop(Rm[i], soma, stick, precision=.1, maxiter=1e4)
+            soma1, stick1, params1 = adjust_model_prop(Rm[i], soma, stick,\
+                                                       precision=.01, maxiter=1e5)
             LS[i] = 1e6*soma1['L']
             DD[i], LD[i] = 1e6*stick1['D'], 1e6*stick1['L']
 
