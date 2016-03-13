@@ -222,10 +222,14 @@ def run_simulation(shotnoise_input, cables, params, tstop=2000.,\
     t_vec.record(nrn._ref_t)
     V = []
 
-    if recordings is not 'full':
-        for rec in recordings:
-            V.append(nrn.Vector())
-            exec('V[-1].record(nrn.cable_'+str(rec[0])+'_'+str(rec[1])+'('+str(rec[0])+')._ref_v[0]')
+    # if recordings is 'soma':
+    #     for rec in recordings:
+    #         V.append(nrn.Vector())
+    #         exec('V[-1].record(nrn.cable_'+str(rec[0])+'_'+str(rec[1])+'('+str(rec[0])+')._ref_v[0]')
+    
+    if recordings is 'soma':
+        V.append(nrn.Vector())
+        exec('V[0].record(nrn.cable_0_0(0)._ref_v)')
 
     ## --- launching the simulation
     nrn.finitialize(params['El']*1e3)

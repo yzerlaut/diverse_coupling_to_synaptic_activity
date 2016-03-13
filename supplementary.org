@@ -663,7 +663,21 @@ can be computed analytically with the Neyman-Scott equation
 
 * Variability in the fluctuations properties introduced by the different morphologies
 
-Here we 
+In Figure [[fig:fluct-var]], we investigate what is the variability
+introduced by the different morphologies for the implemented
+protocols. We fix (\nu_e^p, \nu_e^p, s) and \mu_V, the inhibitory
+frequencies are adjusted adjusted depending on the morphology and the
+fluctuations properties also depend on the morphology.
+
+#+ATTR_LATEX: :float H!
+#+NAME: fig:fluct-var
+#+CAPTION: *Variability in the fluctuations properties introduced by the different morphologies.* Showing only the quantities that vary across cells, all other variables (\nu_e^p, \nu_e^p, s) or \mu_V are fixed across cells. *(A)* Model variables. The balance \mu_V is adjusted for each cells and the cells have different surfaces, so different number of synapses (and especially different ratio of excitatory to inhibitory numbers) so the inihibitory activity is adjusted differently for each cell. *(B)* Fluctuations properties.
+[[file:../figures/variabilty_in_fluct_resulting_from_morpho.png]]
+
+
+We conclude that the impact of the different morphology is weak for
+those protocols.
+
 
 * Residual correlations after accounting for the excitability effects
 

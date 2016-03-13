@@ -91,6 +91,7 @@ def get_model(args):
     params['fraction_for_L_prox'] = 5./6.
     params['factor_for_distal_synapses_weight'] = 2.
     params['factor_for_distal_synapses_tau'] = 1.
+    params_for_cable_theory(stick, params)
 
     return soma, stick, params
 
@@ -120,7 +121,7 @@ if __name__=='__main__':
     parser.add_argument("--seed", type=int, help="seed fo random numbers",default=37)
     parser.add_argument("--SEED", type=int, help="number of changed SEEDS",default=3)
     parser.add_argument("--discret_sim", type=int, help="space discretization for numerical simulation", default=20)
-    parser.add_argument("--tstop", type=float, help="max simulation time (s)", default=5000.)
+    parser.add_argument("--tstop", type=float, help="max simulation time (s)", default=3000.)
     parser.add_argument("--dt", type=float, help="simulation time step (ms)", default=0.025)
     parser.add_argument("--discret_th", type=int, help="discretization for theoretical evaluation",default=20)
     
@@ -153,11 +154,11 @@ if __name__=='__main__':
         for s in range(args.SEED):
             print 'baseline sim. , seed=', s
             t, V = run_simulation(shtn_input, cables, params,\
+                                  recordings='soma',
                                   tstop=args.tstop, dt=args.dt, seed=(ii+args.seed+s*(s+1))**3%10000)
-            muV_exp, sV_exp, Tv_exp = analyze_simulation(x_exp, cables, t, V)
             for EXP in SET_OF_EXPS:
                 EXP['muV_exp'][int(N_POINTS/2.),s], EXP['sV_exp'][int(N_POINTS/2.),s],\
-                  EXP['Tv_exp'][int(N_POINTS/2.),s] = muV_exp[0], sV_exp[0], Tv_exp[0]
+                  EXP['Tv_exp'][int(N_POINTS/2.),s] = analyze_simulation(x_exp, cables, t, V, recordings='soma')
 
         for EXP in SET_OF_EXPS:
             for i in np.delete(np.arange(N_POINTS), int(N_POINTS/2.)):
@@ -167,22 +168,21 @@ if __name__=='__main__':
                 for s in range(args.SEED):
                     print 'sim=', i, ', seed=', s
                     t, V = run_simulation(shtn_input, cables, params,\
+                                          recordings='soma',
                                           tstop=args.tstop, dt=args.dt, seed=(ii+args.seed+s*(s+2))**3%10000)
-                    muV_exp, sV_exp, Tv_exp = analyze_simulation(x_exp, cables, t, V)
-
-                    EXP['muV_exp'][i,s], EXP['sV_exp'][i,s], EXP['Tv_exp'][i,s] = muV_exp[0], sV_exp[0], Tv_exp[0]
+                    EXP['muV_exp'][i,s], EXP['sV_exp'][i,s], EXP['Tv_exp'][i,s] = analyze_simulation(x_exp, cables, t, V, recordings='soma')
                                                       
-                # # keeping a trace of the full spatial profile, and the theoretical comparison
-                fig = plot_time_traces(t, V, cables, params['EqCylinder'])
-                fig.savefig('data/trace_'+str(ii)+'.svg')
-                muV_exp, sV_exp, Tv_exp = analyze_simulation(x_exp, cables, t, V)
-                x_th, muV_th, sV_th, Tv_th  = \
-                  get_analytical_estimate(shtn_input,
-                                        soma, stick, params,
-                                        discret=args.discret_th)
-                fig = make_comparison_plot(x_th, muV_th, sV_th, Tv_th,\
-                         x_exp, muV_exp, sV_exp, Tv_exp, shtn_input)    
-                fig.savefig('data/spatial_profile_'+str(ii)+'.svg')
+                # # # keeping a trace of the full spatial profile, and the theoretical comparison
+                # fig = plot_time_traces(t, V, cables, params['EqCylinder'])
+                # fig.savefig('data/trace_'+str(ii)+'.svg')
+                # muV_exp, sV_exp, Tv_exp = analyze_simulation(x_exp, cables, t, V, recordings='soma')
+                # x_th, muV_th, sV_th, Tv_th  = \
+                #   get_analytical_estimate(shtn_input,
+                #                         soma, stick, params,
+                #                         discret=args.discret_th)
+                # fig = make_comparison_plot(x_th, muV_th, sV_th, Tv_th,\
+                #          x_exp, muV_exp, sV_exp, Tv_exp, shtn_input)    
+                # fig.savefig('data/spatial_profile_'+str(ii)+'.svg')
                 ii+=1
                 plt.close('all')
         np.save(file, [soma, stick, params, SET_OF_EXPS, args])
@@ -233,7 +233,8 @@ if __name__=='__main__':
                 set_plot(ax, xticks=np.linspace(-.2,.2,len(x)),\
                          xticks_labels=[], xlim=[-.3,.3])
             else:
-                set_plot(ax, xticks=np.linspace(-.2,.2,len(x)),yticks_labels=[], xlim=[-.3,.3])
+                set_plot(ax, xticks=np.linspace(-.2,.2,len(x)),\
+                         yticks_labels=[], xlim=[-.3,.3], xticks_labels=[])
             
     for ax, ylabel in zip(AX[:,0], ['$\mu_V$ (mV)', '$\sigma_V$ (mV)', '$\\tau_V$ (ms)']):
         ax.set_ylabel(ylabel)

@@ -37,27 +37,33 @@ stick = {'L': 2000*1e-6, 'D': 4*1e-6, 'NSEG': 30,\
          'Ke':100, 'Ki':100., 'name':'dend'}
 
 
-def analyze_simulation(xtot, cables, t, V, window_for_autocorrel=50):
+def analyze_simulation(xtot, cables, t, V, window_for_autocorrel=50, recordings='full'):
 
-    muV_exp, sV_exp, Tv_exp = [], [], []
 
-    # plt.figure()
-    for i in range(len(cables)): # loop over levels
-        n_level = max(1,2**(i-1)) # number of levels
-        for k in range(cables[i]['NSEG']): # loop over segments first
-            muV_exp.append(0)
-            sV_exp.append(0)
-            Tv_exp.append(0)
-            # they all have the same discretization
-            for j in range(n_level): # loop over branches then
-                v = np.array([V[it][i][j][k] for it in range(int(.1*len(t)), len(t))]).flatten()
-                muV_exp[-1] += v.mean()/n_level
-                sV_exp[-1] += v.std()/n_level
-                v_acf, t_shift = autocorrel(v, window_for_autocorrel, (t[1]-t[0]))
-                Tv_exp[-1] += np.trapz(v_acf, t_shift)/n_level
-    #             plt.plot(t_shift, v_acf)
-    # plt.show()
-    return np.array(muV_exp), np.array(sV_exp), np.array(Tv_exp)
+    if recordings=='full':
+        muV_exp, sV_exp, Tv_exp = [], [], []
+        
+        for i in range(len(cables)): # loop over levels
+            n_level = max(1,2**(i-1)) # number of levels
+            for k in range(cables[i]['NSEG']): # loop over segments first
+                muV_exp.append(0)
+                sV_exp.append(0)
+                Tv_exp.append(0)
+                # they all have the same discretization
+                for j in range(n_level): # loop over branches then
+                    v = np.array([V[it][i][j][k] for it in range(int(.1*len(t)), len(t))]).flatten()
+                    muV_exp[-1] += v.mean()/n_level
+                    sV_exp[-1] += v.std()/n_level
+                    v_acf, t_shift = autocorrel(v, window_for_autocorrel, (t[1]-t[0]))
+                    Tv_exp[-1] += np.trapz(v_acf, t_shift)/n_level
+        muV_exp, sV_exp, Tv_exp = np.array(muV_exp), np.array(sV_exp), np.array(Tv_exp)
+        
+    elif recordings=='soma':
+        v = np.array(V[0])
+        v_acf, t_shift = autocorrel(v, window_for_autocorrel, (t[1]-t[0]))
+        muV_exp, sV_exp, Tv_exp = v.mean(), v.std(), np.trapz(v_acf, t_shift)
+        
+    return muV_exp, sV_exp, Tv_exp
 
 
 def get_analytical_estimate(shotnoise_input,
