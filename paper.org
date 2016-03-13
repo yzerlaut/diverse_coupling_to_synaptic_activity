@@ -1,4 +1,4 @@
-#+TITLE: Do heterogenous firing responses lead to diverse couplings to presynaptic activity ?
+#+TITLE: Do heterogenous firing responses lead to diverse couplings to presynaptic activity ? 
 # A theoretical study in a simplified morphological model of layer V pyramidal neurons
 #+AUTHOR: Y. Zerlaut^{1} \& A. Destexhe^{1}
 #+INCLUDE: my_template.org 
@@ -10,9 +10,9 @@
   Neocortical processing of sensory input rely on the specific
   activation of subpopulations within the cortical network. Though
   specific circuitry is thought to be the primary mechanism underlying
-  this functional principle, we investigate here how diverse
-  biophysical features in single neuron might contribute to such
-  differential activation.
+  this functional principle, we investigate here a putative
+  complementary mechanism: whether diverse biophysical features in
+  single neuron contribute to such differential activation.
 
   In a companion study [[cite:Zerlaut2016]], we reported that, in young
   mice visual cortex, individual neurons differ not only in their
@@ -443,7 +443,7 @@ balance between -55mV and -52mV (see Figure
 [[fig:synaptic-integration]]). The synchrony is kept constant and the
 activity indifferentially raises in the proximal and distal part. This
 increase of total activity raises the input conductance ratio close to
-4. In this moderate range, the variations of the amplitude of the
+four. In this moderate range, the variations of the amplitude of the
 fluctuations \sigma_V remains a monotonic increase (unlike the
 non-monotonic variations found in the single-compartment study of
 [[citetext:Kuhn2004]] and the case of a proximal stimulation, see below),
@@ -543,10 +543,10 @@ we briefly discuss them here and we perform a more rigorous analysis
 in the next section.
 
 First, we can see that individual cells have a very different level of
-response to the baseline level of synaptic activity (response to the
-minimum of the abcissa in Figure [[fig:cell-examples]]). Cell 1 has a
-baseline at \sim 10^{-2}Hz while Cell2 or Cell3 have response above
-1Hz, i.e. 2 orders of magnitude above.
+response to the baseline level of synaptic activity (initial response
+in Figure [[fig:cell-examples]]). Cell 1 has a baseline at \sim 10^{-2} Hz
+while Cell2 or Cell3 have response above 1Hz, i.e. two orders of
+magnitude above.
 
 Importantly, those cells have different preferences for particular
 types of stimulations. Cell 1 responds more to unbalanced activity
@@ -573,8 +573,11 @@ for all n=27 cells. We get their response to the baseline level
 (the mean over the range of scanned presynaptic input):
 \delta\nu_{ubl} for the unbalanced activity, \delta\nu_{prox} for the
 proximal activity, \delta\nu_{dist} for the distal activity and
-\delta\nu_{synch} for the sychronous activity. We show the histogram
-of those values in the left column of Figure [[fig:coupling-correlation]].
+\delta\nu_{synch} for an increased sychrony. We show the histogram of
+those values in the left column of Figure [[fig:coupling-correlation]]. We
+also look for the origin of the individual couplings by correlating
+them with the characteristics of the neuronal firing responses
+[[cite:Zerlaut2016]].
 
 We first analyze the response to baseline activity \nu_{bsl}. When
 log-scaled (Figure [[fig:coupling-correlation]]A), the distribution is
@@ -596,37 +599,72 @@ naturally emerge as a result of the normal distribution observed in
 pyramidal cell's excitabilities [[cite:Zerlaut2016]], thus suggesting that
 no specific circuitry is needed to explain this neocortical property.
 
-We analyze the response to unbalanced activity \delta\nu_{ubl}. The
-firing increase also showed a strong heterogeneity, covering two
-orders of magnitude. This response was again highly correlated with
-the excitability. Surprisingly, the response was not related to the
-sensitivity to the depolarization \(\langle \partial \nu / \partial
-\mu_V \rangle_\mathcal{D} \), meaning that 
+Despite the important differences in the fluctuations they create (see
+Figure [[fig:synaptic-integration]]B), the responses over cells to
+unbalanced activity, distal activity and an increased synchrony share
+a very similar behavior. Their firing increases show a strong
+heterogeneity over cells, covering two orders of magnitude (see log
+y-axis on Figure [[fig:coupling-correlation]]B,D,E). This variability in
+responses was again highly correlated with the
+excitability. Surprisingly, the response was not dependent on any
+other of the characteristics of the firing response. For example, the
+variability observed during an increase in synchrony could have been
+linked to the to the sensitivity to the standard deviation \sigma_V
+\(\langle \partial \nu / \partial \sigma_V \rangle_\mathcal{D} \), but
+this effect was not significant (p>0.05, Pearson correlation).  This
+analysis therefore revealed that, for those type of synaptic
+activities, those properties of the firing response have negligible
+impact compared to the very strong effect of the variability in
+excitabilities. In the Supplementary Material we also investigated
+whether, after accounting for the variability due to the excitability,
+the residual variability would be explained by the characteristics of
+the firing response. Again, correlations were not significant,
+suggesting that those quantities have a very low explanatory power on
+the firing responses for those types of stimuli.
 
+
+The response to proximal activity also showed a great variability but
+with a qualitatively different behavior (Figure
+[[fig:coupling-correlation]]C). Notably, firing could be suppressed or
+increased. This variability was independent of the excitability of the
+cells but was correlated with the sensitivity to the speed of the
+fluctuations \(\langle \partial \nu / \partial \tau_V^N
+\rangle_\mathcal{D} \). Indeed, the proximal stimulation implies a
+strong variations of the fluctuations speed (i.e. decreasing \tau_V,
+while keeping moderate variations of \sigma_V and, by design, a
+constant \mu_V) thus rendering the sensitivity to the fluctuation
+speed the critical quantity for this stimulation type.
 
 
 #+ATTR_LATEX: :width \linewidth :float multicolumn
 #+NAME: fig:coupling-correlation
-#+CAPTION: *Correlating specific synaptic coupling to biophysical features.*
+#+CAPTION: *Diverse cellular responses to synaptic stimulation and their link to the chracteristics of their firing response function.* Note the logarithmic scale for the firing respones in *B,C,D*. *(A)* Diverse response to baseline stimulation. *(B)* Diverse response to unbalanced activity. *(C)* Diverse response to proximal activity. Note that because the response also show negative changes of firing rate, the data can not be log-scaled. Instead, they have been rescaled by the baseline response. *(D)* Diverse response to distal activity. *(E)* Diverse response to a synchrony increase.
 [[./figures/coupling_correlations.png]]
 
 * Discussion
 
-In this communication, by introducing an analytically tractable
-dendritic model, we presented the final form of our theoretical
-framework for single cell computation in the fluctuation-driven
-regime.
+** Sum up
 
-We used a second dataset to characterize the morphology, so that we
-could do it on the "firing response dataset"
+In this communication, 
 
 To highlight the impact of the /biophysical specificity/, we
 investigated single neuron response in a framework where the /circuit
 specificity/ was null (all neurons had the same afferent connections)
 
+
+by introducing an analytically tractable dendritic model, we presented
+the final form of our theoretical framework for single cell
+computation in the fluctuation-driven regime.
+
+We used a second dataset to characterize the morphology, so that we
+could do it on the "firing response dataset"
+
+
 implemented an hypothesis 
 
 ** An analytical model for dendritic integration in the fluctuation-driven regime
+
+[[stress why population dynamics and dendritic integration are linked]]
 
 we provided a stratey for the analytical treatment of dendritic
 integration in the fluctuation-driven regime that relies on 1)
@@ -645,10 +683,6 @@ models.
 Rely on calculating PSP events and opens the way toward event based
 simulations of dendritic integration in the high conductance state
 (though including approximation).
-
-** Limitations of the proposed theoretical framework for single-cell computation
-
-Only enables to scan sensory processing
 
 ** Heterogeneity of morpological and passive neuronal properties
 
@@ -690,6 +724,10 @@ proximal part.
 
 Let's speculate about the
 blabla
+
+** Limitations of the proposed theoretical framework for single-cell computation
+
+Only enables to scan sensory processing
 
 ** Interaction between circuit properties and biophysical properties
 

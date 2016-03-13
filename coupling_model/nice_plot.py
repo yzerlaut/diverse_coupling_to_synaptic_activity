@@ -65,6 +65,7 @@ set_plot(AX[0,0], ['left', 'bottom'], ylabel='cell #',\
     xlabel='baseline activity \n'+r'$ \nu_\mathrm{bsl}$ (Hz)',\
     xticks=[-1,0,1], yticks=[0,3,6], xlim=[-2.7,1.5],\
     xticks_labels=['0.1', '1 ', '10'])
+
 ## -- CORRELATION WITH VTHRE
 cc, pp = pearsonr(VTHRE, y)
 lin_fit = np.polyfit(np.array(VTHRE, dtype='f8'), np.array(y, dtype='f8'), 1)
