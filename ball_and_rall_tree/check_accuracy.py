@@ -15,9 +15,9 @@ from firing_response_description.template_and_fitting import final_func
 N_POINTS = 3
 inh_factor = 5.8
 
-fe_baseline, fi_baseline, synch_baseline = 0.4, 0.4*inh_factor, 0.2
-fe_vector = np.array([0.1,fe_baseline,0.7])
-fi_vector = fe_vector*inh_factor
+fe_baseline, fi_baseline, synch_baseline = 0.2, 0.2*inh_factor, 0.05
+fe_vector = np.array([0.,fe_baseline,0.4])
+fi_vector = np.round(fe_vector*inh_factor,1)
 synch_vector = np.array([0., synch_baseline, 0.4])
 
 def create_set_of_exps(args):
@@ -209,32 +209,39 @@ if __name__=='__main__':
     for EXP in SET_OF_EXPS:
         for y, i in zip([EXP['muV_exp'], EXP['sV_exp'], EXP['Tv_exp']], range(3)):
             for ax in AX[i,:]:
-                ax.plot(-0.+0*y, y, 'wD', lw=0, ms=0.1, alpha=0.)
+                ax.plot(-0.+0*y, 1.1*y, 'wD', lw=0, alpha=0.)
+                ax.plot(-0.+0*y, .9*y, 'wD', lw=0, alpha=0.)
 
+    YTICKS = [[-70,-60,-50], [3,5,7], [24,18,12]]
+    YLIM = [[-75,-40], [1.9,8.], [9,28]]
+    
     for EXP, ii in zip(SET_OF_EXPS, range(len(SET_OF_EXPS))):
+        
         SHTN_INPUT =  {'synchrony':EXP['synchrony'],
                         'fe_prox':EXP['fe_prox'], 'fi_prox':EXP['fi_prox'],
                         'fe_dist':EXP['fe_dist'], 'fi_dist':EXP['fi_dist']}
+        
         muV_th, sV_th, Tv_th, muG_th = get_the_fluct_prop_at_soma(SHTN_INPUT, params, soma, stick)
-        for ax, x, y in zip(AX[:,ii], [1e3*muV_th, 1e3*sV_th, 1e3*Tm0*Tv_th],\
-                            [EXP['muV_exp'], EXP['sV_exp'], EXP['Tv_exp']]):
+        for ax, x, y, yticks, ylim in zip(AX[:,ii], [1e3*muV_th, 1e3*sV_th, 1e3*Tm0*Tv_th],\
+                                          [EXP['muV_exp'], EXP['sV_exp'], EXP['Tv_exp']],\
+                                          YTICKS, YLIM):
             ax.errorbar(np.linspace(-.2,.2,len(y)), np.array(y).mean(axis=1),\
                         yerr=np.array(y).std(axis=1), marker='D', color='k')
             ax.plot(np.linspace(-.2,.2,len(x)), x, '-', color='lightgray', lw=3)
             if (ax==AX[-1,0]):
                 set_plot(ax, xticks=np.linspace(-.2,.2,len(x)), xlim=[-.3,.3],\
-                         xlabel=EXP['label'],
+                         xlabel=EXP['label'], yticks=yticks, ylim=ylim,
                          xticks_labels=[str(round(EXP['xticks'][i],2)) for i in range(N_POINTS)])
             elif (ax==AX[-1,ii]):
                 set_plot(ax, xticks=np.linspace(-.2,.2,len(x)), yticks_labels=[], xlim=[-.3,.3],\
-                         xlabel=EXP['label'],
+                         xlabel=EXP['label'], yticks=yticks, ylim=ylim, 
                          xticks_labels=[str(round(EXP['xticks'][i],2)) for i in range(N_POINTS)])
             elif ax in AX[:,0]:
                 set_plot(ax, xticks=np.linspace(-.2,.2,len(x)),\
-                         xticks_labels=[], xlim=[-.3,.3])
+                         xticks_labels=[], xlim=[-.3,.3], yticks=yticks, ylim=ylim)
             else:
-                set_plot(ax, xticks=np.linspace(-.2,.2,len(x)),\
-                         yticks_labels=[], xlim=[-.3,.3], xticks_labels=[])
+                set_plot(ax, xticks=np.linspace(-.2,.2,len(x)), yticks_labels=[],\
+                         xlim=[-.3,.3], xticks_labels=[], yticks=yticks, ylim=ylim)
             
     for ax, ylabel in zip(AX[:,0], ['$\mu_V$ (mV)', '$\sigma_V$ (mV)', '$\\tau_V$ (ms)']):
         ax.set_ylabel(ylabel)

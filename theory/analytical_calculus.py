@@ -399,6 +399,7 @@ def get_the_fluct_prop_at_soma(SHTN_INPUT, params, soma, stick,\
                 fe, fi = shtn_input['fe_dist'], shtn_input['fi_dist']
                 weight_synapse_factor = params['factor_for_distal_synapses_weight']
                 tau_synapse_factor = params['factor_for_distal_synapses_tau']
+                tau_synapse_factor = 1. # removed params
 
             ## weighting due to branching !
             # fe, fi = fe*Branch_weights[ix_source], fi*Branch_weights[ix_source]

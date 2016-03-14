@@ -32,20 +32,23 @@
   of the synaptic bombardment. This mathematical description allows to
   easily emulate various forms of presynaptic activities: either
   balanced, unbalanced, synchronized, purely proximal or purely distal
-  synaptic activity. We found that those different forms of activity
-  led to various comodulations of the membrane potential fluctuation
-  properties, thus raising the question whether individual neurons
-  might differentially couple to specific forms of activity because of
-  their various firing responses to fluctuation. We indeed found such
-  an heterogenous response, but trivially, the only significant
-  contribution to the various firing response was the different levels
-  of cellular excitability. A notable exception appeared for proximal
-  activity: increasing proximal activity could either promote firing
-  response in some cells or suppress it in some other cells whatever
-  their individual excitability. This behavior could only be explained
-  by various sensitivities to the speed of the fluctuations, that was
-  previously linked to heterogenous levels of sodium inactivation and
-  sodium channels density.
+  synaptic activity. 
+
+  We found that those different forms of activity led to various
+  comodulations of the membrane potential fluctuation properties, thus
+  raising the question whether individual neurons might differentially
+  couple to specific forms of activity because of their various firing
+  responses to fluctuations. 
+
+  We indeed found such an heterogenous response, but trivially, the
+  only significant contribution to the various firing response was the
+  different levels of cellular excitability. A notable exception
+  appeared for proximal activity: increasing proximal activity could
+  either promote firing response in some cells or suppress it in some
+  other cells whatever their individual excitability. This behavior
+  could only be explained by various sensitivities to the speed of the
+  fluctuations, that was previously linked to heterogenous levels of
+  sodium inactivation and sodium channels density.
 
   In addition to giving quantitative insight on the impact of various
   excitability levels in individual neurons, the present study
@@ -65,9 +68,10 @@ neuroscience.
 # Though this diverse activation is likely to be due to specific
 # connectivity schemes, we explore here a complementary mechanism: given
 
-Neocortical neurons differ in their afferent connectivity: e.g. in the
-somato-sensory cortex of rodents, layer IV neurons in two different
-barrels sample inputs from different locations in the thalamus nucleus
+Neocortical neurons have some degree of specififc circuitry, they
+differ in their afferent connectivity: e.g. in the somato-sensory
+cortex of rodents, layer IV neurons in two different barrels sample
+inputs from different locations in the thalamus nucleus
 [[ref?]]. Neocortical neurons also vary in their electrophysiological
 properties: for example, heterogenous levels in the action potential
 threshold are routinely measured both in vivo [[Nowak, etc]] and in vitro
@@ -75,37 +79,50 @@ threshold are routinely measured both in vivo [[Nowak, etc]] and in vitro
 given feature results from the combination of its /circuit
 specificity/ (relative to this feature) and its /biophysical
 specificity/.  The somato-sensory cortex study of [[citetext:Crochet2011]]
-illustrates this point precisely.  During active touch, the response
+illustrates this point precisely. During active touch, the response
 probability of a neuron (its sensitivity to whisker touch) follows
 from the combination of the reached level of synaptically-driven
 membrane potential deflection (resulting from its
 /circuit-specificity/) and its threshold for action potential
 triggering (its /biophysical specificity/). The same result hold for
 texture recognition in the study of [[citetext:Yang2015]] where the
-combination of the two mentionned effect correlated with the [[xx, to
-be checked]] in barrel cortex neurons. Those results therefore suggest
-that heterogeneity in the electrophysiological or biophysical
-properties of neocortical neurons might have an impact on their
-functional role during sensory processing [[factor 2-3 between ranges]].
+combination of the two mentionned effect correlated with the [[xx, to be
+checked]] in barrel cortex neurons. Those results therefore suggest that
+heterogeneity in the electrophysiological or biophysical properties of
+neocortical neurons might have an impact on their functional role
+during sensory processing [[note nonetheless a factor 2-3 between the
+ranges of each effect]].
 
-In the present work, we further investigate this hypothesis in the
-light of the variability in the biophysical features reported in
-[[citetext:Zerlaut2016]], namely that single neurons in juvenile mice
-cortex not only vary in their excitability (linked to the action
+In the present work, we further investigate this putative interaction
+in the light of the variability in the biophysical features reported
+in our companion communication, namely that single neurons in juvenile
+mice cortex not only vary in their excitability (linked to the action
 potential threshold, see [[xx]]) but also in their sensitivity to the
 properties of the membrane potential fluctuations. Our previous
 communication introduced those new dimensions in the /biophysical
 specificity/ and we now aim at understanding their functional impact.
+
 
 To highlight the impact of the /biophysical specificity/, we will
 investigate single neuron response in a framework where the /circuit
 specificity/ is null, i.e. with the hypothesis that all neurons sample
 statistically equally.
 
- Within the context of population dynamics, where the neuronal
-response can be described as a spiking probability and the input can
-be described by stationary firing rates (or slowly modulated firing
-rates compared to the membrane time constant).
+In the context of low synchrony population dynamics characterizing the
+activity of activated cortical states, information processing through
+population rate correspond to the temporal modulations of the membrane
+potential fluctuations.
+
+
+Here specific form of presynaptic stimulation
+ that are well defined in a 
+
+
+
+Within the context of population dynamics, where the neuronal response
+can be described as a spiking probability and the input can be
+described by stationary firing rates (or slowly modulated firing rates
+compared to the membrane time constant).
 
 We designed a theoretical model for passive dendritic integration that
 allows an analytical treatment and thus easily enables the
@@ -645,7 +662,17 @@ speed the critical quantity for this stimulation type.
 
 ** Sum up
 
-In this communication, 
+In this communication, we investigated how the heterogeneity in firing
+responses to fluctuations shape the diverse input-output functions of
+neocortical pyramidal cells. In the context of low synchrony
+population dynamics characterizing the activity of activated cortical
+states, we emulated various type of presynaptic activity in a
+theoretical model of dendritic integration. We found that those
+different types of synaptic stimulation corresponded to various
+comodulation
+
+p would have an impact on the and could therefore induce specific
+couplings to presynaptic activity.
 
 To highlight the impact of the /biophysical specificity/, we
 investigated single neuron response in a framework where the /circuit

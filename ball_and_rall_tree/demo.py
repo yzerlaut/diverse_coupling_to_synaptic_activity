@@ -60,8 +60,9 @@ def analyze_simulation(xtot, cables, t, V, window_for_autocorrel=50, recordings=
         
     elif recordings=='soma':
         v = np.array(V[0])
-        v_acf, t_shift = autocorrel(v, window_for_autocorrel, (t[1]-t[0]))
-        muV_exp, sV_exp, Tv_exp = v.mean(), v.std(), np.trapz(v_acf, t_shift)
+        # discarding transient rise with [len(v)/5:]
+        v_acf, t_shift = autocorrel(v[len(v)/5:], window_for_autocorrel, (t[1]-t[0]))
+        muV_exp, sV_exp, Tv_exp = v[len(v)/5:].mean(), v[len(v)/5:].std(), np.trapz(v_acf, t_shift)
         
     return muV_exp, sV_exp, Tv_exp
 

@@ -90,9 +90,9 @@ def Constructing_the_ball_and_tree(params, cables,
                 for seg in section:
 
                     tree_fraction = np.max([0,float(seg.x)/(len(cables)-1)+float(level-1)/(len(cables)-1)])
-                    if tree_fraction>=params['fraction_for_L_prox']:
+                    if tree_fraction>params['fraction_for_L_prox']:
                         # print 'strengthen synapse !'
-                        Ftau = params['factor_for_distal_synapses_tau']
+                        Ftau = 1. # removed params !
                         Fq = params['factor_for_distal_synapses_weight']
                     else:
                         Ftau = 1.
@@ -234,6 +234,7 @@ def run_simulation(shotnoise_input, cables, params, tstop=2000.,\
     ## --- launching the simulation
     nrn.finitialize(params['El']*1e3)
     nrn.dt = dt
+
     if recordings is 'full':
         V.append(get_v(cables))
 

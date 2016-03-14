@@ -5,10 +5,10 @@ soma, stick, params = np.load('../input_impedance_calibration/mean_model.npy')
 stick['NSEG'] = 20
 
 inh_factor = 5.8
-fe_baseline, fi_baseline, synch_baseline = 0.15, 0.15*inh_factor, 0.05
+fe_baseline, fi_baseline, synch_baseline = 0.1, 0.1*inh_factor, 0.05
 shtn_input = {'synchrony':synch_baseline,
                 'fe_prox':fe_baseline, 'fi_prox':fi_baseline,
-                  'fe_dist':fe_baseline, 'fi_dist':fi_baseline}
+                  'fe_dist':2.*fe_baseline, 'fi_dist':fi_baseline}
 
 if sys.argv[-1]=='run':
     tstop = 2000.
