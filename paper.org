@@ -115,7 +115,7 @@ potential fluctuations.
 
 
 Here specific form of presynaptic stimulation
- that are well defined in a 
+ that are well defined in a framework
 
 
 
@@ -262,7 +262,7 @@ its introduction as a variable.
 
 #+ATTR_LATEX: :width \linewidth
 #+NAME: fig:in-vitro-calib
-#+CAPTION: *Calibrating the model on /in vitro/ measurements: the simplified model and its size variations provides an approximation for the somatic input impedance and its heterogeneity*. *(A)* Input impedance (left: modulus and right: phase shift) measured at the soma in intracellular recordings with sine-wave protocols in current-clamp (inset). The color code indicates the input resistance and is likely to result from size variations of individual cells. *(B)* A medium size model accounts for the average data and varying the size of the dendritic tree and soma reproduces the trend in the individual measurements. Large cells (blue) have a lower modulus and a lower phase shift while small cells (red) have both a higher modulus and phase shift. *(C)* Left: We obtain a map between input resistance and size of the morphological model. Right: Representation of the medium-size model. *(D)* Additionally the synaptic weights are rescaled with respect to the cell's somatic input resistance. Because the mean transfer resistance to soma is linked to the input resistance, this rescalings insures that the mean synaptic efficacy at soms is the same for all cells.
+#+CAPTION: *Calibrating the model on /in vitro/ measurements: the simplified model and its size variations provides an approximation for the somatic input impedance and its heterogeneity*. *(A)* Input impedance (left: modulus and right: phase shift) measured at the soma in intracellular recordings with sine-wave protocols in current-clamp (inset). The color code indicates the input resistance and is likely to result from size variations of individual cells. *(B)* A medium size model accounts for the average data and varying the size of the dendritic tree and soma reproduces the trend in the individual measurements. Large cells (blue) have a lower modulus and a lower phase shift while small cells (red) have both a higher modulus and phase shift. *(C)* We obtain a map between input resistance and size of the morphological model. *(D)* Representation of the medium-size model. *(E)* Additionally the synaptic weights are rescaled with respect to the cell's somatic input resistance. Because the mean transfer resistance to soma is linked to the input resistance, this rescalings insures that the mean synaptic efficacy at soms is the same for all cells.
 [[file:./figures/calibration_on_input_imped.png]]
 
 We will use the firing response function of our companion study, we
@@ -342,7 +342,7 @@ shown in Figure [[fig:in-vitro-calib]]C.
 
 #+ATTR_LATEX: :width \linewidth
 #+NAME: fig:analytics-accuracy
-#+CAPTION: [[to be adapted]] *Accuracy of the analytical approximation for the properties of the membrane potential fluctuations: comparison between numerical simulations and analytical estimates*. *(A)* Morphology corresponding to the mean model, with the 3 points where the membrane potential is recorded. *(B)* Membrane potential fluctuations for the 3 recorded locations. Note the very weal level of correlation of the membrane potential between different branches. *(C)* Properties of the membrane potential fluctuations for different configuration of presynaptic activity: analytical predictions and output from numerical simulations in =NEURON=.
+#+CAPTION: *Accuracy of the analytical estimate for the properties of the membrane potential fluctuations at the soma: comparison between numerical simulations and the analytical approximation*. Shown for the medium size model of Figure [[fig:in-vitro-calib]]D. *(A)* In the numerical simulation, we explicitely simulate the whole dendritic arborization, we show the membrane potential variations for the three locations shown on the left. *(B)* Properties of the membrane potential fluctuations for different configuration of presynaptic activity: analytical predictions and output from numerical simulations in =NEURON=.
 [[./figures/comparison_analytics_and_sim.png]]
 
 For each cell, we now want to translate the five variables of the
@@ -390,22 +390,18 @@ hypothesis).
 
 In Figure [[fig:analytics-accuracy]] , we compare the analytical
 approximation to the output of numerical simulations performed with
-the =NEURON= software [[cite:HinesXXXX]]. We varied the five variables of
+the =NEURON= software [[cite:Hines1997]]. We varied the five variables of
 the model around a mean synaptic bombardment configuration (see next
 section). Some discrepancies between the approximation and the
 simulations appeared, see e.g. the \sim 1mV shift in the estimation of
-the standard deviation \sigma_V of the fluctuation. It is however hard
-to deintricate the origin of those deviations given the computational
-cost of the simulations (\sim 24h for the data of Figure
-[[fig:analytics-accuracy]] on a standard desktop computer), deviations
-could be due to the non-validity of the approximations or to the
-errors introduced by numerical solving (due to the limited spatial and
-temporal discretization, e.g. see the Supplementary Material for the
-effect on \sigma_V). Nonetheless, the trend in the variations of the
-fluctuations as a function of the model variables is kept between the
-analytical estimate and the numerical simulations. This relatively
-good agreement therefore shows that our analytical estimate is a valid
-tool to study dendritic integration in the fluctuation-driven regime.
+the standard deviation \sigma_V of the fluctuation. 
+
+
+Nonetheless, the trend in the variations of the fluctuations as a
+function of the model variables is kept between the analytical
+estimate and the numerical simulations. This relatively good agreement
+therefore shows that our analytical estimate is a valid tool to study
+dendritic integration in the fluctuation-driven regime.
 
 # We emphasize here that even if the analytical description uses the
 # reduction to the equivalent cylinder (and therefore could be seen as
