@@ -212,8 +212,8 @@ if __name__=='__main__':
                 ax.plot(-0.+0*y, 1.1*y, 'wD', lw=0, alpha=0.)
                 ax.plot(-0.+0*y, .9*y, 'wD', lw=0, alpha=0.)
 
-    YTICKS = [[-70,-60,-50], [3,5,7], [24,18,12]]
-    YLIM = [[-75,-40], [1.9,8.], [9,28]]
+    YTICKS = [[-70,-60,-50], [3,5,7], [12, 20, 28]]
+    YLIM = [[-75,-40], [1.9,8.], [9,31]]
     
     for EXP, ii in zip(SET_OF_EXPS, range(len(SET_OF_EXPS))):
         

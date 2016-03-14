@@ -68,21 +68,21 @@ neuroscience.
 # Though this diverse activation is likely to be due to specific
 # connectivity schemes, we explore here a complementary mechanism: given
 
-Neocortical neurons have some degree of specififc circuitry, they
-differ in their afferent connectivity: e.g. in the somato-sensory
-cortex of rodents, layer IV neurons in two different barrels sample
-inputs from different locations in the thalamus nucleus
-[[ref?]]. Neocortical neurons also vary in their electrophysiological
-properties: for example, heterogenous levels in the action potential
-threshold are routinely measured both in vivo [[Nowak, etc]] and in vitro
-[[refs]]. An emerging picture is that the sensitivity of a neuron to a
-given feature results from the combination of its /circuit
-specificity/ (relative to this feature) and its /biophysical
-specificity/.  The somato-sensory cortex study of [[citetext:Crochet2011]]
-illustrates this point precisely. During active touch, the response
-probability of a neuron (its sensitivity to whisker touch) follows
-from the combination of the reached level of synaptically-driven
-membrane potential deflection (resulting from its
+The neocortex is characterized by some degree of specific circuitry:
+neurons differ in their afferent connectivity: e.g. in the
+somato-sensory cortex of rodents, simple cells layer IV neurons in the
+visual cortex, barrels sample inputs from different locations in the
+thalamus nucleus [[ref?]]. Neocortical neurons also vary in their
+electrophysiological properties: for example, heterogenous levels in
+the action potential threshold are routinely measured both in vivo
+[[Nowak, etc]] and in vitro [[refs]]. An emerging picture is that the
+sensitivity of a neuron to a given feature results from the
+combination of its /circuit specificity/ (relative to this feature)
+and its /biophysical specificity/.  The somato-sensory cortex study of
+[[citetext:Crochet2011]] illustrates this point precisely. During active
+touch, the response probability of a neuron (its sensitivity to
+whisker touch) follows from the combination of the reached level of
+synaptically-driven membrane potential deflection (resulting from its
 /circuit-specificity/) and its threshold for action potential
 triggering (its /biophysical specificity/). The same result hold for
 texture recognition in the study of [[citetext:Yang2015]] where the
@@ -229,15 +229,23 @@ have been shown to deviate from Rall's 3/2 branching rule. Nonetheless
 this simplified model contains the important ingredient for our study:
 the fact that the transfer impedance to the soma of a synaptic input
 will strongly depend on its location on the dendritic tree. Indeed, as
-observed experimentally [[cite:Macgee2000]], distal events will be more
+observed experimentally [[cite:Magee2000]], distal events will be more
 low-pass filtered than proximal events in this model.
+
+
+[[Usually, proximal dendrites receive excitatory inputs from local
+sources (collaterals in the same area or from an adjacent area)
+whereas the distal apical tuft receives inputs from more distant
+cortical and thalamic locations (FIG. 1b).]]
+
+
 
 We spread synapses onto this morphology according to physiological
 densitities (taking lower bounds of [[citetext:DeFelipe1994]]) and
 describe synaptic events as transient permeability changes of
 ion-selective channels (see Methods[[sec:model-equations]]). We
 arbitrarily separate the dendritic tree into two domains: a proximal
-and a distal domain. Following experimental evidences [[cite:Macgee2000]],
+and a distal domain. Following experimental evidences [[cite:Magee2000]],
 we set a higher synaptic efficacy for distal synapses. The synaptic
 parameters take physiological values [[cite:Destexhe1994]] and can be
 found on Table [[table:params]]. The passive and morphological parameters
@@ -342,7 +350,7 @@ shown in Figure [[fig:in-vitro-calib]]C.
 
 #+ATTR_LATEX: :width \linewidth
 #+NAME: fig:analytics-accuracy
-#+CAPTION: *Accuracy of the analytical estimate for the properties of the membrane potential fluctuations at the soma: comparison between numerical simulations and the analytical approximation*. Shown for the medium size model of Figure [[fig:in-vitro-calib]]D. *(A)* In the numerical simulation, we explicitely simulate the whole dendritic arborization, we show the membrane potential variations for the three locations shown on the left. *(B)* Properties of the membrane potential fluctuations for different configuration of presynaptic activity: analytical predictions and output from numerical simulations in =NEURON=.
+#+CAPTION: *Accuracy of the analytical estimate for the properties of the membrane potential fluctuations at the soma: comparison between numerical simulations and the analytical approximation*. Shown for the medium size model of Figure [[fig:in-vitro-calib]]D. *(A)* In the numerical simulation, we explicitely simulate the whole dendritic arborization, we show the membrane potential variations for the three locations shown on the left. *(B)* Properties of the membrane potential fluctuations for different configuration of presynaptic activity: analytical predictions and output from numerical simulations in =NEURON=. In each column, one variable is varied while the other variables are fixed to the mean configuration value corresponding to \nu_e^p=\nu_e^d=0.2Hz, \nu_i^p=\nu_i^d=1.2Hz and s=0.05.
 [[./figures/comparison_analytics_and_sim.png]]
 
 For each cell, we now want to translate the five variables of the
@@ -388,20 +396,22 @@ amplitude compared to the amplitude of the massive synaptic
 bombardment (see e.g.  [[citetext:Kuhn2004]] for the validity of the first
 hypothesis).
 
-In Figure [[fig:analytics-accuracy]] , we compare the analytical
+In Figure [[fig:analytics-accuracy]], we compare the analytical
 approximation to the output of numerical simulations performed with
 the =NEURON= software [[cite:Hines1997]]. We varied the five variables of
 the model around a mean synaptic bombardment configuration (see next
 section). Some discrepancies between the approximation and the
-simulations appeared, see e.g. the \sim 1mV shift in the estimation of
-the standard deviation \sigma_V of the fluctuation. 
-
-
-Nonetheless, the trend in the variations of the fluctuations as a
-function of the model variables is kept between the analytical
-estimate and the numerical simulations. This relatively good agreement
-therefore shows that our analytical estimate is a valid tool to study
-dendritic integration in the fluctuation-driven regime.
+simulations appeared, in particular one can see a \sim 1mV shift in
+the standard deviation \sigma_V of the fluctuation. Because the
+synchrony controls the amplitude of the fluctuations (Figure
+[[fig:analytics-accuracy]]B and Figure [[fig:synaptic-integration]]B), the
+analytical estimate could therefore be seen as an accurate estimate,
+modulo a shift in the synchrony. Nonetheless, the trend in the
+variations of the fluctuations as a function of the model variables is
+globally kept between the analytical estimate and the numerical
+simulations. This relatively good agreement therefore shows that our
+analytical estimate is a valid tool to study dendritic integration in
+the fluctuation-driven regime.
 
 # We emphasize here that even if the analytical description uses the
 # reduction to the equivalent cylinder (and therefore could be seen as
@@ -580,6 +590,11 @@ presynaptic activity/.
 
 ** Biophysical origin of the heterogenous couplings to presynaptic activities
 
+#+ATTR_LATEX: :width \linewidth :float multicolumn
+#+NAME: fig:coupling-correlation
+#+CAPTION: *Diverse cellular responses to synaptic stimulation and their link to the chracteristics of their firing response function.* Note the logarithmic scale for the firing respones in *B,C,D*. *(A)* Diverse response to baseline stimulation. *(B)* Diverse response to unbalanced activity. *(C)* Diverse response to proximal activity. Note that because the response also show negative changes of firing rate, the data can not be log-scaled. Instead, they have been rescaled by the baseline response. *(D)* Diverse response to distal activity. *(E)* Diverse response to a synchrony increase.
+[[./figures/coupling_correlations.png]]
+
 We now make this analysis more quantitative by computing the responses
 for all n=27 cells. We get their response to the baseline level
 \nu_{bsl} and their mean response change for each stimulation type
@@ -648,24 +663,34 @@ while keeping moderate variations of \sigma_V and, by design, a
 constant \mu_V) thus rendering the sensitivity to the fluctuation
 speed the critical quantity for this stimulation type.
 
-
-#+ATTR_LATEX: :width \linewidth :float multicolumn
-#+NAME: fig:coupling-correlation
-#+CAPTION: *Diverse cellular responses to synaptic stimulation and their link to the chracteristics of their firing response function.* Note the logarithmic scale for the firing respones in *B,C,D*. *(A)* Diverse response to baseline stimulation. *(B)* Diverse response to unbalanced activity. *(C)* Diverse response to proximal activity. Note that because the response also show negative changes of firing rate, the data can not be log-scaled. Instead, they have been rescaled by the baseline response. *(D)* Diverse response to distal activity. *(E)* Diverse response to a synchrony increase.
-[[./figures/coupling_correlations.png]]
-
 * Discussion
 
 ** Sum up
 
 In this communication, we investigated how the heterogeneity in firing
-responses to fluctuations shape the diverse input-output functions of
-neocortical pyramidal cells. In the context of low synchrony
-population dynamics characterizing the activity of activated cortical
-states, we emulated various type of presynaptic activity in a
-theoretical model of dendritic integration. We found that those
-different types of synaptic stimulation corresponded to various
-comodulation
+responses to fluctuating input shape the diverse input-output
+functions of neocortical pyramidal cells. Focusing on the regime of
+near asynchronous population dynamics, we emulated various type of
+presynaptic activity in a theoretical model of dendritic
+integration. We found that those different types of synaptic
+stimulation corresponds to various comodulations of the fluctuations
+properties, and that, because of their different response to the same
+fluctuations, individual neurons would respond differently to those
+stimulation.
+
+Very naturally, the key quantity to explain the various neuronal
+responses was the cellular excitability: indeed, the response to
+unbalanced activity, distal activity or an increase in synchrony was
+strongly correlated with cellular excitability.
+
+
+In our companion communication, we related the sensitivity to the
+speed of the fluctuations
+
+
+with the notable exception of proximal activity.
+
+
 
 p would have an impact on the and could therefore induce specific
 couplings to presynaptic activity.
@@ -714,18 +739,20 @@ and the size of the morphological model has led to the invariance in
 the relation between input (presynaptic variables) and the fluctuation
 properties. Thus the heterogeneity in morpholgies (here only cell
 sizes) had very little effects on the heterogeneity of cell responses.
-
+Nontheless 
 
 
  a rescaling of the
 
 The reason for 
 
-** Relevant functional  measures of cellular properties in the fluctuation-driven 
+** Relevant functional measures of cellular properties in the fluctuation-driven 
 
-In our companion communication, we introduced 4 measures for the
-cellular properties, we discuss their relevance in the light of the
-present analysis.
+In our companion communication, we introduced four measures
+characterizing the cellular properties in the fluctuation-driven
+regime, the present analysis shed some light on their physiological
+relevance. 
+
 
 We showed here that to of them seems irrelevant and do not have any
 explanatory power . A significant heterogeneity was found for those
@@ -734,15 +761,53 @@ situation, those quantities
 
 On the other hand
 
+** Diverse coupling to proximal activity and /in vivo/ observations
+
+
+The /in vivo/ study in mice visual cortex of [[citetext:Okun2015]]
+reported a strong heterogeneity in the coupling between individual
+cell's responses and the locally recorded population activity. The
+authors explained those observations by an increased local recurrent
+connectivity and argued that this diverse coupling did not seem to be
+explained by biophysical heterogeneity (e.g. the coupling was
+independent from the action potential threshold, somehow a measure of
+the excitability). However, as local connectivity is thought to target
+more proximal regions [[cite:Spruston2008]], our study proposes a
+biophysical mechanism that could contribute to this phenomena. The
+diverse coupling to proximal activity was indeed found to be
+independent on the cellular excitability (see Figure
+[[fig:coupling-correlation]]), the critical quantity to explain this
+feature was the sensitivity to the speed of the fluctuations. Note
+that two strong hypothesis underlie the previous reasoning, 1) that
+our description of proximal activity is somehow adequate, i.e. the
+activity remains balanced and elicits strong changes in the speed of
+the fluctuations while limiting variations of \sigma_V and 2) that the
+biophysical heterogeneity observed in young mice cortex is at least
+partially preserved in adult animals. 
+
+Future work could adress this hypothesis by combining recordings of
+population activity with a more subtle and functionnally-relevant
+analysis of single cell biophysics
+
+
 ** Sodium inactivation and sensitivities to $\tau_V$
 
 The 
 
-** Diverse coupling to proximal activity
+,
+i.e. putatively linked to the impact of sodium inactivation and the
+density of sodium channels [[cite:Zerlaut2016]]. 
+
+
+A more subtle characterization of the
+cellular biophysical properties could indeeed
+
 
 Note that proximal activity in our theoretical model has a rather
 large extent, six seventh of the dendritic tree belongs to the
 proximal part.
+
+
 
 
 Let's speculate about the
@@ -996,15 +1061,20 @@ membrane potential fluctuations).
 
 The full model has been implemented numerically using the =NEURON=
 software. The branched morhology was created and passive cable
-properties were introduced. The spatial discretization was =nseg=30=
-segments per branch. On each segment, one excitatory and one
-inhibitory synapse were created, the shotnoise frequency was then
-scaled according to the segment area and the synaptic density to
-account for the number of synapses on this segment (using the
-properties of the Poisson process, N synapses at frequency $\nu$ is a
-synapse at frequency $N\nu$). Custom event generation was implemented
-to introduce correlations (instead of classical =NetStim=) and fed
-=NetCon= objects attached to each synapses (=ExpSyn= synapses).
+properties were introduced (see Table [[table:params]]). The spatial
+discretization was =nseg=30= segments per branch. On each segment, one
+excitatory and one inhibitory synapse were created, the shotnoise
+
+frequency was then scaled according to the segment area and the
+synaptic density to account for the number of synapses on this segment
+(using the properties of the Poisson process, N synapses at frequency
+$\nu$ is a synapse at frequency $N\nu$). Custom event generation was
+implemented to introduce correlations (instead of classical =NetStim=)
+and fed =NetCon= objects attached to each synapses (=ExpSyn=
+synapses). Each simulation had a time step dt=0.01ms and a length of
+3s, the simulationwas repeated over 4 seeds to yield a mean and a
+standard deviation in the estimate of the membrane potential
+fluctuations at the soma (see Figure [[fig:analytics-accuracy]]B).
 
 ** Analytical derivation of the fluctuation properties: strategy
 <<sec:strategy>>
