@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pylab as plt
 import sys
-sys.path.append('/home/yann/work/python_library')
+sys.path.append('../code')
 from my_graph import set_plot
 import fourier_for_real as rfft
 sys.path.append('../')

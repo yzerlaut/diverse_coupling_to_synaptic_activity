@@ -114,10 +114,8 @@ population rate correspond to the temporal modulations of the membrane
 potential fluctuations.
 
 
-Here specific form of presynaptic stimulation
- that are well defined in a framework
-
-
+Here specific form of presynaptic stimulation that are well defined in
+a framework
 
 Within the context of population dynamics, where the neuronal response
 can be described as a spiking probability and the input can be
@@ -181,7 +179,7 @@ In the fluctuation-driven regime, the cellular input-output function
 of a neocortical neuron corresponds to the function that maps the
 presynaptic variables to the spiking probability of the neuron (this
 is true both in a rate coding paradigm [[cite:Adrian, Shadlen]] or in a
-stochastic temporal coding paradigm [[cite:Rossant]]). In addition,
+stochastic temporal coding paradigm [[cite:Rossant2011]]). In addition,
 because our study focuses on effects resulting from population
 dynamics, the presynaptic variables will have a simple description:
 firing rates and a synchrony degree.
@@ -232,7 +230,7 @@ will strongly depend on its location on the dendritic tree. Indeed, as
 observed experimentally [[cite:Magee2000]], distal events will be more
 low-pass filtered than proximal events in this model.
 
-
+from [[cite:Spruston2008]]:
 [[Usually, proximal dendrites receive excitatory inputs from local
 sources (collaterals in the same area or from an adjacent area)
 whereas the distal apical tuft receives inputs from more distant
@@ -247,7 +245,7 @@ ion-selective channels (see Methods[[sec:model-equations]]). We
 arbitrarily separate the dendritic tree into two domains: a proximal
 and a distal domain. Following experimental evidences [[cite:Magee2000]],
 we set a higher synaptic efficacy for distal synapses. The synaptic
-parameters take physiological values [[cite:Destexhe1994]] and can be
+parameters take physiological values [[cite:Destexhe1998]] and can be
 found on Table [[table:params]]. The passive and morphological parameters
 will be estimated from /in vitro/ measurements.
 
@@ -258,12 +256,12 @@ of them has two presynaptic rates corresponding to the excitatory and
 inhibitory populations (hence four rate variables: \nu_e^p, \nu_i^p,
 \nu_e^d, \nu_i^d). Additionally, a global synchrony variable has been
 introduced for presynaptic events. This reproduces the effect of
-pairwise correlations observed in neocortical assemblies [[cite:Peyrache]]
-and/or the multi-innervation of a cell by its presynaptic afferent
-[[ref-multi-innervation]]. The synchrony degree in the presynaptic
-activity has been suggested to vary with stimulus statistics in the
-primary visual cortex [[cite:Baudot2004, ElBoustani2009]] and justifies
-its introduction as a variable.
+pairwise correlations observed in neocortical assemblies
+[[cite:Peyrache2012]] and/or the multi-innervation of a cell by its
+presynaptic afferent [[ref-multi-innervation]]. The synchrony degree in
+the presynaptic activity has been suggested to vary with stimulus
+statistics in the primary visual cortex [[cite:Baudot2013,
+ElBoustani2009]] and justifies its introduction as a variable.
 
 ** Model calibration on /in vitro/ measurements
 <<sec:in-vitro-calib>>
@@ -283,7 +281,7 @@ which this characterization relies is the fact that the input
 impedance at the soma can not be accounted for only by the
 isopotential somatic compartment (i.e. a RC circuit). The input
 impedance also shows the contribution of the dendritic tree in
-parallel to the soma (see [[cite:Rall962]] for the classical description
+parallel to the soma (see [[cite:Rall1962]] for the classical description
 on the [[xx]] motoneuron). Indeed, both the modulus and the phase of the
 imput impedance show deviations from the deviations from the RC
 circuit impedance (see the comparison in Figure [[fig:in-vitro-calib]]B):
@@ -345,6 +343,9 @@ the mean impedance behavior). Thus, for each neuron in our previous
 "firing response dataset", because we have its input resistance at the
 soma, we can associate a given morphology. The association rule is
 shown in Figure [[fig:in-vitro-calib]]C.
+
+Mean number of synapses: 3953 \(\pm\) 1748 with a ratio of excitatory
+to inhibitory numebers of synapses of 4.5 \(\pm\) 0.1.
 
 ** An analytical approximation for the properties of the membrane potential fluctuations at the soma
 
@@ -650,7 +651,6 @@ the firing response. Again, correlations were not significant,
 suggesting that those quantities have a very low explanatory power on
 the firing responses for those types of stimuli.
 
-
 The response to proximal activity also showed a great variability but
 with a qualitatively different behavior (Figure
 [[fig:coupling-correlation]]C). Notably, firing could be suppressed or
@@ -678,59 +678,74 @@ properties, and that, because of their different response to the same
 fluctuations, individual neurons would respond differently to those
 stimulation.
 
-Very naturally, the key quantity to explain the various neuronal
-responses was the cellular excitability: indeed, the response to
+- Note that proximal activity in our theoretical model has a rather
+  large extent, six seventh of the dendritic tree belongs to the
+  proximal part.
+
+** Limitations of the proposed theoretical framework for single-cell computation
+
+- Only enables to scan sensory processing
+
+- no active mechanisms in dendrites !!
+
+** Relevant functional measures of cellular properties in the fluctuation-driven 
+
+Very naturally, a key quantity to explain the various neuronal
+responses was the cellular excitability. Indeed, the response to
 unbalanced activity, distal activity or an increase in synchrony was
-strongly correlated with cellular excitability.
+strongly correlated with cellular excitability. Also the sensitivity
+to the speed of the fluctuations had a crucial impact on the response
+to proximal activity.
+
+The present analysis therefore shed light on the physiological
+relevance of the properties that we introduced in our companion
+study.
+
+Therefore, in all four measures characterizing the cellular properties
+in the fluctuation-driven regime that we introduced in our companion
+study, only two of them seems to be physiologically relevant: the
+excitability and the sensitivity to the speed of the fluctuations. 
 
 
-In our companion communication, we related the sensitivity to the
-speed of the fluctuations
-
-
-with the notable exception of proximal activity.
-
-
-
-p would have an impact on the and could therefore induce specific
-couplings to presynaptic activity.
+We showed here that to of them seems irrelevant and do not have any
+explanatory power . A significant heterogeneity was found for those
+two quantities in between cells, but when plugged in a physiological
+situation, those quantities 
 
 To highlight the impact of the /biophysical specificity/, we
 investigated single neuron response in a framework where the /circuit
 specificity/ was null (all neurons had the same afferent connections)
 
 
-by introducing an analytically tractable dendritic model, we presented
+- By introducing an analytically tractable dendritic model, we presented
 the final form of our theoretical framework for single cell
 computation in the fluctuation-driven regime.
 
-We used a second dataset to characterize the morphology, so that we
-could do it on the "firing response dataset"
+- We used a second dataset to characterize the morphology, so that we
+  could do it on the "firing response dataset"
 
-
-implemented an hypothesis 
 
 ** An analytical model for dendritic integration in the fluctuation-driven regime
 
-[[stress why population dynamics and dendritic integration are linked]]
+- we provided a stratey for the analytical treatment of dendritic
+  integration in the fluctuation-driven regime that relies on 1)
+  shotnoise theory, 2) cable theory and 3) adequate approximations.
 
-we provided a stratey for the analytical treatment of dendritic
-integration in the fluctuation-driven regime that relies on 1)
-shotnoise theory, 2) cable theory and 3) adequate approximations.
+- The main advantage of this model is that you can very naturall plug
+  in physiological parameters (because surface area is physiological
+  as well as transfer resistance to soma) and still it remains
+  analytical.
 
-The main advantage of this model is that you can very naturall plug in
-physiological parameters (because surface area is physiological as
-well as transfer resistance to soma) and still it remains analytical.
+- Literature suffers from the reduction to single-compartment. Though
+  being approximative.
 
-Literature suffers from the reduction to single-compartment
+- The current model provides a tool to make network dynamics question
+  amenable to mathematical analysisw ith morphologically detailed
+  models.
 
-The current model provides a tool to make network dynamics question
-amenable to mathematical analysis with morphologically detailed
-models.
-
-Rely on calculating PSP events and opens the way toward event based
-simulations of dendritic integration in the high conductance state
-(though including approximation).
+- Rely on calculating PSP events and opens the way toward event based
+  simulations of dendritic integration in the high conductance state
+  (though including approximation).
 
 ** Heterogeneity of morpological and passive neuronal properties
 
@@ -742,84 +757,37 @@ sizes) had very little effects on the heterogeneity of cell responses.
 Nontheless 
 
 
- a rescaling of the
-
-The reason for 
-
-** Relevant functional measures of cellular properties in the fluctuation-driven 
-
-In our companion communication, we introduced four measures
-characterizing the cellular properties in the fluctuation-driven
-regime, the present analysis shed some light on their physiological
-relevance. 
-
-
-We showed here that to of them seems irrelevant and do not have any
-explanatory power . A significant heterogeneity was found for those
-two quantities in between cells, but when plugged in a physiological
-situation, those quantities 
-
-On the other hand
-
 ** Diverse coupling to proximal activity and /in vivo/ observations
-
 
 The /in vivo/ study in mice visual cortex of [[citetext:Okun2015]]
 reported a strong heterogeneity in the coupling between individual
 cell's responses and the locally recorded population activity. The
-authors explained those observations by an increased local recurrent
-connectivity and argued that this diverse coupling did not seem to be
-explained by biophysical heterogeneity (e.g. the coupling was
-independent from the action potential threshold, somehow a measure of
-the excitability). However, as local connectivity is thought to target
-more proximal regions [[cite:Spruston2008]], our study proposes a
-biophysical mechanism that could contribute to this phenomena. The
+authors explained those observations by a variabiliy in the local
+recurrent connectivity and argued that this diverse coupling did not
+seem to be explained by biophysical heterogeneity (e.g. the coupling
+was independent from the action potential threshold, somehow a measure
+of the excitability). However, as local connectivity is thought to
+target more proximal regions [[cite:Spruston2008]], our study proposes a
+biophysical mechanism that could contribute to their observation. The
 diverse coupling to proximal activity was indeed found to be
 independent on the cellular excitability (see Figure
 [[fig:coupling-correlation]]), the critical quantity to explain this
 feature was the sensitivity to the speed of the fluctuations. Note
-that two strong hypothesis underlie the previous reasoning, 1) that
-our description of proximal activity is somehow adequate, i.e. the
-activity remains balanced and elicits strong changes in the speed of
-the fluctuations while limiting variations of \sigma_V and 2) that the
-biophysical heterogeneity observed in young mice cortex is at least
-partially preserved in adult animals. 
-
-Future work could adress this hypothesis by combining recordings of
-population activity with a more subtle and functionnally-relevant
-analysis of single cell biophysics
-
+that two strong hypothesis underlie the previous reasoning: 1) that
+local population activity correspond to the proximal activity modeled
+our study, i.e. the activity should remains balanced, elicits strong
+changes in the speed of the fluctuations while limiting variations of
+\sigma_V and 2) that the biophysical heterogeneity for the sensitivity
+to \tau_V observed in young mice cortex is at least partially
+preserved in adult animals. Future work could therefore adress this
+question by combining recordings of population activity with a more
+subtle and functionnally-relevant analysis of single cell properties.
 
 ** Sodium inactivation and sensitivities to $\tau_V$
 
-The 
-
-,
-i.e. putatively linked to the impact of sodium inactivation and the
-density of sodium channels [[cite:Zerlaut2016]]. 
-
-
-A more subtle characterization of the
-cellular biophysical properties could indeeed
-
-
-Note that proximal activity in our theoretical model has a rather
-large extent, six seventh of the dendritic tree belongs to the
-proximal part.
-
-
-
-
-Let's speculate about the
-blabla
-
-** Limitations of the proposed theoretical framework for single-cell computation
-
-Only enables to scan sensory processing
-
-** Interaction between circuit properties and biophysical properties
-
-blabla 
+In our companion communication, theoretical modeling suggested that
+the sensitivity to the speed of the fluctuations to the impact of
+sodium inactivation and the density of sodium channels
 
 * Material and Methods 
 \small
@@ -843,34 +811,36 @@ The parameters of the model are presented on Table [[table:params]].
 
 #+ATTR_LATEX: :float multicolumn
 #+NAME: table:params
-#+CAPTION: *Model parameters* 
+#+CAPTION: *Model parameters*. The passive properties and the mean morphology are fitted while 
 | *Parameters*      | Parameter Name                | Symbol                 | Value | Unit                      |
 |-------------------+-------------------------------+------------------------+-------+---------------------------|
 | /                 | <>                            | <>                     |    <> | /                         |
 |                   |                               |                        |       |                           |
 | *passive*         |                               |                        |       |                           |
-|                   | leak resistivity density      | \(r_m\)                |  10.0 | mS/cm^2                   |
-|                   | specific capacitance          | \(c_m\)                |  1.05 | \mu F /cm^2               |
+|                   | leak resistivity density      | \(r_m\)                |   325 | \(\mu\)S/cm^2             |
+|                   | intracellular resistivity     | \(r_i\)                |    30 | \Omega .cm                |
+|                   | specific capacitance          | \(c_m\)                |  1.05 | \(\mu\)F/cm^2             |
 |                   | leak reversal potential       | E_L                    |   -65 | mV                        |
 | *synaptic*        |                               |                        |       |                           |
 |                   | inhibitory reversal potential | E_i                    |   -80 | mV                        |
 |                   | excitatory reversal potential | E_e                    |     0 | mV                        |
-|                   | somatic inhibitory density    | $\mathcal{D}_i^{soma}$ |    20 | synapses/(100$\mu m^{2}$) |
-|                   | tree excitatory density       | $\mathcal{D}_e$        |    30 | synapses/(100$\mu m^{2}$) |
-|                   | tree inhibitory density       | $\mathcal{D}_i$        |     8 | synapses/(100$\mu m^{2}$) |
-|                   | prox. excitatory weight       | Q_e^{0,p}              |   1.0 | nS                        |
-|                   | prox. inhibitory weight       | Q_i^{0,p}              |   1.2 | nS                        |
-|                   | distal excitatory weight      | Q_e^{0,d}              |   1.0 | nS                        |
-|                   | distal inhibitory weight      | Q_i^{0,d}              |   1.2 | nS                        |
-|                   | excitatory decay              | \tau_e                 |     4 | ms                        |
-|                   | inhibitory decay              | \tau_i                 |   1.2 | ms                        |
+|                   | somatic excitatory density    | $\mathcal{D}_e^{soma}$ |     0 | synapses/(100\(\mu\)m^2) |
+|                   | somatic inhibitory density    | $\mathcal{D}_i^{soma}$ |    20 | synapses/(100\(\mu\)m^2) |
+|                   | tree excitatory density       | $\mathcal{D}_e^{tree}$ |    30 | synapses/(100\(\mu\)m^2) |
+|                   | tree inhibitory density       | $\mathcal{D}_i^{tree}$ |     6 | synapses/(100\(\mu\)m^2) |
+|                   | prox. excitatory weight       | Q_e^{0,p}              |   0.7 | nS                        |
+|                   | prox. inhibitory weight       | Q_i^{0,p}              |    1. | nS                        |
+|                   | distal excitatory weight      | Q_e^{0,d}              |  1.05 | nS                        |
+|                   | distal inhibitory weight      | Q_i^{0,d}              |   1.5 | nS                        |
+|                   | excitatory decay              | \tau_e                 |     5 | ms                        |
+|                   | inhibitory decay              | \tau_i                 |     5 | ms                        |
 | *Mean morphology* |                               |                        |       |                           |
+|                   | soma length                   | L_S                    |   5.0 | \(\mu\)m                  |
 |                   | soma diameter                 | D_S                    |  15.0 | \(\mu\)m                  |
-|                   | soma length                   | L_S                    |  10.0 | \(\mu\)m                  |
-|                   | root branch diameter          | D_t                    |  15.0 | \(\mu\)m                  |
-|                   | tree length                   | L_t                    |  15.0 | \(\mu\)m                  |
+|                   | root branch diameter          | D_t                    |  2.25 | \(\mu\)m                  |
+|                   | tree length                   | L_t                    | 550.0 | \(\mu\)m                  |
 |                   | branch number                 | B                      |     5 |                           |
-|                   | Proximal tree fraction        | f_{prox}               |   5/6 |                           |
+|                   | Proximal tree fraction        | f_{prox}               |   7/8 |                           |
 
 ** Model equations: synaptic input and passive properties
 <<sec:model-equations>>
@@ -1072,7 +1042,7 @@ $\nu$ is a synapse at frequency $N\nu$). Custom event generation was
 implemented to introduce correlations (instead of classical =NetStim=)
 and fed =NetCon= objects attached to each synapses (=ExpSyn=
 synapses). Each simulation had a time step dt=0.01ms and a length of
-3s, the simulationwas repeated over 4 seeds to yield a mean and a
+10s, the simulation was repeated over 4 seeds to yield a mean and a
 standard deviation in the estimate of the membrane potential
 fluctuations at the soma (see Figure [[fig:analytics-accuracy]]B).
 
@@ -1212,20 +1182,21 @@ presented in Figure [[fig:in-vitro-calib]]A.
 ** Fitting passive properties and a mean morphology
 <<sec:fitting>>
 
-Grid
+Because the variables combined discrete (the branch number) and
+continuous variables, the minimization consisted in taking the minimum
+over a grid of paramters. The parameter space has 7 dimensions (given
+here with the considered range): the branch number (B \in [2, 7]), the
+somatic length (L_S \in [5, 20]\(\mu\)m), the total length of the tree
+(L_t \in [300, 800]\(\mu\)m), the diameter of the root branch (D_t \in
+[0.5, 4]\(\mu\)m), the leak specific resistance (r_m \in [100,
+1000]\(\mu\)S/cm^2), the intracellular resistivity (r_i \in [10,
+90]\(\Omega\).cm), the specific capacitance (c_m \in [0.8,
+1.8]\(\mu\)F/cm^2).
 
-** Numerical tools
-
-All numerical simulations of single cell dynamics have been performed
-with custom code written in the numerical library of =python=: =numpy=
-and optimized with the =numba= library. For the neuronal model, each
-point (a mean output frequency and its standard deviation across
-trials) corresponds to numerical simulations running with a time step
-dt=0.01ms, for a duration of 10s and repeated 4 times with different
-seeds (one simulation duration: $\sim$ 2s of real time on a Dell
-Optiplex 9020 desktop computer). Experimental protocols and
-online-analysis have been written in =Elphy2=. Plots and data analysis
-have been done thanks to the =SciPy= package.
+Each dimension was discretized in 5 points, the scan of the 7
+dimensional space then consisted in finding the least square residual
+of the product of the modulus and phase of the impedance over this 5^7
+points. The resulting parameters are shown on Table [[table:params]].
 
 * Supplementary information
 
