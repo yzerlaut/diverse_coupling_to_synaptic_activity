@@ -6,6 +6,9 @@
 
 * Heterogeneity in the morphologies
 
+We give here a graphical representation of the two extreme
+morphologies considered in this study.
+
 #+ATTR_LATEX: :float H! :width .6\linewidth
 #+NAME: fig:two-extrems
 #+CAPTION: *Representaiton of the biggest and smallest cells.*
@@ -36,7 +39,7 @@ g_{i0}^d = \pi \, d \, \mathcal{D}_i \, \nu_i^d \, \tau_i^d \, Q_i^d
 \end{equation}
 
 where $\mathcal{D}_e$ and $\mathcal{D}_i$ are the excitatory and
-inhibitory synaptic densities (see Figure [[fig:model-illustration]]B).
+inhibitory synaptic densities.
 
 We introduce two activity-dependent electrotonic constants relative to
 the proximal and distal part respectively:
@@ -135,42 +138,6 @@ where:
 \end{split}
 \end{equation}
 
-The solution for this equation is:
-\begin{equation}
- \mu_v(X) = 
-\left\{
-\begin{split}
-v_0^p + A &\cosh(X) + (v_0^p-V_0+ A) \sinh(X), \\
- & \quad \forall X \in [0,L_p] \\
-v_0^d + B &\cosh(X-L), \quad \forall X \in [L_p,L]
-\end{split}
-\right.
-\end{equation}
-
-with $A$ and $B$ explicited in the supplementary material. The
-accuracy of this expression can be seen on Figure
-[[fig:analytics-accuracy]].
-
-* Derivation of the mean membrane potential solution
-<<sec:mean-coeff>>
-
-Equation for $\mu_v(X)$:
-
-\begin{equation}
-\left\{
-\begin{split}
-& \frac{\partial^2 \mu_v}{\partial X^2} = \mu_v(X)-v_0^p \quad \forall X \in [0,L_p] \\
-&\frac{\partial^2 \mu_v}{\partial X^2} = \mu_v(X)-v_0^d \quad \forall X \in [L_p,L]  \\
-&\frac{\partial \mu_v}{\partial X}|_{X=0} = \gamma^p \, 
-\Big( \mu_v(0) - V_0  \Big) \\
-&\mu_v(X \rightarrow L_p^-) = \mu_v(X \rightarrow L_p^+) \\
-&\frac{\partial \mu_v}{\partial X}_{X \rightarrow L_p^-} = \frac{\lambda^p}{\lambda^d}
-\frac{\partial \mu_v}{\partial X}_{X \rightarrow L_p^+} \\
-&\frac{\partial \mu_v}{\partial X}_{X=L} = 0 
-\end{split}
-\right.
-\end{equation}
-
 We write the solution on the form:
 
 \begin{equation}
@@ -257,7 +224,7 @@ v^{p}_{0} \cosh{\left (L_{p} \right )} + v^{d}_{0} \sinh{\left (L_{p}
 \end{split}
 \end{equation}
 
-* Membane potential response to a synaptic event
+* Membrane potential response to a synaptic event
 <<sec:eq-for-var-around-mean>>
 
 We now look for the response to \(n_{src}= \lfloor \frac{B \,
@@ -269,7 +236,7 @@ mean membrane potential $\mu_V(x)$. This potential will also be used
 to fix the driving force at the synapse to $\mu_v(x_{src})-E_{rev}$,
 this linearizes the equation and will allow an analytical
 treatment. To derive the equation for the response around the mean
-\(\mu_v(x)\), we rewrite Equation [[eq:model-equation]] with \(v(x, t) =
+\(\mu_v(x)\), we rewrite Equation 9 in main text with \(v(x, t) =
 \delta v(x, t) + \mu_v(x)\), we obtain the equation for \(\delta v(x,
 t)\):
 
@@ -405,40 +372,6 @@ where
  r_f^d = \frac{\tau_m^d}{c_m \, \lambda^d} \\
 & \qquad \qquad \gamma_f^p =  \gamma^p \, (1+ 2 i \pi f \tau_m^S) \\
 \end{split}
-\end{equation}
-
-This equation is solved in the supplementary material. We will use the
-solution at the soma, it can be written:
-
-\begin{equation}
-\hat{\delta v}(X=0, X_{src}, f) = K_f(X_{src}) \, 
-\big(\mu_v(X_{src})-E_{rev}\big) \,  \hat{g(f)} 
-\end{equation}
-
-* Derivation of the post-synaptic membrane potential event
-
-For the PSP events we need to solve:
-
-\begin{equation}
-\left\{
-\begin{split}
-& \frac{\partial^2 \hat{\delta v}}{\partial X^2} =
-\big( \alpha_f^p + (\alpha_f^d-\alpha_f^p) 
-\mathcal{H}(X-L_p) \big)^2 \, 
-\hat{\delta v}  \\
-& \frac{\partial \hat{\delta v}}{\partial X}_{|X=0} = 
- \gamma_f^p \,  \hat{\delta v}(0,f) \\
-&  \hat{\delta v}(X_{src}^-,f) = \hat{\delta v}(X_{src}^+,f) \\
-& \frac{\partial \hat{\delta v}}{\partial X}_{X_{src}^-} 
-= \frac{\partial \hat{\delta v}}{\partial X}_{X_{src}^+} 
-- \big(\mu_v(X_{src})-E_{rev}\big) \, \big( r_f^p + (r_f^d-r_f^p) \mathcal{H}(X_{src}-L_p) \big) \, \hat{g(f)} \\
-& \hat{\delta v}(L_p^-,f) = \hat{\delta v}(L_p^+,f) \\
-& \frac{\partial \hat{\delta v}}{\partial X}_{L_p^-} 
-= \frac{\lambda^p}{\lambda^d} \, 
-\frac{\partial \hat{\delta v}}{\partial X}_{L_p^+} \\
-& \frac{\partial \hat{\delta v}}{\partial X}_{X=L} = 0
-\end{split}
-\right.
 \end{equation}
 
 To obtain the solution, we need to split the solution into two cases:
@@ -626,28 +559,16 @@ K_f(X_{src}) =
 \right.
 \end{equation}
 
-* Deriving the fluctuations properties
+* Deriving the fluctuations properties :noexport:
 
 From shotnoise theory [[cite:Daley2007]] (see also
 [[citetext:ElBoustani2009a]] for an application similar to ours), we can
 obtain the power spectral density of the V_m fluctuations \( P_V(f) \)
 as a response to the stimulation Equation [[eq:fluct-eq]]:
 
-From point process theory, this can be seen as two nested point
-processes. The first point process follows a Poisson process which
-determines the cluster positions and the second one determines
-randomly the position of kz1 points within each cluster according to
-an arbitrary density probability function. The correspondance between
-both representations is straightforward and the power spectrum density
-can be computed analytically with the Neyman-Scott equation
-[23,24,51]
-
 #+NAME: eq:vm-pwd
 \begin{equation}
-\begin{split}
- P_V(f)  = & \sum_{syn} \nu_{syn} \, \| \hat{\mathrm{PSP}}(f) \|^2 \\
- & = 2 \nu_{in} \, \frac{Q_I^2 \, \tau_S^2 / \mu_G^2 }{
- (1+4 \pi^2 f^2 \tau_S^2)(1+4 \pi^2 f^2 \tau_m^2)}
+ P_V(f)  = & \sum_{syn} \pi \mathcal{D}_{syn}  \nu_{syn} \, \| \hat{\mathrm{PSP}}(f) \|^2 
 \end{split}
 \end{equation}
 
@@ -678,12 +599,11 @@ fluctuations properties also depend on the morphology.
 We conclude that the impact of the different morphology is weak for
 those protocols.
 
-
 * Residual correlations after accounting for the excitability effects
 
 #+ATTR_LATEX: :float H!
 #+NAME: fig:two-extrems
-#+CAPTION: *Residual correaltions after removing the dependency on the excitatbility (see null correlation with excitability).*
+#+CAPTION: *Residual correaltions after removing the dependency on the excitability (see null correlation with excitability).*
 [[file:../figures/residual_correlations.png]]
 
 * Including cells of very low excitability in the analysis
