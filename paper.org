@@ -148,7 +148,7 @@ presynaptic activities.
 
 ** A theoretical framework for single cell computation in the fluctuation-driven regime
 
-#+ATTR_LATEX: :width \linewidth
+#+ATTR_LATEX: :width .98\linewidth
 #+NAME: fig:model-illustration
 #+CAPTION: *A theoretical framework for single cell computation in the fluctuation-driven regime*. *(A)* Theoretical paradigm: to get the input-output function of a single cell, we split the relation from presynaptic quantities (the input) to the spiking probability (the output) into two steps. 1) passive dendritic integration shape the membrane potential at the soma and 2) how those fluctuations are translated into spikes is captured by a firing response function determined /in vitro/ [[cite:Zerlaut2016]] *(B)* Theoretical model for dendritic integration. A single cell is made of a lumped impedance somatic compartment and a dendritic tree. The dendritic tree is composed of B branches (here B=5), the branching is symmetric and follow Rall's 3/2 rule for the branch diameters. Synapses are then spread all over the membrane according to physiological synaptic densities. We define 3 domains: a somatic and proximal domain as well as a distal domain, excitatory and inhibitory synaptic input can vary independently in those domains. An additional variable: synaptic synchrony controls the degree of coincidents synaptic inputs. *(C)* A given presynaptic stimulation (here \nu_e^p=\nu_e^d=0.2Hz, \nu_i^p=\nu_i^d=1.2Hz and s=0.05) creates membrane potential fluctuations at the soma characterized by their mean \(\mu_V\), their amplitude \(\sigma_V\) and their autocorrelation time \(\tau_V\).
 [[file:./figures/model_illustration.png]]
