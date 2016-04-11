@@ -13,7 +13,7 @@
   complementary mechanism: whether diverse biophysical features in
   single neurons contribute to such differential activation.
 
-  In a companion study [[cite:Zerlaut2016]], we reported that, in young
+  In a previous study [[cite:Zerlaut2016]], we reported that, in young
   mice visual cortex, individual neurons differ not only in their
   excitability but also in their sensitivities to the properties of
   the membrane potential fluctuations. In the present work, we analyze
@@ -92,7 +92,7 @@ during sensory processing.
 
 In the present work, we further investigate this putative interaction
 in the light of the variability in the biophysical features reported
-in our companion communication, namely that single neurons in juvenile
+in our previous communication, namely that single neurons in juvenile
 mice cortex not only vary in their excitability (linked to the action
 potential threshold) but also in their sensitivity to the properties
 of the membrane potential fluctuations. Our previous communication
@@ -117,7 +117,7 @@ corrresponds to different variations of the properties of the membrane
 potential fluctuations (mean depolarization, standard deviation and
 autocorrelation time). The various firing responses (as a function of
 the fluctuation properties) for individual neurons found in our
-companion study then led to diverse coupling to each activity type.
+previous study then led to diverse coupling to each activity type.
 
 We designed a theoretical model for passive dendritic integration that
 allows an analytical treatment and thus easily enables the
@@ -127,7 +127,7 @@ exponent rule [[cite:Rall1962]], the analytical derivation relies on
 adapting the equivalent cylinder transformation [[cite:Rall1962]] to the
 properties of the high conductance state [[cite:Destexhe2003]].
 
-We suggested in our companion study that the properties of the
+We suggested in our previous study that the properties of the
 fluctuations could follow various comodulations depending on the type
 of presynaptic activity, what we demonstrate in this study.
 
@@ -143,7 +143,7 @@ an analytical approximation for the membrane potential fluctuations at
 the soma that we compare to numerical simulations using standard
 compartemental modeling. We implement various types of presynaptic
 activity we analyze the individual responses of the layer V pyramidal
-cells characterized in our companion study for those various types of
+cells characterized in our previous study for those various types of
 presynaptic activities.
 
 ** A theoretical framework for single cell computation in the fluctuation-driven regime
@@ -249,7 +249,7 @@ introduction as a variable.
 #+CAPTION: *Calibrating the model on /in vitro/ measurements: the simplified model and its size variations provides an approximation for the somatic input impedance and its heterogeneity*. *(A)* Input impedance (left: modulus and right: phase shift) measured at the soma in intracellular recordings with sine-wave protocols in current-clamp (inset). The color code indicates the input resistance and is likely to result from size variations of individual cells. *(B)* A medium size model accounts for the average data and varying the size of the dendritic tree and soma reproduces the trend in the individual measurements. Large cells (blue) have a lower modulus and a lower phase shift while small cells (red) have both a higher modulus and phase shift. *(C)* We obtain a map between input resistance and size of the morphological model. *(D)* Representation of the medium-size model. *(E)* Additionally the synaptic weights are rescaled with respect to the cell's somatic input resistance. Because the mean transfer resistance to soma is linked to the input resistance, this rescalings insures that the mean synaptic efficacy at soms is the same for all cells.
 [[file:./figures/calibration_on_input_imped.png]]
 
-We will use the firing response function of our companion study, we
+We will use the firing response function of our previous study, we
 therefore wanted a characterization of the passive and morphological
 properties on the same experimental system: layer V pyramidal neurons
 in the primary visual cortex of young mice. To this purpose, we
@@ -519,7 +519,7 @@ integration, the properties of the fluctuations (\mu_V, \sigma_V,
 \tau_V) can follow various comodulations, depending on the properties
 of the synaptic stimulation. This behavior is what motivated to fully
 scan the three dimensional space (\mu_V, \sigma_V, \tau_V) in our
-companion study.
+previous study.
 
 ** Heterogeneous firing responses induce diverse coupling to presynaptic activity
 
@@ -528,7 +528,7 @@ companion study.
 #+CAPTION: *Examples of the firing response of 4 different cells for the different synaptic inputs (color-coded) shown in Figure [[fig:synaptic-integration]].* The abcissa corresponds to the variations of the model variables shown in Figure [[fig:synaptic-integration]]A
 [[./figures/firing_response_examples.png]]
 
-For each one of the n=27 cells of our companion study
+For each one of the n=27 cells of our previous study
 [[cite:Zerlaut2016]], we now have 1) a morphological model and 2) a firing
 response function \( \nu_{out} = \mathcal{F}(\mu_V, \sigma_V, \tau_V)
 \). Thanks to the analytical approximation, we can translate the five
@@ -645,13 +645,13 @@ speed the critical quantity for this stimulation type.
 
 * Discussion
 
-In this communication, by introducing an analytically tractable
-dendritic model, we presented the final form of our theoretical
-framework for single cell computation in the fluctuation-driven
-regime. We used it to investigate how the heterogeneity in firing
-responses to fluctuating input shape the diverse input-output
-functions of neocortical pyramidal cells. Focusing on the regime of
-near asynchronous population dynamics, we emulated various type of
+In this paper, by introducing an analytically tractable dendritic
+model, we presented the final form of our theoretical framework for
+single cell computation in the fluctuation-driven regime. We used it
+to investigate how the heterogeneity in firing responses to
+fluctuating input shape the diverse input-output functions of
+neocortical pyramidal cells. Focusing on the regime of near
+asynchronous population dynamics, we emulated various type of
 presynaptic activity in a theoretical model of dendritic
 integration. We found that those different types of synaptic
 stimulation corresponds to various comodulations of the fluctuations
@@ -692,18 +692,18 @@ responses was the cellular excitability. Indeed, the response to
 unbalanced activity, distal activity or an increase in synchrony was
 strongly correlated with cellular excitability. Also the sensitivity
 to the speed of the fluctuations had a crucial impact on the response
-to proximal activity. The present analysis therefore shed light on the
-physiological relevance of the properties that we introduced in our
-companion study. In all four measures characterizing the cellular
+to proximal activity. The present analysis therefore sheds light on
+the physiological relevance of the properties that we introduced in
+our previous study. In all four measures characterizing the cellular
 properties in the fluctuation-driven regime that we introduced in our
-companion study, only two of them seems to be physiologically
-relevant: the excitability and the sensitivity to the speed of the
-fluctuations (at least for the protocols that we tested). In our
-companion communication, theoretical modeling suggested that a high
-sensitivity to the speed of the fluctuations was enable by a high
-level of sodium inactivation. The present analysis thus proposes a
-functional role for sodium inactivation: controlling the response
-level to proximal activity.
+previous study, only two of them seems to be physiologically relevant:
+the excitability and the sensitivity to the speed of the fluctuations
+(at least for the protocols that we tested). In our previous
+communication, theoretical modeling suggested that a high sensitivity
+to the speed of the fluctuations was enable by a high level of sodium
+inactivation. The present analysis thus proposes a functional role for
+sodium inactivation: controlling the response level to proximal
+activity.
 
 
 In this study, the rescaling rule between input resistance at the soma
@@ -758,7 +758,7 @@ young mice cortex is at least partially preserved in adult animals.
 Future work could therefore adress this hypothesis by combining
 recordings of population activity with a more subtle and
 functionnally-relevant analysis of single cell properties (analogous
-to that of our companion communication).
+to that of our previous communication).
 
 * Material and Methods 
 \small
@@ -782,7 +782,7 @@ The parameters of the model are presented on Table [[table:params]].
 
 #+ATTR_LATEX: :float multicolumn
 #+NAME: table:params
-#+CAPTION: *Model parameters*. The passive properties and the mean morphology are fitted while 
+#+CAPTION: *Model parameters*.
 | *Parameters*      | Parameter Name                | Symbol                 | Value | Unit                      |
 |-------------------+-------------------------------+------------------------+-------+---------------------------|
 | /                 | <>                            | <>                     |    <> | /                         |
