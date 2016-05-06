@@ -2,6 +2,10 @@
 #+AUTHOR: Y. Zerlaut^{1} \& A. Destexhe^{1}
 #+INCLUDE: my_template.org 
 
+* Author summary
+
+[...]
+
 * Abstract
 
   \bfseries
@@ -13,14 +17,14 @@
   complementary mechanism: whether diverse biophysical features in
   single neurons contribute to such differential activation.
 
-  In a companion study [[cite:Zerlaut2016]], we reported that, in young
+  In a previous study [[cite:Zerlaut2016]], we reported that, in young
   mice visual cortex, individual neurons differ not only in their
   excitability but also in their sensitivities to the properties of
   the membrane potential fluctuations. In the present work, we analyze
   how this heterogeneity is translated into diverse input-ouput
   properties (i.e. in the relation from presynaptic quantities to
   spiking probability) in the context of low synchrony population
-  dynamics. 
+  dynamics.
 
   To this purpose, we designed a simplified morphological model of
   layer V pyramidal neurons with a dendritic tree following Rall's
@@ -66,43 +70,50 @@ of how such specific activations happen are key questions in systems
 neuroscience. As a primary source for specific activation, the
 neocortex is characterized by some degree of specific circuitry:
 neurons differ in their afferent connectivity. A classical example can
-be found in the primary cortex, layer IV simple cells specifically
-sample their input from ON and OFF cells in the thalamic nucleus
-[[cite:Hubel1962,Ferster1996]]. Neocortical neurons also vary in their
-electrophysiological properties: for example, heterogenous levels in
-the action potential threshold are routinely measured /in vivo/
-[[cite:Crochet2011,Okun2015,Yang2015]]. Thus, an emerging refinment is
-that the sensitivity of a neuron to a given feature do not only
-results from its /circuit specificity/ (relative to this feature,
-e.g. orientation selectivy), but from the combination of its /circuit
-specificity/ and its /biophysical specificity/. The somato-sensory
-cortex studies of [[citetext:Crochet2011]] and [[citetext:Yang2015]]
-illustrates this point precisely. In [[citetext:Crochet2011]], during
-active touch, the response probability of a neuron (its sensitivity to
-whisker touch) follows from the combination of the reached level of
-synaptically-driven membrane potential deflection (resulting from its
-/circuit-specificity/) and its threshold for action potential
-triggering (its /biophysical specificity/). The same result hold for
-texture recognition in the study of [[citetext:Yang2015]] where only the
-combination of those two quantities was shown to predict
-choice-related spiking. Those results therefore suggest that
-heterogeneity in the electrophysiological or biophysical properties of
+be found in the primary visual cortex, layer IV simple cells
+specifically sample their input from ON and OFF cells in the thalamic
+nucleus [[cite:Hubel1962,Ferster1996]]. Additionally, neocortical neurons
+also vary in their electrophysiological properties: for example,
+heterogenous levels in the action potential threshold are routinely
+measured /in vivo/ [[cite:Crochet2011,Okun2015,Yang2015]]. An emerging
+refinment is that the sensitivity of a neuron to a given feature do
+not only results from its /circuit specificity/ (relative to this
+feature, e.g. orientation selectivity), but from the combination of
+its /circuit specificity/ and its /biophysical specificity/. The
+somato-sensory cortex studies of [[citetext:Crochet2011]] and
+[[citetext:Yang2015]] illustrates this point precisely. In
+[[citetext:Crochet2011]], during active touch, the response probability of
+a neuron (its sensitivity to whisker touch) follows from the
+combination of the reached level of synaptically-driven membrane
+potential deflection (resulting from its /circuit-specificity/) and
+its threshold for action potential triggering (its /biophysical
+specificity/). The same result hold for texture recognition in the
+study of [[citetext:Yang2015]] where the combination of those two
+quantities was shown to predict choice-related spiking. Those results
+therefore suggest that heterogeneity in the biophysical properties of
 neocortical neurons might have an impact on their functional role
 during sensory processing.
 
-In the present work, we further investigate this putative interaction
-in the light of the variability in the biophysical features reported
-in our companion communication, namely that single neurons in juvenile
-mice cortex not only vary in their excitability (linked to the action
+In the present work, we further investigate this possibity in the
+light of the variability in the biophysical features reported in our
+companion communication, namely that single neurons in juvenile mice
+cortex not only vary in their excitability (linked to the action
 potential threshold) but also in their sensitivity to the properties
 of the membrane potential fluctuations. Our previous communication
 introduced those new dimensions in the /biophysical specificity/ and
 we now aim at understanding their functional impact.
 
-To highlight the impact of the /biophysical specificity/, we will
-investigate single neuron responses in a framework where the /circuit
-specificity/ of individual neurons is null, i.e. with the hypothesis
-that all neurons sample statistically equally their input.
+# To highlight the impact of the /biophysical specificity/, we will
+# investigate single neuron responses in a framework where the /circuit
+# specificity/ of individual neurons is null, i.e. with the hypothesis
+# that all neurons sample statistically equally their input.
+# We designed a theoretical model for passive dendritic integration that
+# allows an analytical treatment and thus easily enables the
+# implementation of various types of presynaptic activity. It is based
+# on a symmetrical morphology where branching follows the Rall's 3/2
+# exponent rule [[cite:Rall1962]], the analytical derivation relies on
+# adapting the equivalent cylinder transformation [[cite:Rall1962]] to the
+# properties of the high conductance state [[cite:Destexhe2003]].
 
 In the context of low synchrony population dynamics
 [[cite:Ecker2010,Renart2010]], where the neuronal response can be
@@ -112,24 +123,17 @@ activity: either unbalanced (to emulate net excitatory input), purely
 proximal (to emulate local network input [[cite:Spruston2008]]), purely
 distal (to emulate long-range or thalamic input [[cite:Spruston2008]]) or
 of increased synchrony (to emulate changes in input statistics
-[[cite:Baudot2013,ElBoustani2009]]). We found that those various types of activity
-corrresponds to different variations of the properties of the membrane
-potential fluctuations (mean depolarization, standard deviation and
-autocorrelation time). The various firing responses (as a function of
-the fluctuation properties) for individual neurons found in our
-companion study then led to diverse coupling to each activity type.
+[[cite:Baudot2013,ElBoustani2009a]]). We found that those various types of
+activity corrresponds to different variations of the properties of the
+membrane potential fluctuations (mean depolarization, standard
+deviation and autocorrelation time). The various firing responses (as
+a function of the fluctuation properties) for individual neurons found
+in our companion study then led to diverse coupling to each activity
+type.
 
-We designed a theoretical model for passive dendritic integration that
-allows an analytical treatment and thus easily enables the
-implementation of various types of presynaptic activity. It is based
-on a symmetrical morphology where branching follows the Rall's 3/2
-exponent rule [[cite:Rall1962]], the analytical derivation relies on
-adapting the equivalent cylinder transformation [[cite:Rall1962]] to the
-properties of the high conductance state [[cite:Destexhe2003]].
-
-We suggested in our companion study that the properties of the
-fluctuations could follow various comodulations depending on the type
-of presynaptic activity, what we demonstrate in this study.
+# We suggested in our companion study that the properties of the
+# fluctuations could follow various comodulations depending on the type
+# of presynaptic activity, what we demonstrate in this study.
 
 * Results 
 \normalsize
