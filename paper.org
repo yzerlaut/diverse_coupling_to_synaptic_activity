@@ -1,17 +1,11 @@
-#+TITLE: Heterogenous firing responses lead to diverse couplings to presynaptic activity
+#+TITLE: Heterogenous firing responses of layer V pyramidal neurons lead to diverse couplings to presynaptic activity
 #+AUTHOR: Y. Zerlaut^{1} \& A. Destexhe^{1}
 #+INCLUDE: my_template.org 
+
 
 * Abstract
 
   \bfseries
-
-  Neocortical processing of sensory input rely on the specific
-  activation of subpopulations within the cortical network. Though
-  specific circuitry is thought to be the primary mechanism underlying
-  this functional principle, we investigate here a putative
-  complementary mechanism: whether diverse biophysical features in
-  single neurons contribute to such differential activation.
 
   In a previous study [[cite:Zerlaut2016]], we reported that, in young
   mice visual cortex, individual neurons differ not only in their
@@ -57,6 +51,15 @@
   activity.
 
 \normalfont
+
+* Authors summary
+
+  Neocortical processing of sensory input rely on the specific
+  activation of subpopulations within the cortical network. Though
+  specific circuitry is thought to be the primary mechanism underlying
+  this functional principle, we investigate here a putative
+  complementary mechanism: whether diverse biophysical features in
+  single neurons contribute to such differential activation.
 
 * Introduction
 
@@ -148,10 +151,10 @@ presynaptic activities.
 
 ** A theoretical framework for single cell computation in the fluctuation-driven regime
 
-#+ATTR_LATEX: :width .98\linewidth
+#+ATTR_LATEX: :width .8\linewidth
 #+NAME: fig:model-illustration
 #+CAPTION: *A theoretical framework for single cell computation in the fluctuation-driven regime*. *(A)* Theoretical paradigm: to get the input-output function of a single cell, we split the relation from presynaptic quantities (the input) to the spiking probability (the output) into two steps. 1) passive dendritic integration shape the membrane potential at the soma and 2) how those fluctuations are translated into spikes is captured by a firing response function determined /in vitro/ [[cite:Zerlaut2016]] *(B)* Theoretical model for dendritic integration. A single cell is made of a lumped impedance somatic compartment and a dendritic tree. The dendritic tree is composed of B branches (here B=5), the branching is symmetric and follow Rall's 3/2 rule for the branch diameters. Synapses are then spread all over the membrane according to physiological synaptic densities. We define 3 domains: a somatic and proximal domain as well as a distal domain, excitatory and inhibitory synaptic input can vary independently in those domains. An additional variable: synaptic synchrony controls the degree of coincidents synaptic inputs. *(C)* A given presynaptic stimulation (here \nu_e^p=\nu_e^d=0.2Hz, \nu_i^p=\nu_i^d=1.2Hz and s=0.05) creates membrane potential fluctuations at the soma characterized by their mean \(\mu_V\), their amplitude \(\sigma_V\) and their autocorrelation time \(\tau_V\).
-[[file:./figures/model_illustration.png]]
+[[file:../figures/model_illustration.png]]
 
 In the fluctuation-driven regime, the cellular input-output function
 of a neocortical neuron corresponds to the function that maps the
@@ -247,7 +250,7 @@ introduction as a variable.
 #+ATTR_LATEX: :width \linewidth
 #+NAME: fig:in-vitro-calib
 #+CAPTION: *Calibrating the model on /in vitro/ measurements: the simplified model and its size variations provides an approximation for the somatic input impedance and its heterogeneity*. *(A)* Input impedance (left: modulus and right: phase shift) measured at the soma in intracellular recordings with sine-wave protocols in current-clamp (inset). The color code indicates the input resistance and is likely to result from size variations of individual cells. *(B)* A medium size model accounts for the average data and varying the size of the dendritic tree and soma reproduces the trend in the individual measurements. Large cells (blue) have a lower modulus and a lower phase shift while small cells (red) have both a higher modulus and phase shift. *(C)* We obtain a map between input resistance and size of the morphological model. *(D)* Representation of the medium-size model. *(E)* Additionally the synaptic weights are rescaled with respect to the cell's somatic input resistance. Because the mean transfer resistance to soma is linked to the input resistance, this rescalings insures that the mean synaptic efficacy at soms is the same for all cells.
-[[file:./figures/calibration_on_input_imped.png]]
+[[file:../figures/calibration_on_input_imped.png]]
 
 We will use the firing response function of our previous study, we
 therefore wanted a characterization of the passive and morphological
@@ -333,7 +336,7 @@ offers a validation of our approach.
 #+ATTR_LATEX: :width \linewidth
 #+NAME: fig:analytics-accuracy
 #+CAPTION: *Accuracy of the analytical estimate for the properties of the membrane potential fluctuations at the soma: comparison between numerical simulations and the analytical approximation*. Shown for the medium size model of Figure [[fig:in-vitro-calib]]D. *(A)* In the numerical simulation, we explicitely simulate the whole dendritic arborization, we show the membrane potential variations for the three locations shown on the left. *(B)* Properties of the membrane potential fluctuations for different configuration of presynaptic activity: analytical predictions and output from numerical simulations in =NEURON=. In each column, one variable is varied while the other variables are fixed to the mean configuration value corresponding to \nu_e^p=\nu_e^d=0.2Hz, \nu_i^p=\nu_i^d=1.2Hz and s=0.05.
-[[./figures/comparison_analytics_and_sim.png]]
+[[../figures/comparison_analytics_and_sim.png]]
 
 For each cell, we now want to translate the five variables of the
 model in terms of membrane potential fluctuations properties at the
@@ -423,7 +426,7 @@ in all cells.
 #+ATTR_LATEX: :width .8\linewidth
 #+NAME: fig:synaptic-integration
 #+CAPTION: *Properties of the membrane potential fluctuations for different types of presynaptic activity: either unbalanced, purely proximal, purely distal, synchronized (color code)*. A common baseline configuration of low balanced proximal and distal activity gives rise to baseline fluctuations properties, then we increase a given type of activity. *(A)* Model variables to achieve varying levels of those different types of activity. *(B)* Membrane potential fluctuations properties and somatic input conductance at the soma for the different protocols. Shown for the medium-size model, see Supplementary Material for the variability introduced by variations in cell morphologies.
-[[./figures/synaptic_integration.png]]
+[[../figures/synaptic_integration.png]]
 
 We first introduce a baseline level of presynaptic activity
 corresponding to a low level of network activity: g_{tot}^{soma}/g_L
@@ -526,7 +529,7 @@ previous study.
 #+ATTR_LATEX: :width \linewidth
 #+NAME: fig:cell-examples
 #+CAPTION: *Examples of the firing response of 4 different cells for the different synaptic inputs (color-coded) shown in Figure [[fig:synaptic-integration]].* The abcissa corresponds to the variations of the model variables shown in Figure [[fig:synaptic-integration]]A
-[[./figures/firing_response_examples.png]]
+[[../figures/firing_response_examples.png]]
 
 For each one of the n=27 cells of our previous study
 [[cite:Zerlaut2016]], we now have 1) a morphological model and 2) a firing
@@ -573,7 +576,7 @@ presynaptic activity/.
 #+ATTR_LATEX: :width \linewidth :float multicolumn
 #+NAME: fig:coupling-correlation
 #+CAPTION: *Diverse cellular responses to synaptic stimulation and their link to the chracteristics of their firing response function.* Note the logarithmic scale for the firing respones in *B,C,D*. *(A)* Diverse response to baseline stimulation. *(B)* Diverse response to unbalanced activity. *(C)* Diverse response to proximal activity. Note that because the response also show negative changes of firing rate, the data can not be log-scaled. Instead, they have been rescaled by the baseline response. *(D)* Diverse response to distal activity. *(E)* Diverse response to a synchrony increase.
-[[./figures/coupling_correlations.png]]
+[[../figures/coupling_correlations.png]]
 
 We now make this analysis more quantitative by computing the responses
 for all n=27 cells. We get their response to the baseline level
@@ -598,12 +601,12 @@ this behavior, we therefore looked for correlations between our
 measures of the firing responses in the fluctuation-driven regime
 [[cite:Zerlaut2016]] and the baseline responses. Not surprisingly, we
 found a very strong linear correlation between the excitability
-\langle V_{thre}^{eff}\rangle_D and the baseline response level, the
-other characteristics semt to have no impact (Pearson correlations,
-see values in Figure [[fig:coupling-correlation]]A). Again, it should be
-stressed that presynaptic connections are non-specific, those results
-therefore show that the typical log-normal distribution of firing
-rates could very naturally emerge as a result of the normal
+\(\langle V_{thre}^{eff}\rangle_D \) and the baseline response level,
+the other characteristics semt to have no impact (Pearson
+correlations, see values in Figure [[fig:coupling-correlation]]A). Again,
+it should be stressed that presynaptic connections are non-specific,
+those results therefore show that the typical log-normal distribution
+of firing rates could very naturally emerge as a result of the normal
 distribution observed in pyramidal cell's excitabilities
 [[cite:Zerlaut2016]], thus suggesting that no specific circuitry is needed
 to explain this neocortical property.
@@ -1085,7 +1088,8 @@ solutions is relatively simple but computing coefficients with the
 boudaries conditions give rise to complex expressions because of the
 number of parameters). The resulting expression were then exported to
 =numpy= functions for numerical evaluation. The =ipython= notebook
-that presents the full derivation is available on the following [[http://nbviewer.jupyter.org/urls/bitbucket.org/yzerlaut/diverse_coupling_to_synaptic_activity/raw/master/notebooks/Fluctuations_at_soma_for_Ball_&_Rall_tree.ipynb][link]].
+that presents the full derivation is available on the following
+[[http://nbviewer.jupyter.org/urls/bitbucket.org/yzerlaut/diverse_coupling_to_synaptic_activity/raw/master/notebooks/Fluctuations_at_soma_for_Ball_&_Rall_tree.ipynb]].
 
 ** From fluctuation properties to spiking probability
 
@@ -1195,5 +1199,5 @@ Y.Z. and A.D. designed research. Y.Z performed research and wrote the
 present draft.
 
 * References
-\bibliography{tex/biblio}
+\bibliography{biblio}
 
