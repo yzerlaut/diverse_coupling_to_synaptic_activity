@@ -1,14 +1,54 @@
-#+TITLE: Heterogenous firing responses lead to diverse couplings to presynaptic activity
+#+TITLE: Heterogenous Firing Responses Lead to Diverse Couplings to Presynaptic Activity in mice Layer V Pyramidal Neurons
 #+AUTHOR: Y. Zerlaut^{1} \& A. Destexhe^{1}
 #+INCLUDE: my_template.org 
-
-* Author summary
-
-[...]
 
 * Abstract
 
   \bfseries
+
+  In the present study, we present a theoretical framework combining
+  experimental characterizations and analytical calculus to determine
+  the input-output properties of single neurons in the
+  fluctuation-driven regime (i.e. in the relation from presynaptic
+  quantities to spiking probability). We use this framework to
+  investigate the functional impact of the heterogeneity in firing
+  responses found in young mice layer V pyramidal cells
+  [[cite:Zerlaut2016]].
+
+  We first designed and calibrated /in vitro/ a simplified
+  morphological model of layer V pyramidal neurons with a dendritic
+  tree following Rall's branching rule. Then, we propose an analytical
+  derivation for the membrane potential fluctuations at the soma as a
+  function of the properties of the synaptic bombardment. This
+  mathematical description allows to easily emulate various forms of
+  presynaptic activities: either balanced, unbalanced, synchronized,
+  purely proximal or purely distal synaptic activity.  We found that
+  those different forms of activity led to various comodulations of
+  the membrane potential fluctuation properties, thus raising the
+  question whether individual neurons might differentially couple to
+  specific forms of activity.  We indeed found such an heterogenous
+  response, but trivially, the only significant contribution to the
+  various firing response was the different levels of cellular
+  excitability. A notable exception appeared for proximal activity:
+  increasing proximal activity could either promote firing response in
+  some cells or suppress it in some other cells whatever their
+  individual excitability. This behavior could only be explained by
+  various sensitivities to the speed of the fluctuations, that was
+  previously linked to heterogenous levels of sodium inactivation and
+  sodium channels density.
+
+  In addition to giving quantitative insight on the impact of various
+  excitability levels in individual neurons, the present study
+  proposes a novel functional impact of biophysical heterogeneity:
+  various levels of density of sodium channels and sodium inactivation
+  will control the response of individual neurons to proximally
+  targetting presynaptic activity.
+
+\normalfont
+
+* Author summary
+
+\bfseries
 
   Neocortical processing of sensory input rely on the specific
   activation of subpopulations within the cortical network. Though
@@ -22,43 +62,18 @@
   excitability but also in their sensitivities to the properties of
   the membrane potential fluctuations. In the present work, we analyze
   how this heterogeneity is translated into diverse input-ouput
-  properties (i.e. in the relation from presynaptic quantities to
-  spiking probability) in the context of low synchrony population
-  dynamics.
+  properties in the context of low synchrony population dynamics.
 
-  To this purpose, we designed a simplified morphological model of
-  layer V pyramidal neurons with a dendritic tree following Rall's
-  branching rule. We first show that we are able to calibrate this
-  simplified model on /in vitro/ measurements of somatic input
-  impedance. We then propose an analytical derivation for the membrane
-  potential fluctuations at the soma as a function of the properties
-  of the synaptic bombardment. This mathematical description allows to
-  easily emulate various forms of presynaptic activities: either
-  balanced, unbalanced, synchronized, purely proximal or purely distal
-  synaptic activity. 
-
-  We found that those different forms of activity led to various
-  comodulations of the membrane potential fluctuation properties, thus
-  raising the question whether individual neurons might differentially
-  couple to specific forms of activity because of their various firing
-  responses to fluctuations. 
-
-  We indeed found such an heterogenous response, but trivially, the
-  only significant contribution to the various firing response was the
-  different levels of cellular excitability. A notable exception
-  appeared for proximal activity: increasing proximal activity could
-  either promote firing response in some cells or suppress it in some
-  other cells whatever their individual excitability. This behavior
-  could only be explained by various sensitivities to the speed of the
-  fluctuations, that was previously linked to heterogenous levels of
-  sodium inactivation and sodium channels density.
-
-  In addition to giving quantitative insight on the impact of various
-  excitability levels in individual neurons, the present study
-  suggests a new functional impact of biophysical heterogeneity:
-  various levels of density of sodium channels and sodium inactivation
-  will control the response of individual neurons to proximal
-  activity.
+  Trivially, we found that individual neurons couple differentially to
+  specific form of presynaptic activity (emulating afferent stimuli of
+  various properties) mostly because of their differences in
+  excitability. However, we also found that the response to proximal
+  activity was controlled by the sensitivity to the speed of the
+  fluctuations (that was previously linked to various levels of
+  density of sodium channels and sodium inactivation). We conclude
+  that this aspect of biophysical heterogeneity might be relevant to
+  neocortical processing by controlling how individual neurons couple
+  to local network activity.
 
 \normalfont
 
