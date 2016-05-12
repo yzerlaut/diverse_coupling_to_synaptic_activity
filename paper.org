@@ -9,11 +9,9 @@
   In the present study, we present a theoretical framework combining
   experimental characterizations and analytical calculus to determine
   the input-output properties of single neurons in the
-  fluctuation-driven regime (i.e. in the relation from presynaptic
-  quantities to spiking probability). We use this framework to
-  investigate the functional impact of the heterogeneity in firing
-  responses found in young mice layer V pyramidal cells
-  [[cite:Zerlaut2016]].
+  fluctuation-driven regime. We use this framework to investigate the
+  functional impact of the heterogeneity in firing responses found in
+  young mice layer V pyramidal cells [[cite:Zerlaut2016]].
 
   We first designed and calibrated /in vitro/ a simplified
   morphological model of layer V pyramidal neurons with a dendritic
@@ -26,16 +24,16 @@
   those different forms of activity led to various comodulations of
   the membrane potential fluctuation properties, thus raising the
   question whether individual neurons might differentially couple to
-  specific forms of activity.  We indeed found such an heterogenous
-  response, but trivially, the only significant contribution to the
-  various firing response was the different levels of cellular
-  excitability. A notable exception appeared for proximal activity:
-  increasing proximal activity could either promote firing response in
-  some cells or suppress it in some other cells whatever their
-  individual excitability. This behavior could only be explained by
-  various sensitivities to the speed of the fluctuations, that was
-  previously linked to heterogenous levels of sodium inactivation and
-  sodium channels density.
+  specific forms of activity because of their firing responses.  We
+  indeed found such an heterogenous response, but trivially, the only
+  significant contribution to the various firing response was the
+  different levels of cellular excitability. A notable exception
+  appeared for proximal activity: increasing proximal activity could
+  either promote firing response in some cells or suppress it in some
+  other cells whatever their individual excitability. This behavior
+  could only be explained by various sensitivities to the speed of the
+  fluctuations, that was previously linked to heterogenous levels of
+  sodium inactivation and sodium channels density.
 
   In addition to giving quantitative insight on the impact of various
   excitability levels in individual neurons, the present study
@@ -90,20 +88,20 @@ specifically sample their input from ON and OFF cells in the thalamic
 nucleus [[cite:Hubel1962,Ferster1996]]. Additionally, neocortical neurons
 also vary in their electrophysiological properties: for example,
 heterogenous levels in the action potential threshold are routinely
-measured /in vivo/ [[cite:Crochet2011,Okun2015,Yang2015]]. An emerging
-refinment is that the sensitivity of a neuron to a given feature do
-not only results from its /circuit specificity/ (relative to this
-feature, e.g. orientation selectivity), but from the combination of
-its /circuit specificity/ and its /biophysical specificity/. The
-somato-sensory cortex studies of [[citetext:Crochet2011]] and
-[[citetext:Yang2015]] illustrates this point precisely. In
-[[citetext:Crochet2011]], during active touch, the response probability of
+measured /in vivo/ [[cite:Crochet2011,Okun2015,Yang2015]]. Thus, an
+emerging refinment is that the sensitivity of a neuron to a given
+feature do not only results from its /circuit specificity/ (relative
+to this feature, e.g. orientation selectivity), but from the
+combination of its /circuit specificity/ and its /biophysical
+specificity/. Two somato-sensory cortex studies illustrates this point
+precisely [[cite:Crochet2011,Yang2015]] . In Crochet et
+al. [[cite:Crochet2011]], during active touch, the response probability of
 a neuron (its sensitivity to whisker touch) follows from the
 combination of the reached level of synaptically-driven membrane
 potential deflection (resulting from its /circuit-specificity/) and
 its threshold for action potential triggering (its /biophysical
 specificity/). The same result hold for texture recognition in the
-study of [[citetext:Yang2015]] where the combination of those two
+study of Yang et al. [[cite:Yang2015]], where the combination of those two
 quantities was shown to predict choice-related spiking. Those results
 therefore suggest that heterogeneity in the biophysical properties of
 neocortical neurons might have an impact on their functional role
@@ -403,16 +401,17 @@ the =NEURON= software [[cite:Hines1997]]. We varied the five variables of
 the model around a mean synaptic bombardment configuration (see next
 section). Some discrepancies between the approximation and the
 simulations appeared, in particular one can see a \sim 1mV shift in
-the standard deviation \sigma_V of the fluctuation. Because the
-synchrony controls the amplitude of the fluctuations (Figure
-[[fig:analytics-accuracy]]B and Figure [[fig:synaptic-integration]]B), the
-analytical estimate could therefore be seen as an accurate estimate,
-modulo a shift in the synchrony. Nonetheless, the trend in the
-variations of the fluctuations as a function of the model variables is
-globally kept between the analytical estimate and the numerical
-simulations. This relatively good agreement therefore shows that our
-analytical estimate is a valid tool to study dendritic integration in
-the fluctuation-driven regime.
+the standard deviation \sigma_V of the fluctuation (meaning that
+single events are hypothesis 2 ). Because the synchrony controls the amplitude of the
+fluctuations (Figure [[fig:analytics-accuracy]]B and Figure
+[[fig:synaptic-integration]]B), the analytical estimate could therefore be
+seen as an accurate estimate, modulo a shift in the
+synchrony. Nonetheless, the trend in the variations of the
+fluctuations as a function of the model variables is globally kept
+between the analytical estimate and the numerical simulations. This
+relatively good agreement therefore shows that our analytical estimate
+is a valid tool to study dendritic integration in the
+fluctuation-driven regime.
 
 # We emphasize here that even if the analytical description uses the
 # reduction to the equivalent cylinder (and therefore could be seen as
