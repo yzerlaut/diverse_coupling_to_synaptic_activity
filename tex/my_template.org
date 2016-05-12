@@ -1,9 +1,9 @@
 
-# \blfootnote{ $\,^1$ Unité de Neurosciences, Information et Complexité, Centre National de la Recherche Scientifique, FRE 3693, Gif sur Yvette, France}
-# \blfootnote{ $\,^2$ European Institute fo Theoretical Neuroscience, 74 Rue du Faubourg Saint-Antoine, 75012 Paris}
-# \blfootnote{correspondance : <lastname>@unic.cnrs-gif.fr}
+\blfootnote{ $\,^1$ Unité de Neurosciences, Information et Complexité, Centre National de la Recherche Scientifique, FRE 3693, Gif sur Yvette, France}
 
-#+LaTeX_HEADER: \def\shorttitle{Heterogenous firing response leads to diverse coupling to synaptic activity}
+\blfootnote{correspondance : yann.zerlaut@gmail.com}
+
+#+LaTeX_HEADER: \def\shorttitle{Heterogenous firing responses lead to diverse couplings to presynaptic activity}
 #+LaTeX_HEADER: \def\shortauthor{Zerlaut \& Destexhe} 
 #+LaTeX_HEADER: \def\shortdate{\today} 
 
@@ -17,31 +17,23 @@
 ** basis
 
 #+LATEX_CLASS: article
-#+OPTIONS: toc:nil        (no Table Of COntents at all)
+#+OPTIONS: toc:nil H:5 num:nil        (no Table Of COntents at all)
 #+LaTeX_CLASS_OPTIONS: [8pt, a4paper, twocolumn, twoside, colorlinks]
+#+LaTeX_HEADER:\setcounter{tocdepth}{5}
 #+LaTeX_HEADER:\usepackage{graphicx}
 #+LaTeX_HEADER:\usepackage[AUTO]{inputenc}
 #+LaTeX_HEADER:\usepackage[T1]{fontenc}
 #+LaTeX_HEADER:\usepackage{lmodern}
 #+LaTeX_HEADER:\usepackage{amsmath}
-# #+LaTeX_HEADER:\usepackage{amssymb,mathenv,array,breqn}
+# #+LaTeX_HEADER:\usepackage{amssymb,mathenv,array}
 #+LaTeX_HEADER:\usepackage{microtype} % Slightly tweak font spacing for aesthetics
 #+LaTeX_HEADER: \usepackage{geometry}
 #+LaTeX_HEADER: \geometry{a4paper,total={210mm,297mm}, left=15mm, right=15mm, top=20mm, bottom=20mm, bindingoffset=0mm, columnsep=.5cm}
 #+LaTeX_HEADER: \usepackage[labelfont=bf]{caption}
 
-
-** Sections in roman
-#+LaTeX_HEADER: \renewcommand\thesection{\,\Roman{section}}
-
-
 ** Hyperref setup
 #+LaTeX_HEADER: \hypersetup{allcolors = blue} % to have all the hyperlinks in 1 color
-#+LaTeX_HEADER: \newcommand{\beginsupplement}{\setcounter{table}{0}
-#+LaTeX_HEADER: \renewcommand{\thetable}{S\arabic{table}} \setcounter{figure}{0}
-#+LaTeX_HEADER: \renewcommand{\thefigure}{S\arabic{figure}}  }
 #+LaTeX_HEADER: \def\todo#1{\marginpar{\colorbox{red}{TODO}}{(TODO: \textit{#1})}}
-
 
 ** Headers and footers
 
@@ -69,13 +61,9 @@
 # # we delete the references name
 #+LaTeX_HEADER: \renewcommand{\refname}{\vspace{-.8cm}}
 
-#+LaTeX_HEADER: \usepackage{jneurosci}
-#+LaTeX_HEADER: \bibliographystyle{tex/jneurosci}
-
-# #+LaTeX_HEADER: \usepackage[url=false, doi=true]{natbib}
-# #+LaTeX_HEADER: \bibliographystyle{plainnat}
-# package to generate a file
-# #+LaTeX_HEADER: \usepackage{natbib,hyperref}
-# #+LaTeX_HEADER: \bibliographystyle{apalike}
+#+LaTeX_HEADER: \usepackage{biology_citations}
+#+LaTeX_HEADER: \bibliographystyle{biology_citations}
 
 
+** supplementary
+#+LaTeX_HEADER: \newcommand{\beginsupplement}{\setcounter{table}{0} \renewcommand{\thetable}{S\arabic{table}} \setcounter{figure}{0} \renewcommand{\thefigure}{S\arabic{figure}}  }
