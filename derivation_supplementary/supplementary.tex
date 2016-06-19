@@ -2,20 +2,9 @@
 \documentclass[colorlinks]{article}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
-\usepackage{fixltx2e}
-\usepackage{graphicx}
-\usepackage{longtable}
-\usepackage{float}
-\usepackage{wrapfig}
-\usepackage{rotating}
-\usepackage[normalem]{ulem}
-\usepackage{amsmath}
-\usepackage{textcomp}
-\usepackage{marvosym}
-\usepackage{wasysym}
-\usepackage{amssymb}
+\usepackage{amsmath, amssymb}
 \usepackage{hyperref}
-\tolerance=1000
+%% \tolerance=1000
 \hypersetup{allcolors = blue} % to have all the hyperlinks in 1 color
 \renewcommand{\refname}{\vspace{-.8cm}}
 \usepackage{jneurosci}
@@ -23,10 +12,6 @@
 \author{Y. Zerlaut \& A. Destexhe}
 \date{\today}
 \title{Supplementary Material \\ \large{Heterogenous firing responses leads to diverse coupling to presynaptic activity in a simplified morphological model of layer V pyramidal neurons}}
-\hypersetup{
-  pdfkeywords={},
-  pdfsubject={},
-  pdfcreator={Emacs 24.5.1 (Org mode 8.2.10)}}
 \begin{document}
 
 \maketitle
@@ -68,7 +53,7 @@ the proximal and distal part respectively:
 \begin{equation}
 \lambda^p= \sqrt{\frac{r_m}{r_i (1 + r_m g_{e0}^p + r_m g_{i0}^p)}}
 \quad 
-\lambda^d= \sqrt{\frac{r_m}{r_i (1 + r_m g_{e0}^d + r_m g_{i0}^d)}}$
+\lambda^d= \sqrt{\frac{r_m}{r_i (1 + r_m g_{e0}^d + r_m g_{i0}^d)}}
 \end{equation}
 
 For a dendritic tree of total length $l$, whose proximal part ends at
@@ -331,7 +316,7 @@ where we have introduced the following time constants:
 \end{split}
 \end{equation}
 
-Now used distribution theory (see \citetext{Appel2008} for a
+We now use distribution theory (see \citetext{Appel2008} for a
 comprehensive textbook) to translate the synaptic input into boundary
 conditions at $X_{src}$, physically this corresponds to: 1) the
 continuity of the membrane potential and 2) the discontinuity of the
@@ -483,7 +468,7 @@ with:
 \end{split}
 \end{equation}
 
-\item \$ L$_{\text{p}}$ $\le$ X$_{\text{src}}$\$
+\item $ L_p \le X_{\text{src}}$
 \label{sec-3-0-0-2}
 
 
@@ -582,26 +567,52 @@ current \(I_f=1\) and \( K_f(X_{src}) \) given by:
 K_f(X_{src}) = 
 \left\{
 \begin{split}
-& A_f(X_{src}) \forall X_{src} \in [0,L_p] \\
-& E_f(X_{src}) \forall X_{src} \in [L_p, L]
+& A_f(X_{src}) \quad \forall X_{src} \in [0,L_p] \\
+& E_f(X_{src}) \quad \forall X_{src} \in [L_p, L]
 \end{split}
 \right.
 \end{equation}
 \end{enumerate}
 
-\section{Deriving the fluctuations properties}
+\section{Deriving the power spectrum of the membrane potential fluctuations}
 \label{sec-4}
 
-From shotnoise theory \cite{Daley2007} (see also
-\citetext{ElBoustani2009a} for an application similar to ours), we can
-obtain the power spectral density of the V$_{\text{m}}$ fluctuations \( P_V(f) \)
-as a response to the stimulation Equation \texttt{eq:fluct-eq}:
+The calculus rely on the ability to obtain the power spectrum of the
+membrane potential fluctuations at the soma $P_V(f)$.
+
+This can be obtained from shotnoise theory \cite{Daley2007} (see also
+\citetext{ElBoustani2009a} for an application similar to ours), the
+general form can be expressed as:
 
 \begin{equation}
 \label{eq:vm-pwd}
- P_V(f)  = & \sum_{syn} \pi \mathcal{D}_{syn}  \nu_{syn} \, \| \hat{\mathrm{PSP}}(f) \|^2 
+P_V(f)  = \sum_{\{syn\}} N_{syn} \,  F_\mathrm{synch} \, \nu_{syn}
+\, \| \hat{\mathrm{PSP}_{syn}}(f) \|^2 
 \end{split}
 \end{equation}
+
+where $\{syn\}$ is the set of identical synapses, each having
+$N_{syn}$ synapses, a Poisson release probability: $\nu_{syn}$ and
+creating a post-synaptic event $\mathrm{PSP}_{syn}(t)$.
+
+In addition, we added a synchrony factor $F_\mathrm{synch}$ that
+accounts for the effects of the synchronous arrivals of presynaptic
+events. Given the synchrony generator considered in the main text, the
+synchrony factor takes the form:
+
+\begin{equation}
+\label{eq:F-synch}
+F_\mathrm{synch} =(1-s) + (s-s^2) 2^2 + (s^2-s^3) 3^2 + s^3 4^2
+\end{split}
+\end{equation}
+
+because single events arise with a probability $1-s$, double events
+with a probability $s-s^2$ (and the PSP are squared in
+Eq. \ref{eq:vm-pwd}, hence the $2^2$ factor), etc...
+
+
+\section{Deriving the fluctuations properties}
+\label{sec-5}
 
 \begin{equation}
 \label{eq:Tv-def-with-pwd}
@@ -616,5 +627,5 @@ as a response to the stimulation Equation \texttt{eq:fluct-eq}:
 \section{References}
 \label{sec-5}
 \bibliography{biblio}
-% Emacs 24.5.1 (Org mode 8.2.10)
+
 \end{document}
