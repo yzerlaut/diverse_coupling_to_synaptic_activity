@@ -42,6 +42,7 @@ g_{i0}^p = \pi \, d \, \mathcal{D}_i \, \nu_i^p \, \tau_i^p \, Q_i^p \\
 g_{i0}^d = \pi \, d \, \mathcal{D}_i \, \nu_i^d \, \tau_i^d \, Q_i^d
 \end{split}
 \right.
+\label{eq:1}
 \end{equation}
 
 where $\mathcal{D}_e$ and $\mathcal{D}_i$ are the excitatory and
@@ -74,8 +75,8 @@ therefore has a discontinuity at $x=l_p$.
 Following \citetext{Rall1962}, we now define a dimensionless length $X$:
 
 \begin{equation}
-\label{eq:x-rescale}
  X(x) = \int_0^x \frac{dx}{\lambda(x)}
+\label{eq:x-rescale}
 \end{equation}
 
 We define \(L= X(l) \) and \(L_p= X(l_p) \), the total length and
@@ -154,6 +155,7 @@ We write the solution on the form:
 & \mu_v(X) = v_0^d + B \, \cosh(X-L) + D \, \sinh(X-L) \quad \forall \, X \in [L_pL]
 \end{split}
 \right.
+\label{eq:muV-final}
 \end{equation}
 
 
@@ -550,18 +552,15 @@ with:
 \end{equation}
 
 
-\item PSP at the soma
-\label{sec-3-0-0-3}
-
-The main text writes a solution for the PSP at soma of the form:
+From this calculus, we can write the PSP at the soma on the form:
 
 \begin{equation}
+\label{eq:delta-v-final}
 \hat{\delta v}(X=0, X_{src}, f) = K_f(X_{src}) \, 
 \big(\mu_v(X_{src})-E_{rev}\big) \,  \hat{g(f)} 
 \end{equation}
 
-The correspondance with the previous calculus is to take a unitary
-current \(I_f=1\) and \( K_f(X_{src}) \) given by:
+where \( K_f(X_{src}) \) given by:
 
 \begin{equation}
 K_f(X_{src}) = 
@@ -574,6 +573,8 @@ K_f(X_{src}) =
 \end{equation}
 \end{enumerate}
 
+This is obtained by taking a unitary current \(I_f=1\) in the previous calculus.
+
 \section{Deriving the power spectrum of the membrane potential fluctuations}
 \label{sec-4}
 
@@ -582,23 +583,22 @@ membrane potential fluctuations at the soma $P_V(f)$.
 
 This can be obtained from shotnoise theory \cite{Daley2007} (see also
 \citetext{ElBoustani2009a} for an application similar to ours), the
-general form can be expressed as:
+general form of the power spectrum density can be expressed as:
 
 \begin{equation}
-\label{eq:vm-pwd}
 P_V(f)  = \sum_{\{syn\}} N_{syn} \,  F_\mathrm{synch} \, \nu_{syn}
 \, \| \hat{\mathrm{PSP}_{syn}}(f) \|^2 
 \end{split}
+\label{eq:vm-pwd}
 \end{equation}
 
 where $\{syn\}$ is the set of identical synapses, each having
 $N_{syn}$ synapses, a Poisson release probability: $\nu_{syn}$ and
-creating a post-synaptic event $\mathrm{PSP}_{syn}(t)$.
-
-In addition, we added a synchrony factor $F_\mathrm{synch}$ that
-accounts for the effects of the synchronous arrivals of presynaptic
-events. Given the synchrony generator considered in the main text, the
-synchrony factor takes the form:
+creating a post-synaptic event $\mathrm{PSP}_{syn}(t)$. In addition,
+$F_\mathrm{synch}$ is a synchrony factor (depending on the variable
+$s$ in the model), it accounts for the effects of the synchronous
+arrivals of presynaptic events. Given the synchrony generator
+considered in the main text, the synchrony factor takes the form:
 
 \begin{equation}
 \label{eq:F-synch}
@@ -611,18 +611,70 @@ with a probability $s-s^2$ (and the PSP are squared in
 Eq. \ref{eq:vm-pwd}, hence the $2^2$ factor), etc...
 
 
-\section{Deriving the fluctuations properties}
+Now obtaining the power spectrum density $P_V(f)$ in our situation
+requires to explicit the sum over synapses: $\sum_{\{syn\}}$, In our
+cases, we need to sum over 1) their type (excitatory/inhibitory,
+$\sum_{s \in \{e,i\}}$ ), 2) their location (we will integrate over
+the dendritic length $\int_0^L dx$) 3) branches.
+
+\begin{equation}
+\begin{split}
+  P_V(f)  = & \sum_{s \in \{e,i\}} \int_0^L \, dx \,  \pi \, \mathcal{D}_s
+  \Big( d_t \, 2^{- \frac{2}{3} \, \lfloor \frac{B \, x}{l} \rfloor} \Big)
+  \, \,  2^{\lfloor \frac{B \, x}{l} \rfloor} \, \, \,  F_\mathrm{synch} \, \nu_{s}(x)
+  \, \| \hat{\delta v}_{s}(0, x, f) \|^2 \\
+  & + \pi \, \mathcal{D}_i \, l_{S} \, d_{S} \, \,  F_\mathrm{synch} \, \nu_{i}(0)
+  \, \| \hat{\delta v}_{i}(0, 0, f) \|^2 
+\end{split}
+\label{eq:vm-pwd-final}
+\end{equation}
+
+where $ \hat{\delta v}_{s}(0, x, f)$ is given by
+Eq. \ref{eq:delta-v-final} (note that the dependency on synaptic type
+$s$ comes from the reversal potential term $E_{rev}$ in
+Eq. \ref{eq:delta-v-final}). The factor $2^{\lfloor \frac{B \, x}{l}
+  \rfloor}$ corresponds to the sum of the synapses over the different
+branches at the distance $x$. The term $\big( d_t \, 2^{- \frac{2}{3}
+  \, \lfloor \frac{B \, x}{l} \rfloor} \Big)$ is the diameter of the
+branches at the distance $x$.
+
+The last term in Eq. \ref{eq:vm-pwd-final} corresponds to the
+contribution of somatic inhibitory synapses (number of somatic
+inhibitory synapses: $\pi \, \mathcal{D}_i \, l_{S} \, d_{S}$.
+
+\section{Deriving the fluctuations properties ($\mu_V, \sigma_V, \tau_V$)}
 \label{sec-5}
 
-\begin{equation}
-\label{eq:Tv-def-with-pwd}
-  \tau_V = \frac{1}{2} \, \big( \frac{\int_\mathbb{R} P_V(f) \, d f}{ P_V(0) } \big)^{-1}
-\end{equation}
+The final expressions for the fluctuation propeorties as a function of
+($\nu_e^p, \nu_i^p, \nu_e^d, \nu_i^d, s$) are thus given by:
 
-\begin{equation}
-\label{eq:var-expr}
-  \sigma_V^2 = \int_\mathbb{R} P_V(f) \, df
-\end{equation}
+\begin{itemize}
+
+  \item $\mu_V$: we obtain the mean of the fluctuations at the soma by
+    taking $\mu_V(0)$ in Equation \ref{eq:muV-final}.
+
+  \item $\sigma_V$: we obtain the standard deviation of the fluctuations from the power spectrum density in Equation \ref{eq:vm-pwd-final} and the expression:
+
+    \begin{equation}
+      \label{eq:var-expr}
+      \sigma_V^2 = \int_\mathbb{R} P_V(f) \, df
+    \end{equation}
+
+    This integral expression was discretized and evaluated numerically
+
+  \item $\tau_V$: we obtain the autocorrelation time of the
+    fluctuations from the power spectrum density in Equation
+    \ref{eq:vm-pwd-final} and the expression \cite{Zerlaut2016}:
+
+    \begin{equation}
+      \label{eq:Tv-def-with-pwd}
+      \tau_V = \frac{1}{2} \, \big( \frac{\int_\mathbb{R} P_V(f) \, d f}{ P_V(0) } \big)^{-1}
+    \end{equation}
+    
+    This integral expression was discretized and evaluated numerically
+    
+\end{itemize}
+
 
 \section{References}
 \label{sec-5}
