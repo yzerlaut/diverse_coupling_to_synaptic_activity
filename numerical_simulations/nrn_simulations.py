@@ -1,4 +1,9 @@
 # nrn_simulations.py
+import platform, sys
+if platform.system()=='Darwin':
+    sys.path.append('/Applications/NEURON-7.4/nrn/lib/python')
+    sys.path.append('/System/Library/Frameworks/Python.framework/Versions/2.7')
+    sys.path.append('/System/Library/Frameworks/Python.framework/Versions/2.7/lib')
 from neuron import h as nrn
 nrn('objref nil') # need a nil object in NEURON
 import numpy as np

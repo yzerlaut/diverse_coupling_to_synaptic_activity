@@ -1,4 +1,4 @@
-from numba import jit
+# from numba import jit
 import numpy as np
 import matplotlib
 import matplotlib.pylab as plt
@@ -177,22 +177,22 @@ def stat_pot_function(x, shtn_input, soma, stick, params):
     return np.array([muV_prox(XX, Lp, L, lbdD, lbdP, gP, v0D, v0P, V0) if XX<Lp\
                      else muV_dist(XX, Lp, L, lbdD, lbdP, gP, v0D, v0P, V0) for XX in X])
 
-@jit
+# @jit
 def exp_FT(f, Q, Tsyn, t0=0):
     return Q*np.exp(-1j*2*np.pi*t0*f)/(1j*2*np.pi*f+1./Tsyn)
 
-@jit
+# @jit
 def exp_FT_mod(f, Q, Tsyn):
     return Q**2/((2*np.pi*f)**2+(1./Tsyn)**2)
 
-@jit
+# @jit
 def split_root_square_of_imaginary(f, tau):
     # returns the ral and imaginary part of Sqrt(1+2*Pi*f*tau)
     af = np.sqrt((np.sqrt(1+(2*np.pi*f*tau)**2)+1)/2)
     bf = np.sqrt((np.sqrt(1+(2*np.pi*f*tau)**2)-1)/2)
     return af, bf
 
-@jit
+# @jit
 def psp_norm_square_integral_per_dend_synapse_type(x_dest, x_src, f, Gf2,\
                             Erev, shtn_input,\
                             soma, stick, params,
@@ -230,7 +230,7 @@ def psp_norm_square_integral_per_dend_synapse_type(x_dest, x_src, f, Gf2,\
             PSP = dv_Lp_Xsrc_X(Xdest, Xsrc, 1., afP, afD, gfP, rfP, rfD, Lp, L, lbdD, lbdP)
     return Gf2*np.abs(PSP)**2*(Erev-muV_X)**2
 
-# @jit
+# # @jit
 def get_the_theoretical_sV_and_Tv(shtn_input,\
                                   f, x, params, soma, stick,\
                                   precision=50):
@@ -314,7 +314,7 @@ def get_the_theoretical_sV_and_Tv(shtn_input,\
         
     return np.sqrt(sV2), Tv
 
-@jit
+# @jit
 def psp_norm_square_integral_per_dend_synapse_type_at_soma(x_src, f, Gf2,\
                             Erev, shtn_input,\
                             soma, stick, params,
@@ -345,7 +345,7 @@ def psp_norm_square_integral_per_dend_synapse_type_at_soma(x_src, f, Gf2,\
 
     return Gf2*np.abs(PSP)**2*(Erev-muV_X)**2
 
-@jit
+# @jit
 def get_the_fluct_prop_at_soma(SHTN_INPUT, params, soma, stick,\
                                precision=100, f=rfft.time_to_freq(1000, 1e-4)):
 

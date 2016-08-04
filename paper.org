@@ -816,6 +816,7 @@ of the dendritic tree.
 
 The parameters of the model are presented on Table [[table:params]].
 
+
 #+ATTR_LATEX: :float multicolumn
 #+NAME: table:params
 #+CAPTION: *Model parameters*. Note that the passive properties and the mean morphology are fitted on /in vitro/ measurements.
