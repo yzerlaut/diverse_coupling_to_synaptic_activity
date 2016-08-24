@@ -1,0 +1,317 @@
+load_file("070603c2.cll")//the layer 5 cell
+
+axon.L=10
+axon.diam=5
+create axon1
+connect axon1(0),axon(1)
+axon1.L=200
+axon1.diam=1
+objref basal,apical,trunk,hotzone
+objref tuft,tuftE,tuftS,temp,tuft1[6]
+objref secv,sref
+basal = new SectionList()
+apical = new SectionList()
+trunk = new SectionList()
+hotzone = new SectionList()
+tuft = new SectionList()
+for i=0,5 tuft1[i] = new SectionList()
+tuftE = new SectionList()
+tuftS = new SectionList()
+temp = new SectionList()
+
+
+apic[45].L=1
+apic[30].L=1
+apic[74].L=1
+
+
+access apic[1]
+apical.subtree()
+
+access apic 
+apical.append()
+access apic[10]
+tuft.subtree()
+for i = 0, 11 apic[i] trunk.append()
+
+for i = 0, 69 dend[i] basal.append()
+
+apic[72] tuft1[4].append()
+apic[73] tuft1[4].append()
+apic[65] tuft1[4].append()
+apic[67] tuft1[4].append()
+apic[68] tuft1[4].append()
+apic[62] tuft1[4].append()
+apic[37] tuft1[4].append()
+apic[38] tuft1[4].append()
+apic[21] tuft1[4].append()
+apic[35] tuft1[4].append()
+apic[61] tuft1[4].append()
+apic[31] tuft1[4].append()
+apic[34] tuft1[4].append()
+apic[57] tuft1[4].append()
+apic[56] tuft1[4].append()
+apic[52] tuft1[4].append()
+apic[45] tuft1[4].append()
+apic[53] tuft1[4].append()
+apic[23] tuft1[4].append()
+apic[27] tuft1[4].append()
+apic[18] tuft1[4].append()
+apic[17] tuft1[4].append()
+apic[25] tuft1[4].append()
+apic[28] tuft1[4].append()
+apic[24] tuft1[4].append()
+apic[64] tuft1[4].append()
+apic[66] tuft1[4].append()
+apic[69] tuft1[4].append()
+
+apic[22] tuft1[3].append()
+apic[46] tuft1[3].append()
+apic[16] tuft1[3].append()
+apic[51] tuft1[3].append()
+apic[33] tuft1[3].append()
+apic[36] tuft1[3].append()
+apic[60] tuft1[3].append()
+
+apic[30] tuft1[3].append()
+apic[28] tuft1[3].append()
+apic[25] tuft1[3].append()
+apic[20] tuft1[3].append()
+apic[27] tuft1[3].append()
+apic[44] tuft1[3].append()
+apic[63] tuft1[3].append()
+
+apic[12] tuft1[0].append()
+apic[47] tuft1[0].append()
+apic[39] tuft1[0].append()
+apic[11] tuft1[0].append()
+apic[48] tuft1[0].append()
+
+apic[40] tuft1[1].append()
+apic[70] tuft1[1].append()
+apic[59] tuft1[1].append()
+apic[32] tuft1[1].append()
+apic[13] tuft1[1].append()
+apic[49] tuft1[1].append()
+apic[58] tuft1[1].append()
+apic[41] tuft1[1].append()
+apic[42] tuft1[1].append()
+
+apic[14] tuft1[2].append()
+apic[15] tuft1[2].append()
+apic[26] tuft1[2].append()
+apic[29] tuft1[2].append()
+apic[43] tuft1[2].append()
+apic[50] tuft1[2].append()
+apic[55] tuft1[2].append()
+apic[74] tuft1[2].append()
+apic[71] tuft1[2].append()
+apic[19] tuft1[2].append()
+
+forall {
+	nseg=11
+	insert pas
+	e_pas=-70
+	g_pas=1/20000
+	cm=1
+}
+forsec tuft cm=1.4
+forsec apical	diam=diam*1.2
+forsec tuft {
+	hbar=0.001//0.005
+	insert hd
+	ghdbar_hd=hbar
+}
+access soma
+apic_it=0.000
+apic_il=1
+apic_km=0
+apic_kdr=0
+apic_kca=10
+apic_k2=0.0001
+apic_k1=0.000
+apic_na=0.004
+apic_ka=0.003
+
+trunk_it=0.000
+trunk_il=1
+trunk_km=0
+trunk_kca=1
+trunk_k2=0.06
+trunk_kdr=0
+trunk_k1=0.1
+trunk_na=0.005
+trunk_ka=0.06
+
+soma_na=0.005
+soma_k1=0.06
+soma_k2=.3
+soma_kdr=0
+soma_ka=0.06
+soma_km=10
+
+axon_na=3
+axon_k1=0.8
+axon_k2=1
+axon_kdr=0
+axon_km=0
+
+taun_hh3=1.5
+taun2_hh3=10
+tauh_hh3=.6
+sN_hh3=0
+
+//ca hot zone
+hot_dis_dist=300
+hot_dis_prox=00
+
+hot_it=0.000
+hot_il=10
+hot_kca=30
+hot_k1=0
+hot_k2=0.0001
+hot_ka=0.003
+hot_km=0
+hot_kdr=0
+hot_na=0.01
+
+proc ca_hot_zone(){
+   forsec all{
+	insert kdr
+	gbar_kdr=apic_kdr
+	insert kca
+	gbar_kca=apic_kca
+	insert cad2
+      // ca diffusion  and kca parameters
+      taur_cad2 = 80 
+      caix_kca  = 4
+      Ra_kca    = 0.05
+      Rb_kca    = 0.1
+	
+	insert it2
+	gcabar_it2=apic_it
+	vh1_it2=56
+	vh2_it2=415
+	ah_it2=30				
+	v12m_it2=45
+	v12h_it2=65  
+	am_it2=3
+	vshift_it2=-10
+	vm1_it2=50
+	vm2_it2=125
+
+	insert sca
+	gbar_sca=apic_il
+	
+	insert hh3
+	gnabar_hh3=apic_na
+	gkbar_hh3=apic_k1
+	gl_hh3=0
+	gkbar2_hh3=apic_k2
+	insert km
+	gbar_km=apic_km
+	insert kap
+	gkabar_kap=apic_ka
+  }
+
+	//trunk
+	trunk.remove(trunk)
+  	for i = 0, 11 apic[i] trunk.append()
+
+	access apic[10]
+	distance()
+	forsec tuft {
+		if (distance(0)<=hot_dis_prox) trunk.append()	
+	}
+	forsec trunk{
+		gcabar_it2=trunk_it
+		gbar_sca=trunk_il
+		gbar_kca=trunk_kca
+		gkbar_hh3=trunk_k1
+		gkbar2_hh3=trunk_k2
+		gkabar_kap=trunk_ka
+		gbar_km=trunk_km
+		gnabar_hh3=trunk_na
+		gbar_kdr=trunk_kdr
+	}
+	forsec basal{
+		gcabar_it2=apic_it
+		gbar_sca=apic_il
+		gbar_kca=apic_kca
+		gkbar_hh3=apic_k1
+		gkbar2_hh3=apic_k2
+		gkabar_kap=apic_ka
+		gbar_km=apic_km
+		gnabar_hh3=apic_na
+		gbar_kdr=apic_kdr
+	}
+	//hot zone
+	access apic[10]
+	distance()
+	hotzone.remove(hotzone)
+	forsec tuft {
+		if ((distance(0)<hot_dis_dist)&&(distance(0)>hot_dis_prox)) hotzone.append()
+	}
+	forsec hotzone{
+		gcabar_it2=hot_it
+		gbar_sca=hot_il
+		gbar_kca=hot_kca
+		gkbar_hh3=hot_k1
+		gkbar2_hh3=hot_k2
+		gkabar_kap=hot_ka
+		gbar_km=hot_km
+		gnabar_hh3=hot_na
+		gbar_kdr=hot_kdr
+
+	}
+
+	access soma
+	insert hh3
+	gnabar_hh3=soma_na
+	gkbar_hh3=soma_k1
+	gl_hh3=0
+	gkbar2_hh3=soma_k2
+	insert km
+	gbar_km=soma_km
+	insert kdr
+	gbar_kdr=soma_kdr
+
+	access axon
+	insert hh3
+	gnabar_hh3=axon_na
+	gkbar_hh3=axon_k1
+	gl_hh3=0
+	gkbar2_hh3=axon_k2
+	insert km
+	gbar_km=axon_km
+	insert kdr
+	gbar_kdr=axon_kdr
+
+	access axon1
+	insert hh3
+	gnabar_hh3=axon_na
+	gkbar_hh3=axon_k1
+	gl_hh3=0
+	gkbar2_hh3=axon_k2
+	insert km
+	gbar_km=axon_km
+	insert kdr
+	gbar_kdr=axon_kdr
+
+	access soma
+}//proc
+ca_hot_zone()
+
+
+access soma
+forsec apical {nseg=11}
+
+objref all
+all = new SectionList()
+forall all.append()
+access axon
+all.remove()
+access axon1
+all.remove()
+access soma
+all.remove()
