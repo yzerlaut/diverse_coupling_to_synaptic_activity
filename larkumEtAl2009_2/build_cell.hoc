@@ -212,7 +212,7 @@ proc ca_hot_zone(){
 	gbar_km=apic_km
 	insert kap
 	gkabar_kap=apic_ka
-  }
+    }
 
 	//trunk
 	trunk.remove(trunk)
