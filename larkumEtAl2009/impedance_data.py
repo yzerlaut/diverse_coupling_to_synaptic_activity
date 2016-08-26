@@ -7,7 +7,7 @@ nrn.xopen("build_cell.hoc")
 import numpy as np
 import matplotlib.pylab as plt
 
-freq = np.logspace(0, 3, 30)
+freq = np.logspace(-1.1, np.log(500.)/np.log(10), 50)
 imped, phase = 0.*freq, 0.*freq
 
 Z = nrn.Impedance(sec=nrn.soma)
