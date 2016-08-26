@@ -122,11 +122,14 @@ forsec apical	diam=diam*1.2
 // === active mechanisms ========== //
 // ================================ //
 
-forsec tuft {
+proc insert_h_current_in_tuft(){
+  forsec tuft {
 	hbar=0.001//0.005
 	insert hd
 	ghdbar_hd=hbar
+  }
 }
+
 access soma
 apic_it=0.000
 apic_il=1
