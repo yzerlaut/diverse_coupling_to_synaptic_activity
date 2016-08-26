@@ -1,5 +1,5 @@
 from neuron import h as nrn
-h.nrn_load_dll('x86_64/.libs/libnrnmech.so')
+nrn.nrn_load_dll('x86_64/.libs/libnrnmech.so')
 
 nrn.xopen('build_cell.hoc')
 
