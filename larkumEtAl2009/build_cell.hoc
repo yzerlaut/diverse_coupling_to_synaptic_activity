@@ -117,6 +117,11 @@ forall {
 }
 forsec tuft cm=1.4
 forsec apical	diam=diam*1.2
+
+// ================================ //
+// === active mechanisms ========== //
+// ================================ //
+
 forsec tuft {
 	hbar=0.001//0.005
 	insert hd
@@ -300,7 +305,7 @@ proc ca_hot_zone(){
 
 	access soma
 }//proc
-ca_hot_zone()
+//ca_hot_zone()
 
 
 access soma

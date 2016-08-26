@@ -1,0 +1,18 @@
+xopen("build_cell.hoc")
+// create soma
+// soma insert pas
+// soma e_pas = -65.
+// soma g_pas = 5e-5
+// soma L = 20.
+// soma diam = 20.
+
+proc ComputeZin() { localobj Z
+  Z = new Impedance()
+  soma { Z.loc(0.5) }
+  Z.compute(1 , 0.5)
+  Zin = 0.
+  soma { Zin = Z.input(0.5)}
+  print Zin
+}
+
+ComputeZin()
