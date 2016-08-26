@@ -12,10 +12,10 @@ NEURON {
 	POINT_PROCESS glutamate
 	USEION ca READ cai WRITE ica VALENCE 2
 	NONSPECIFIC_CURRENT inmda,iampa
-	RANGE e ,gmax,ntar,local_v,inmda,iampa,gh
+	RANGE e ,gmax,ntar,local_v,inmda,iampa,gh
 	RANGE del,Tspike,Nspike
 	RANGE gnmda,gampa
-	GLOBAL n, gama,tau1,tau2,tau_ampa,tauh,cah
+	GLOBAL n, gama,tau1,tau2,tau_ampa,tauh,cah
 }
 
 UNITS {
