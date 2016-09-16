@@ -1,9 +1,9 @@
 import numpy as np
 import matplotlib.pylab as plt
 import sys
-sys.path.append('/home/yann/work/python_library')
-from my_graph import set_plot
-import fourier_for_real as rfft
+sys.path.append('/Users/yzerlaut/work/common_libraries/')
+from graphs.my_graph import set_plot
+import data_analysis.fourier_for_real as rfft
 sys.path.append('../')
 from theory.analytical_calculus import *
 from data_firing_response.analyze_data import get_Rm_range

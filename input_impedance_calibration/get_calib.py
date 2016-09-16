@@ -1,8 +1,9 @@
 import numpy as np
 import matplotlib.pylab as plt
 import os, sys
-sys.path.append('../code')
-import my_graph as graph
+sys.path.append('/Users/yzerlaut/work/common_libraries/')
+from graphs.my_graph import set_plot
+import data_analysis.fourier_for_real as rfft
 sys.path.append('../')
 from theory.analytical_calculus import * # where the core calculus lies
 
