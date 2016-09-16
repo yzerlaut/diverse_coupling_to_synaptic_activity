@@ -10,7 +10,7 @@ def get_Rm_range(plot=False):
         Rm[i-1] = 1e-6/data['Gl']
 
     if plot:
-        print 'Rm range: ', Rm.min(), Rm.max()
+        print('Rm range: ', Rm.min(), Rm.max())
         plt.hist(Rm, bins=10)
         plt.show()
 
@@ -44,7 +44,7 @@ if __name__=='__main__':
     elif sys.argv[-1]=='print_coeff':
         ALL_CELLS = np.load('../input_impedance_calibration/all_cell_params.npy')
         for i in range(len(ALL_CELLS)):
-            print 'cell ', i
-            print ALL_CELLS[i]['P']
+            print('cell ', i)
+            print(ALL_CELLS[i]['P'])
     else:
         get_Rm_range(plot=True)

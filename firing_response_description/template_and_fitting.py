@@ -84,7 +84,7 @@ def linear_fitting_of_threshold_with_firing_weight(\
             
     P = plsq.x
     if print_things:
-        print plsq
+        print(plsq)
     return P
 
 def fitting_Vthre_then_Fout(Fout, muV, sV, TvN, muGn, Gl, Cm, El,\

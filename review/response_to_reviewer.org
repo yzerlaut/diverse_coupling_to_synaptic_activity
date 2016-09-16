@@ -21,7 +21,14 @@ the details of the study.
 \bfseries
 
 We agree with the reviewer that this way to represent data might not
-be the easiest. Nonetheless, what we want to represent...the
+be straightforward. We improved the legend of Figure 4 to render the
+understanding
+
+
+The difficulty here is that the (not only one variable is increased, )
+
+
+Nonetheless, what we want to represent...the
 difficulty here, is that the x-axis (increasing one synaptic quantity,
 e.g. release probability of proximal synapses) corresponds to a
 comodulation of

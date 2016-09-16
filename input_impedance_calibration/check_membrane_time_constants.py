@@ -30,11 +30,11 @@ for i in range(len(CELLS)):
     Tm_data[i]= CELLS[i]['Cm']/CELLS[i]['Gl']
     
 
-print '---------------------------------------------------'
-print 'Comparison between model and data for Tm'
-print 'DATA, mean = ', 1e3*Tm_data.mean(), 'ms +/-', 1e3*Tm_data.std()
-print 'MODEL, mean = ', 1e3*Tm_model.mean(), 'ms +/-', 1e3*Tm_model.std()
-print '---------------------------------------------------'
+print('---------------------------------------------------')
+print('Comparison between model and data for Tm')
+print('DATA, mean = ', 1e3*Tm_data.mean(), 'ms +/-', 1e3*Tm_data.std())
+print('MODEL, mean = ', 1e3*Tm_model.mean(), 'ms +/-', 1e3*Tm_model.std())
+print('---------------------------------------------------')
 
 
 fig, [ax,ax2] = plt.subplots(1, 2, figsize=(8,3))

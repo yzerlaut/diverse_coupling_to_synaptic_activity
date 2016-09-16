@@ -92,8 +92,8 @@ if __name__ == '__main__':
     TFfunc_from_tf = FT(func_th, N, dt)
     func_from_tf = inv_FT(TFfunc_th, N, dt)
 
-    print TFfunc_from_tf[:3], TFfunc_th[:3]
-    print f[:3]
+    print((TFfunc_from_tf[:3], TFfunc_th[:3]))
+    print((f[:3]))
     
     #### 3) Plots in the temporal domain
     plt.figure(figsize=(6,4))

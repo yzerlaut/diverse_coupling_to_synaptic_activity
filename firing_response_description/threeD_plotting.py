@@ -4,7 +4,7 @@ import matplotlib as mpl
 from mpl_toolkits.mplot3d import Axes3D
 from matplotlib.ticker import MaxNLocator
 
-from template_and_fitting import erfc_func, fitting_Vthre_then_Fout,\
+from .template_and_fitting import erfc_func, fitting_Vthre_then_Fout,\
     final_threshold_func, print_reduce_parameters
     
 def make_3d_and_2d_figs(P, Fout, s_Fout, muV, sV, Tv_ratio,\

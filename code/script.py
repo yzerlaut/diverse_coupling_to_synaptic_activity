@@ -3,7 +3,7 @@
 
 import numpy as np
 import matplotlib.pylab as plt
-from my_graph import set_plot
+from .my_graph import set_plot
 
 def generate_white_noise(mean, std, nsample=100):
     return mean+std*np.random.randn(nsample)

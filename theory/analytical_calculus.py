@@ -51,8 +51,8 @@ def setup_model(soma, stick, params, verbose=True):
         if cable['name']!='soma':
             jj+=1
     if verbose:
-        print "Total number of EXCITATORY synapses : ", Ke_tot
-        print "Total number of INHIBITORY synapses : ", Ki_tot
+        print("Total number of EXCITATORY synapses : ", Ke_tot)
+        print("Total number of INHIBITORY synapses : ", Ki_tot)
     # we store this info in the somatic comp
     cables[0]['Ke_tot'], cables[0]['Ki_tot'] = Ke_tot, Ki_tot
     return xtot, cables
@@ -135,7 +135,7 @@ def cable_eq_params(f, tauS, tauP, lbdP, tauD, lbdD, Cm, cm, ri, lp, l, B):
 
 ############### INPUT FROM SYMPY ###################
 
-exec(open('../theory/functions.txt'))
+exec(open('../theory/functions.txt').read())
 
 def lbd(x, l, lp, B, lbdP, lbdD):
     # specific to evenly space branches !! (see older implementation with EqCylinder for more general implement.)

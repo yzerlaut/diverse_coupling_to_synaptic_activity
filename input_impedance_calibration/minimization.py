@@ -73,40 +73,40 @@ def find_minimum():
         j=0
         for b, ls, ld, dd, g_pas, cm, ra in itertools.product(B, L_soma, L_dend, D_dend, G_PAS, CM, RA):
             if j==i:
-                print '====> Minimum of the PHASE and PSD'
+                print('====> Minimum of the PHASE and PSD')
                 soma1, stick1, params1 = soma.copy(), stick.copy(), params.copy()
                 soma1['L'] = ls
                 stick1['B'], stick1['D'], stick1['L'] = b, dd, ld
                 params1['g_pas'], params1['cm'], params1['Ra'] = g_pas, cm, ra
-                print 'B=',b, ', Ls=',1e6*ls, 'um, Ld=',1e6*ld, 'um, Dd=',\
-                          1e6*dd,'um,\n g_pas=',g_pas,', cm=', 1e2*cm, ', Ra=',1e2*ra
+                print('B=',b, ', Ls=',1e6*ls, 'um, Ld=',1e6*ld, 'um, Dd=',\
+                          1e6*dd,'um,\n g_pas=',g_pas,', cm=', 1e2*cm, ', Ra=',1e2*ra)
                 MIN_BOTH = [soma1.copy(), stick1.copy(), params1.copy()]
             if j==i0:
-                print '====> Minimum of the PSD'
+                print('====> Minimum of the PSD')
                 soma1, stick1, params1 = soma.copy(), stick.copy(), params.copy()
                 soma1['L'] = ls
                 stick1['B'], stick1['D'], stick1['L'] = b, dd, ld
                 params1['g_pas'], params1['cm'], params1['Ra'] = g_pas, cm, ra
-                print 'B=',b, ', Ls=',1e6*ls, 'um, Ld=',1e6*ld, 'um, Dd=',\
-                          1e6*dd,'um,\n g_pas=',g_pas,', cm=', 1e2*cm, ', Ra=',1e2*ra
+                print('B=',b, ', Ls=',1e6*ls, 'um, Ld=',1e6*ld, 'um, Dd=',\
+                          1e6*dd,'um,\n g_pas=',g_pas,', cm=', 1e2*cm, ', Ra=',1e2*ra)
                 MIN_PSD = [soma1.copy(), stick1.copy(), params1.copy()]
             if j==i1:
-                print '====> Minimum of the PHASE'
+                print('====> Minimum of the PHASE')
                 soma1, stick1, params1 = soma.copy(), stick.copy(), params.copy()
                 soma1['L'] = ls
                 stick1['B'], stick1['D'], stick1['L'] = b, dd, ld
                 params1['g_pas'], params1['cm'], params1['Ra'] = g_pas, cm, ra
-                print 'B=',b, ', Ls=',1e6*ls, 'um, Ld=',1e6*ld, 'um, Dd=',\
-                          1e6*dd,'um,\n g_pas=',g_pas,', cm=', 1e2*cm, ', Ra=',1e2*ra
+                print('B=',b, ', Ls=',1e6*ls, 'um, Ld=',1e6*ld, 'um, Dd=',\
+                          1e6*dd,'um,\n g_pas=',g_pas,', cm=', 1e2*cm, ', Ra=',1e2*ra)
                 MIN_PHASE = [soma1.copy(), stick1.copy(), params1.copy()]
             j+=1
         return MIN_PHASE, MIN_PSD, MIN_BOTH
     except IOError:
-        print '--------------------------------------------'
-        print 'NEED TO MAKE THE MINIMIZATION FIRST'
-        print 'RUN :'
-        print 'python minimization compute'
-        print '--------------------------------------------'
+        print('--------------------------------------------')
+        print('NEED TO MAKE THE MINIMIZATION FIRST')
+        print('RUN :')
+        print('python minimization compute')
+        print('--------------------------------------------')
 
 def make_fig(MIN_PHASE, MIN_PSD, MIN_BOTH):
     fig, AX = plt.subplots(1, 2, figsize=(11,4))
@@ -140,11 +140,11 @@ def single_comp_minim():
 
     P0 = [400, 50e-6]
     psd, phase = single_comp_imped(f, P0[0], P0[1])
-    print phase_means[-1], phase[-1]
+    print(phase_means[-1], phase[-1])
     plsq = minimize(Res,P0, method='nelder-mead')
 
     np.save('single_comp_fit.npy', plsq.x)
-    print plsq
+    print(plsq)
 
 if __name__=='__main__':
 

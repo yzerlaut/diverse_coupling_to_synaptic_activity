@@ -40,9 +40,9 @@ def find_excitability_region(P, El, Gl, Cm,\
     ok = (Fout<pp['max_Fout']) & (Fout>pp['min_Fout']) & (dmuV>0) & (dsV>0) # desired conditions
 
     if print_domain:
-        print 'muV domain :', round(1e3*muV[ok].min()), round(1e3*muV[ok].max())
-        print 'sV domain :', round(1e3*sV[ok].min()), round(1e3*sV[ok].max())
-        print 'TvN domain :', round(1e2*TvN[ok].min()), round(1e2*TvN[ok].max())
+        print('muV domain :', round(1e3*muV[ok].min()), round(1e3*muV[ok].max()))
+        print('sV domain :', round(1e3*sV[ok].min()), round(1e3*sV[ok].max()))
+        print('TvN domain :', round(1e2*TvN[ok].min()), round(1e2*TvN[ok].max()))
     
     return Fout[ok], Vthre[ok], muV[ok], sV[ok], TvN[ok]
 
@@ -66,6 +66,6 @@ if __name__=='__main__':
     P = [-45e-3,0,0,0]
     El, Gl, Cm = -70e-3,10e-9,200e-12
     Fout, Vthre, muV, sV, TvN = find_excitability_region(P, El, Gl, Cm)
-    print derivative_sV(P, muV, sV, TvN, 0*muV, El, Gl, Cm).mean()*1e-3
+    print(derivative_sV(P, muV, sV, TvN, 0*muV, El, Gl, Cm).mean()*1e-3)
 
 

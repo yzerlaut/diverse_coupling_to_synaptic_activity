@@ -1,5 +1,5 @@
 from neuron import h as nrn
-nrn.nrn_load_dll('x86_64/.libs/libnrnmech.so')
+# nrn.nrn_load_dll('x86_64/.libs/libnrnmech.so')
 # nrnivmodl h.mod kdr2.mod kca.mod cad2.mod it2.mod SlowCa.mod hh3.mod km.mod kap.mod
 nrn.xopen("build_cell.hoc")
 # nrn.ca_hot_zone()
@@ -23,4 +23,4 @@ AX[0].loglog(freq, imped)
 AX[1].semilogx(freq, -phase)
 plt.show()
 
-np.savez('data/larkum_imped_data.npz', freq=freq, imped=imped, phase=phase)
+np.save('data/larkum_imped_data.npy', [freq, imped, phase])

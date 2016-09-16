@@ -58,7 +58,7 @@ def ticks_number(ax, xticks=3, yticks=3):
 
 
 def adjust_spines(ax, spines, tck_outward=3):
-    for loc, spine in ax.spines.items():
+    for loc, spine in list(ax.spines.items()):
         if loc in spines:
             spine.set_position(('outward', tck_outward)) # outward by 10 points by default
             spine.set_smart_bounds(True)

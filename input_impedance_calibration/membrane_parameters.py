@@ -33,7 +33,7 @@ def format_params(soma, stick, params):
 | soma diameter | D_S | %(D)s | $\mu m$ |
 | soma length (mean model) | L_S | %(L)s | $\mu m$ |
     """ %soma
-    print S1+S2
+    print(S1+S2)
     
 if __name__=='__main__':
     ## | Parameter Name          | Symbol | Value | Unit |

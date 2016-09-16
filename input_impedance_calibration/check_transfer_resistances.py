@@ -25,10 +25,10 @@ for i in range(len(CELLS)):
     
     Rtf_model[i]= get_the_mean_transfer_resistance_to_soma(soma1, stick1, params1)
     
-print '---------------------------------------------------'
-print 'Comparison between model and data for Tm'
-print 'MODEL, mean = ', 1e-6*Rtf_model.mean(), 'ms +/-', 1e-6*Rtf_model.std()
-print '---------------------------------------------------'
+print('---------------------------------------------------')
+print('Comparison between model and data for Tm')
+print('MODEL, mean = ', 1e-6*Rtf_model.mean(), 'ms +/-', 1e-6*Rtf_model.std())
+print('---------------------------------------------------')
 
 
 fig, [ax,ax2] = plt.subplots(1, 2, figsize=(8,3))

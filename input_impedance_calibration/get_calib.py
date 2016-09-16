@@ -37,9 +37,9 @@ def get_input_resist(soma, stick, params):
 def adjust_model_prop(Rm, soma, stick, precision=.5, params2=None, maxiter=1000):
     """ Rm in Mohm !! """
     if Rm>1200 or Rm<100:
-        print '---------------------------------------------------'
-        print '/!\ Rm value too high or too low for the conversion'
-        print '---------------------------------------------------'
+        print('---------------------------------------------------')
+        print('/!\ Rm value too high or too low for the conversion')
+        print('---------------------------------------------------')
 
     # comodulation values :
     L_soma_base = 2e-6
@@ -81,10 +81,10 @@ def adjust_model_prop(Rm, soma, stick, precision=.5, params2=None, maxiter=1000)
         previous_diff = diff
         n+=1
     if n==maxiter:
-        print delta_b
-        print n_same
-        print 'minimization not achieved !!!'
-        print Rm, 1e-6*get_Rm_from_factor(b)
+        print(delta_b)
+        print(n_same)
+        print('minimization not achieved !!!')
+        print(Rm, 1e-6*get_Rm_from_factor(b))
         
     if params2 is None:
         params1 = params.copy()
@@ -155,14 +155,14 @@ def make_experimental_fig():
 
     ## THEN MODEL
 
-    from minimization import single_comp_imped
+    from .minimization import single_comp_imped
     try:
         Rm, Cm = np.load('single_comp_fit.npy')
         psd, phase = single_comp_imped(f, Rm, Cm)
         AX[1,0].loglog(f, psd, 'k:', lw=2)
         AX[1,1].semilogx(f, phase, 'k:', lw=2, label='single comp.')
     except IOError:
-        print 'no single compartment data available'
+        print('no single compartment data available')
     
     ### MEAN MODEL
     psd, phase = get_input_imped(soma, stick, params)

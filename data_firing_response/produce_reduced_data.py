@@ -24,7 +24,7 @@ def produce_reduced_data():
                       'Tm':data['Cm']/data['Gl'], 'P':P, 'E':E})
         OUTPUT[:4,i-1] = P
         OUTPUT[4:,i-1] =E
-        print data['Gl'], data['Cm']
+        print(data['Gl'], data['Cm'])
 
     np.save('reduced_data.npy', CELLS)
 
