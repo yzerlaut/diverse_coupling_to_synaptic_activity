@@ -20,4 +20,6 @@ for sec in nrn.allsec():
 edges, bins = np.histogram(R_transfer, bins=50, weights=Areas)
 plt.bar(bins[:-1], edges, width=bins[1]-bins[0])
 
+np.savez('data/larkum_Tf_Resist_data.npz', R_transfer=R_transfer, Areas=Areas)
+
 plt.show()

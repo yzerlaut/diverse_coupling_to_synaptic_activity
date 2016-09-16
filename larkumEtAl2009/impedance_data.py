@@ -22,3 +22,5 @@ fig, AX = plt.subplots(1, 2, figsize=(10,3))
 AX[0].loglog(freq, imped)
 AX[1].semilogx(freq, -phase)
 plt.show()
+
+np.savez('data/larkum_imped_data.npz', freq=freq, imped=imped, phase=phase)
