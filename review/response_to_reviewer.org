@@ -1,6 +1,6 @@
 #+TITLE: Response to reviewers
 #+AUTHOR: Y. Zerlaut & A. Destexhe
-#+INCLUDE: ~/work/miscellaneous/ORG/report_template.org
+#+INCLUDE: ~/work/common_libraries/org-mode/report_template.org
 
 * Reviewer #1
 
@@ -20,7 +20,11 @@ the details of the study.
 
 \bfseries
 
-We skjdf
+We agree with the reviewer that this way to represent data might not
+be the easiest. Nonetheless, what we want to represent...the
+difficulty here, is that the x-axis (increasing one synaptic quantity,
+e.g. release probability of proximal synapses) corresponds to a
+comodulation of
 
 \textnormal
 
@@ -61,6 +65,21 @@ We skjdf
    individual neurons to proximally targeting presynaptic activity.”
    Again, we could not find a state-of-the-art explanation why this
    statement is true.
+
+\bfseries
+
+The sharpness of the sodium activation curve controls the ability of
+neocortical neurons to respond to fast fluctuating input. So if for
+some neurons this
+
+Unfortunately, there is, to the best of our knowledge, no closed-form
+solution for the (only numerical solutions of the Fokker-Planck
+equation)
+
+We skjdf
+
+\textnormal
+
 
 4) No dendritic nonlinearities. One main characteristics of L5
    pyramidal neurons is the calcium spike in the apical tree, and more
