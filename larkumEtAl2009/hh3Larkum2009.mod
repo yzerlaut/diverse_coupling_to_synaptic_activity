@@ -6,7 +6,7 @@ static const char rcsid[]="$Id: hh3.mod,v 1.1 1996/05/19 19:26:28 karchie Exp $"
 ENDVERBATIM
 
 NEURON {
-	SUFFIX hh3
+	SUFFIX hh3Larkum2009
 	USEION na READ ena WRITE ina
 	USEION k READ ek WRITE ik
 	NONSPECIFIC_CURRENT il

@@ -32,7 +32,7 @@ PARAMETER {
 
 
 NEURON {
-	SUFFIX kap
+	SUFFIX kapLarkum2009
 	USEION k READ ek WRITE ik
         RANGE gkabar,gka
         GLOBAL ninf,linf,taul,taun,lmin

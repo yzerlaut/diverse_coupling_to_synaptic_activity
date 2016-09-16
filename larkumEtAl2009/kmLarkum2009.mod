@@ -10,7 +10,7 @@ ENDCOMMENT
 INDEPENDENT {t FROM 0 TO 1 WITH 1 (ms)}
 
 NEURON {
-	SUFFIX km
+	SUFFIX kmLarkum2009
 	USEION k READ ek WRITE ik
 	RANGE n, gk, gbar
 	RANGE ninf, ntau

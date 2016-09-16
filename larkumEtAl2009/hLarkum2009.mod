@@ -24,7 +24,7 @@ tau=1
 
 
 NEURON {
-	SUFFIX hd
+	SUFFIX hdLarkum2009
 	NONSPECIFIC_CURRENT i
         RANGE ghdbar, vhalfl,tau
         GLOBAL linf,taul

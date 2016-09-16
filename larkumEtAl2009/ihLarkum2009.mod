@@ -28,7 +28,7 @@ PARAMETER {
 
 
 NEURON {
-	SUFFIX ih
+	SUFFIX ihLarkum2009
 	NONSPECIFIC_CURRENT Iqq
 	RANGE Iqq,ghdbar,gamma_ih
 }

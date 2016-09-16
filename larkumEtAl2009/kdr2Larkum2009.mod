@@ -14,7 +14,7 @@ UNITS {
 } 
 
 NEURON { 
-	SUFFIX kdr
+	SUFFIX kdrLarkum2009
 	USEION k READ ek WRITE ik
 	RANGE gbar, ik
 }

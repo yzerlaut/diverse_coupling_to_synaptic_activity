@@ -119,7 +119,7 @@ forsec tuft cm=1.4
 forsec apical	diam=diam*1.2
 forsec tuft {
 	hbar=0.001//0.005
-	insert hd
+	insert hdLarkum2009
 	ghdbar_hd=hbar
 }
 access soma
@@ -177,18 +177,18 @@ hot_na=0.01
 
 proc ca_hot_zone(){
    forsec all{
-	insert kdr
+	insert kdrLarkum2009
 	gbar_kdr=apic_kdr
-	insert kca
+	insert kcaLarkum2009
 	gbar_kca=apic_kca
-	insert cad2
+	insert cad2Larkum2009
       // ca diffusion  and kca parameters
       taur_cad2 = 80 
       caix_kca  = 4
       Ra_kca    = 0.05
       Rb_kca    = 0.1
 	
-	insert it2
+	insert it2Larkum2009
 	gcabar_it2=apic_it
 	vh1_it2=56
 	vh2_it2=415
@@ -200,17 +200,17 @@ proc ca_hot_zone(){
 	vm1_it2=50
 	vm2_it2=125
 
-	insert sca
+	insert scaLarkum2009
 	gbar_sca=apic_il
 	
-	insert hh3
+	insert hh3Larkum2009
 	gnabar_hh3=apic_na
 	gkbar_hh3=apic_k1
 	gl_hh3=0
 	gkbar2_hh3=apic_k2
-	insert km
+	insert kmLarkum2009
 	gbar_km=apic_km
-	insert kap
+	insert kapLarkum2009
 	gkabar_kap=apic_ka
   }
 
@@ -266,36 +266,36 @@ proc ca_hot_zone(){
 	}
 
 	access soma
-	insert hh3
+	insert hh3Larkum2009
 	gnabar_hh3=soma_na
 	gkbar_hh3=soma_k1
 	gl_hh3=0
 	gkbar2_hh3=soma_k2
-	insert km
+	insert kmLarkum2009
 	gbar_km=soma_km
-	insert kdr
+	insert kdrLarkum2009
 	gbar_kdr=soma_kdr
 
 	access axon
-	insert hh3
+	insert hh3Larkum2009
 	gnabar_hh3=axon_na
 	gkbar_hh3=axon_k1
 	gl_hh3=0
 	gkbar2_hh3=axon_k2
-	insert km
+	insert kmLarkum2009
 	gbar_km=axon_km
-	insert kdr
+	insert kdrLarkum2009
 	gbar_kdr=axon_kdr
 
 	access axon1
-	insert hh3
+	insert hh3Larkum2009
 	gnabar_hh3=axon_na
 	gkbar_hh3=axon_k1
 	gl_hh3=0
 	gkbar2_hh3=axon_k2
-	insert km
+	insert kmLarkum2009
 	gbar_km=axon_km
-	insert kdr
+	insert kdrLarkum2009
 	gbar_kdr=axon_kdr
 
 	access soma
@@ -534,10 +534,10 @@ proc loclocation(){
 
 		rseg.uniform(.1,.9)
 		if (nmdaampa==1){
-			synS[i]=new glutamate(rseg.repick)
+			synS[i]=new glutamateLarkum2009(rseg.repick)
 		  	synS[i].ntar=1
 		}else{
-	      	synS[i]=new ampa(rseg.repick)
+	      	synS[i]=new ampaLarkum2009(rseg.repick)
 		}
 		
 		synS[i].gmax=gmaxS
@@ -561,10 +561,10 @@ proc loclocation(){
 		access apic[dendnum]
 		rseg.uniform(.1,.9)
 		if (nmdaampa==1){
-			synE[i]=new glutamate(rseg.repick)
+			synE[i]=new glutamateLarkum2009(rseg.repick)
 		  	synE[i].ntar=1
 		}else{
-	      	synE[i]=new ampa(rseg.repick)
+	      	synE[i]=new ampaLarkum2009(rseg.repick)
 		}
 		
 		synE[i].gmax=gmaxE

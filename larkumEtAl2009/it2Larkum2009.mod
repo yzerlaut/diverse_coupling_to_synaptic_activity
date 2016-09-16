@@ -11,7 +11,7 @@ ENDCOMMENT
 INDEPENDENT {t FROM 0 TO 1 WITH 1 (ms)}
 
 NEURON {
-	SUFFIX it2
+	SUFFIX it2Larkum2009
 	USEION ca READ eca WRITE ica
 	RANGE m, h, gca, gcabar
 	RANGE minf, hinf, mtau, htau, inactF, actF

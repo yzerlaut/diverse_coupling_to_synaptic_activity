@@ -9,7 +9,7 @@ ENDCOMMENT
 TITLE NMDA synapse with depression
 
 NEURON {
-	POINT_PROCESS glutamate
+	POINT_PROCESS glutamateLarkum2009
 	USEION ca READ cai WRITE ica VALENCE 2
 	NONSPECIFIC_CURRENT inmda,iampa
 	RANGE e ,gmax,ntar,local_v,inmda,iampa,gh

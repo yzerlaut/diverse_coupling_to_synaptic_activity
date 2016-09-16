@@ -9,7 +9,7 @@ ENDCOMMENT
 TITLE NMDA synapse with depression
 
 NEURON {
-	POINT_PROCESS ampa
+	POINT_PROCESS ampaLarkum2009
 	
 	NONSPECIFIC_CURRENT iampa
 	RANGE e ,gmax,ntar,local_v,iampa,gh

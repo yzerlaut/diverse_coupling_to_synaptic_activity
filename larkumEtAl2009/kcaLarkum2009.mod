@@ -16,7 +16,7 @@ ENDCOMMENT
 INDEPENDENT {t FROM 0 TO 1 WITH 1 (ms)}
 
 NEURON {
-	SUFFIX kca
+	SUFFIX kcaLarkum2009
 	USEION k READ ek WRITE ik
 	USEION ca READ cai
 	RANGE n, gk, gbar
