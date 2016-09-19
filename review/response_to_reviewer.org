@@ -1,6 +1,5 @@
 #+TITLE: Response to reviewers
 #+AUTHOR: Y. Zerlaut & A. Destexhe
-#+INCLUDE: ~/work/common_libraries/org-mode/report_template.org
 
 * Reviewer #1
 
@@ -18,25 +17,20 @@ the details of the study.
    is. For us (the writer and two other group members) it was neither
    possible to figure it out from the caption nor the text.
 
-\bfseries
+   \bfseries 
+   We agree with the reviewer that this way to represent data might
+   not be straightforward. We improved the legend of Figure 4 to
+   facilitate the comprehension.
 
-We agree with the reviewer that this way to represent data might not
-be straightforward. We improved the legend of Figure 4 to facilitate
-the comprehension.
+   The difficulty here is that, to emulate the comodulations that
+   characterize neocortical dynamics (e.g. inhibition follows
+   excitation), one has to make variables co-vary at the same time, so
+   one can not represent the data as a function of a single variable.
 
-
-The difficulty here is that, to emulate the comodulations that
-characterize neocortical dynamics (e.g. inhibition follows
-excitation), one has to make variables co-vary at the same time, so
-one can not represent the data as a function of a single variable.
-
-
-Nonetheless, what we want to represent...the
-difficulty here, is that the x-axis (increasing one synaptic quantity,
-e.g. release probability of proximal synapses) corresponds to a
-comodulation of
-
-\textnormal
+   Nonetheless, what we want to represent...the difficulty here, is
+   that the x-axis (increasing one synaptic quantity, e.g. release
+   probability of proximal synapses) corresponds to a comodulation of
+   \textnormal
 
 2) Main statement unclear. Unfortunately, it does not become clear
    what one has to understand of the “Diverse Couplings to the
@@ -118,15 +112,39 @@ We skjdf
    12.5% as the “distal” part. Is the result dependent on this choice,
    or could one have also chosen the closer 12.5% as “proximal” only?
 
-\bfseries
+   \bfseries 
+   
+   Our main statement is not that "distal and proximal inputs
+   differently affects the output firing rates" (we also show this,
+   but we agree with the reviewer that this could seen as
+   "trivial"). Our main statement claims that those stimulations
+   affect individual neurons in diverse manners (in particular for the
+   proximal stimulation: increasing their response for some neurons,
+   decreasing it for some other neurons). We believe that this
+   diversity of responses across neurons is not trivial.
 
-We reproduced in Figure the analysis with the convention "proximal
-only as the closest 12.5%"
+   We adressed the question of the _arbitrary ratio_ between proximal
+   and distal input. Following the reviewer's suggestion, we
+   reproduced the analysis with the convention "proximal as the
+   closest 12.5% only". We show on [[fig:1][Figure 1]] that the results are
+   not affected by this change, the qualitative properties of the
+   fluctuations remain identical: strong decrease of the fluctuation
+   time constant and non-monotonic shape of the standard deviation of
+   the fluctuations. We compensated for the loss of number of synapses
+   that this procedure by increasing the afferent input, but the
+   absolute range of synaptic release frequency. So . On the other
+   hand, setting the "furthest 87.5% as the distal input"
+   qualitatively change the results for the (very naturally because ),
+   this is what motivated this arbitrary choice and the statement
+   (line 102) "The distal part was taken as the last eighth of the
+   dendritic tree to reproduce the large electronic distance to the
+   soma characterizing distal synapses", to highlight that this is the
+   crititical motivation for this arbitrary choice.
 
-This is indeed an important question. The main motivation behind the
-arbitrary choice for the separation is related to the electrotonic
-distance profiles in (i) real layer V pyramidal cells and (ii) the
-proposed reduced geometry. 
+#+NAME: fig:1
+#+CAPTION: *Changing the ratio of the proximal/distal separation.* Generate the figure with : =python code/script.py= Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Etiam lobortis facilisis sem. Nullam necmi et neque pharetra sollicitudin. Praesent im-perdiet mi nec ante. Donec ullamcorper, felis nonsodales commodo, lectus velit ultrices augue, a dig-nissim nibh lectus placerat pede. Vivamus nuncnunc, molestie ut, ultricies vel, semper in, velit.Ut porttitor. Praesent in sapien. Lorem ipsumdolor sit amet, consectetuer adipiscing elit. Duisfringilla tristique neque. Sed interdum libero utmetus. Pellentesque placerat. Nam rutrum auguea leo. Morbi sed elit sit amet ante lobortis sollici-tudin. Praesent blandit blandit mauris. Praesentlectus tellus, aliquet aliquam, luctus a, egestas a,turpis. Mauris lacinia lorem sit amet ipsum. Nuncquis urna dictum turpis accumsan semper.
+[[../figs/change_ratio.png]]
+
 
 \textnormal
 
@@ -324,3 +342,16 @@ Methods section:
 
 - "Fitting passive properties": Are the solutions unique or are there many different trees with similar fit performance that result in different couplings to presynaptic activity?
  
+* Options :noexport:
+#+OPTIONS: toc:nil
+#+LaTeX_CLASS_OPTIONS: [8pt, a4paper, colorlinks]
+#+LaTeX_HEADER:\usepackage{amssymb,mathenv,array}
+#+LaTeX_HEADER:\usepackage{microtype} % Slightly tweak font spacing for aesthetics
+#+LaTeX_HEADER: \usepackage{geometry}
+#+LaTeX_HEADER: \geometry{a4paper,total={210mm,297mm}, left=25mm, right=25mm, top=20mm, bottom=20mm}
+#+LaTeX_HEADER: \usepackage{filecontents}
+#+LaTeX_HEADER: \renewcommand{\refname}{\vspace{-.8cm}}
+#+LaTeX_HEADER: \usepackage{biology_citations}
+#+LaTeX_HEADER: \bibliographystyle{biology_citations}
+#+LaTeX_HEADER: \renewcommand{\thesection}{\Roman{section}} 
+#+LaTeX_HEADER: \renewcommand{\thesubsection}{\Roman{subsection}}

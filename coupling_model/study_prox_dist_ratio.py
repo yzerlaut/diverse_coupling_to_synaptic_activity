@@ -6,6 +6,14 @@ from theory.analytical_calculus import *
 soma, stick, params = np.load('../input_impedance_calibration/mean_model.npy')
 ALL_CELLS = np.load('../input_impedance_calibration/all_cell_params.npy')
 
+
+############# CHANGING THE RATIO ##################
+new_ratio = 12.5 # in percent !
+factor_for_prox_act = 4.
+############# CHANGING THE RATIO ##################
+
+
+
 def find_inh_cond_for_balance(feG, fiG, feI, fiI, fe0, i_nrn, balance, precision=1e2):
     for i in range(len(feG)):
         fiG[i], fiI[i] = find_balance_at_soma(feG[i], feI[i], fe0,\
@@ -16,6 +24,9 @@ def find_inh_cond_for_balance(feG, fiG, feI, fiI, fe0, i_nrn, balance, precision
 def get_fluct_var(i_nrn, F=None, exp_type='non specific activity',\
                   balance=-55e-3, len_f=5, precision=1e2):
 
+    ### CHANGING THE RATIO HERE !! ####
+    ALL_CELLS[i_nrn]['params']['fraction_for_L_prox'] = new_ratio/100.
+    
     if F is None:
         F = np.linspace(0., .4, len_f)
         
@@ -28,22 +39,11 @@ def get_fluct_var(i_nrn, F=None, exp_type='non specific activity',\
     fe0 = find_baseline_excitation(params, soma, stick,\
                                    balance=balance, synch=synch)
     
-    if exp_type=='non specific activity':
-        feG, fiG, feI, fiI = 1.1*F+F0, inh_factor*(0*F+F0), 1.1*F+F0, inh_factor*(0*F+F0)
-        fiG, fiI = find_inh_cond_for_balance(feG, fiG, feI, fiI, fe0,i_nrn, balance+0*F, precision=precision)
-    elif exp_type=='unbalanced activity':
-        feG, feI, fiG, fiI = (F+F0), (F+F0), 0*F, 0*F
-        fiG, fiI = find_inh_cond_for_balance(feG, fiG, feI, fiI, fe0,i_nrn,\
-                                             balance+3e-3*np.linspace(0,1,len(F)), precision=precision)
-    elif exp_type=='proximal activity':
-        feG, fiG, feI, fiI = F0+4.*F, 4.*inh_factor*(F+F0), F0, 0*F
+    if exp_type=='proximal activity':
+        feG, fiG, feI, fiI = F0+factor_for_prox_act*0.4*F, factor_for_prox_act*0.4*(F+F0), F0, 0*F
         fiG, fiI = find_inh_cond_for_balance(feG, fiG, feI, fiI, fe0,i_nrn, balance+0*F, precision=precision)
     elif exp_type=='distal activity':
         feG, fiG, feI, fiI = F0, 0*F, F0+1.3*F, 1.3*inh_factor*(F+F0)
-        fiG, fiI = find_inh_cond_for_balance(feG, fiG, feI, fiI, fe0,i_nrn, balance+0*F, precision=precision)
-    elif exp_type=='synchrony':
-        synch = synch+np.linspace(0., 0.63, len(F))
-        feG, feI, fiG, fiI = F0, F0, 0*F, 0*F
         fiG, fiI = find_inh_cond_for_balance(feG, fiG, feI, fiI, fe0,i_nrn, balance+0*F, precision=precision)
     else:
         print('------------------------------------------')
@@ -73,8 +73,8 @@ LABELS2 = ['$\\nu_e^{prox}$(Hz)', '$\\nu_i^{prox}$(Hz)',\
 if __name__=='__main__':
 
     import matplotlib.pylab as plt
-    sys.path.append('/home/yann/work/python_library/')
-    from my_graph import set_plot
+    sys.path.append('/Users/yzerlaut/work/common_libraries/')
+    from graphs.my_graph import set_plot
 
     i_nrn = 2 # index of the neuron
     precision = 1e4
@@ -83,16 +83,13 @@ if __name__=='__main__':
     plt.subplots_adjust(left=.45, top=.9, wspace=.2, hspace=.2)
     fig2, AX2 = plt.subplots(5, 1, figsize=(3.5, 10))
     plt.subplots_adjust(left=.45, top=.9, wspace=.2, hspace=.2)
-    COLORS=['r', 'b', 'g', 'c', 'k', 'm']
+    COLORS=['b', 'g']
 
-    # PROTOCOLS = ['unbalanced activity', 'proximal activity', 'distal activity',\
-    #              'synchrony', 'non specific activity']
-    PROTOCOLS = ['unbalanced activity', 'proximal activity', 'distal activity',\
-                 'synchrony']
+    PROTOCOLS = ['proximal activity', 'distal activity']
                  
     len_f = 30
-    F = np.linspace(0,1, len_f)
-    if sys.argv[-1]=='all':
+    F = np.linspace(0, 1, len_f)
+    if sys.argv[-2]=='all':
 
         FEG, FIG, FEI, FII, SYNCH, MUV, SV, TVN, MUGN, FOUT =\
            [np.zeros((len(PROTOCOLS), len(ALL_CELLS), len(F))) for j in range(10)]
@@ -105,11 +102,12 @@ if __name__=='__main__':
                    MUV[i, i_nrn,:], SV[i, i_nrn,:], TVN[i, i_nrn,:], MUGN[i, i_nrn,:] =\
                    get_fluct_var(i_nrn, exp_type=PROTOCOLS[i], len_f=len_f, precision=precision)
 
-        np.save('data/synaptic_data.npy', [FEG, FIG, FEI, FII, SYNCH, MUV, SV, TVN, MUGN, FOUT])
+        np.save('data/synaptic_data_modif.npy', [FEG, FIG, FEI, FII, SYNCH, MUV, SV, TVN, MUGN, FOUT, new_ratio])
             
     elif sys.argv[-1]=='plot':
                 
-        FEG, FIG, FEI, FII, SYNCH, MUV, SV, TVN, MUGN, FOUT = np.load('data/synaptic_data.npy')
+        FEG, FIG, FEI, FII, SYNCH, MUV, SV, TVN, MUGN, FOUT, new_ratio = np.load('data/synaptic_data_modif.npy')
+        fig.suptitle('$f_{prox}$ = '+str(new_ratio)+'%')
             
         for i in range(len(PROTOCOLS)):
             for ax, x in zip(AX, [1e3*MUV[i,:,:], 1e3*SV[i,:,:], 1e2*TVN[i,:,:], MUGN[i,:,:]]):
@@ -123,6 +121,7 @@ if __name__=='__main__':
                     ax.fill_between(F, x.mean(axis=0)-x.std(axis=0),\
                                 x.mean(axis=0)+x.std(axis=0), alpha=.2, color=COLORS[i])
     else:
+        fig.suptitle('$f_{prox}$ = '+str(new_ratio)+'%')
         for i in range(len(PROTOCOLS)):
             feG, fiG, feI, fiI, synch, muV, sV, TvN, muGn = get_fluct_var(i_nrn,\
                                           exp_type=PROTOCOLS[i], len_f=len_f, precision=precision)
@@ -146,10 +145,11 @@ if __name__=='__main__':
     set_plot(AX2[-1], ['bottom','left'],\
              ylabel=LABELS2[-1], xticks=[], xlabel='increasing \n presynaptic quantity', num_yticks=4)
 
-    # if sys.argv[-1]!='all':
-    #     AX[0].legend(prop={'size':'xx-small'}, bbox_to_anchor=(1., 2.))
+    if sys.argv[-1]!='all':
+        AX[0].legend(prop={'size':'xx-small'}, bbox_to_anchor=(1., 2.))
         
     fig.savefig('fig.svg')
     fig2.savefig('fig2.svg')
-    plt.show()
+    plt.show(block=False);input('Hit Enter To Close');plt.close()
+    
              
