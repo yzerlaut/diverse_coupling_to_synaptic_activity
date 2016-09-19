@@ -15,15 +15,15 @@ f, psd_means, phase_means = np.load('../larkumEtAl2009/data/larkum_imped_data.np
 phase_means = -phase_means
 
 #### ================================================== ##
-#### MODEL VARIATIONS ###############################
+#### ####### MODEL VARIATIONS ############################
 #### ================================================== ##
 
 N0, N = 5, 5
 B = np.arange(N)+N0 # to be adjusted !!! (does not depends on N)
 L_soma = np.linspace(5., 60., N)*1e-6
 L_dend = np.linspace(700., 1200., N)*1e-6
-D_dend = np.linspace(2, 6., N)*1e-6
-G_PAS = np.linspace(1e-4, 1e-2, N)*1e4
+D_dend = np.linspace(3., 7., N)*1e-6
+G_PAS = np.linspace(17e-5, 3e-5, N)*1e4
 CM = np.linspace(.8, 1.8, N)*1e-2
 RA = np.linspace(10., 90., N)*1e-2
 
