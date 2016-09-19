@@ -91,18 +91,18 @@ def make_fig(args):
                run_single_experiment(t, int(NEURONS[i_nrn]),\
                         args, exp_type=PROTOCOLS[ip], seed=SEEDS[ip])
     ### PLOTTING ALL
-    for ip, color in zip(range(len(PROTOCOLS)), COLORS):
+    for ip, color in zip(list(range(len(PROTOCOLS))), COLORS):
         # membrane potential quantities
-        for j, x in zip(range(4), [1e3*MUV[ip,1,:], 1e3*SV[ip,1,:],\
+        for j, x in zip(list(range(4)), [1e3*MUV[ip,1,:], 1e3*SV[ip,1,:],\
                     1e2*TVN[ip,1,:], MUGN[ip,1,:]]):
             AX1[j, ip].plot(t, x, color=color, lw=3, label=PROTOCOLS[ip])
-        for j, x in zip(range(4), [1e3*MUV[ip,0,:], 1e3*SV[ip,0,:],\
+        for j, x in zip(list(range(4)), [1e3*MUV[ip,0,:], 1e3*SV[ip,0,:],\
                     1e2*TVN[ip,0,:], MUGN[ip,0,:]]):
             AX1[j, ip].plot(t, x, 'k-', lw=1, label='non specific activity')
         # presynaptic activity
-        for j, x in zip(range(4), [FEG[ip,1,:], FIG[ip,1,:], FEI[ip,1,:], FII[ip,1,:]]):
+        for j, x in zip(list(range(4)), [FEG[ip,1,:], FIG[ip,1,:], FEI[ip,1,:], FII[ip,1,:]]):
             AX2[j, ip].plot(t, x, color=color, lw=3, label=PROTOCOLS[ip])
-        for j, x in zip(range(4), [FEG[ip,0,:], FIG[ip,0,:], FEI[ip,0,:], FII[ip,0,:]]):
+        for j, x in zip(list(range(4)), [FEG[ip,0,:], FIG[ip,0,:], FEI[ip,0,:], FII[ip,0,:]]):
             AX2[j, ip].plot(t, x, 'k-', lw=1, label='non specific activity')
         # then output firing
         for i_nrn in range(len(NEURONS)):
@@ -111,9 +111,9 @@ def make_fig(args):
             
     # THEN LIMITS
     for ip in range(len(PROTOCOLS)):
-        for j, x in zip(range(4), [FEG, FIG, FEI, FII]):
+        for j, x in zip(list(range(4)), [FEG, FIG, FEI, FII]):
             AX2[j, ip].plot([0,0], [x.min(),x.max()], color='w', alpha=0)
-        for j, x in zip(range(4), [1e3*MUV, 1e3*SV,\
+        for j, x in zip(list(range(4)), [1e3*MUV, 1e3*SV,\
                     1e2*TVN, MUGN]):
             AX1[j, ip].plot([0,0], [x.min(),x.max()], color='w', alpha=0)
 
@@ -162,7 +162,7 @@ def get_cross_correlation_functions(args):
             
     NEURONS, PROTOCOLS = list(args.NEURONS), args.PROTOCOLS
     COLORS, SEEDS = args.COLORS, args.SEEDS
-    print args.NEURONS
+    print(args.NEURONS)
     
     t = np.arange(int(args.tstop*args.time_increase_factor/args.dt)-1)*args.dt # time array
     # now for cross correlation analysis
@@ -177,9 +177,9 @@ def get_cross_correlation_functions(args):
     FOUT = np.zeros((len(NEURONS), len(PROTOCOLS), 2, len(t)))
 
     for i_nrn in range(len(NEURONS)):
-        print 'cell', i_nrn
+        print('cell', i_nrn)
         for ip in range(len(PROTOCOLS)):
-            print '-- protocol: ', PROTOCOLS[ip]
+            print('-- protocol: ', PROTOCOLS[ip])
             feG, _, feI, _, _, _, _, _, Fout = \
                run_single_experiment(t, i_nrn, args, exp_type=PROTOCOLS[ip])
             X, Y = 1./2.*(feG+feI), Fout*(t[1]-t[0])
@@ -257,7 +257,7 @@ def histogram_of_couplings(args, params, bins=10):
     fig, AX = plt.subplots(1, len(args.PROTOCOLS)+1, figsize=(3*(1+len(args.PROTOCOLS)),2.5))
     fig.subplots_adjust(bottom=.3,left=.1,wspace=.3, hspace=.3)
 
-    for ax, i, label in zip(AX, range(len(args.PROTOCOLS)+1), YLABELS1):
+    for ax, i, label in zip(AX, list(range(len(args.PROTOCOLS)+1)), YLABELS1):
         hist, be = np.histogram(COUPLINGS[:,i], bins=bins)
         ax.bar(.5*(be[:-1]+be[1:]), hist, width=be[1]-be[0], color='k', alpha=.5)
         set_plot(ax, xlabel=label, ylabel='cell #')
@@ -291,7 +291,7 @@ def correlating_electrophy_and_coupling(args, params):
 
     INDEXES, MARKER, SIZE = [], ['^', 'd', '*', 's'], [12, 11, 17, 10]
     for cell in args.NEURONS:
-        print cell, np.where(np.array(INDEX)==cell)
+        print(cell, np.where(np.array(INDEX)==cell))
         INDEXES.append(np.where(INDEX==cell)[0][0])
 
     fig, AX = plt.subplots(len(Y), len(X), figsize=(20,18))

@@ -21,11 +21,14 @@ the details of the study.
 \bfseries
 
 We agree with the reviewer that this way to represent data might not
-be straightforward. We improved the legend of Figure 4 to render the
-understanding
+be straightforward. We improved the legend of Figure 4 to facilitate
+the comprehension.
 
 
-The difficulty here is that the (not only one variable is increased, )
+The difficulty here is that, to emulate the comodulations that
+characterize neocortical dynamics (e.g. inhibition follows
+excitation), one has to make variables co-vary at the same time, so
+one can not represent the data as a function of a single variable.
 
 
 Nonetheless, what we want to represent...the
@@ -116,6 +119,9 @@ We skjdf
    or could one have also chosen the closer 12.5% as “proximal” only?
 
 \bfseries
+
+We reproduced in Figure the analysis with the convention "proximal
+only as the closest 12.5%"
 
 This is indeed an important question. The main motivation behind the
 arbitrary choice for the separation is related to the electrotonic

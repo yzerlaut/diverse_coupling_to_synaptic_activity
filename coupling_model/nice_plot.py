@@ -30,7 +30,7 @@ VTHREs, DMUVs, DTSVs, DTVs = VTHRE[INDEXES], DMUV[INDEXES], DTSV[INDEXES], DTV[I
 cond = (NU0>0)# to have all cells !!
 cond = (NU0>1e-4)
 np.save('kept_cells.npy', cond)
-print 'number of kept cells:',  len(NU0[cond])
+print('number of kept cells:',  len(NU0[cond]))
 NU0, NU, UNBALANCED, PROX, DIST, SYNCH = NU0[cond], NU[cond], UNBALANCED[cond], PROX[cond], DIST[cond], SYNCH[cond]
 VTHRE, DMUV, DTSV, DTV = VTHRE[cond], DMUV[cond], DTSV[cond], DTV[cond]
 

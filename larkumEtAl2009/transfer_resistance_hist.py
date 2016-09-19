@@ -13,11 +13,11 @@ Z.loc(0.5)
 R_transfer, Areas = [], []
 for sec in nrn.allsec():
     for seg in sec.allseg():
-        Z.compute(0 , 0.5)
+        Z.compute(0, seg.x, sec=sec)
         Areas.append(seg.area())
-        R_transfer.append(Z.input(seg.x, sec=sec))
+        R_transfer.append(Z.transfer(seg.x, sec=sec))
 
-edges, bins = np.histogram(R_transfer, bins=50, weights=Areas)
+edges, bins = np.histogram(R_transfer, bins=50, weights=Areas, normed=True)
 plt.bar(bins[:-1], edges, width=bins[1]-bins[0])
 
 np.savez('data/larkum_Tf_Resist_data.npz', R_transfer=R_transfer, Areas=Areas)

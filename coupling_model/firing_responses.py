@@ -35,14 +35,14 @@ if __name__=='__main__':
                  
     FIG_LIST = []
     if sys.argv[-1]=='all':
-        CHOOSED_CELLS = range(len(ALL_CELLS))
+        CHOOSED_CELLS = list(range(len(ALL_CELLS)))
     else:
         CHOOSED_CELLS = [0, 2, 27, 1]
     ii=1
     for i_nrn in CHOOSED_CELLS:
         fig, ax = plt.subplots(figsize=(4, 3))
         plt.subplots_adjust(left=.3, bottom=.3, wspace=.2, hspace=.2)
-        print 'cell : ', i_nrn+1
+        print('cell : ', i_nrn+1)
         ax.set_title('cell'+str(i_nrn+1))
         for protocol, c in zip(PROTOCOLS, COLORS[:5]):
             Fout = single_experiment(i_nrn, exp_type=protocol, len_f=len_f, precision=1e3)

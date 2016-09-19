@@ -29,7 +29,7 @@ def single_experiment(i_nrn, balance=-54e-3):
     COLORS=['r', 'b', 'g', 'c']
 
     ii=0
-    for p, i  in zip(PROTOCOLS, range(2,len(coupling))):
+    for p, i  in zip(PROTOCOLS, list(range(2,len(coupling)))):
         feG, fiG, feI, fiI, synch, muV, sV, TvN, muGn = get_fluct_var(i_nrn, exp_type=p, balance=balance)
         Fout2 = final_func(ALL_CELLS[i_nrn]['P'], muV, sV, TvN,\
                            ALL_CELLS[i_nrn]['Gl'], ALL_CELLS[i_nrn]['Cm'])
@@ -116,7 +116,7 @@ if __name__=='__main__':
         COUPLINGS = np.zeros((6, len(ALL_CELLS)))
         BIOPHYSICS = np.zeros((4, len(ALL_CELLS)))
         for i_nrn in range(len(ALL_CELLS)):
-            print 'cell', i_nrn
+            print('cell', i_nrn)
             BIOPHYSICS[:,i_nrn] = ALL_CELLS[i_nrn]['E']
             COUPLINGS[:,i_nrn] = single_experiment(i_nrn)
         np.save('data/elctrophy_vs_coupling.npy', [COUPLINGS, BIOPHYSICS])

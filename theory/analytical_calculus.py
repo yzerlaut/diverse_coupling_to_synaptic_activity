@@ -148,6 +148,7 @@ def rescale_x(x, l, lp, B, lbdP, lbdD):
     # specific to evenly space branches !! (see older implementation with EqCylinder for more general implement.)
     EqCylinder = np.linspace(0, l, B+1)
     C = EqCylinder[EqCylinder<=x]
+    # print(lbd(C[-1], l, lp, B, lbdP, lbdD), lp)
     return np.sum(np.diff(C)/lbd(C, l, lp, B, lbdP, lbdD)[:-1])+(x-C[-1])/lbd(C[-1], l, lp, B, lbdP, lbdD)
 
 def stat_pot_function(x, shtn_input, soma, stick, params):
@@ -464,7 +465,60 @@ def get_the_input_resistance_at_soma(soma, stick, params, shtn_input):
     # input and recording in x=0 
     return np.abs(dv_X_Xsrc_Lp(0., 0., 1., afP, afD, gfP, rfP, rfD, Lp, L, lbdD, lbdP))
 
-def get_the_transfer_resistance_to_soma(soma, stick, params, precision=100):
+def get_the_transfer_resistance_to_soma(soma, stick, params, precision=100, with_area=False, freq=0.):
+
+    shtn_input = {'fi_prox':0, 'fe_prox':0,'fi_prox':0,
+                  'fe_dist':0,'fi_dist':0}
+    params_for_cable_theory(stick, params)
+    setup_model(soma, stick, params)
+    
+    # model parameters
+    Ls, Ds, l, D, lp, Rm, Cm,\
+        El, Ee, Ei, rm, cm, ri = ball_and_stick_params(soma, stick, params)
+    # activity dependent parameters
+    tauS, tauP, lbdP, tauD, lbdD = \
+            ball_and_stick_constants(shtn_input, soma, stick, params)
+    # cable constants
+    afP, gfP, rfP, afD, rfD, Lp, L = cable_eq_params(freq, tauS, tauP, lbdP,\
+                                    tauD, lbdD, Cm, cm, ri, lp, l, stick['B'])
+                                    
+    Source_Array = np.linspace(0, stick['L'], precision+1)
+    Source_Array = .5*(Source_Array[1:]+Source_Array[:-1]) # discarding the soma, treated below
+    DX = Source_Array[1]-Source_Array[0]
+    Branch_weights = 0*Source_Array # initialized t0 0 !
+    for b in params['EqCylinder']:
+        Branch_weights[np.where(Source_Array>=b)[0]] += 1
+        
+    Branch_weights = np.power(2., Branch_weights-1) # NUMBER OF BRANCHES
+
+    R_transfer = np.zeros(len(Source_Array)+1)
+    N_synapses = np.zeros(len(Source_Array)+1)
+    Area = np.zeros(len(Source_Array)+1)
+    
+    #### DENDRITIC SYNAPSES
+    for ix_source in range(len(Source_Array)): 
+
+        X_source = Source_Array[ix_source]
+        Xsrc = rescale_x(X_source, l, lp, stick['B'], lbdP, lbdD) # rescaled x_source
+        # print(Xsrc)
+        if X_source<=Lp:
+            R_transfer[ix_source] = dv_X_Xsrc_Lp(0., Xsrc, 1., afP, afD, gfP, rfP, rfD, Lp, L, lbdD, lbdP)
+        else:
+            R_transfer[ix_source] = dv_X_Lp_Xsrc(0., Xsrc, 1., afP, afD, gfP, rfP, rfD, Lp, L, lbdD, lbdP)
+        N_synapses[ix_source] = Branch_weights[ix_source]*np.pi*DX*stick['D']*(1./stick['exc_density']+1./stick['inh_density'])
+        Area[ix_source] = Branch_weights[ix_source]*np.pi*DX*stick['D']
+        
+    ### SOMATIC SYNAPSES
+    N_synapses[-1] = np.pi*soma['L']*soma['D']*(1./soma['exc_density']+1./soma['inh_density'])
+    Area[-1] = np.pi*soma['L']*soma['D']
+    R_transfer[-1] = dv_X_Xsrc_Lp(0., 0., 1., afP, afD, gfP, rfP, rfD, Lp, L, lbdD, lbdP)
+    
+    if with_area:
+        return R_transfer, Area
+    else:
+        return R_transfer, N_synapses
+
+def get_the_input_resistance(soma, stick, params, precision=100, with_area=False):
 
     shtn_input = {'fi_prox':0, 'fe_prox':0,'fi_prox':0,
                   'fe_dist':0,'fi_dist':0}
@@ -490,8 +544,9 @@ def get_the_transfer_resistance_to_soma(soma, stick, params, precision=100):
         
     Branch_weights = np.power(2., Branch_weights-1) # NUMBER OF BRANCHES
 
-    R_transfer = np.zeros(len(Source_Array)+1)
+    R_input = np.zeros(len(Source_Array)+1)
     N_synapses = np.zeros(len(Source_Array)+1)
+    Area = np.zeros(len(Source_Array)+1)
     
     #### DENDRITIC SYNAPSES
     for ix_source in range(len(Source_Array)): 
@@ -499,17 +554,23 @@ def get_the_transfer_resistance_to_soma(soma, stick, params, precision=100):
         X_source = Source_Array[ix_source]
         Xsrc = rescale_x(X_source, l, lp, stick['B'], lbdP, lbdD) # rescaled x_source
         if X_source<=Lp:
-            R_transfer[ix_source] = dv_X_Xsrc_Lp(0., Xsrc, 1., afP, afD, gfP, rfP, rfD, Lp, L, lbdD, lbdP)
+            R_input[ix_source] = dv_Xsrc_X_Lp(Xsrc, Xsrc, 1., afP, afD, gfP, rfP, rfD, Lp, L, lbdD, lbdP)
         else:
-            R_transfer[ix_source] = dv_X_Lp_Xsrc(0., Xsrc, 1., afP, afD, gfP, rfP, rfD, Lp, L, lbdD, lbdP)
-        N_synapses[ix_source] = Branch_weights[ix_source]*np.pi*DX*stick['D']*(1./stick['exc_density']+1./stick['inh_density'])
+            R_input[ix_source] = dv_Lp_Xsrc_X(Xsrc, Xsrc, 1., afP, afD, gfP, rfP, rfD, Lp, L, lbdD, lbdP)
 
+        N_synapses[ix_source] = Branch_weights[ix_source]*np.pi*DX*stick['D']*(1./stick['exc_density']+1./stick['inh_density'])
+        Area[ix_source] = Branch_weights[ix_source]*np.pi*DX*stick['D']
+        
     ### SOMATIC SYNAPSES
     N_synapses[-1] = np.pi*soma['L']*soma['D']*(1./soma['exc_density']+1./soma['inh_density'])
-    R_transfer[-1] = dv_X_Xsrc_Lp(0., 0., 1., afP, afD, gfP, rfP, rfD, Lp, L, lbdD, lbdP)
+    Area[-1] = np.pi*soma['L']*soma['D']
+    R_input[-1] = dv_X_Xsrc_Lp(0., 0., 1., afP, afD, gfP, rfP, rfD, Lp, L, lbdD, lbdP)
     
-    return R_transfer, N_synapses
-
+    if with_area:
+        return R_input, Area
+    else:
+        return R_input, N_synapses
+    
 def get_the_mean_transfer_resistance_to_soma(soma, stick, params, precision=100):
     R_transfer, N_synapses = get_the_transfer_resistance_to_soma(soma, stick, params,precision=precision)
     return np.sum(R_transfer*(N_synapses/N_synapses.sum()))

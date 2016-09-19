@@ -45,9 +45,9 @@ def get_fluct_var(i_nrn, F=None, exp_type='non specific activity', balance=-54e-
         feG, fiG, feI, fiI = F, inh_factor*F, F, inh_factor*F
         fiG, fiI = find_inh_cond_for_balance(feG, fiG, feI, fiI, fe0,i_nrn, balance+0*F)
     else:
-        print '------------------------------------------'
-        print 'problem with the protocol: ', exp_type
-        print '------------------------------------------'
+        print('------------------------------------------')
+        print('problem with the protocol: ', exp_type)
+        print('------------------------------------------')
 
     shtn_input = {'fi_soma':fiG, 'fe_prox':feG+fe0,'fi_prox':fiG,
                   'fe_dist':feI+fe0,'fi_dist':fiI, 'synchrony':synch+0.*F}
@@ -92,7 +92,7 @@ if __name__=='__main__':
                [np.zeros((len(ALL_CELLS), len(F))) for j in range(10)]
 
             for i_nrn in range(len(ALL_CELLS)):
-                print 'cell: ', i_nrn
+                print('cell: ', i_nrn)
                 FEG[i_nrn,:], FIG[i_nrn,:], FEI[i_nrn,:], FII[i_nrn,:], SYNCH[i_nrn,:],\
                    MUV[i_nrn,:], SV[i_nrn,:], TVN[i_nrn,:], MUGN[i_nrn,:] =\
                    get_fluct_var(i_nrn, exp_type=PROTOCOLS[i], len_f=len_f)

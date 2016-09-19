@@ -18,14 +18,23 @@ phase_means = -phase_means
 #### ####### MODEL VARIATIONS ############################
 #### ================================================== ##
 
-N0, N = 5, 5
+N0, N = 10, 10
 B = np.arange(N)+N0 # to be adjusted !!! (does not depends on N)
-L_soma = np.linspace(5., 60., N)*1e-6
-L_dend = np.linspace(700., 1200., N)*1e-6
-D_dend = np.linspace(3., 7., N)*1e-6
-G_PAS = np.linspace(17e-5, 3e-5, N)*1e4
-CM = np.linspace(.8, 1.8, N)*1e-2
-RA = np.linspace(10., 90., N)*1e-2
+L_soma = np.linspace(20., 1500., 1)*1e-6
+L_dend = np.linspace(900., 1200., 1)*1e-6
+D_dend = np.linspace(1., 10., 1)*1e-6
+G_PAS = np.linspace(5e-5, 30e-5, 1)*1e4
+CM = np.linspace(1., 1., 1)*1e-2
+RA = np.linspace(50., 100., N)*1e-2
+
+# N0, N = 5, 5
+# B = np.arange(N)+N0 # to be adjusted !!! (does not depends on N)
+# L_soma = np.linspace(5., 60., N)*1e-6
+# L_dend = np.linspace(700., 1200., N)*1e-6
+# D_dend = np.linspace(2, 6., N)*1e-6
+# G_PAS = np.linspace(1e-4, 1e-2, N)*1e4
+# CM = np.linspace(.8, 1.8, N)*1e-2
+# RA = np.linspace(10., 90., N)*1e-2
 
 #### ================================================== ##
 #### MODEL PROPERTIES ###############################
@@ -36,11 +45,11 @@ def get_input_imped(soma, stick, params):
     # branching properties
     params_for_cable_theory(stick, params) # setting cable membrane constants
     output = get_the_input_impedance_at_soma(f, soma, stick, params)
-    psd, phase = np.abs(output)/1e6, (np.angle(output)+np.pi/2.)%(2.*np.pi)-np.pi/2.
+    psd, phase = np.abs(output)/1e6, (np.angle(output)+np.pi)%(2.*np.pi)-np.pi
     return psd, -phase
 
 import itertools
-def compute_deviations(factor_for_phase=3.):
+def compute_deviations(factor_for_phase=1.):
     VALUE_PSD, VALUE_PHASE = [], []
     # product loop
     for b, ls, ld, dd, g_pas, cm, ra in itertools.product(B, L_soma, L_dend, D_dend, G_PAS, CM, RA):
@@ -101,8 +110,8 @@ def find_minimum():
 def make_fig(MIN_PHASE, MIN_PSD, MIN_BOTH):
     fig, AX = plt.subplots(1, 2, figsize=(11,4))
 
-    AX[0].plot(f, psd_means, color='gray', lw=3, label='Layer V pyr. cell')
-    AX[1].plot(f, phase_means, color='gray', lw=3, label='Layer V pyr. cell')
+    AX[0].plot(f, psd_means, color='gray', lw=3, label='Layer V pyr. cell \n Larkum et al. 2009')
+    AX[1].plot(f, phase_means, color='gray', lw=3, label='Layer V pyr. cell \n Larkum et al. 2009')
 
     for p, label in zip([MIN_PHASE, MIN_PSD, MIN_BOTH],\
                         ['phase min.', 'psd min.', 'both min.']):
@@ -140,6 +149,12 @@ if __name__=='__main__':
         compute_deviations()
     elif sys.argv[-1]=='single_comp':
         single_comp_minim() 
+    elif sys.argv[-1]=='cp':
+        compute_deviations()
+        MIN_PHASE, MIN_PSD, MIN_BOTH = find_minimum()
+        make_fig(MIN_PHASE, MIN_PSD, MIN_BOTH)
+        np.save('mean_model_larkum.npy', MIN_BOTH)
+        plt.show(block=False);input('Hit Enter To Close');plt.close()
     else:
         MIN_PHASE, MIN_PSD, MIN_BOTH = find_minimum()
         make_fig(MIN_PHASE, MIN_PSD, MIN_BOTH)
