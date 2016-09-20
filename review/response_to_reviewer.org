@@ -17,19 +17,20 @@ the details of the study.
    is. For us (the writer and two other group members) it was neither
    possible to figure it out from the caption nor the text.
 
-   \bfseries 
-   We agree with the reviewer that this way to represent data might
-   not be straightforward. We improved the legend of Figure 4 to
-   facilitate the comprehension.
+   \bfseries We agree with the reviewer that this way to represent
+   data might not be straightforward. We improved the legend of Figure
+   4 to facilitate the comprehension. In particular, we have added an
+   example to explicit the presence of "comodulations" of variables
+   and hence the difficulty to represent the data as a function of one
+   given variable. We believe that this way to present data is still
+   the best one to emulate the comodulations that characterize
+   neocortical dynamics (e.g. inhibition follows excitation) and to be
+   able to represent the response to various forms of network activity
+   (i.e. various comodulations) on individual cells.
+   
+   The new legend reads:
+   _The abscissa “increasing synaptic quantity” corresponds to the comodulations of the model variables shown in Figure 4A (same color code). As an example, the response to a “proximal activity increase” (blue curve) corresponds to a linear increase of and while keeping , and to their baseline level. See Figure 4A for the comodulations of the other types of increasing activity._
 
-   The difficulty here is that, to emulate the comodulations that
-   characterize neocortical dynamics (e.g. inhibition follows
-   excitation), one has to make variables co-vary at the same time, so
-   one can not represent the data as a function of a single variable.
-
-   Nonetheless, what we want to represent...the difficulty here, is
-   that the x-axis (increasing one synaptic quantity, e.g. release
-   probability of proximal synapses) corresponds to a comodulation of
    \textnormal
 
 2) Main statement unclear. Unfortunately, it does not become clear
@@ -47,11 +48,15 @@ the details of the study.
    more than the individual excitability that determines the firing
    behavior, but this seems to contradict the previous statement.
 
-\bfseries
+   \bfseries
 
-We skjdf
+   We agree with the reviewer that the formulation "only [...] except
+   [...]" might be misleading, we adapted the abstract to remove this
+   source of confusion. Now it reads: "but trivially, the _main_
+   significant contribution to the various firing response was the
+   different levels of cellular excitability [...]".
 
-\textnormal
+   \textnormal
 
 3) Main statement; missing analysis. It is suggested that the
    heterogeneity would arise from sodium channels, but the paper is
@@ -342,6 +347,111 @@ Methods section:
 
 - "Fitting passive properties": Are the solutions unique or are there many different trees with similar fit performance that result in different couplings to presynaptic activity?
  
+* References
+\small
+
+#+BEGIN_LATEX
+\begin{filecontents}{biblio.bib}
+
+@article{Kuhn2004,
+abstract = {During sensory stimulation, visual cortical neurons undergo massive synaptic bombardment. This increases their input conductance, and action potentials mainly result from membrane potential fluctuations. To understand the response properties of neurons operating in this regime, we studied a model neuron with synaptic inputs represented by transient membrane conductance changes. We show that with a simultaneous increase of excitation and inhibition, the firing rate first increases, reaches a maximum, and then decreases at higher input rates. Comodulation of excitation and inhibition, therefore, does not provide a straightforward way of controlling the neuronal firing rate, in contrast to coding mechanisms postulated previously. The synaptically induced conductance increase plays a key role in this effect: it decreases firing rate by shunting membrane potential fluctuations, and increases it by reducing the membrane time constant, allowing for faster membrane potential transients. These findings do not depend on details of the model and, hence, are relevant to cells of other cortical areas as well.},
+author = {Kuhn, Alexandre and Aertsen, Ad and Rotter, Stefan},
+doi = {10.1523/JNEUROSCI.3349-03.2004},
+file = {:Users/yzerlaut/Documents/Mendeley Desktop//Kuhn, Aertsen, Rotter - 2004 - Neuronal integration of synaptic input in the fluctuation-driven regime.pdf:pdf},
+issn = {1529-2401},
+journal = {The Journal of neuroscience : the official journal of the Society for Neuroscience},
+keywords = {Action Potentials,Action Potentials: physiology,Animals,Computer Simulation,Excitatory Postsynaptic Potentials,Excitatory Postsynaptic Potentials: physiology,Humans,Membrane Potentials,Membrane Potentials: physiology,Models,Neural Inhibition,Neural Inhibition: physiology,Neurological,Neurons,Neurons: physiology,Synapses,Synapses: physiology,Synaptic Transmission,Synaptic Transmission: physiology,Visual Cortex,Visual Cortex: physiology},
+mendeley-groups = {Neuroscience},
+month = {mar},
+number = {10},
+pages = {2345--56},
+pmid = {15014109},
+publisher = {Soc Neuroscience},
+title = {{Neuronal integration of synaptic input in the fluctuation-driven regime.}},
+url = {http://www.ncbi.nlm.nih.gov/pubmed/15014109},
+volume = {24},
+year = {2004}
+}
+
+@article{Tuckwell2002,
+   author = {Tuckwell, Henry C and Wan, Frederic Y M and Rospars, Jean-Pierre},
+   title = {A spatial stochastic neuronal model with Ornstein--Uhlenbeck input current},
+   journal = {Biological cybernetics},
+   volume = {86},
+   pages = {137-145},
+   year = {2002},
+   type = {Journal Article}
+}
+
+@article{Destexhe2003,
+   author = {Destexhe, A. and Rudolph, M. and Pare, D.},
+   title = {The high-conductance state of neocortical neurons in vivo},
+   journal = {Nat Rev Neurosci},
+   volume = {4},
+   number = {9},
+   pages = {739-51},
+   ISSN = {1471-003X (Print)
+1471-003X (Linking)},
+   DOI = {10.1038/nrn1198},
+   url = {http://www.ncbi.nlm.nih.gov/pubmed/12951566},
+   year = {2003},
+   type = {Journal Article}
+}
+
+@article{Chance2002,
+   author = {Chance, Frances S. and Abbott, L. F. and Reyes, Alex D.},
+   title = {Gain modulation from background synaptic input},
+   journal = {Neuron},
+   volume = {35},
+   pages = {773-782},
+   ISSN = {0896-6273 (Print)\n0896-6273 (Linking)},
+   DOI = {10.1016/S0896-6273(02)00820-6},
+   year = {2002},
+   type = {Journal Article}
+}
+
+@article{Reig2015,
+abstract = {The cortical network recurrent circuitry generates spontaneous activity organized into Up (active) and Down (quiescent) states during slow-wave sleep or anesthesia. These different states of cortical activation gain modulate synaptic transmission. However, the reported modulation that Up states impose on synaptic inputs is disparate in the literature, including both increases and decreases of responsiveness. Here, we tested the hypothesis that such disparate observations may depend on the intensity of the stimulation. By means of intracellular recordings, we studied synaptic transmission during Up and Down states in rat auditory cortex in vivo. Synaptic potentials were evoked either by auditory or electrical (thalamocortical, intracortical) stimulation while randomly varying the intensity of the stimulus. Synaptic potentials evoked by the same stimulus intensity were compared in Up/Down states. Up states had a scaling effect on the stimulus-evoked synaptic responses: the amplitude of weaker responses was potentiated whereas that of larger responses was maintained or decreased with respect to the amplitude during Down states. We used a computational model to explore the potential mechanisms explaining this nontrivial stimulus-response relationship. During Up/Down states, there is different excitability in the network and the neuronal conductance varies. We demonstrate that the competition between presynaptic recruitment and the changing conductance might be the central mechanism explaining the experimentally observed stimulus-response relationships. We conclude that the effect that cortical network activation has on synaptic transmission is not constant but contingent on the strength of the stimulation, with a larger modulation for stimuli involving both thalamic and cortical networks.},
+author = {Reig, Ramon and Zerlaut, Yann and Vergara, Ramiro and Destexhe, Alain and Sanchez-Vives, Maria V},
+doi = {10.1523/JNEUROSCI.2004-14.2015},
+file = {:home/yann/Documents/Mendeley/Reig et al. - 2015 - Gain modulation of synaptic inputs by network state in auditory cortex in vivo.pdf:pdf},
+issn = {1529-2401},
+journal = {The Journal of neuroscience : the official journal of the Society for Neuroscience},
+keywords = {cerebral cortex,computational model,oscillations,synaptic inputs,thalamocortical,up states},
+mendeley-groups = {Neuroscience},
+month = feb,
+number = {6},
+pages = {2689--702},
+pmid = {25673859},
+title = {{Gain modulation of synaptic inputs by network state in auditory cortex in vivo.}},
+url = {http://www.ncbi.nlm.nih.gov/pubmed/25673859},
+volume = {35},
+year = {2015}
+}
+
+@article{Heuer2002,
+abstract = {Contrast normalization is a process whereby responses of neurons are scaled according to the total amount of contrast in a region of the image nearby the receptive field of a neuron. This process allows neurons to code for informative scene or object attributes in a manner unaffected by changes in illumination. Evidence for normalization is seen in striate and extrastriate cortex from experiments where multiple stimuli are presented with a single receptive field (RF). Neuronal responses in such experiments are smaller than that predicted by linear summation, revealing the presence of normalization. While the presence of normalization is often clear, its mechanism is less so. To study the mechanism of normalization, we measured the interaction between pairs of brief local stimuli (spatial Gabor functions) within the RFs of cells in the middle temporal (MT or V5) area of monkeys and varied both the location and contrast of the stimuli. We found response summed approximately linearly when contrast was low but rapidly became normalized as stimulus contrast increased. The rapid transition to effective normalization at low contrasts suggested cooperativity in the normalization, and a model embodying such a cooperative step provided a good account of our data.},
+author = {Heuer, Hilary W and Britten, Kenneth H},
+doi = {10.1152/jn.00255.2002},
+file = {:home/yann/Documents/Mendeley/Heuer, Britten - 2002 - Contrast dependence of response normalization in area MT of the rhesus macaque.pdf:pdf},
+issn = {0022-3077},
+journal = {Journal of neurophysiology},
+keywords = {Animals,Contrast Sensitivity,Contrast Sensitivity: physiology,Macaca mulatta,Models, Neurological,Photic Stimulation,Photic Stimulation: methods,Reference Values,Temporal Lobe,Temporal Lobe: physiology},
+month = dec,
+number = {6},
+pages = {3398--408},
+pmid = {12466456},
+title = {{Contrast dependence of response normalization in area MT of the rhesus macaque.}},
+url = {http://www.ncbi.nlm.nih.gov/pubmed/12466456},
+volume = {88},
+year = {2002}
+}
+
+\end{filecontents}
+#+END_LATEX
+
+\bibliography{biblio}
+
 * Options :noexport:
 #+OPTIONS: toc:nil
 #+LaTeX_CLASS_OPTIONS: [8pt, a4paper, colorlinks]

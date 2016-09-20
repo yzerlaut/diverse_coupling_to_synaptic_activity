@@ -9,7 +9,7 @@ ALL_CELLS = np.load('../input_impedance_calibration/all_cell_params.npy')
 
 ############# CHANGING THE RATIO ##################
 new_ratio = 12.5 # in percent !
-factor_for_prox_act = 4.
+factor_for_prox_act = 12.
 ############# CHANGING THE RATIO ##################
 
 
@@ -72,9 +72,7 @@ LABELS2 = ['$\\nu_e^{prox}$(Hz)', '$\\nu_i^{prox}$(Hz)',\
 
 if __name__=='__main__':
 
-    import matplotlib.pylab as plt
-    sys.path.append('/home/safaai/yann/common_libraries/')
-    from graphs.my_graph import set_plot
+    sys.path.append('/Users/yzerlaut/work/common_libraries/')
 
     i_nrn = 2 # index of the neuron
     precision = 1e4
@@ -101,6 +99,8 @@ if __name__=='__main__':
             
     elif sys.argv[-1]=='plot':
                 
+        import matplotlib.pylab as plt
+        from graphs.my_graph import set_plot
         fig, AX = plt.subplots(4, 1, figsize=(3.5, 9))
         plt.subplots_adjust(left=.45, top=.9, wspace=.2, hspace=.2)
         fig2, AX2 = plt.subplots(5, 1, figsize=(3.5, 10))
@@ -122,6 +122,8 @@ if __name__=='__main__':
                     ax.fill_between(F, x.mean(axis=0)-x.std(axis=0),\
                                 x.mean(axis=0)+x.std(axis=0), alpha=.2, color=COLORS[i])
     else:
+        import matplotlib.pylab as plt
+        from graphs.my_graph import set_plot
         fig, AX = plt.subplots(4, 1, figsize=(3.5, 9))
         plt.subplots_adjust(left=.45, top=.9, wspace=.2, hspace=.2)
         fig2, AX2 = plt.subplots(5, 1, figsize=(3.5, 10))
