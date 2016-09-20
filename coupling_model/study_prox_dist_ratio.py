@@ -84,7 +84,7 @@ if __name__=='__main__':
     len_f = 30
     F = np.linspace(0, 1, len_f)
     
-    if sys.argv[-2]=='all':
+    if sys.argv[-1]=='all':
 
         FEG, FIG, FEI, FII, SYNCH, MUV, SV, TVN, MUGN, FOUT =\
            [np.zeros((len(PROTOCOLS), len(ALL_CELLS), len(F))) for j in range(10)]
