@@ -73,23 +73,17 @@ LABELS2 = ['$\\nu_e^{prox}$(Hz)', '$\\nu_i^{prox}$(Hz)',\
 if __name__=='__main__':
 
     import matplotlib.pylab as plt
-    sys.path.append('/Users/yzerlaut/work/common_libraries/')
     sys.path.append('/home/safaai/yann/common_libraries/')
     from graphs.my_graph import set_plot
 
     i_nrn = 2 # index of the neuron
     precision = 1e4
     
-    fig, AX = plt.subplots(4, 1, figsize=(3.5, 9))
-    plt.subplots_adjust(left=.45, top=.9, wspace=.2, hspace=.2)
-    fig2, AX2 = plt.subplots(5, 1, figsize=(3.5, 10))
-    plt.subplots_adjust(left=.45, top=.9, wspace=.2, hspace=.2)
-    COLORS=['b', 'g']
-
     PROTOCOLS = ['proximal activity', 'distal activity']
                  
     len_f = 30
     F = np.linspace(0, 1, len_f)
+    
     if sys.argv[-2]=='all':
 
         FEG, FIG, FEI, FII, SYNCH, MUV, SV, TVN, MUGN, FOUT =\
@@ -107,6 +101,12 @@ if __name__=='__main__':
             
     elif sys.argv[-1]=='plot':
                 
+        fig, AX = plt.subplots(4, 1, figsize=(3.5, 9))
+        plt.subplots_adjust(left=.45, top=.9, wspace=.2, hspace=.2)
+        fig2, AX2 = plt.subplots(5, 1, figsize=(3.5, 10))
+        plt.subplots_adjust(left=.45, top=.9, wspace=.2, hspace=.2)
+        COLORS=['b', 'g']
+
         FEG, FIG, FEI, FII, SYNCH, MUV, SV, TVN, MUGN, FOUT, new_ratio = np.load('data/synaptic_data_modif.npy')
         fig.suptitle('$f_{prox}$ = '+str(new_ratio)+'%')
             
@@ -122,6 +122,11 @@ if __name__=='__main__':
                     ax.fill_between(F, x.mean(axis=0)-x.std(axis=0),\
                                 x.mean(axis=0)+x.std(axis=0), alpha=.2, color=COLORS[i])
     else:
+        fig, AX = plt.subplots(4, 1, figsize=(3.5, 9))
+        plt.subplots_adjust(left=.45, top=.9, wspace=.2, hspace=.2)
+        fig2, AX2 = plt.subplots(5, 1, figsize=(3.5, 10))
+        plt.subplots_adjust(left=.45, top=.9, wspace=.2, hspace=.2)
+        COLORS=['b', 'g']
         fig.suptitle('$f_{prox}$ = '+str(new_ratio)+'%')
         for i in range(len(PROTOCOLS)):
             feG, fiG, feI, fiI, synch, muV, sV, TvN, muGn = get_fluct_var(i_nrn,\
@@ -130,27 +135,26 @@ if __name__=='__main__':
                 ax.plot(F, x, lw=4, color=COLORS[i], label=PROTOCOLS[i])
             for ax, x in zip(AX2, [feG, fiG, feI, fiI, synch]):
                 ax.plot(F, x, lw=4, color=COLORS[i], label=PROTOCOLS[i])
-
-                
-    for ax, ylabel in zip(AX[:-1], LABELS[:-1]):
-        set_plot(ax, ['left'], ylabel=ylabel, xticks=[], num_yticks=4)
-    for ax, ylabel in zip(AX2[:-1], LABELS2[:-1]):
-        set_plot(ax, ['left'], ylabel=ylabel, xticks=[], num_yticks=4)
-    set_plot(AX[-2], ['left'], ylabel=LABELS[-2], xticks=[], num_yticks=4)
-    set_plot(AX[-1], ['bottom','left'],\
-             ylabel=LABELS[-1], xticks=[], xlabel='increasing \n presynaptic quantity')
-    set_plot(AX2[-2], ['left'], ylabel=LABELS2[-2], xticks=[], num_yticks=4)#, yticks=[0,1,2])
-    set_plot(AX2[1], ['left'], ylabel=LABELS2[1], xticks=[], num_yticks=4)#, yticks=[0,2,4])
-    set_plot(AX2[0], ['left'], ylabel=LABELS2[0], xticks=[], num_yticks=4)#, yticks=[0,0.3,0.6])
-    set_plot(AX2[2], ['left'], ylabel=LABELS2[2], xticks=[], num_yticks=4)#, yticks=[0,0.15,0.3])
-    set_plot(AX2[-1], ['bottom','left'],\
-             ylabel=LABELS2[-1], xticks=[], xlabel='increasing \n presynaptic quantity', num_yticks=4)
+        plt.show(block=False);input('Hit Enter To Close');plt.close()
 
     if sys.argv[-1]!='all':
+        for ax, ylabel in zip(AX[:-1], LABELS[:-1]):
+            set_plot(ax, ['left'], ylabel=ylabel, xticks=[], num_yticks=4)
+        for ax, ylabel in zip(AX2[:-1], LABELS2[:-1]):
+            set_plot(ax, ['left'], ylabel=ylabel, xticks=[], num_yticks=4)
+        set_plot(AX[-2], ['left'], ylabel=LABELS[-2], xticks=[], num_yticks=4)
+        set_plot(AX[-1], ['bottom','left'],\
+                 ylabel=LABELS[-1], xticks=[], xlabel='increasing \n presynaptic quantity')
+        set_plot(AX2[-2], ['left'], ylabel=LABELS2[-2], xticks=[], num_yticks=4)#, yticks=[0,1,2])
+        set_plot(AX2[1], ['left'], ylabel=LABELS2[1], xticks=[], num_yticks=4)#, yticks=[0,2,4])
+        set_plot(AX2[0], ['left'], ylabel=LABELS2[0], xticks=[], num_yticks=4)#, yticks=[0,0.3,0.6])
+        set_plot(AX2[2], ['left'], ylabel=LABELS2[2], xticks=[], num_yticks=4)#, yticks=[0,0.15,0.3])
+        set_plot(AX2[-1], ['bottom','left'],\
+                 ylabel=LABELS2[-1], xticks=[], xlabel='increasing \n presynaptic quantity', num_yticks=4)
         AX[0].legend(prop={'size':'xx-small'}, bbox_to_anchor=(1., 2.))
         
-    fig.savefig('fig.svg')
-    fig2.savefig('fig2.svg')
-    plt.show(block=False);input('Hit Enter To Close');plt.close()
+        fig.savefig('fig.svg')
+        fig2.savefig('fig2.svg')
+        plt.show(block=False);input('Hit Enter To Close');plt.close()
     
              
