@@ -74,6 +74,7 @@ if __name__=='__main__':
 
     import matplotlib.pylab as plt
     sys.path.append('/Users/yzerlaut/work/common_libraries/')
+    sys.path.append('/home/safaai/yann/common_libraries/')
     from graphs.my_graph import set_plot
 
     i_nrn = 2 # index of the neuron
