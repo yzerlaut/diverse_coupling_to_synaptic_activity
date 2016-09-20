@@ -9,9 +9,8 @@ ALL_CELLS = np.load('../input_impedance_calibration/all_cell_params.npy')
 
 ############# CHANGING THE RATIO ##################
 new_ratio = 12.5 # in percent !
-factor_for_prox_act = 12.
+factor_for_prox_act = 70.
 ############# CHANGING THE RATIO ##################
-
 
 
 def find_inh_cond_for_balance(feG, fiG, feI, fiI, fe0, i_nrn, balance, precision=1e2):
@@ -41,6 +40,7 @@ def get_fluct_var(i_nrn, F=None, exp_type='non specific activity',\
     
     if exp_type=='proximal activity':
         feG, fiG, feI, fiI = F0+factor_for_prox_act*0.4*F, factor_for_prox_act*0.4*(F+F0), F0, 0*F
+        print(feG)
         fiG, fiI = find_inh_cond_for_balance(feG, fiG, feI, fiI, fe0,i_nrn, balance+0*F, precision=precision)
     elif exp_type=='distal activity':
         feG, fiG, feI, fiI = F0, 0*F, F0+1.3*F, 1.3*inh_factor*(F+F0)
@@ -100,7 +100,6 @@ if __name__=='__main__':
     elif sys.argv[-1]=='plot':
                 
         import matplotlib.pylab as plt
-        from graphs.my_graph import set_plot
         fig, AX = plt.subplots(4, 1, figsize=(3.5, 9))
         plt.subplots_adjust(left=.45, top=.9, wspace=.2, hspace=.2)
         fig2, AX2 = plt.subplots(5, 1, figsize=(3.5, 10))
@@ -123,7 +122,6 @@ if __name__=='__main__':
                                 x.mean(axis=0)+x.std(axis=0), alpha=.2, color=COLORS[i])
     else:
         import matplotlib.pylab as plt
-        from graphs.my_graph import set_plot
         fig, AX = plt.subplots(4, 1, figsize=(3.5, 9))
         plt.subplots_adjust(left=.45, top=.9, wspace=.2, hspace=.2)
         fig2, AX2 = plt.subplots(5, 1, figsize=(3.5, 10))
@@ -140,6 +138,7 @@ if __name__=='__main__':
         plt.show(block=False);input('Hit Enter To Close');plt.close()
 
     if sys.argv[-1]!='all':
+        from graphs.my_graph import set_plot
         for ax, ylabel in zip(AX[:-1], LABELS[:-1]):
             set_plot(ax, ['left'], ylabel=ylabel, xticks=[], num_yticks=4)
         for ax, ylabel in zip(AX2[:-1], LABELS2[:-1]):

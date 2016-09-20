@@ -11,6 +11,9 @@ from input_impedance_calibration.get_calib import adjust_model_prop
 
 soma, stick, params = np.load('../input_impedance_calibration/mean_model.npy')
 
+Ls, Ds, l, D, lp, Rm, Cm,\
+        El, Ee, Ei, rm, cm, ri = ball_and_stick_params(soma, stick, params)
+
 Rm = get_Rm_range()
 
 Ke, Ki = 0*Rm, 0*Rm

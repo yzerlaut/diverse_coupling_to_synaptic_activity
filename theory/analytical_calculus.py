@@ -129,7 +129,6 @@ def cable_eq_params(f, tauS, tauP, lbdP, tauD, lbdD, Cm, cm, ri, lp, l, B):
     # ball and tree rescaling
     Lp = rescale_x(lp, l, lp, B, lbdP, lbdD)
     L = rescale_x(l, l, lp, B, lbdP, lbdD)
-    
     return afP, gfP, rfP, afD, rfD, Lp, L
 
 
