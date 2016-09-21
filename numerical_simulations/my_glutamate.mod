@@ -4,12 +4,15 @@ COMMENT
 //    apmega@yahoo.com		//
 //		2007			//
 //****************************//
+
+slightly modified by Y. Zerlaut (yann.zerlaut @gmail.com)
+to include a net_receive and be stimulated by a shotnoise, 2016
 ENDCOMMENT
 
 TITLE NMDA synapse with depression
 
 NEURON {
-	POINT_PROCESS glutamateLarkum2009
+	POINT_PROCESS my_glutamate
 	USEION ca READ cai WRITE ica VALENCE 2
 	NONSPECIFIC_CURRENT inmda,iampa
 	RANGE e ,gmax,ntar,local_v,inmda,iampa,gh
@@ -74,15 +77,7 @@ INITIAL {
 
 BREAKPOINT {  
     
-	LOCAL count
 	SOLVE state METHOD cnexp
-	FROM count=0 TO Nspike-1 {
-		IF(at_time(count*Tspike+del)){
-			state_discontinuity( A, A+ gmax)
-			state_discontinuity( B, B+ gmax)
-			state_discontinuity( gampa, gampa+ gmax/ntar)
-		}
-	}
 
 	gnmda=(A-B)/(1+n*exp(-gama*v) )
 	gh=(exp(-h))
@@ -99,7 +94,8 @@ DERIVATIVE state {
 	h'=(cah*cai-h)/tauh
 }
 
-
-
+NET_RECEIVE(weight (uS)) {
+	gampa = gampa + weight
+}
 
 

@@ -46,7 +46,7 @@ def set_tree_params(EqCylinder, dend, soma, Params):
     return xtot, cables
 
 def Constructing_the_ball_and_tree(params, cables,
-                                spiking_mech=False):
+                                   spiking_mech=False, nmda_spikes=False):
 
     # list of excitatory stuff
     exc_synapses, exc_netcons, exc_spike_trains, exc_Ks  = [], [], [], []
@@ -104,8 +104,12 @@ def Constructing_the_ball_and_tree(params, cables,
                         Fq = 1.
 
                     # in each segment, we insert an excitatory synapse
-                    syn = nrn.ExpSyn(seg.x, sec=section)
-                    syn.tau, syn.e = Ftau*params['Te']*1e3, params['Ee']*1e3
+                    if nmda_spikes:
+                        syn = my_glutamate(seg.x, sec=section)
+                        syn.tau_ampa, syn.e = Ftau*params['Te']*1e3, params['Ee']*1e3
+                    else:
+                        syn = nrn.ExpSyn(seg.x, sec=section)
+                        syn.tau, syn.e = Ftau*params['Te']*1e3, params['Ee']*1e3
                     exc_synapse.append(syn)
                     netcon = nrn.NetCon(nrn.nil, syn)
                     netcon.weight[0] = Fq*params['Qe']*1e6
@@ -227,11 +231,6 @@ def run_simulation(shotnoise_input, cables, params, tstop=2000.,\
     t_vec.record(nrn._ref_t)
     V = []
 
-    # if recordings is 'soma':
-    #     for rec in recordings:
-    #         V.append(nrn.Vector())
-    #         exec('V[-1].record(nrn.cable_'+str(rec[0])+'_'+str(rec[1])+'('+str(rec[0])+')._ref_v[0]')
-    
     if recordings is 'soma':
         V.append(nrn.Vector())
         exec('V[0].record(nrn.cable_0_0(0)._ref_v)')
