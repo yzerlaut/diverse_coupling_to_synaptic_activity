@@ -20,7 +20,7 @@ if sys.argv[-1]=='run':
     # constructing the space-dependent shotnoise input for the simulation
 
     ## MAKING THE BASELINE EXPERIMENT
-    print 'Running simulation [...]'
+    print('Running simulation [...]')
     t, V = run_simulation(shtn_input, cables, params, tstop=tstop, dt=0.05)
     np.save('data/data_mean_model_sim.npy', [x_exp, shtn_input, cables, t, V])
     
@@ -28,7 +28,7 @@ elif sys.argv[-1]=='analyze':
     x_exp, shtn_input, cables, t, V = \
       np.load('data/data_mean_model_sim.npy')
     x_exp, cables = setup_model(soma, stick, params)    
-    print 'Analyzing data [...]'
+    print('Analyzing data [...]')
     muV_exp, sV_exp, Tv_exp = analyze_simulation(x_exp, cables, t, V)
 
     np.save('data/analyzed_data_mean_model_sim.npy', [x_exp, muV_exp, sV_exp, Tv_exp, shtn_input, soma, stick, params])

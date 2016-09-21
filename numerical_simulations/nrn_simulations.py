@@ -41,8 +41,8 @@ def set_tree_params(EqCylinder, dend, soma, Params):
         Ke_tot += 2**jj*cable['Ke_per_seg']*cable['NSEG']
         if cable['name']!='soma':
             jj+=1
-    print "Total number of EXCITATORY synapses : ", Ke_tot
-    print "Total number of INHIBITORY synapses : ", Ki_tot
+    print(("Total number of EXCITATORY synapses : ", Ke_tot))
+    print(("Total number of INHIBITORY synapses : ", Ki_tot))
     return xtot, cables
 
 def Constructing_the_ball_and_tree(params, cables,
@@ -149,11 +149,11 @@ def Constructing_the_ball_and_tree(params, cables,
     else:
         spkout = np.zeros(0)
         
-    print "======================================="
-    print " --- checking if the neuron is created "
+    print("=======================================")
+    print(" --- checking if the neuron is created ")
     nrn.topology()
-    print "with the total surface : ", area_tot
-    print "======================================="
+    print(("with the total surface : ", area_tot))
+    print("=======================================")
         
     return exc_synapses, exc_netcons, exc_Ks, exc_spike_trains,\
        inh_synapses, inh_netcons, inh_Ks, inh_spike_trains, area_lists, spkout
@@ -248,10 +248,10 @@ def run_simulation(shotnoise_input, cables, params, tstop=2000.,\
         if recordings is 'full':
             V.append(get_v(cables))
 
-    print "======================================="
+    print("=======================================")
     nrn('forall delete_section()')
-    print " --- checking if the neuron is destroyed"
+    print(" --- checking if the neuron is destroyed")
     nrn.topology()
-    print "======================================="
+    print("=======================================")
     return np.array(t_vec), V
 

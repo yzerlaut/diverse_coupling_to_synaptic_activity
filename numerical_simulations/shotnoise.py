@@ -42,7 +42,7 @@ def queue_presynaptic_events_in_NEURON(ALL):
                 for t in spk_train: # loop over events
                     netcon.event(t)
                     ii+=1
-        print ie, ii
+        print((ie, ii))
         return True
     return init_spike_train
 

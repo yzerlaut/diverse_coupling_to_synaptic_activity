@@ -70,8 +70,8 @@ def analyze_simulation(xtot, cables, t, V, window_for_autocorrel=50, recordings=
 def get_analytical_estimate(shotnoise_input,
                             soma, stick, params, discret=20):
 
-    print '----------------------------------------------------'
-    print ' Analytical calculus running [...]'
+    print('----------------------------------------------------')
+    print(' Analytical calculus running [...]')
 
     x_th = np.linspace(0, stick['L'], discret)
     
@@ -88,9 +88,9 @@ def get_analytical_estimate(shotnoise_input,
                                   precision=discret)
     # Rin, Rtf = get_the_input_and_transfer_resistance(fe, fi, f, x_th, params, soma, stick)
 
-    print '----------------------------------------------------'
-    print ' => end calculus'
-    print '----------------------------------------------------'
+    print('----------------------------------------------------')
+    print(' => end calculus')
+    print('----------------------------------------------------')
 
     return x_th, muV_th, sV_th, Tv_th
 
@@ -233,7 +233,7 @@ if __name__=='__main__':
     params['factor_for_distal_synapses_tau'] = 1.
     params['factor_for_distal_synapses_weight'] = 2.
 
-    print ' first we set up the model [...]'
+    print(' first we set up the model [...]')
     x_exp, cables = setup_model(soma, stick, params)    
 
     x_stick = np.linspace(0,args.L_stick*1e-6, args.discret_sim+1) # then :
@@ -248,7 +248,7 @@ if __name__=='__main__':
     
     # then we run the simulation if needed
     if args.simulation:
-        print 'Running simulation [...]'
+        print('Running simulation [...]')
         t, V = run_simulation(shotnoise_input, cables, params, tstop=args.tstop_sim, dt=args.dt, seed=args.seed)
         muV_exp, sV_exp, Tv_exp = analyze_simulation(x_exp, cables, t, V)
         np.save(file, [x_exp, shotnoise_input, muV_exp, sV_exp, Tv_exp, soma, stick, params])
@@ -270,10 +270,10 @@ if __name__=='__main__':
                          x_exp, muV_exp, sV_exp, Tv_exp, shotnoise_input)    
         plt.show()
     except IOError:
-        print '======================================================'
-        print 'no numerical data available !!!  '
-        print 'either you run the simulation with the --simulation option !' 
-        print 'either you provide a datafile through the --file option !' 
-        print '======================================================'
+        print('======================================================')
+        print('no numerical data available !!!  ')
+        print('either you run the simulation with the --simulation option !') 
+        print('either you provide a datafile through the --file option !') 
+        print('======================================================')
     
 

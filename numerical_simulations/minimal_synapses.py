@@ -1,7 +1,7 @@
 from neuron import h as nrn
 import numpy as np
 import matplotlib.pylab as plt
-
+from nrn_simulations import *
 
 soma = nrn.Section()
 soma.insert('pas')

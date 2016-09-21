@@ -152,7 +152,7 @@ if __name__=='__main__':
                       'fe_prox':fe_baseline, 'fi_prox':fi_baseline,
                       'fe_dist':fe_baseline, 'fi_dist':fi_baseline}
         for s in range(args.SEED):
-            print 'baseline sim. , seed=', s
+            print('baseline sim. , seed=', s)
             t, V = run_simulation(shtn_input, cables, params,\
                                   recordings='soma',
                                   tstop=args.tstop, dt=args.dt, seed=(ii+args.seed+s*(s+1))**3%10000)
@@ -166,7 +166,7 @@ if __name__=='__main__':
                               'fe_prox':EXP['fe_prox'][i], 'fi_prox':EXP['fi_prox'][i],
                               'fe_dist':EXP['fe_dist'][i], 'fi_dist':EXP['fi_dist'][i]}
                 for s in range(args.SEED):
-                    print 'sim=', i, ', seed=', s
+                    print('sim=', i, ', seed=', s)
                     t, V = run_simulation(shtn_input, cables, params,\
                                           recordings='soma',
                                           tstop=args.tstop, dt=args.dt, seed=(ii+args.seed+s*(s+2))**3%10000)
@@ -189,15 +189,15 @@ if __name__=='__main__':
 
     import os
     if not os.path.isfile(file):
-        print '--------------------> input file DOES NOT EXIST'
-        print '--------------------> taking the last one !'
+        print('--------------------> input file DOES NOT EXIST')
+        print('--------------------> taking the last one !')
         file, i, flist ='', 0, os.listdir("data")
         while (file=='') and (i<1e3):
             f = flist[i]
             i+=1
             if len(f.split("vars_"))>1:
                 file = 'data/'+f
-        print file
+        print(file)
   
     # now theoretical plot
     soma, stick, params, SET_OF_EXPS, args = np.load(file)
@@ -207,7 +207,7 @@ if __name__=='__main__':
 
     # plotting all points in all plots so that they have the same boundaries !!
     for EXP in SET_OF_EXPS:
-        for y, i in zip([EXP['muV_exp'], EXP['sV_exp'], EXP['Tv_exp']], range(3)):
+        for y, i in zip([EXP['muV_exp'], EXP['sV_exp'], EXP['Tv_exp']], list(range(3))):
             for ax in AX[i,:]:
                 ax.plot(-0.+0*y, 1.1*y, 'wD', lw=0, alpha=0.)
                 ax.plot(-0.+0*y, .9*y, 'wD', lw=0, alpha=0.)
@@ -215,7 +215,7 @@ if __name__=='__main__':
     YTICKS = [[-70,-60,-50], [3,5,7], [12, 20, 28]]
     YLIM = [[-75,-40], [1.9,8.], [9,31]]
     
-    for EXP, ii in zip(SET_OF_EXPS, range(len(SET_OF_EXPS))):
+    for EXP, ii in zip(SET_OF_EXPS, list(range(len(SET_OF_EXPS)))):
         
         SHTN_INPUT =  {'synchrony':EXP['synchrony'],
                         'fe_prox':EXP['fe_prox'], 'fi_prox':EXP['fi_prox'],
