@@ -79,7 +79,7 @@ BREAKPOINT {
     
 	SOLVE state METHOD cnexp
 
-	gnmda=ntar*(A-B)/(1+n*exp(-gama*v) )
+	gnmda=(A-B)/(1+n*exp(-gama*v) )
 	gh=(exp(-h))
 	inmda =(1e-3)* gnmda * gh * (v-e) * nmda_on
 	ica=inmda/10
@@ -95,9 +95,9 @@ DERIVATIVE state {
 }
 
 NET_RECEIVE(weight (uS)) {
-	gampa = gampa + gmax/ntar
-	A = A + gmax
-	B = B + gmax
+	gampa = gampa + gmax
+	A = A + gmax*ntar
+	B = B + gmax*ntar
 }
 
 

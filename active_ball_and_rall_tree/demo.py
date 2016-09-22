@@ -71,66 +71,29 @@ def analyze_simulation(xtot, cables, t, V, window_for_autocorrel=50, recordings=
     return muV_exp, sV_exp, Tv_exp
 
 
-def plot_time_traces(t, V, cables, EqCylinder, title='', recordings=[[0,0,0.5]]):
-
-    # time window
-    i1, i2 = 0, min([int(1000/(t[1]-t[0])),len(t)])
-
-    # we define the points that we want to extract
-
-    # ---- soma
-    i_level0, i_branch0, frac_seg0 = 1, 0, 0.
-    i_seg0 = int(frac_seg0*cables[i_level0]['NSEG'])
-    v0 = np.array([V[i][i_level0][i_branch0][i_seg0] for i in range(i1,i2)])
-
-    # ---- medial
-    if len(cables)==2:
-        i_level1, i_branch1 =0, 0
-    else:
-        i_level1, i_branch1= len(cables)/2+1, max([1,2**(len(cables)/2)-1])
-    frac_seg1 =.5
-    i_seg1 = int(frac_seg1*cables[i_level1]['NSEG'])
-    v1 = np.array([V[i][i_level1][i_branch1][i_seg1] for i in range(i1,i2)])
-
-    # ---- distal
-    i_level2, i_branch2, frac_seg2 = len(cables)-1, 0, 1.
-    i_seg2 = int(frac_seg2*cables[i_level2]['NSEG'])-1
-    v2 = np.array([V[i][i_level2][i_branch2][i_seg2] for i in range(i1,i2)])
-    
-    ## first we draw the fig where we will see the inputs
-    fig, ax = brt_drawing.make_fig(EqCylinder, cables[1]['D'],\
-        added_points=[\
-                      [i_level2, i_branch2+1, frac_seg2,'r','D', 10],\
-                      [i_level1, i_branch1+1, frac_seg1,'g','D', 10],\
-                      [i_level0, i_branch0+1, frac_seg0,'b','D', 10]])
-    fig2 = plt.figure()
-
-    plt.title(title)
-    plt.plot(1e-3*t[i1:i2], v0, 'b', label='soma')
-    plt.plot(1e-3*t[i1:i2], v1, 'g', label='medial')
-    plt.plot(1e-3*t[i1:i2], v2, 'r', label='distal')
-    
-    plt.xlabel('time (s)')
-    plt.ylabel('$V_m$ (mV)')
-    plt.legend(loc='best', prop={'size':'small'})
-    plt.tight_layout()
-    plt.savefig('./fig2.svg', format='svg')
-
-    return fig2
-
 def get_plotting_instructions():
     return """
 args = data['args'].all()
 sys.path.append('../../')
 from common_libraries.graphs.my_graph import set_plot
-fig, ax = plt.subplots(figsize=(5,3))
-plt.subplots_adjust(left=.2,bottom=.2)
-plt.plot(data['t'], data['V'][1], 'k-', label='no NMDA')
-plt.plot(data['t'], data['Vnmda'][1], 'r-', label='with NMDA')
-plt.plot(data['t'], data['V'][0], 'k:', label='no NMDA')
-plt.plot(data['t'], data['Vnmda'][0], 'r:', label='with NMDA')
-ax.legend()
-set_plot(ax, xlabel='time (ms)', ylabel='$V_m$ (mV)')
+fig, AX = plt.subplots(2, 1, figsize=(8,6))
+plt.subplots_adjust(left=.2,bottom=.2, hspace=.3, wspace=.3)
+AX[0].plot(data['t'], data['V'][1], 'k-', label='passive')
+AX[0].plot(data['t'], data['Vnmda'][1], 'r-', label='NMDA')
+AX[0].legend(prop={'size':'xx-small'})
+AX[1].plot(data['t'], data['V'][0], 'k-', label='Control (passive + AMPA + GABA)')
+AX[1].plot(data['t'], data['Vnmda'][0], 'r-', label='Control + NMDA')
+AX[1].plot(data['t'], data['Vhh'][0], 'b-', label='Control + HH (soma)')
+AX[1].plot(data['t'], data['Vall'][0], 'g--', alpha=.3, lw=3, label='Control + NMDA + HH (soma) + Ca spikes')
+AX[1].legend(prop={'size':'xx-small'})
+if args.with_synch_stim:
+    tt=args.DT_synch_stim
+    while tt<args.tstop:
+        AX[0].plot(tt, [-30], 'kv', ms=10)
+        AX[1].plot(tt, [40], 'kv', ms=10)
+        tt+=args.DT_synch_stim
+set_plot(AX[0], xlabel='time (ms)', ylabel='$V_m$ (mV)')
+set_plot(AX[1], xlabel='time (ms)', ylabel='$V_m$ (mV)')
 """
 
 if __name__=='__main__':
@@ -144,6 +107,9 @@ if __name__=='__main__':
     ,formatter_class=argparse.RawTextHelpFormatter)
 
     parser.add_argument("--mean_model", help="mean model ?", action="store_true")
+    parser.add_argument("--with_synch_stim", help="with synchronous stimulation ?", action="store_true")
+    parser.add_argument("--N_synch_stim", type=int, help="Number of synchronous psp events", default=30)
+    parser.add_argument("--DT_synch_stim", type=float, help="space between synch events", default=200)
     parser.add_argument('-r', "--recording", type=int, help="Number of recording points: 1 (soma), 2 (soma and distal), 0 (full) ", default=20)
     parser.add_argument("--fe_prox", type=float, help="excitatory synaptic frequency in proximal compartment", default=0.7)
     parser.add_argument("--fi_prox", type=float, help="inhibitory synaptic frequency in proximal compartment", default=1.)
@@ -152,7 +118,7 @@ if __name__=='__main__':
     parser.add_argument("--fi_soma", type=float, help="inhibitory synaptic frequency at soma compartment", default=1.)
     parser.add_argument("--synchrony", type=float, help="synchrony of presynaptic spikes", default=0.)
     parser.add_argument("--discret_sim", type=int, help="space discretization for numerical simulation", default=20)
-    parser.add_argument("--tstop_sim", type=float, help="max simulation time (s)", default=2.)
+    parser.add_argument("--tstop", type=float, help="max simulation time (s)", default=2.)
     parser.add_argument("--dt", type=float, help="simulation time step (ms)", default=0.025)
     parser.add_argument("--discret_th", type=int, help="discretization for theoretical evaluation",default=20)
     parser.add_argument("--seed", type=int, help="seed fo random numbers",default=3)
@@ -204,13 +170,23 @@ if __name__=='__main__':
     inh_factor = 5.8
     fe_baseline, fi_baseline, synch_baseline = 0.1, 0.1*inh_factor, 0.05
     shotnoise_input = {'synchrony':synch_baseline,
-                    'fe_prox':fe_baseline, 'fi_prox':fi_baseline,
-                      'fe_dist':2.*fe_baseline, 'fi_dist':fi_baseline}
+                       'fe_prox':fe_baseline, 'fi_prox':fi_baseline,
+                       'fe_dist':2.*fe_baseline, 'fi_dist':fi_baseline}
     # shotnoise_input = {'synchrony':args.synchrony,
     #                    'fi_soma':args.fi_prox,
     #                    'fe_prox':args.fe_prox,'fi_prox':args.fi_prox,
     #                    'fe_dist':args.fe_dist,'fi_dist':args.fi_dist}
-    
+
+    if args.with_synch_stim:
+        spikes = np.array([])
+        tt=args.DT_synch_stim
+        while tt<args.tstop:
+            spikes = np.concatenate([spikes,tt+np.ones(args.N_synch_stim)])
+            tt+=args.DT_synch_stim
+        synchronous_stim={'location':[4,14], 'spikes':spikes}
+    else:
+        synchronous_stim={'location':[4,14], 'spikes':[]}
+        
     if args.update_plot:
         data = dict(np.load(args.filename))
         data['plot'] = get_plotting_instructions()
@@ -218,31 +194,12 @@ if __name__=='__main__':
     else:
         from numerical_simulations.nrn_simulations import *
         nrn.nrn_load_dll('../numerical_simulations/x86_64/.libs/libnrnmech.so')
-        print('Running simulation -- no NMDA [...]')
-        t, V = run_simulation(shotnoise_input, cables, params, tstop=args.tstop_sim, dt=args.dt, seed=args.seed, recordings2='cable_end', recordings='soma')
-        print('Running simulation -- with NMDA [...]')
-        t, Vnmda = run_simulation(shotnoise_input, cables, params, tstop=args.tstop_sim, dt=args.dt, seed=args.seed, recordings2='cable_end', recordings='soma', nmda_on=True)
-        np.savez(args.filename, args=args, t=t, V=V, Vnmda=Vnmda, plot=get_plotting_instructions())
-
-    
-    # muV_exp, sV_exp, Tv_exp = analyze_simulation(x_exp, cables, t, V)
-    #     np.save(file, [x_exp, shotnoise_input, muV_exp, sV_exp, Tv_exp, soma, stick, params])
-        
-    #     # now plotting of simulated membrane potential traces
-    #     plot_time_traces(t, V, cables, params['EqCylinder'],\
-    #         title='$\\nu_e^p$=  %1.2f Hz, $\\nu_e^d$=  %1.2f Hz, $\\nu^p_i$= %1.2f Hz, $\\nu^d_i$= %1.2f Hz' % (args.fe_prox,args.fe_dist,args.fi_prox,args.fi_prox))
-    #     plt.show()
-
-    # # ===== now analytical calculus ========
-    # try:
-    #     x_exp, shotnoise_input, muV_exp, sV_exp, Tv_exp, soma, stick, params = np.load(file)
-    #     # constructing the space-dependent shotnoise input for the simulation
-    #     make_comparison_plot(x_th, muV_th, sV_th, Tv_th,\
-    #                      x_exp, muV_exp, sV_exp, Tv_exp, shotnoise_input)    
-    #     plt.show()
-    # except IOError:
-    #     print '======================================================'
-    #     print 'no numerical data available !!!  '
-    #     print 'either you run the simulation with the --simulation option !' 
-    #     print 'either you provide a datafile through the --file option !' 
-    #     print '======================================================'
+        print('Running simulation -- Passive [...]')
+        t, V = run_simulation(shotnoise_input, cables, params, tstop=args.tstop, dt=args.dt, seed=args.seed, recordings2='cable_end', recordings='soma', synchronous_stim=synchronous_stim)
+        print('Running simulation -- NMDA [...]')
+        t, Vnmda = run_simulation(shotnoise_input, cables, params, tstop=args.tstop, dt=args.dt, seed=args.seed, recordings2='cable_end', recordings='soma', nmda_on=True, synchronous_stim=synchronous_stim)
+        print('Running simulation -- Ca2+ + NMDA [...]')
+        t, Vhh = run_simulation(shotnoise_input, cables, params, tstop=args.tstop, dt=args.dt, seed=args.seed, recordings2='cable_end', recordings='soma', nmda_on=True, Ca_spikes_on=False, HH_on=True, synchronous_stim=synchronous_stim)
+        print('Running simulation -- Ca2+ + NMDA [...]')
+        t, Vall = run_simulation(shotnoise_input, cables, params, tstop=args.tstop, dt=args.dt, seed=args.seed, recordings2='cable_end', recordings='soma', nmda_on=True, Ca_spikes_on=True, HH_on=True, synchronous_stim=synchronous_stim)
+        np.savez(args.filename, args=args, t=t, V=V, Vnmda=Vnmda, Vhh=Vhh, Vall=Vall, plot=get_plotting_instructions())

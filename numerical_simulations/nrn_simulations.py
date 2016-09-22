@@ -46,7 +46,7 @@ def set_tree_params(EqCylinder, dend, soma, Params):
     return xtot, cables
 
 def Constructing_the_ball_and_tree(params, cables,
-                                   spiking_mech=False, nmda_on=False):
+                                   spiking_mech=False, nmda_on=False, Ca_spikes_on=False, HH_on=False):
 
     # list of excitatory stuff
     exc_synapses, exc_netcons, exc_spike_trains, exc_Ks  = [], [], [], []
@@ -83,6 +83,26 @@ def Constructing_the_ball_and_tree(params, cables,
                 section.insert('pas')
                 section.g_pas = params['g_pas']*1e-4
                 section.e_pas = params['El']*1e3
+                if comp==0 and HH_on:
+	            section.insert('hh3Larkum2009')
+                if (comp==1 or comp==2) and Ca_spikes_on:
+                    section.insert('scaLarkum2009')
+                    section.gbar_scaLarkum2009=10
+	            # section.insert('kdrLarkum2009')
+                    # section.insert('kcaLarkum2009')
+                    # section.gbar_kcaLarkum2009=30
+                    section.insert('cad2Larkum2009')
+	            section.insert('it2Larkum2009')
+                    # section.gcabar_it2Larkum2009=0.000
+	            # section.insert('hh3Larkum2009')
+                    # section.gkbar_hh3Larkum2009=0
+                    # section.gkbar2_hh3Larkum2009=0.0001
+                    # section.gnabar_hh3Larkum2009=0.01
+	            # section.insert('kapLarkum2009')
+                    # section.gkabar_kapLarkum2009=0.003
+	            # section.insert('kmLarkum2009')
+                    # section.gbar_kmLarkum2009=0
+                    # section.gbar_kdrLarkum2009=0
 
                 if level>=1: # if not soma
                     # in NEURON : connect daughter, mother branch
@@ -187,7 +207,8 @@ def get_v(cables):
 
 def set_presynaptic_spikes_manually(shotnoise_input, cables, params,\
                                     exc_spike_trains, exc_Ks,
-                                    inh_spike_trains, inh_Ks, tstop, seed=2):
+                                    inh_spike_trains, inh_Ks, tstop, seed=2,\
+                                    synchronous_stim={'location':[4,14], 'spikes':[]}):
 
     synchrony = shotnoise_input['synchrony']
     
@@ -204,23 +225,30 @@ def set_presynaptic_spikes_manually(shotnoise_input, cables, params,\
             ## excitation
             build_poisson_spike_train(exc_spike_trains[i][j], fe, exc_Ks[i][j], units='ms',\
                                       tstop=tstop, seed=i*(seed**2+j), synchrony=synchrony)
+            if [i,j]==synchronous_stim['location']:
+                for tspk in synchronous_stim['spikes']:
+                    exc_spike_trains[i][j].append(tspk)
+                exc_spike_trains[i][j] = np.sort(exc_spike_trains[i][j])
+                
             ## inhibition
             build_poisson_spike_train(inh_spike_trains[i][j], fi, inh_Ks[i][j], units='ms',\
                                       tstop=tstop, seed=seed+i*j**2, synchrony=synchrony)
 
 def run_simulation(shotnoise_input, cables, params, tstop=2000.,\
-                   dt=0.025, seed=3, recordings='full', recordings2='', nmda_on=False):
+                   dt=0.025, seed=3, recordings='full', recordings2='', nmda_on=False, Ca_spikes_on=False, HH_on=False,\
+                   synchronous_stim={'location':[4,14], 'spikes':[]}):
     """
     recordings is a set of tuple of the form : [branch_generation, branch_number, xseg]
     """
     exc_synapses, exc_netcons, exc_Ks, exc_spike_trains,\
        inh_synapses, inh_netcons, inh_Ks, inh_spike_trains,\
-       area_lists, spkout = Constructing_the_ball_and_tree(params, cables, nmda_on=nmda_on)
+       area_lists, spkout = Constructing_the_ball_and_tree(params, cables, nmda_on=nmda_on, Ca_spikes_on=Ca_spikes_on, HH_on=HH_on)
 
     # then synapses manually
     set_presynaptic_spikes_manually(shotnoise_input, cables, params,\
                                     exc_spike_trains, exc_Ks,
-                                    inh_spike_trains, inh_Ks, tstop, seed=seed)
+                                    inh_spike_trains, inh_Ks, tstop, seed=seed,\
+                                    synchronous_stim=synchronous_stim)
     
     ## QUEUING OF PRESYNAPTIC EVENTS
     init_spike_train = queue_presynaptic_events_in_NEURON([exc_netcons, exc_spike_trains, inh_netcons, inh_spike_trains])
