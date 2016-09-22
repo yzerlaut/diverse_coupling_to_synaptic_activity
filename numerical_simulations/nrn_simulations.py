@@ -46,7 +46,7 @@ def set_tree_params(EqCylinder, dend, soma, Params):
     return xtot, cables
 
 def Constructing_the_ball_and_tree(params, cables,
-                                   spiking_mech=False, nmda_spikes=False):
+                                   spiking_mech=False, nmda_on=False):
 
     # list of excitatory stuff
     exc_synapses, exc_netcons, exc_spike_trains, exc_Ks  = [], [], [], []
@@ -104,9 +104,10 @@ def Constructing_the_ball_and_tree(params, cables,
                         Fq = 1.
 
                     # in each segment, we insert an excitatory synapse
-                    if nmda_spikes:
-                        syn = my_glutamate(seg.x, sec=section)
+                    if nmda_on:
+                        syn = nrn.my_glutamate(seg.x, sec=section)
                         syn.tau_ampa, syn.e = Ftau*params['Te']*1e3, params['Ee']*1e3
+                        syn.gmax = 1e9*params['Qe'] # nS in my_glutamate.mod
                     else:
                         syn = nrn.ExpSyn(seg.x, sec=section)
                         syn.tau, syn.e = Ftau*params['Te']*1e3, params['Ee']*1e3
@@ -208,13 +209,13 @@ def set_presynaptic_spikes_manually(shotnoise_input, cables, params,\
                                       tstop=tstop, seed=seed+i*j**2, synchrony=synchrony)
 
 def run_simulation(shotnoise_input, cables, params, tstop=2000.,\
-                   dt=0.025, seed=3, recordings='full'):
+                   dt=0.025, seed=3, recordings='full', recordings2='', nmda_on=False):
     """
     recordings is a set of tuple of the form : [branch_generation, branch_number, xseg]
     """
     exc_synapses, exc_netcons, exc_Ks, exc_spike_trains,\
        inh_synapses, inh_netcons, inh_Ks, inh_spike_trains,\
-       area_lists, spkout = Constructing_the_ball_and_tree(params, cables)
+       area_lists, spkout = Constructing_the_ball_and_tree(params, cables, nmda_on=nmda_on)
 
     # then synapses manually
     set_presynaptic_spikes_manually(shotnoise_input, cables, params,\
@@ -234,6 +235,9 @@ def run_simulation(shotnoise_input, cables, params, tstop=2000.,\
     if recordings is 'soma':
         V.append(nrn.Vector())
         exec('V[0].record(nrn.cable_0_0(0)._ref_v)')
+    if recordings2 is 'cable_end':
+        V.append(nrn.Vector())
+        exec('V[1].record(nrn.cable_5_15(1)._ref_v)')
 
     ## --- launching the simulation
     nrn.finitialize(params['El']*1e3)

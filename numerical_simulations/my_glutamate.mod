@@ -5,7 +5,7 @@ COMMENT
 //		2007			//
 //****************************//
 
-slightly modified by Y. Zerlaut (yann.zerlaut @gmail.com)
+slightly modified by Y. Zerlaut (yann.zerlaut@gmail.com)
 to include a net_receive and be stimulated by a shotnoise, 2016
 ENDCOMMENT
 
@@ -16,9 +16,9 @@ NEURON {
 	USEION ca READ cai WRITE ica VALENCE 2
 	NONSPECIFIC_CURRENT inmda,iampa
 	RANGE e ,gmax,ntar,local_v,inmda,iampa,gh
-	RANGE del,Tspike,Nspike
-	RANGE gnmda,gampa
-	GLOBAL n, gama,tau1,tau2,tau_ampa,tauh,cah
+	RANGE del,Tspike, Nspike, nmda_on
+	RANGE gnmda, gampa,tau_ampa
+	GLOBAL n, gama,tau1,tau2,tauh,cah
 }
 
 UNITS {
@@ -44,7 +44,7 @@ PARAMETER {
 	v		(mV)
 	del=30	(ms)
 	Tspike=10	(ms)
-	Nspike=1
+	nmda_on=1
 	cah   = 10	(/ms)		: max act rate  
 	tauh   = 1000	(/ms)		: max deact rate 
 }
@@ -79,9 +79,9 @@ BREAKPOINT {
     
 	SOLVE state METHOD cnexp
 
-	gnmda=(A-B)/(1+n*exp(-gama*v) )
+	gnmda=ntar*(A-B)/(1+n*exp(-gama*v) )
 	gh=(exp(-h))
-	inmda =(1e-3)* gnmda * gh * (v-e)
+	inmda =(1e-3)* gnmda * gh * (v-e) * nmda_on
 	ica=inmda/10
 	iampa= (1e-3)*gampa* (v- e)
 	local_v=v
@@ -95,7 +95,9 @@ DERIVATIVE state {
 }
 
 NET_RECEIVE(weight (uS)) {
-	gampa = gampa + weight
+	gampa = gampa + gmax/ntar
+	A = A + gmax
+	B = B + gmax
 }
 
 
