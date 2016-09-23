@@ -1,17 +1,64 @@
 #+TITLE:  "Heterogeneous Firing Responses Predict Diverse Couplings to Presynaptic Activity in mice Layer V Pyramidal Neurons" \\ _\textsc{ Response to reviewers}_
 #+AUTHOR: Y. Zerlaut & A. Destexhe
 
-* Active mechanisms in dendrites
+* Impact of active dendritic mechanisms
 
-Common to two reviewers, so we adressed it in details
+\bfseries 
 
-We included dendritic non-linearities as provided by the model of
-[[citetext:Larkum2009]] ([[https://senselab.med.yale.edu/modeldb/showModel.cshtml?model=124043][found on ModelDB]]), see [[fig:0a][Figure 1]], and studied
-their impact in the fluctuation-driven regime, see [[fig:0b][Figure 2]].
+Two reviewers raised the concern that active dendritic mechanisms
+could qualitatively affect the claim of our study. We address their
+concern in the following.
+
+How could active dendritic mechanisms "qualitatively affect the claim
+of our study" ? Our framework for single cell computation consists in
+(i) evaluating analytically the somatic subthreshold membrane
+potential fluctuations at the soma as a function of the presynaptic
+quantities and (ii) convert those fluctuations into a spiking
+probability thanks to a /firing response/ function determined /in
+vitro/ in individual neuron thanks to somatic recordings.
+
+Our framework thus needs to be tested against two phenomena: (I)
+whether active dendritic mechanisms qualitatively affect the
+relationship between presynaptic quantities and somatic membrane
+potential fluctuations and (II) whether dendritic non-linearities
+introduce a coupling between presynaptic activity and spike emission
+that render the decomposition into the successive steps i & ii
+misleading. Those phenomena will naturally appear to some extent and
+will produce quantitative deviations with respect to our predictions
+(that neglects dendritic non-linearities), the purpose of this study
+is only to check for "qualitative deviations".
+
+To investigate the impact of those phenomena, we included active
+dendritic mechanisms (as provided by the model of [[citetext:Larkum2009]],
+available on ModelDB, [[https://senselab.med.yale.edu/modeldb/showModel.cshtml?model=124043][link]]) into our framework for cellular
+computation in the /fluctuation-driven/ regime. We included two of the
+principal ingredients of active dendritic mechanisms into our model:
+(i) NMDA currents (coupled to the AMPA synapses) and (ii) Ca^{2+}
+spikes. We performed a numerical study on the /mean/ morphological
+model of the main text (Table 1 and Figure 2,3), we spread those
+mechanisms according to the picture provided by the study of
+[[citetext:Larkum2009]], all glutamatergic synapses were replaced by the
+AMPA+NMDA synapses and Ca^{2+} currents were included in the last two
+branches to provide a /relay/ for far dendritic events (depicted in
+the mean model drawing of [[fig:0a][Figure 1]]). Phenomenon (I) will be tested
+against the inclusion of the NMDA mechanism and phenomenon (II) will
+be tested against the inclusion of both NMDA and Ca^{2+} spikes.
 
 #+NAME: fig:0a
 #+CAPTION: *Including dendritic non-linearities within our framework for single cell computation (numerical study).* *(A)* Response Baseline activity.
 [[./figs/traces.pdf]]
+
+In [[fig:0a][Figure 1]], we represent the output of the numerical simulations of
+the resulting model. We show on [[fig:0a][Figure 1]]A,C-F the response to the five
+protocols discussed within the manuscript. Additionally, on [[fig:0a][Figure 1]]B,
+we added another type stimulus 
+
+[[cite:Stuart2015]]
+
+show the their impact in the
+fluctuation-driven regime, see [[fig:0b][Figure 2]].
+
+\normalfont
 
 #+NAME: fig:0b
 #+CAPTION: *Effect of dendritic non-linearities in the subthreshold fluctuations and firing response in the fluctuation-dirven regime.* *(A)* 
@@ -345,6 +392,22 @@ Methods section:
 
 #+BEGIN_LATEX
 \begin{filecontents}{biblio.bib}
+
+@article{Stuart2015,
+author = {Stuart, Greg J and Spruston, Nelson},
+doi = {10.1038/nn.4157},
+file = {:Users/yzerlaut/Documents/Mendeley Desktop/Stuart, Spruston - 2015 - Dendritic integration 60 years of progress.pdf:pdf},
+issn = {1097-6256},
+journal = {Nature Neuroscience},
+mendeley-groups = {Neuroscience},
+number = {12},
+pages = {1713--1721},
+pmid = {26605882},
+title = {{Dendritic integration: 60 years of progress}},
+url = {http://www.nature.com/doifinder/10.1038/nn.4157},
+volume = {18},
+year = {2015}
+}
 
 @article{Larkum2009,
 author = {Larkum, M E and Nevian, T and Sandler, M and Polsky, A and Schiller, J},
