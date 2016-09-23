@@ -12,6 +12,7 @@ from theory.analytical_calculus import *
 from scipy.optimize import curve_fit
 from numerical_simulations.nrn_simulations import *
 nrn.nrn_load_dll('../numerical_simulations/x86_64/.libs/libnrnmech.so')
+nrn.nrn_load_dll('../numerical_simulations/nrnmech.dll')
 
 # we calculate the parameters to plug into cable theory
 
@@ -21,7 +22,6 @@ params = {
     'Qe' : 1.e-9 , 'Te' : 5.e-3, 'Ee': 0e-3,\
     'Qi' : 1.5e-9 , 'Ti' : 5.e-3, 'Ei': -80e-3,\
     'seed' : 0}
-
     
 FACTOR_FOR_DENSITY = 1. # because Ball & Sticks sucks !!!
 
