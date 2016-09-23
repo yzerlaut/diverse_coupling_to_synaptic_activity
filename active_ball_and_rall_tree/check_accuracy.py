@@ -92,7 +92,7 @@ for EXP in SET_OF_EXPS:
             ax.plot(-0.+0*y, 1.1*y, 'wD', lw=0, alpha=0.)
             ax.plot(-0.+0*y, .9*y, 'wD', lw=0, alpha=0.)
 YTICKS = [[-70,-60,-50], [3,5,7], [12, 20, 28], [0,10,20]]
-YLIM = [[-75,-40], [1.9,8.], [9,31], [-2,30]]
+YLIM = [[-75,-30], [1.9,10.], [9,45], [-2,30]]
 for EXP, ii in zip(SET_OF_EXPS, list(range(len(SET_OF_EXPS)))):
     for ax, y1, x, yticks, ylim, col in zip(AX[:,ii],\
                                       [EXP['muV_exp_ctrl'], EXP['sV_exp_ctrl'], EXP['Tv_exp_ctrl'], EXP['Fout_hh']],\
@@ -148,6 +148,7 @@ if __name__=='__main__':
         np.savez(args.filename, **data)
     else:
         from demo import *
+        nrn.nrn_load_dll('../numerical_simulations/x86_64/.libs/libnrnmech.so')
         soma, stick, params = np.load('../input_impedance_calibration/mean_model.npy')
         stick['NSEG'] = args.discret_sim
     
