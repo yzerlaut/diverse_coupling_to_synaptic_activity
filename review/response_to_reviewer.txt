@@ -3,8 +3,6 @@
 
 * Impact of active dendritic mechanisms
 
-\bfseries 
-
 Two reviewers raised the concern that active dendritic mechanisms
 could qualitatively affect the claim of our study. We address their
 concern in the following.
@@ -42,10 +40,11 @@ AMPA+NMDA synapses and Ca^{2+} currents were included in the last two
 branches to provide a /relay/ for far dendritic events (depicted in
 the mean model drawing of [[fig:0a][Figure 1]]). Phenomenon (I) will be tested
 against the inclusion of the NMDA mechanism and phenomenon (II) will
-be tested against the inclusion of both NMDA and Ca^{2+} spikes.
+be tested against the inclusion of both NMDA and Ca^{2+} spikes. Those
+two situations will be compared to the picture described in the main text.
 
 #+NAME: fig:0a
-#+CAPTION: *Including dendritic non-linearities within our framework for single cell computation (numerical study).* *(A)* Response Baseline activity.
+#+CAPTION: *Including dendritic non-linearities (numerically) within our framework for single cell computation. On top of each panel, we present the recording of the membrane potential in the far distal dendrite (depicted with the upper electrode on the drawing) in the Control and Control+NMDA case. On the bottom, we present the membrane potential recorded at the soma (depicted with the lower electrode on the drawing) in four cases, the Control, the Control+NMDA case, the Control case with a HH model inserted in the soma and the Control+NMDA+Ca^{2+}spikes+HH(soma)*. *(A)* Response to baseline activity. \(\nu_e^p=\nu_e^d\)=0.2Hz, \(\nu_i^p=\nu_i^d\)=1.2Hz and s=0.05. *(B)* Response to baseline activity with the synchronous activation of 20 synapses every 500ms (marked by a triangle), note the impact of the NMDA mechanism under this stimulation type. *(C)* Response to an increase of proximal activity with respect to the baseline level (\(\nu_e^p\)=1.6Hz, \(\nu_i^p\)=10Hz). *(D)* Response to an increase in distally targetting presynaptic activity. *(E)* Response to an increase in unbalanced activity. *(F)* Response to an increase in 
 [[./figs/traces.pdf]]
 
 In [[fig:0a][Figure 1]], we represent the output of the numerical simulations of
@@ -58,18 +57,16 @@ we added another type stimulus
 show the their impact in the
 fluctuation-driven regime, see [[fig:0b][Figure 2]].
 
-\normalfont
-
 #+NAME: fig:0b
 #+CAPTION: *Effect of dendritic non-linearities in the subthreshold fluctuations and firing response in the fluctuation-dirven regime.* *(A)* 
 [[./figs/active_sum_up.pdf]]
 
 * Reviewer #1
 
-Unfortunately, it is very difficult to grasp the essence and even more
-the details of the study.
+\it Unfortunately, it is very difficult to grasp the essence and even more
+the details of the study. \rm
 
-1) Main statement; presentation. It starts with the title that claims
+1) \it Main statement; presentation. It starts with the title that claims
    that claims that “Heterogeneous Firing Responses Predict Diverse
    Couplings to Presynaptic Activity in mice Layer V Pyramidal
    Neurons”. The title refers to the phenomenology in Figure 5 showing
@@ -78,9 +75,9 @@ the details of the study.
    that figure is label. But not clear how strong the increase is at
    the corresponding position, nor what of the presynaptic quantity
    is. For us (the writer and two other group members) it was neither
-   possible to figure it out from the caption nor the text.
+   possible to figure it out from the caption nor the text. \rm
 
-   \bf We agree that this way to represent data might not be
+    We agree that this way to represent data might not be
    straightforward. We improved the legend of Figure 4 to facilitate
    the comprehension. In particular, we have added an example to
    explicit the presence of "comodulations" of variables and hence the
@@ -93,9 +90,9 @@ the details of the study.
    reads:
 
    _The abscissa “increasing synaptic quantity” corresponds to the comodulations of the model variables shown in Figure 4A (same color code). As an example, the response to a “proximal activity increase” (blue curve) corresponds to a linear increase of and while keeping , and to their baseline level. See Figure 4A for the comodulations of the other types of increasing activity._
-   \rm
 
-2) Main statement unclear. Unfortunately, it does not become clear
+
+2) \it Main statement unclear. Unfortunately, it does not become clear
    what one has to understand of the “Diverse Couplings to the
    Presynaptic Activity” as expressed in the title. In the abstract it
    is stated: “We indeed found such a heterogeneous response, but
@@ -108,19 +105,19 @@ the details of the study.
    response in some cells or suppress it in some other cells whatever
    their individual excitability.” We conclude that there is still
    more than the individual excitability that determines the firing
-   behavior, but this seems to contradict the previous statement.
+   behavior, but this seems to contradict the previous statement. \rm
 
-   \bf We agree with the reviewer that the formulation "only [...] except
+   We agree with the reviewer that the formulation "only [...] except
    [...]" might be misleading, we adapted the abstract to remove this
    source of confusion. Now it reads: "but trivially, the _main_
    significant contribution to the various firing response was the
-   different levels of cellular excitability [...]". \rm
+   different levels of cellular excitability [...]".
 
 #+NAME: fig:1
 #+CAPTION: *Changing the ratio of the proximal/distal separation.* *(A)* Configuration of the main text, the proximal part occupies the first 87.5% of the dendritic morphology. *(B)* Now the proximal part occupies only the first 12.5% of the dendritic morphology. This importantly reduces the number of available synapses (the morphology has only one branch in the first 12.5% part). Provided this loss of synapses is compensated by an increase of activity, there is _no qualitative change between the 12.5% and the 87.5% setting for the proximal activity: non-monotonic \(\sigma_V\) variations, strong decrease in \(\tau_V / \tau_m^0 \)_. On the other hand, this change would have important qualitative consequences for the "distal activity" regime, if the last 87.5% of the morphology are "distal", many synapses are electrotonically close (what is rather irrealistic for distal synapses), they will thus stronly interact through conductance shunting and thus produce fluctuations close to the "proximal activity" setting of the main text.
 [[./figs/varying_prox_dist.png]]
 
-3) Main statement; missing analysis. It is suggested that the
+3) \it Main statement; missing analysis. It is suggested that the
    heterogeneity would arise from sodium channels, but the paper is
    missing a joint presentation of experimental and modeling data
    showing some fit. Neither could we find a mathematical argument why
@@ -135,9 +132,9 @@ the details of the study.
    channels and sodium inactivation will control the response of
    individual neurons to proximally targeting presynaptic activity.”
    Again, we could not find a state-of-the-art explanation why this
-   statement is true.
+   statement is true. \rm
 
-   \bf This point is precisely the focus of our previous communication
+    This point is precisely the focus of our previous communication
    [[cite:Zerlaut2016]]. Unfortunately there is, to the best of our knowledge, no
    closed-form solution that could give the firing rate response as a
    response to fluctuating input in a model including sodium
@@ -147,9 +144,9 @@ the details of the study.
    we have added the following statement (line 316):
    _In our previous communication, theoretical modeling suggested that a high sensitivity to the speed of the fluctuations was enable by a high level of sodium inactivation (as only fast fluctuations allow to deinactivate sodium channels) and a high density of sodium channels (as it  produces a sharp spike initiation that enables to extract fast fluctuating input)._
    For further details, we believe the reader should refer to our
-   previous publication. \rm
+   previous publication. 
 
-4) No dendritic nonlinearities. One main characteristics of L5
+4) \it No dendritic nonlinearities. One main characteristics of L5
    pyramidal neurons is the calcium spike in the apical tree, and more
    generally the various types of dendritic spikes. Non of them is
    considered in the model, and one conjectures that the various
@@ -157,31 +154,51 @@ the details of the study.
    various dendritic nonlinearities. Describing the firing properties
    of pyramidal neurons as a function of proximal and distal activity
    should take account of these dendritic nonlinearities. Otherwise,
-   in fact, the statements cannot be compelling.
+   in fact, the statements cannot be compelling. \rm
 
-   \bf See Part A \rm
+   We adressed this concern in details in Part A.
 
-5) Data extraction. It is not clear how the 4 cells have been selected
+5) \it Data extraction. It is not clear how the 4 cells have been selected
    out of the 27 cells. The 4 cells represent 4 cell types. How are
    these cell types specified? The paper does not give an answer on
-   that.
-   
-   \bf The 4 cells represent 4 different cells recorded in our
-   previous study. (We chose the same 4 cells, as they ). \rm
+   that. \rm
 
-6) Figure 2 has two panels A & B, but the caption describes panels
-   A–E.
-   \bf We apologize for this \rm
+   The 4 cells represent 4 different cells out of the n=30 cells
+   recorded in our previous study [[cite:Zerlaut2016]]. The criteria to
+   choose those 4 cells was that they should somehow represent
+   different behaviors while still being representative. See in Figure
+   6B in [[citetext:Zerlaut2016]] how those 4 cells cover relatively well
+   the domain of measured characteristics for the firing response,
+   this is also the case in the present study, where they cover
+   relatively well the domain of the predicted coupling to the various
+   types of activities.
 
-7) Apart from that, the fit of the numerical simulations and the
+6) \it Figure 2 has two panels A & B, but the caption describes panels
+   A–E. \rm 
+
+   Indeed, we apologize for this problem in the manuscript
+   preparation. Figure 2 and Figure 3 have been mixed up...
+
+7) \it Apart from that, the fit of the numerical simulations and the
    analytical estimate in B for sigma_V is biased. No argument is
-   given why this bias is there.
+   given why this bias is there. \rm
 
-8) The central claim is that distal and proximal inputs differently
+   From line 165 to line 182, we discuss the validity of our
+   analytical treatment. We explicit the two hypothesis that underlie
+   our estimation and detail their expected effect. We conclude by
+   discussing the bias for \(\sigma)V\) from line 180 to 182: "Some
+   discrepancies between the approximation and the simulations
+   appeared, in particular one can see a 1mV shift in the standard
+   deviation of the fluctuation (meaning that single events are
+   underestimated in the analytical treatment, so that hypothesis 2 is
+   the most problematic one)." (where hypothesis 2 has been explicited
+   before).
+
+8) \it The central claim is that distal and proximal inputs differently
    affects the output firing rates. Beside the fact that this
-   statement by itself is trivial [...]
+   statement by itself is trivial [...] \rm
 
-   \bf We also show that "distal and proximal inputs differently
+   We also show that "distal and proximal inputs differently
    affects the output firing rates", but this is not our main
    statement and we agree with the reviewer that this could seen as
    "trivial". Our main statement claims that those stimulations affect
@@ -189,14 +206,14 @@ the details of the study.
    proximal stimulation: increasing their response for some neurons,
    decreasing it for some other neurons). We believe that this
    diversity of responses across neurons (to the same input) is not a
-   so trivial phenomena.\rm
+   so trivial phenomena.
 
-9) [...] we wondered why the closer 87.5% of the dendritic branch is
+9) \it [...] we wondered why the closer 87.5% of the dendritic branch is
    declared as “proximal” and the furthest 12.5% as the “distal”
    part. Is the result dependent on this choice, or could one have
-   also chosen the closer 12.5% as “proximal” only?
+   also chosen the closer 12.5% as “proximal” only? \rm
 
-   \bf Indeed, the _arbitrary ratio_ between proximal and distal input
+   Indeed, the _arbitrary ratio_ between proximal and distal input
    might need a more detailed discussion. Following the reviewer's
    suggestion, we reproduced the analysis with the convention
    "proximal as the closest 12.5% only". We show on [[fig:1][Figure 3]] that the
@@ -278,7 +295,7 @@ Where is excitability < V_thre^eff >_D defined?
 
 * Reviewer #3
 
-The key claim of this work is that recently identified L5 PCs firing
+\it The key claim of this work is that recently identified L5 PCs firing
 rate properties indicate how these cells couple to presynaptic
 activity patterns (proximal, distal,...). The claim is based on i)
 recently identified firing response functions (previous work of the
@@ -292,7 +309,7 @@ The topic is of importance and the theoretical part is novel, very
 appealing in itself and rigorous, but inadequate to support the key
 claim of the paper (see paper title).
 
-This is because ...
+This is because ... \rm
 
 ** CONS
 
@@ -308,7 +325,6 @@ This is because ...
    properties of the cells in the fluctuation driven regime. In any
    case, see the first point in additional work below.
 
-
 - *B*: (part iii) Even the description of the passive dendritic
   integration properties of the cell seems to be questionable (maybe
   because of the constraints to symmetrical trees). That this doesn't
@@ -319,13 +335,11 @@ This is because ...
   dendrites etc. are the worst case scenario for the symmetry
   constraints for the tree.
   
-
 ** PROS
 
 The theoretical work is still significant for other cell types that
 work in a more linear regime, e.g. L2/3 PCs, and have morphologies
 that match the theoretical constraints..
-
 
 ** Additional work required:
 
