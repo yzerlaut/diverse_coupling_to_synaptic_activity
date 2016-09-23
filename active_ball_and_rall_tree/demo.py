@@ -54,7 +54,10 @@ def analyze_simulation(t, V, Vnmda, Vhh, Vall):
         Tv_dend.append(np.trapz(v_acf, t_shift))
     # spikes
     vhh, vall = np.array(Vhh[0]), np.array(Vall[0])
+    print(t[(vhh[1:]>10) & (vhh[:-1]<10)])
+    print(len(t[(vhh[1:]>10) & (vhh[:-1]<10)]))
     Fhh = len(t[(vhh[1:]>10) & (vhh[:-1]<10)])/t[-1]
+    print(1e3*Fhh)
     Fall = len(t[(vall[1:]>10) & (vall[:-1]<10)])/t[-1]
     # return muV_soma, sV_soma, Tv_soma, muV_dend, sV_dend, Tv_dend, Fhh, Fall
     return muV_soma, sV_soma, Tv_soma, Fhh, Fall
@@ -83,8 +86,8 @@ AX[0].plot(data['t'], data['Vnmda'][1], 'r-', label='NMDA')
 AX[0].legend(prop={'size':'xx-small'})
 AX[1].plot(data['t'], data['V'][0], 'k-', label='Control (passive + AMPA + GABA)')
 AX[1].plot(data['t'], data['Vnmda'][0], 'r-', label='Control + NMDA')
-AX[1].plot(data['t'], data['Vhh'][0], 'b-', label='Control + HH (soma)')
-AX[1].plot(data['t'], data['Vall'][0], 'g--', alpha=.3, lw=3, label='Control + NMDA + HH (soma) + Ca spikes')
+AX[1].plot(data['t'], 1e3*data['Vhh'][0], 'b-', label='Control + HH (soma)')
+AX[1].plot(data['t'], 1e3*data['Vall'][0], 'g--', alpha=.3, lw=3, label='Control + NMDA + HH (soma) + Ca spikes')
 AX[1].legend(prop={'size':'xx-small'})
 if args.with_synch_stim:
     tt=args.DT_synch_stim
