@@ -3,6 +3,20 @@
 
 * Active mechanisms in dendrites
 
+Common to two reviewers, so we adressed it in details
+
+We included dendritic non-linearities as provided by the model of
+[[citetext:Larkum2009]] ([[https://senselab.med.yale.edu/modeldb/showModel.cshtml?model=124043][found on ModelDB]]), see [[fig:0a][Figure 1]], and studied
+their impact in the fluctuation-driven regime, see [[fig:0b][Figure 2]].
+
+#+NAME: fig:0a
+#+CAPTION: *Including dendritic non-linearities within our framework for single cell computation (numerical study).* *(A)* Response Baseline activity.
+[[./figs/traces.pdf]]
+
+#+NAME: fig:0b
+#+CAPTION: *Effect of dendritic non-linearities in the subthreshold fluctuations and firing response in the fluctuation-dirven regime.* *(A)* 
+[[./figs/active_sum_up.pdf]]
+
 * Reviewer #1
 
 Unfortunately, it is very difficult to grasp the essence and even more
@@ -138,7 +152,7 @@ the details of the study.
    \bf Indeed, the _arbitrary ratio_ between proximal and distal input
    might need a more detailed discussion. Following the reviewer's
    suggestion, we reproduced the analysis with the convention
-   "proximal as the closest 12.5% only". We show on [[fig:1][Figure 1]] that the
+   "proximal as the closest 12.5% only". We show on [[fig:1][Figure 3]] that the
    results are not affected by this change, the qualitative properties
    of the fluctuations remain identical: strong decrease of the
    fluctuations time constant and non-monotonic shape of the standard
@@ -157,7 +171,7 @@ the details of the study.
    \(f_{prox}\)=87.5% and \(f_{prox}\)=12.5% (they all contain the
    very proximal synapses), and keeping \(f_{prox}\)=87.5% avoid to
    introduce an additional rescaling of synaptic frequences because of
-   the reduced number of synapses (the procedure shown in [[fig:1][Figure 1]]).
+   the reduced number of synapses (the procedure shown in [[fig:1][Figure 3]]).
 
 * Reviewer #2
 
@@ -331,6 +345,20 @@ Methods section:
 
 #+BEGIN_LATEX
 \begin{filecontents}{biblio.bib}
+
+@article{Larkum2009,
+author = {Larkum, M E and Nevian, T and Sandler, M and Polsky, A and Schiller, J},
+doi = {10.1126/science.1171958},
+issn = {1095-9203 (Electronic) 0036-8075 (Linking)},
+journal = {Science},
+number = {5941},
+pages = {756--760},
+title = {{Synaptic integration in tuft dendrites of layer 5 pyramidal neurons: a new unifying principle}},
+type = {Journal Article},
+url = {http://www.ncbi.nlm.nih.gov/pubmed/19661433 http://science.sciencemag.org/content/sci/325/5941/756.full.pdf},
+volume = {325},
+year = {2009}
+}
 
 @article{Hedrick2013,
 author = {Hedrick, K R and Cox, S J},
