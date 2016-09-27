@@ -4,62 +4,161 @@
 * Impact of active dendritic mechanisms
 
 Two reviewers raised the concern that active dendritic mechanisms
-could qualitatively affect the claim of our study. We address their
-concern in the following.
+(reviewed in [[citetext:Stuart2015]]) could qualitatively affect the claim
+of our study. We address their concern in the following.
 
 How could active dendritic mechanisms "qualitatively affect the claim
 of our study" ? Our framework for single cell computation consists in
-(i) evaluating analytically the somatic subthreshold membrane
+(*i*) evaluating analytically the somatic subthreshold membrane
 potential fluctuations at the soma as a function of the presynaptic
-quantities and (ii) convert those fluctuations into a spiking
+quantities and (*ii*) convert those fluctuations into a spiking
 probability thanks to a /firing response/ function determined /in
 vitro/ in individual neuron thanks to somatic recordings.
 
-Our framework thus needs to be tested against two phenomena: (I)
+Our framework thus needs to be tested against two phenomena: (*I*)
 whether active dendritic mechanisms qualitatively affect the
 relationship between presynaptic quantities and somatic membrane
-potential fluctuations and (II) whether dendritic non-linearities
-introduce a coupling between presynaptic activity and spike emission
-that render the decomposition into the successive steps i & ii
-misleading. Those phenomena will naturally appear to some extent and
-will produce quantitative deviations with respect to our predictions
-(that neglects dendritic non-linearities), the purpose of this study
-is only to check for "qualitative deviations".
+potential fluctuations, i.e. checking the validity of step *i*, and
+(*II*) whether dendritic non-linearities introduce a coupling between
+presynaptic activity and spike emission that render the decomposition
+into the successive steps *i* & *ii* misleading. Those phenomena will
+naturally appear to some extent and will produce quantitative
+deviations with respect to our predictions (that do not include
+dendritic non-linearities, e.g. trivially, all cells should be more
+excitable). As the main message of the paper does not rely on the
+absolute values of the input-output functions but on the rather on the
+relative behaviors from cell to cell that emerge from differences
+across individual firing response functions, the purpose of this study
+is only to investigate putative "qualitative deviations".
 
 To investigate the impact of those phenomena, we included active
 dendritic mechanisms (as provided by the model of [[citetext:Larkum2009]],
-available on ModelDB, [[https://senselab.med.yale.edu/modeldb/showModel.cshtml?model=124043][link]]) into our framework for cellular
-computation in the /fluctuation-driven/ regime. We included two of the
-principal ingredients of active dendritic mechanisms into our model:
-(i) NMDA currents (coupled to the AMPA synapses) and (ii) Ca^{2+}
-spikes. We performed a numerical study on the /mean/ morphological
-model of the main text (Table 1 and Figure 2,3), we spread those
-mechanisms according to the picture provided by the study of
-[[citetext:Larkum2009]], all glutamatergic synapses were replaced by the
-AMPA+NMDA synapses and Ca^{2+} currents were included in the last two
-branches to provide a /relay/ for far dendritic events (depicted in
-the mean model drawing of [[fig:0a][Figure 1]]). Phenomenon (I) will be tested
-against the inclusion of the NMDA mechanism and phenomenon (II) will
-be tested against the inclusion of both NMDA and Ca^{2+} spikes. Those
-two situations will be compared to the picture described in the main text.
+available on ModelDB on the following [[https://senselab.med.yale.edu/modeldb/showModel.cshtml?model=124043][link]]) into our framework for
+cellular computation in the /fluctuation-driven/ regime. We included
+two of the principal ingredients of non-linear dendritic mechanisms
+into our model: NMDA currents (coupled to the AMPA synapse) and
+Ca^{2+} currents. We performed a numerical study on the /mean/
+morphological model of the main text (Table 1 and Figure 2,3), we
+spread those mechanisms according to the picture provided by the study
+of [[citetext:Larkum2009]], all glutamatergic synapses were replaced by
+the AMPA+NMDA synapses and Ca^{2+} currents were included in the last
+two branches to provide a /relay/ for far dendritic events (depicted
+on the drawing of the mean model, see [[fig:0a][Figure 1]]). Phenomenon (*I*) will
+be tested against the inclusion of the NMDA mechanism, we will examine
+the properties of the membrane potential fluctuations at the soma,
+with and without this mechanism. Phenomenon (*II*) will be tested
+against the inclusion of both NMDA and Ca^{2+} currents: we will first
+include numerically a spike emission model at the soma (Hodgkin-Huxley
+like, Na^{+} and K^{+} currents) in the morphological model, then the
+model will be able to produce the full input-output function (from
+presynaptic quantities to spiking probability), we will then
+investigate how NMDA and Ca^{2+} currents impacts the dependency on
+the presynaptic variables for the full input-output function.
 
 #+NAME: fig:0a
-#+CAPTION: *Including dendritic non-linearities (numerically) within our framework for single cell computation. On top of each panel, we present the recording of the membrane potential in the far distal dendrite (depicted with the upper electrode on the drawing) in the Control and Control+NMDA case. On the bottom, we present the membrane potential recorded at the soma (depicted with the lower electrode on the drawing) in four cases, the Control, the Control+NMDA case, the Control case with a HH model inserted in the soma and the Control+NMDA+Ca^{2+}spikes+HH(soma)*. *(A)* Response to baseline activity. \(\nu_e^p=\nu_e^d\)=0.2Hz, \(\nu_i^p=\nu_i^d\)=1.2Hz and s=0.05. *(B)* Response to baseline activity with the synchronous activation of 20 synapses every 500ms (marked by a triangle), note the impact of the NMDA mechanism under this stimulation type. *(C)* Response to an increase of proximal activity with respect to the baseline level (\(\nu_e^p\)=1.6Hz, \(\nu_i^p\)=10Hz). *(D)* Response to an increase in distally targetting presynaptic activity. *(E)* Response to an increase in unbalanced activity. *(F)* Response to an increase in 
+#+CAPTION: *Including dendritic non-linearities (numerically) within our framework for single cell computation. On top of each panel, we present the recording of the membrane potential in the far distal dendrite (depicted with the upper electrode on the drawing) in the Control and Control+NMDA case. On the bottom, we present the membrane potential recorded at the soma (depicted with the lower electrode on the drawing) in four cases, the Control, the Control+NMDA case, the Control case with a HH model inserted in the soma and the Control+NMDA+Ca^{2+}spikes+HH(soma)*. *(A)* Response to baseline activity. \(\nu_e^p=\nu_e^d\)=0.2Hz, \(\nu_i^p=\nu_i^d\)=1.2Hz and s=0.05. *(B)* Response to baseline activity with the synchronous activation of 20 synapses every 500ms (marked by a triangle), note the impact of the NMDA mechanism under this stimulation type. *(C)* Response to an increase of proximal activity with respect to the baseline level (\(\nu_e^p\)=1.6Hz, \(\nu_i^p\)=10Hz). *(D)* Response to an increase in distally targetting presynaptic activity (\(\nu_e^d\)=0.6Hz, \(\nu_i^d\)=3Hz). *(E)* Response to an increase in unbalanced activity (\(\nu_e^p\)=0.4Hz, \(\nu_i^p\)=2Hz,\(\nu_e^p\)=0.5Hz, \(\nu_i^p\)=1.7Hz). *(F)* Response to an increase in presynaptic synchrony (s=0.4).
 [[./figs/traces.pdf]]
-
-In [[fig:0a][Figure 1]], we represent the output of the numerical simulations of
-the resulting model. We show on [[fig:0a][Figure 1]]A,C-F the response to the five
-protocols discussed within the manuscript. Additionally, on [[fig:0a][Figure 1]]B,
-we added another type stimulus 
-
-[[cite:Stuart2015]]
-
-show the their impact in the
-fluctuation-driven regime, see [[fig:0b][Figure 2]].
 
 #+NAME: fig:0b
 #+CAPTION: *Effect of dendritic non-linearities in the subthreshold fluctuations and firing response in the fluctuation-dirven regime.* *(A)* 
 [[./figs/active_sum_up.pdf]]
+
+
+In [[fig:0a][Figure 1]], we represent the output of the numerical simulations of
+the resulting models. We represent the subthreshold responses on top
+plots, as well as the responses in presence of a spiking mechanism
+(the HH model at the soma) on bottom plots. We show on [[fig:0a][Figure 1]]A,C-F
+the response to the five protocols discussed within the
+manuscript. Additionally, on [[fig:0a][Figure 1]]B, we added another type of
+stimulus: the synchronous activation of 20 synapses on one distal
+dendrite. The response to this last stimulus clearly exhibits the
+presence of strong NMDA currents resembling those observed /in vivo/
+[[cite:Larkum2009]]. We observe that, for the /baseline activity/, for the
+/strong proximal activity/ and for the /strong distal activity/, there
+does not seems to be a strong impact of the NMDA mechanism on the
+subthreshold fluctuations (both at the soma and in the distal
+dendrites): it exerts a slight depolarization but does not
+qualitatively impacts the fluctuations. Neither the triggering of
+action potentials seems to be affected (spikes are identically evoked
+with and without NMDA and Ca^{2+} channels in presence of a somatic HH
+model), see [[fig:0a][Figure 1]]A,C,D. On the other hand, for a high level of
+unbalanced activity (where excitation globally overcomes inhibition),
+we observe a strong depolarization induced by the NMDA mechanism, we
+also observe that, consequently, the spiking probability seems
+significantly increased, see [[fig:0a][Figure 1]]E. Also for a high level of
+synchrony the fluctuations and spikes seems to be affected, we observe
+the presence of small NMDA spikes and additional spikes are elicited
+in the presence of NMDA and Ca^{2+} currents, see [[fig:0a][Figure 1]]E. 
+
+We then analyze with more details how those active mechanisms impacts
+the dependency on the variables of the model. We thus reproduced the
+analysis of Figure 3 in the main text. On [[fig:0b][Figure 2]]A, we report the
+properties of the fluctuations as a function of the presynaptic
+variables, with and without NMDA channels. We observe that NMDA
+channels exert an additional small depolarization (increased
+\(\mu_V\)), increase the standard deviation of the fluctuations
+because they increase the amplitude of depolarizing events (increased
+\(\sigma_V\)) and they slow down the fluctuations because they slowly
+increase the low frequency content of post-synaptic depolarization
+(increased \(\tau_V\)). We also observe, that, despite this small
+shift in all quantities, the qualitative trend of all curves remain
+identical. Only for high excitation a qualitative difference can be
+observe (see bottom left plot of [[fig:0b][Figure 2]]A): increasing excitation
+makes V_m fluctuations faster in the passive case whereas increasing
+excitation makes fluctuations slower in the presence of NMDA currents
+(decreasing vs increasing \(\tau_V\) curve respectively). We conclude
+that phenomenon *I* has a very weak impact provided excitation does
+not overcome inhibition and provided that synchrony remains in a
+relatively low range (the range of our study: $s \leq 0.4\)).
+
+On [[fig:0b][Figure 2]]B, we investigate how NMDA and Ca^{2+} currents shape the
+dependency of the spiking probability on the presynaptic
+variables. Trivially, we observe an increased spiking probability
+because cells are more excitable (NMDA and Ca^{2+} currents are
+depolarizing currents). Notably, when excitation does not balance
+inhibition (\(\nu_e^p = 0.4\)Hz or \(\nu_i^p = 0\)Hz), the spiking
+probability is greatly enhanced (almost doubled). For the other
+variables, those effects are much more moderate. Here again, we
+conclude that phenomenon *II* has a weak impact provided excitation
+does not overcome inhibition and provided that synchrony remains in a
+relatively low range (the range of our study: $s \leq 0.4\)).
+
+As can be seen in [[fig:0a][Figure 1]]B, those results nonetheless apply only to
+neocortical processing when effects are mediated by /weakly
+synchronous and relatively balanced/ population dynamics, when single
+cell response is driven by synchronous activation of multiple
+synapses, dendritic nonlinearities have a crucial impact (consistent
+with experimental evidences and the current view on dendritic
+processing, reviewed in [[citetext:Stuart2015]]). We thus modified the
+main text to briefly mention the results of the present analysis and
+our conclusions. The main text now reads:
+
+\bf The proposed theoretical framework for single-cell computation
+nonetheless suffers from several weaknesses. [...]. Most importantly,
+there is no active mechanisms in dendrites [[cite:Hausser2005]], it is
+therefore a question how much those mechanisms could affect the
+picture provided in our study. Preliminary numerical analysis
+performed in presence of NMDA and Ca2+ currents [[cite:Larkum2009]],
+showed that, provided excitation balances inhibition (a situation
+where NMDA channels keeps a relatively low level of stationary
+activation) and provided synchrony do not reach a too high level (so
+that excitatory events have a weak probability to evoke NMDA and
+Ca^{2+} spikes), the qualitative behavior of the cellular input-output
+function remains identical. Our preliminary analysis thus suggest the
+hypothesis that active dendritic mechanisms may not be crucial for
+effects mediated by slow (T\(\geq\)20-30ms) variations of weakly synchronous
+population dynamics while being critical for operations performed on
+synchronous synaptic activations (T\(\leq\)5-10ms), consistent with the
+current view on dendritic processing [[cite:Stuart2015]]. Future work
+should address this hypothesis in details. \rm
+
+Because we believe that those results constitute only preliminary data
+and that this problem should be the focus of a much more detailed
+analysis, we do not wish to include it in the main text or
+supplementary material. If the reviewer think that this is important
+for our study, we can merge [[fig:0a][Figure 1]] and [[fig:0b][Figure 2]] and produce a
+supplementary figure whose legend will be adapted from this section
+and the current legends.
 
 * Reviewer #1
 
@@ -89,7 +188,14 @@ the details of the study. \rm
    (i.e. various comodulations) on individual cells.  The new legend
    reads:
 
-   _The abscissa “increasing synaptic quantity” corresponds to the comodulations of the model variables shown in Figure 4A (same color code). As an example, the response to a “proximal activity increase” (blue curve) corresponds to a linear increase of and while keeping , and to their baseline level. See Figure 4A for the comodulations of the other types of increasing activity._
+   \bf The abscissa “increasing synaptic quantity” corresponds to the
+   comodulations of the model variables shown in Figure 4A (same color
+   code). As an example, the response to a “proximal activity
+   increase” (blue curve) corresponds to a linear increase of
+   \(\nu_e^{prox}\) and \(\nu_i^{prox}\) while keeping
+   \(\nu_e^{dist}\), \(\nu_i^{dist}\) and \(s\) to their baseline
+   level. See Figure 4A for the comodulations of the other types of
+   increasing activity. \rm
 
 
 2) \it Main statement unclear. Unfortunately, it does not become clear
@@ -109,9 +215,9 @@ the details of the study. \rm
 
    We agree with the reviewer that the formulation "only [...] except
    [...]" might be misleading, we adapted the abstract to remove this
-   source of confusion. Now it reads: "but trivially, the _main_
+   source of confusion. Now it reads: \bf "but trivially, the _main_
    significant contribution to the various firing response was the
-   different levels of cellular excitability [...]".
+   different levels of cellular excitability [...]". \rm
 
 #+NAME: fig:1
 #+CAPTION: *Changing the ratio of the proximal/distal separation.* *(A)* Configuration of the main text, the proximal part occupies the first 87.5% of the dendritic morphology. *(B)* Now the proximal part occupies only the first 12.5% of the dendritic morphology. This importantly reduces the number of available synapses (the morphology has only one branch in the first 12.5% part). Provided this loss of synapses is compensated by an increase of activity, there is _no qualitative change between the 12.5% and the 87.5% setting for the proximal activity: non-monotonic \(\sigma_V\) variations, strong decrease in \(\tau_V / \tau_m^0 \)_. On the other hand, this change would have important qualitative consequences for the "distal activity" regime, if the last 87.5% of the morphology are "distal", many synapses are electrotonically close (what is rather irrealistic for distal synapses), they will thus stronly interact through conductance shunting and thus produce fluctuations close to the "proximal activity" setting of the main text.
@@ -134,17 +240,21 @@ the details of the study. \rm
    Again, we could not find a state-of-the-art explanation why this
    statement is true. \rm
 
-    This point is precisely the focus of our previous communication
-   [[cite:Zerlaut2016]]. Unfortunately there is, to the best of our knowledge, no
-   closed-form solution that could give the firing rate response as a
-   response to fluctuating input in a model including sodium
-   inactivation and a sdium activation curve (hence the
-   phenomenological approach formulated in ou previous
+   This point is precisely the focus of our previous communication
+   [[cite:Zerlaut2016]]. Unfortunately there is, to the best of our
+   knowledge, no closed-form solution that could give the firing rate
+   response as a response to fluctuating input in a model including
+   sodium inactivation and a sodium activation curve (hence the
+   phenomenological approach formulated in our previous
    communication). Nonetheless to give some intuition to the reader,
-   we have added the following statement (line 316):
-   _In our previous communication, theoretical modeling suggested that a high sensitivity to the speed of the fluctuations was enable by a high level of sodium inactivation (as only fast fluctuations allow to deinactivate sodium channels) and a high density of sodium channels (as it  produces a sharp spike initiation that enables to extract fast fluctuating input)._
-   For further details, we believe the reader should refer to our
-   previous publication. 
+   we have added the following statement (line 316): \bf In our
+   previous communication, theoretical modeling suggested that a high
+   sensitivity to the speed of the fluctuations was enable by a high
+   level of sodium inactivation (as only fast fluctuations allow to
+   deinactivate sodium channels) and a high density of sodium channels
+   (as it produces a sharp spike initiation that enables to extract
+   fast fluctuating input). \rm For further details, we believe the
+   reader should refer to our previous publication.
 
 4) \it No dendritic nonlinearities. One main characteristics of L5
    pyramidal neurons is the calcium spike in the apical tree, and more
@@ -171,13 +281,21 @@ the details of the study. \rm
    the domain of measured characteristics for the firing response,
    this is also the case in the present study, where they cover
    relatively well the domain of the predicted coupling to the various
-   types of activities.
+   types of activities, see Figure 6 in main text. We updated the
+   manuscript to highlight this point (line 250): \bf We show on
+   Figure 5 the response of four cells (representative of different
+   firing response behaviors, see Figure 5 and 6B in
+   [[citetext:Zerlaut2016]]) to the different types of presynaptic
+   activity described in the previous section. The input-output
+   relationships show qualitative and quantitative differences, [...]
+   \rm
 
 6) \it Figure 2 has two panels A & B, but the caption describes panels
    A–E. \rm 
 
    Indeed, we apologize for this problem in the manuscript
-   preparation. Figure 2 and Figure 3 have been mixed up...
+   preparation. Figure 2 and Figure 3 have been mixed up, this is now
+   corrected.
 
 7) \it Apart from that, the fit of the numerical simulations and the
    analytical estimate in B for sigma_V is biased. No argument is
@@ -239,31 +357,45 @@ the details of the study. \rm
 
 * Reviewer #2
 
- This manuscript shows a nice mixture of experiment and theory. The
- latter is based upon sensible use of the cable modelling framework of
- Rall combined with stochastic models of synaptic input (admittedly of
- a particular type but definitely fit for purpose). 
+ \it This manuscript shows a nice mixture of experiment and
+ theory. The latter is based upon sensible use of the cable modelling
+ framework of Rall combined with stochastic models of synaptic input
+ (admittedly of a particular type but definitely fit for purpose). \rm
 
-\bf we thank the reviewer for his \rm
-
-1) Unfortunately some of the work (for the firing response function)
+1) \it Unfortunately some of the work (for the firing response function)
    is buried in supplementary material - and this has not been made
-   available to me (S1). 
+   available to me (S1).\rm
 
-   \bf Sorry to hear this. For us, the link at the end of the
-   submission pdf (page 32/32) was functional and actually gave the
-   supplementary material. \rm
+   That is indeed unfortunate. For us, the permanent link at the end
+   of the submission pdf (page 32/32) was functional and actually gave
+   the supplementary material. Maybe the reviewer could ask the editor
+   for this material if this is still not available in this
+   resubmission.
 
-2) It would be especially informative to hear more about the author's
+2) \it It would be especially informative to hear more about the author's
    perspective on how synchrony controls rate. Nonetheless given the
    quality and novelty of the main manuscript I suggest to put this
-   issue aside.
+   issue aside. \rm
 
-   \bf \rm
+   This is indeed an interesting point. In the present study, we give
+   a first order description of the effect of synchrony on stationary
+   firing rate (in the /weakly synchronous/ regime, close to an
+   idealized /asynchronous/ regime): presynaptic synchrony between
+   presynaptic events increases the variance of the fluctuations that
+   in turn increases the firing rate. But there should be effect
+   beyond this first order description, when we go further and further
+   from the idealized asynchronous state, i.e. when the firing rate
+   can not be obtained from the stationary fluctuations
+   properties. Interactions between synchrony and dendritic
+   non-linearities also appear important to neocortical cell
+   processing (see Part A of this response). Following the reviewer's
+   opinion, we would also prefer to leave this issue aside as those
+   are quite complicated questions and perform detailed investigations
+   in future work.
 
 ** Major concern
 
-My only major concern with the paper is on the emphasis of a
+\it My only major concern with the paper is on the emphasis of a
 theoretical framework without citing other relevant work in the
 area. Essentially I am surprised not to see the mention of the
 technique(s) for constructing the Green's function of an arbitrary
@@ -276,22 +408,62 @@ work on dendrites that appears relevant, some of which is summarised
 in [[citetext:Bressloff1997]]. The following may also be of interest
 (though not necessarily for this work) - where simple active soma
 models are coupled to passive dendrites
-[[cite:Bressloff1995,Svensson2009,Schwemmer2012]].
+[[cite:Bressloff1995,Svensson2009,Schwemmer2012]]. \rm
 
-\bfseries
 
-Indeed, our 
+We are grateful to the reviewer for those bibliographical
+suggestions. This allowed us to detail the possible extension of our
+framework to more complex dendritic structures. The updated discussion
+now reads (line 335): \bf To investigate those effects within the
+framework proposed in our study, one could benefit from the large body
+of theoretical work on the derivation of Green’s function for
+arbitrary branched passive dendritic trees
+[[cite:Abbott1991,Cao1993,Bressloff1997,Coombes2007]]. \rm
 
-We thank the reviewer
+Nonetheless, for clarity for the reader (not to be pointed toward more
+complex methods than just Rall's method), we keep only the reference
+to Rall's work in the Methods and Results section. Then the author can
+be more focused on the originality of our approach: the use of
+shotnoise theory results in a dendritic integration context.
 
-\textnormal
+In addition, we have given some perspective about the approach used
+here to obtain the firing rate response in presence of a dendritic
+structure. In the discussion, one can now find the sentence (line
+361):
+
+\bf This phenomenological two-steps procedure thus offers a flexible
+complementary approach to the analytical approaches tackling the
+problem of the spiking behavior in presence of an extended dendritic
+structure [[cite:Svensson2009,Schwemmer2012,Saparov2015]]. \rm
+
 
 ** Minor points
 
-Spurious "s" in the sec "A simplified morphological model" - sWe arbitrarily ...
-Where is excitability < V_thre^eff >_D defined?
+1) \it Spurious "s" in the sec "A simplified morphological model" - sWe arbitrarily ... \rm
 
-\bf We apologize for the problems with the manuscript preparations and we thank the reviewer for pointing out those mistakes. \rm
+Thanks. corrected.
+
+2) \it Where is excitability < V_thre^eff >_D defined? \rm
+
+Thanks. This was indeed only briefly mentionned in a main text as a
+reference to our previous study, now in the Methods section, we added:
+
+\bf Importantly, our study introduced four quantities to describe the
+mean properties of a single neuron response in the fluctuation-driven
+regime: (i) a measure of the excitability given by the mean
+phenomenological threshold \( \langle V_{thre}^eff \rangle_\mathcal{D}
+\) of our firing rate function, (ii) a sensitivity to the mean of the
+fluctuations \( \langle \frac{\partial \nu}{\partial \mu_V}
+\rangle_\mathcal{D} \), i.e. quantifying how much a mean
+depolarization is translated into a change in firing rate, (iii) a
+sensitivity to the amplitude of the fluctuations \( \langle
+\frac{\partial \nu}{\partial \sigma_V} \rangle_\mathcal{D} \),
+quantifying how much an increase of the standard deviation of the
+fluctuations is translated into a change in firing rate, and (iv) a
+sensitivity to the speed of the fluctuations \( \langle \frac{\partial
+\nu}{\partial \tau_V^N} \rangle_\mathcal{D} \), quantifying how much a
+change in the autocorrelation time of the fluctuations is translated
+into a change in firing rate. \rm
 
 * Reviewer #3
 
@@ -313,7 +485,7 @@ This is because ... \rm
 
 ** CONS
 
- - *A*: (part ii) For L5 PCs it is highly questionable if dendritic
+ - *A*: \it (part ii) For L5 PCs it is highly questionable if dendritic
    integration can be understood without (or separated from) active
    dendritic properties given the known experimental facts and huge
    literature, e.g. about the compartmentalization of dendritic
@@ -323,9 +495,14 @@ This is because ... \rm
    In my opinion, the model for the L5 PCs based on a passive tree
    will almost surely fail to describe the real dendritic integration
    properties of the cells in the fluctuation driven regime. In any
-   case, see the first point in additional work below.
+   case, see the first point in additional work below. \rm
 
-- *B*: (part iii) Even the description of the passive dendritic
+   We adressed in details the question of dendritic nonlinearities in
+   Part A. The question of the compartementalization of dendritic
+   function is indeed something not adressed in our study, we would
+   prefer to leave this aspect for future investigations.
+
+- *B*: \it (part iii) Even the description of the passive dendritic
   integration properties of the cell seems to be questionable (maybe
   because of the constraints to symmetrical trees). That this doesn't
   work out properly seems to be reflected in the morphologies obtained
@@ -333,79 +510,215 @@ This is because ... \rm
   about 400 um to 900 um (current Fig 3C and Fig. S1) for PCs
   plausible? Please provide references. L5 PCs with their long apical
   dendrites etc. are the worst case scenario for the symmetry
-  constraints for the tree.
-  
+  constraints for the tree. \rm
+
+  We totally agree with the reviewer on this point. We removed the
+  point stating that our simplified morphology could somehow resemble
+  those of layer V pyramidal cells. More precisely, we removed the
+  following statement: \bf Also the obtained morphology seems
+  realistic (B=5 generation of branches, a total tree length of =550m
+  and a root branch diameter of the tree =2.25m) given what can be
+  observed after histological work [[cite:Zerlaut2016]] \rm. The emphasis
+  should remain on the electrical properties.
+
+  Importantly, the results of our study do not rely on having a
+  precise description of the morphology, we only use this to
+  discriminate between a proximal and a distal area, and Rall's
+  symmetric branching model is sufficient to reproduce this feature.
+  So in the discussion, we aknowledge the important limitations of our
+  morphological model and stress the above point (what is the
+  important ingredient in our study) with:
+
+ \bf [...] even if our description captures the various electrotonic
+  distances associated to various synaptic locations (the crucial
+  ingredient here to discriminate between proximal and distal inputs),
+  the morphological model appears as a _very poor description of layer
+  V pyramidal cell_. Deviations from the symmetric branching
+  hypothesis and Rall's branching rule will have a significant impact
+  on dendritic integration in the fluctuation-driven regime. To
+  investigate those effects [...] \rm
+
 ** PROS
 
-The theoretical work is still significant for other cell types that
+\it The theoretical work is still significant for other cell types that
 work in a more linear regime, e.g. L2/3 PCs, and have morphologies
-that match the theoretical constraints..
+that match the theoretical constraints.. \rm
 
 ** Additional work required:
 
-- The authors should provide evidence that active dendritic
+- \it The authors should provide evidence that active dendritic
   integration doesn't change the key claim, or, apply the model to a
-  more appropriate cell type.
+  more appropriate cell type. \rm
 
-- Because the morphology of the tree of the model is very constraint
-  and only a very rough estimate its necessary to assess the influence
-  of this approximation on dendritic integration: A systematic
-  analysis of the impact of the morphology of the tree (7 variables)
-  on the response properties of interest at the soma is missing (This
-  allows also a generalization of the results to other cell types. Now
-  only Fig S2 gives a hint about variability).
+  see Part A of this response
 
-- There's no reference to any other model than [[citetext:Kuhn2004]], on
-  which the approach is based. Relate the model to recent work on the
-  effects of passive dendritic tree properties of neuron on firing
+- \it Because the morphology of the tree of the model is very
+  constraint and only a very rough estimate its necessary to assess
+  the influence of this approximation on dendritic integration: A
+  systematic analysis of the impact of the morphology of the tree (7
+  variables) on the response properties of interest at the soma is
+  missing (This allows also a generalization of the results to other
+  cell types. Now only Fig S2 gives a hint about variability). \rm
+
+  *TO BE DONE*
+
+- \it There's no reference to any other model than [[citetext:Kuhn2004]],
+  on which the approach is based. Relate the model to recent work on
+  the effects of passive dendritic tree properties of neuron on firing
   dynamics (e.g.  [[citetext:Saparov2015]] or other model reduction
-  techniques (a huge field, e.g. [[citetext:Hedrick2013]]).
+  techniques (a huge field, e.g. [[citetext:Hedrick2013]]). \rm
 
-The paper is well organized, easy to read, simple to follow and
-clearly written. However, there are too many typos and word
-repetitions to list them all ("sWe" p.3, "show deviations from the
-deviations" p.4, " vary the size of the size" p.4, "does not goes",
-p.6, "the firing increase show", p.7 ...) and the Figure numbers were
-incorrect (Fig.22b, p.4) or mixed up (Fig. 2 and 3).
+  The updated discussion now reads (line 335): \bf To investigate
+  those effects within the framework proposed in our study, one could
+  benefit from the large body of theoretical work on the derivation of
+  Green’s function for arbitrary branched passive dendritic trees
+  [[cite:Abbott1991,Cao1993,Bressloff1997,Coombes2007]]. \rm In addition,
+  we have given some perspective about the approach used here to
+  obtain the firing rate response in presence of a dendritic
+  structure. In the discussion, one can now find the sentence (line
+  361): \bf This phenomenological two-steps procedure thus offers a
+  flexible complementary approach to the analytical approaches
+  tackling the problem of the spiking behavior in presence of an
+  extended dendritic structure
+  [[cite:Svensson2009,Schwemmer2012,Saparov2015]]. \rm
 
 
-Minor:
+\it The paper is well organized, easy to read, simple to follow and
+clearly written. 
 
-- Fig. 3: The color code seems to be inconsistent: Panel A shows cells
+However, there are too many typos and word repetitions to list them
+all ("sWe" p.3, "show deviations from the deviations" p.4, " vary the
+size of the size" p.4, "does not goes", p.6, "the firing increase
+show", p.7 ...) and the Figure numbers were incorrect (Fig.22b, p.4)
+or mixed up (Fig. 2 and 3). \rm
+
+We apologize for the problems in the manuscript preparation (the
+figures mixed up) and we thank the reviewer for pointing out the
+typos... From now on, even if the question refer to the (wrong)
+previous notation ex-Figure 3 will be renamed to Figure 2 as in the
+re-submission.
+
+** Minor:
+
+- \it Fig. 3: The color code seems to be inconsistent: Panel A shows cells
   with Rm above 600 MOhm, but the bottom panel in Fig 3C shows that
-  such cells are not present.
+  such cells are not present. \rm
+  
+  This is because those data come from two separate datasets, we
+  highlighted this with the mention of "firing rate dataset" at the
+  bottom of panel 2C. We have a special dataset to investigate the
+  input impedance properties (on the exact same experimental model)
+  where 2 cells were more resistive than those present in the other
+  dataset. We use this dataset to derive a "sizing rule" from the
+  input resistance and then be able to use the "firing rate dataset"
+  where we only have the input resistance (and not the detailed input
+  impedance spectrum). Note that, as expected from the same
+  exerimental system, the datasets were statistically pretty similar:
+  355.9 \(\pm\) 184.1 M\(\Omega\) for the "firing rate dataset", see
+  [[citetext:Zerlaut2016]] and 387.3 \(\pm\) 197.2 M\(\Omega\) for the
+  "input impedance dataset", see Methods.
 
-- Fig 3C: The lines in the three top panels could be drawn with the
-  color code (color changes within a line) as used in panel A and B.
+  We have updated figure 2C with the mention of "n=30cells" for the
+  "firing rate dataset", then it highlights the difference with the
+  dataset of input impedance labeled "n=13cells" and makes it more
+  clear to the reader.
 
-- Fig 3AB: Please comment on the inconsistency between data and model
-  for > 100 Hz. There seems to be a flip in vertical order.
+- \it Fig 3C: The lines in the three top panels could be drawn with the
+  color code (color changes within a line) as used in panel A and B. \rm
 
-Section: "An analytical approximation ...":
+  Very good idea, thanks ! See new Figure 2.
 
-- The claim "the analytical estimate could therefore be seen as an accurate estimate, module a shift in the synchrony (~0.2 increase in synchrony corrects for the ~1 mV shift in sigma)" should verified:
-1) Results for synchrony = 0.2 should be shown in the right most column of panels in Fig 2B, and
-2) results for synchrony = 0.2 should be shown for the other columns of panels in Fig 2B, where the other parameters are varied.
+- \it Fig 3AB: Please comment on the inconsistency between data and model
+  for > 100 Hz. There seems to be a flip in vertical order. \rm
+
+  *TO BE DONE*
+
+\it Section: "An analytical approximation ...":
+
+- The claim "the analytical estimate could therefore be seen as an
+  accurate estimate, modulo a shift in the synchrony (~0.2 increase in
+  synchrony corrects for the ~1 mV shift in sigma)" should
+  verified: 1) Results for synchrony = 0.2 should be shown in the
+  right most column of panels in Fig 2B, and 2) results for synchrony
+  = 0.2 should be shown for the other columns of panels in Fig 2B,
+  where the other parameters are varied. \rm
+
+  *TO BE DONE*
 
 Section: "Biophysical origin ..."
 
-- The characteristics of the firing response function are not properly introduced. Please add this.
+- \it The characteristics of the firing response function are not properly
+  introduced. Please add this. \rm
 
-- It can be hardly claimed that Fig. 6A is approximately a log normal distribution.
+  This is indeed a very important point, thanks, we updated the
+  methods section with:
 
-Methods section:
+  \bf Importantly, our study introduced four quantities to describe
+  the mean properties of a single neuron response in the
+  fluctuation-driven regime: (i) a measure of the excitability given
+  by the mean phenomenological threshold \( \langle V_{thre}^eff
+  \rangle_\mathcal{D} \) of our firing rate function, (ii) a
+  sensitivity to the mean of the fluctuations \( \langle
+  \frac{\partial \nu}{\partial \mu_V} \rangle_\mathcal{D} \),
+  i.e. quantifying how much a mean depolarization is translated into a
+  change in firing rate, (iii) a sensitivity to the amplitude of the
+  fluctuations \( \langle \frac{\partial \nu}{\partial \sigma_V}
+  \rangle_\mathcal{D} \), quantifying how much an increase of the
+  standard deviation of the fluctuations is translated into a change
+  in firing rate, and (iv) a sensitivity to the speed of the
+  fluctuations \( \langle \frac{\partial \nu}{\partial \tau_V^N}
+  \rangle_\mathcal{D} \), quantifying how much a change in the
+  autocorrelation time of the fluctuations is translated into a change
+  in firing rate. \rm
 
-- Not all variables are properly defined, e.g. Qe, Qi, lp.
+- \it It can be hardly claimed that Fig. 6A is approximately a log normal
+  distribution. \rm
 
-- "it constitutes an extension of the approach proposed in Kuhn et al. \[19\]": Please, state what extension.
+  We agree. What we actually mean is that the data appears to be
+  distributed logarithmically, we do not wish to put a special
+  emphasis on the log-normal trend. The statement "approximatelly
+  log-normal" was a concise way to express this trend. If this is a
+  problem, we could change it to "the data appears to be distributed
+  logarithmically and not linearly" but we are not sure that this
+  formulation would render better the idea.
 
-- "Fitting passive properties": Are the solutions unique or are there many different trees with similar fit performance that result in different couplings to presynaptic activity?
+\it Methods section: \rm
+
+- \it Not all variables are properly defined, e.g. Qe, Qi, lp. \rm
+
+  Indeed, thanks. We updated the Methods section (mostly the "Model
+  equations" section).
+
+- \it "it constitutes an extension of the approach proposed in Kuhn et
+  al.": Please, state what extension. \rm
+
+  Done, it now reads: \bf it extends the approach proposed in Kuhn et
+  al. to the extended dendritic structure following Rall’s branching
+  rule \rm
+
+- \it "Fitting passive properties": Are the solutions unique or are there
+  many different trees with similar fit performance that result in
+  different couplings to presynaptic activity? \rm
+
+  *TO BE DONE*
  
 * References
 \small
 
 #+BEGIN_LATEX
 \begin{filecontents}{biblio.bib}
+
+@article{Hausser2005,
+author = {London, Michael and H{\"{a}}usser, Michael},
+doi = {10.1146/annurev.neuro.28.061604.135703},
+issn = {0147-006X (Print)$\backslash$r0147-006X (Linking)},
+journal = {Annual review of neuroscience},
+pages = {503--532},
+title = {{Dendritic computation.}},
+type = {Journal Article},
+volume = {28},
+year = {2005}
+}
 
 @article{Stuart2015,
 author = {Stuart, Greg J and Spruston, Nelson},
@@ -609,3 +922,4 @@ year = {2004}
 #+LaTeX_HEADER: \usepackage{biology_citations}
 #+LaTeX_HEADER: \bibliographystyle{biology_citations}
 #+LaTeX_HEADER: \renewcommand{\thesection}{\Alph{section}} 
+
