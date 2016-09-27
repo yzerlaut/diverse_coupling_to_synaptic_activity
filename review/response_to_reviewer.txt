@@ -273,7 +273,7 @@ the details of the study. \rm
    these cell types specified? The paper does not give an answer on
    that. \rm
 
-   The 4 cells represent 4 different cells out of the n=30 cells
+   The 4 cells represent 4 different cells out of the n=27 cells
    recorded in our previous study [[cite:Zerlaut2016]]. The criteria to
    choose those 4 cells was that they should somehow represent
    different behaviors while still being representative. See in Figure
@@ -618,7 +618,7 @@ re-submission.
   [[citetext:Zerlaut2016]] and 387.3 \(\pm\) 197.2 M\(\Omega\) for the
   "input impedance dataset", see Methods.
 
-  We have updated figure 2C with the mention of "n=30cells" for the
+  We have updated figure 2C with the mention of "n=27cells" for the
   "firing rate dataset", then it highlights the difference with the
   dataset of input impedance labeled "n=13cells" and makes it more
   clear to the reader.
@@ -643,9 +643,22 @@ re-submission.
   = 0.2 should be shown for the other columns of panels in Fig 2B,
   where the other parameters are varied. \rm
 
-  *TO BE DONE*
+  We have verified this statement and we now present the results on
+  Figure 3. The shift in synchrony that minimized the difference
+  between analytical simulations and numerical simulations was found
+  to be +0.18, i.e. close to the 0.2 previously mentionned in the main
+  text (minimum found thanks to a Newton method). Those additional
+  curves are now presented in the middle plots of Figure 3B with the
+  label "estimate, s+=0.18". We also increased the resolution of the
+  scanned points so that we can also have a point close to the s=0.18
+  in the right most column of Figure 3B.  The text now reads (line
+  182): \bf (see Figure 3B, an increase of 0.18 in the synchrony
+  corrects for the ~1mV shift in \(\sigma_V\)) \rm and the legend: \bf
+  In the \(\sigma_V\) plots (middle panels, dashed gray lines), we
+  added the prediction of the analytical estimate after a +0.18
+  correction (found with a Newton method). \rm
 
-Section: "Biophysical origin ..."
+\it Section: "Biophysical origin ..." \rm
 
 - \it The characteristics of the firing response function are not properly
   introduced. Please add this. \rm
@@ -680,21 +693,20 @@ Section: "Biophysical origin ..."
   log-normal" was a concise way to express this trend. If this is a
   problem, we could change it to "the data appears to be distributed
   logarithmically and not linearly" but we are not sure that this
-  formulation would render better the idea.
+  formulation is a "standard formulation".
 
 \it Methods section: \rm
 
 - \it Not all variables are properly defined, e.g. Qe, Qi, lp. \rm
 
-  Indeed, thanks. We updated the Methods section (mostly the "Model
-  equations" section).
+  Indeed, thanks. We updated the Methods section. Also the densities
+  of synapses were not properly introduced.
 
 - \it "it constitutes an extension of the approach proposed in Kuhn et
   al.": Please, state what extension. \rm
 
   Done, it now reads: \bf it extends the approach proposed in Kuhn et
-  al. to the extended dendritic structure following Rall’s branching
-  rule \rm
+  al. to dendritic structures following Rall’s branching rule \rm
 
 - \it "Fitting passive properties": Are the solutions unique or are there
   many different trees with similar fit performance that result in
