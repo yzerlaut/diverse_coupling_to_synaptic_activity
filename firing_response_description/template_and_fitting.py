@@ -2,7 +2,6 @@ import numpy as np
 from scipy.optimize import minimize
 from scipy.optimize import curve_fit, leastsq
 import scipy.special as sp_spec
-import statsmodels.api as sm
 
 ## NORMALIZING COEFFICIENTS
 # needs to be global here, because used both in the function

@@ -8,9 +8,8 @@ sys.path.append('../')
 from theory.analytical_calculus import *
 from data_firing_response.analyze_data import get_Rm_range
 from input_impedance_calibration.get_calib import adjust_model_prop
-from demo import *
-
 from firing_response_description.template_and_fitting import final_func
+from demo import *
 
 N_POINTS = 5
 N_POINTS_TH = 10
@@ -23,7 +22,9 @@ fe_vector_th = np.linspace(0., 0.4, N_POINTS_TH)
 fi_vector_th = fe_vector_th*inh_factor
 synch_vector = np.array([0.0, 0.02, synch_baseline, 0.15, 0.4])
 synch_vector_plot = np.array([0.01, 0.02, synch_baseline, 0.15, 0.4])
-synch_vector_th=np.logspace(np.log(0.01)/np.log(10),np.log(0.01)/np.log(10),N_POINTS_TH)
+synch_vector_th_plot=np.logspace(np.log(0.01)/np.log(10),np.log(0.4)/np.log(10),N_POINTS_TH)
+synch_vector_th = synch_vector_th_plot
+synch_vector_th[0] = 0
 
 def create_set_of_exps(args):
     SET_OF_EXPS = [\
@@ -65,7 +66,7 @@ def create_set_of_exps(args):
                     },
                    {'label':'synchrony',
                     'xlabel':'synchrony',
-                    'xticks':synch_vector,
+                    'xticks':synch_vector_plot,
                     'fe_prox':np.ones(N_POINTS)*fe_baseline,
                     'fe_dist':np.ones(N_POINTS)*fe_baseline,
                     'fi_prox':np.ones(N_POINTS)*fi_baseline,
@@ -84,7 +85,7 @@ def create_set_of_exps_th(args):
                     'fi_prox':np.ones(N_POINTS_TH)*fi_baseline,
                     'fi_dist':np.ones(N_POINTS_TH)*fi_baseline,
                     'synchrony':np.ones(N_POINTS_TH)*synch_baseline,
-                    'muV_exp':np.zeros((N_POINTS_TH, args.SEED)), 'sV_exp':np.zeros((N_POINTS_TH, args.SEED)), 'Tv_exp':np.zeros((N_POINTS_TH, args.SEED))
+                    'muV':np.zeros(N_POINTS_TH), 'sV':np.zeros(N_POINTS_TH), 'Tv':np.zeros(N_POINTS_TH)
                     },
                    {'label':'$\\nu_i^p$ (Hz) \n prox. inh. ',
                     'xticks':fi_vector_th,
@@ -93,7 +94,7 @@ def create_set_of_exps_th(args):
                     'fi_prox':fi_vector_th,
                     'fi_dist':np.ones(N_POINTS_TH)*fi_baseline,
                     'synchrony':np.ones(N_POINTS_TH)*synch_baseline,
-                    'muV_exp':np.zeros((N_POINTS_TH, args.SEED)), 'sV_exp':np.zeros((N_POINTS_TH, args.SEED)), 'Tv_exp':np.zeros((N_POINTS_TH, args.SEED))
+                    'muV':np.zeros(N_POINTS_TH), 'sV':np.zeros(N_POINTS_TH), 'Tv':np.zeros(N_POINTS_TH)
                     },
                    {'label':'$\\nu_e^d$ (Hz) \n distal exc. ',
                     'xticks':fe_vector_th,
@@ -102,7 +103,7 @@ def create_set_of_exps_th(args):
                     'fi_prox':np.ones(N_POINTS_TH)*fi_baseline,
                     'fi_dist':np.ones(N_POINTS_TH)*fi_baseline,
                     'synchrony':np.ones(N_POINTS_TH)*synch_baseline,
-                    'muV_exp':np.zeros((N_POINTS_TH, args.SEED)), 'sV_exp':np.zeros((N_POINTS_TH, args.SEED)), 'Tv_exp':np.zeros((N_POINTS_TH, args.SEED))
+                    'muV':np.zeros(N_POINTS_TH), 'sV':np.zeros(N_POINTS_TH), 'Tv':np.zeros(N_POINTS_TH)
                     },
                    {'label':'$\\nu_i^d$ (Hz) \n distal inh.',
                     'xticks':fi_vector_th,
@@ -111,44 +112,78 @@ def create_set_of_exps_th(args):
                     'fi_prox':np.ones(N_POINTS_TH)*fi_baseline,
                     'fi_dist':fi_vector_th,
                     'synchrony':np.ones(N_POINTS_TH)*synch_baseline,
-                    'muV_exp':np.zeros((N_POINTS_TH, args.SEED)), 'sV_exp':np.zeros((N_POINTS_TH, args.SEED)), 'Tv_exp':np.zeros((N_POINTS_TH, args.SEED))
+                    'muV':np.zeros(N_POINTS_TH), 'sV':np.zeros(N_POINTS_TH), 'Tv':np.zeros(N_POINTS_TH)
                     },
                    {'label':'synchrony',
                     'xlabel':'synchrony',
-                    'xticks':synch_vector_th,
+                    'xticks':synch_vector_th_plot,
                     'fe_prox':np.ones(N_POINTS_TH)*fe_baseline,
                     'fe_dist':np.ones(N_POINTS_TH)*fe_baseline,
                     'fi_prox':np.ones(N_POINTS_TH)*fi_baseline,
                     'fi_dist':np.ones(N_POINTS_TH)*fi_baseline,
-                    'synchrony':synch_vector_th_real,
-                    'muV_exp':np.zeros((N_POINTS_TH, args.SEED)), 'sV_exp':np.zeros((N_POINTS_TH, args.SEED)), 'Tv_exp':np.zeros((N_POINTS_TH, args.SEED))
+                    'synchrony':synch_vector_th,
+                    'muV':np.zeros(N_POINTS_TH), 'sV':np.zeros(N_POINTS_TH), 'Tv':np.zeros(N_POINTS_TH)
                     }]
     return SET_OF_EXPS
 
 
-def get_model(args):
-
-    soma = {'L': args.L_soma*1e-6, 'D': args.D_soma*1e-6, 'NSEG': 1,\
-            'exc_density':1e9, 'inh_density':(1e-5)**2/20., 'name':'soma'}
-
-    # baseline stick parameters, will be modified by geometry
-    stick = {'L': args.L_stick*1e-6, 'D': args.D_stick*1e-6, 'B':args.branches, 'NSEG': args.discret_sim,\
-             'exc_density':(1e-5)**2/30., 'inh_density':(1e-5)**2/6., 'name':'dend'}
-
-    # biophysical properties
-    params = {'g_pas': 1e-4*1e4, 'cm' : 1.*1e-2, 'Ra' : 200.*1e-2}
-
-    # now synaptic properties
-    params['Qe'], params['Qi'] = args.Qe*1e-9, args.Qi*1e-9
-    params['Te'], params['Ti'] = 5e-3, 5e-3
-    params['Ee'], params['Ei'] = 0e-3, -80e-3
-    params['El'] = -65e-3#0e-3, -80e-3
-    params['fraction_for_L_prox'] = 5./6.
-    params['factor_for_distal_synapses_weight'] = 2.
-    params['factor_for_distal_synapses_tau'] = 1.
-    params_for_cable_theory(stick, params)
-
-    return soma, stick, params
+def get_plotting_instructions():
+    return """
+args = data['args'].all()
+from final_check_accuracy import *
+SET_OF_EXPS = create_set_of_exps(args)
+SET_OF_EXPS_TH = create_set_of_exps_th(args)
+ii=0
+for EXP in SET_OF_EXPS:
+    EXP['muV_exp'], EXP['sV_exp'], EXP['Tv_exp'] = np.load(args.filename+str(ii)+'.npy')
+    ii+=1
+ii=0
+for EXP in SET_OF_EXPS_TH:
+    EXP['muV'],EXP['sV'],EXP['Tv']=np.load(args.filename+str(ii)+'_th.npy')
+    ii+=1
+sys.path.append('../../')
+from common_libraries.graphs.my_graph import set_plot
+fig, AX = plt.subplots(3, 5, figsize=(10,8))
+plt.subplots_adjust(left=.25, bottom=.25, wspace=.4, hspace=.4)
+# plotting all points in all plots so that they have the same boundaries !!
+YTICKS = [[-70,-60,-50], [3,5,7], [12, 20, 28], [0,15,30]]
+YLIM = [[-75,-30], [1.9,10.], [9,45], [-2,40]]
+SV_MINIM = np.load('data/data_minim.npy')
+for EXP, EXP_TH, sv_min, ii in zip(SET_OF_EXPS, SET_OF_EXPS_TH, SV_MINIM, list(range(len(SET_OF_EXPS)))):
+    X = EXP['xticks']
+    xticks = EXP['xticks'][::2]
+    XTH = EXP_TH['xticks']
+    XLIM = [X[0]-(X[1]-X[0])/3., X[-1]+(X[1]-X[0])/3.]
+    for ax, y1, y2, yticks, ylim in zip(\
+            AX[:,ii],\
+            [EXP['muV_exp'], EXP['sV_exp'], EXP['Tv_exp']],\
+            [EXP_TH['muV'], EXP_TH['sV'], EXP_TH['Tv']],\
+            YTICKS, YLIM):
+        if (ax in AX[1,:]):
+            ax.plot(XTH, sv_min, '--', color='gray', lw=3)
+        ax.plot(np.ones(2)*X[1], ylim, 'wD', lw=0, alpha=0., ms=0.01)
+        ax.plot(XTH, y2, '-', color='gray', lw=3)
+        ax.errorbar(X, np.array(y1).mean(axis=1),\
+                    yerr=np.array(y1).std(axis=1), color='k', fmt='o', mfc='white')
+        if (ax in AX[:,-1]):
+            ax.set_xscale("log")
+            XLIM = [0.005,0.5]
+            xticks = np.concatenate([np.arange(10)*0.01+0.01,np.arange(5)*0.1+0.1])
+        if (ax==AX[-1,0]):
+            set_plot(ax, xlim=XLIM,\
+                     xlabel=EXP['label'], xticks=xticks, yticks=yticks, ylim=ylim)
+        elif (ax==AX[-1,ii]):
+            set_plot(ax, xlim=XLIM, yticks_labels=[], xticks=xticks,
+                     xlabel=EXP['label'], yticks=yticks, ylim=ylim)
+        elif ax in AX[:,0]:
+            set_plot(ax, xlim=XLIM, xticks=xticks,\
+                     xticks_labels=[], yticks=yticks, ylim=ylim)
+        else:
+            set_plot(ax, xlim=XLIM, yticks_labels=[], xticks_labels=[],\
+                    yticks=yticks, ylim=ylim, xticks=xticks)
+for ax, ylabel in zip(AX[:,0], ['$\mu_V$ (mV)', '$\sigma_V$ (mV)', r'$\\tau_V$ (ms)']):
+    ax.set_ylabel(ylabel)
+"""
 
 if __name__=='__main__':
 
@@ -160,19 +195,8 @@ if __name__=='__main__':
      """
     ,formatter_class=argparse.RawTextHelpFormatter)
     
-    # ball and stick properties
-    parser.add_argument("--L_stick", type=float, help="Length of the stick in micrometer", default=1000.)
-    parser.add_argument("--L_prox_fraction", type=float, help="fraction of tree corresponding to prox. compartment", default=0.)
-    parser.add_argument("--D_stick", type=float, help="Diameter of the stick", default=2.)
-    parser.add_argument("--L_soma", type=float, help="Length of the soma in micrometer", default=10.)
-    parser.add_argument("--D_soma", type=float, help="Diameter of the soma in micrometer", default=10.)
-    parser.add_argument("-B", "--branches", type=int, help="Number of branches (equally spaced)", default=1)
-    # synaptic properties
-    parser.add_argument("--Qe", type=float, help="Excitatory synaptic weight (nS)", default=1.)
-    parser.add_argument("--Qi", type=float, help="Inhibitory synaptic weight (nS)", default=3.)
-
-
     parser.add_argument("--SIM", action='store_true') # flag for running simuluation !
+    parser.add_argument("--find_synchrony_min", action='store_true') # find synchrony min
     parser.add_argument("--seed", type=int, help="seed fo random numbers",default=37)
     parser.add_argument("--SEED", type=int, help="number of changed SEEDS",default=3)
     parser.add_argument("--discret_sim", type=int, help="space discretization for numerical simulation", default=20)
@@ -180,28 +204,22 @@ if __name__=='__main__':
     parser.add_argument("--dt", type=float, help="simulation time step (ms)", default=0.025)
     parser.add_argument("--discret_th", type=int, help="discretization for theoretical evaluation",default=20)
     
-    parser.add_argument("--MEAN_MODEL", action='store_true')
-    parser.add_argument("--file",default='')
+    parser.add_argument("-u", "--update_plot", help="plot the figures", action="store_true")
+    parser.add_argument( '-f', "--filename",help="filename",type=str, default='data/data.npz')
 
     args = parser.parse_args()
 
     SET_OF_EXPS = create_set_of_exps(args)
     
-    if args.file=='':
-        file = 'data/vars_'+time.strftime("%d.%m.%Y_%H.%M")+'.npy'
-    else:
-        file = args.file
+    soma, stick, params = np.load('../input_impedance_calibration/mean_model.npy')
+    x_exp, cables = setup_model(soma, stick, params)
     
-    if args.SIM:
-
-        if args.MEAN_MODEL:
-            soma, stick, params = np.load('../input_impedance_calibration/mean_model.npy')
-        else:
-            soma, stick, params = get_model(args)
-
-        x_exp, cables = setup_model(soma, stick, params)
+    if args.update_plot:
+        data = dict(np.load(args.filename))
+        data['plot'] = get_plotting_instructions()
+        np.savez(args.filename, **data)
+    elif args.SIM:
         ii=0
-
         ## MAKING THE BASELINE EXPERIMENT
         shtn_input = {'synchrony':synch_baseline,
                       'fe_prox':fe_baseline, 'fi_prox':fi_baseline,
@@ -229,67 +247,59 @@ if __name__=='__main__':
                                                       
                 ii+=1
                 plt.close('all')
-        np.save(file, [soma, stick, params, SET_OF_EXPS, args])
+        np.savez(args.filename, args=args, plot=get_plotting_instructions())
+        ii=0
+        for EXP in SET_OF_EXPS:
+            np.save(args.filename+str(ii)+'.npy', [EXP['muV_exp'], EXP['sV_exp'], EXP['Tv_exp']])
+            ii+=1
 
-    import os
-    if not os.path.isfile(file):
-        print('--------------------> input file DOES NOT EXIST')
-        print('--------------------> taking the last one !')
-        file, i, flist ='', 0, os.listdir("data")
-        while (file=='') and (i<1e3):
-            f = flist[i]
-            i+=1
-            if len(f.split("vars_"))>1:
-                file = 'data/'+f
-        print(file)
-  
-    # now theoretical plot
-    soma, stick, params, SET_OF_EXPS, args = np.load(file)
-    Tm0 = get_membrane_time_constants(soma, stick, params)
+    elif args.find_synchrony_min:
+        from scipy.optimize import minimize # MINIMIZATION
+        # loading min data
+        SET_OF_EXPS = create_set_of_exps(args)
+        SV_EXP = []
+        ii=0
+        for EXP in SET_OF_EXPS:
+            _, sV_exp, _ = np.load(args.filename+str(ii)+'.npy')
+            SV_EXP.append(sV_exp.mean(axis=1))
+        # function to minimize
+        def to_minimize(synch):
+            SV_TH = []
+            for EXP in SET_OF_EXPS:
+                SHTN_INPUT =  {'synchrony':EXP['synchrony']+synch,
+                               'fe_prox':EXP['fe_prox'], 'fi_prox':EXP['fi_prox'],
+                               'fe_dist':EXP['fe_dist'], 'fi_dist':EXP['fi_dist']}
+                _, sV, _, _ = get_the_fluct_prop_at_soma(SHTN_INPUT, params, soma, stick)
+                SV_TH.append(1e3*sV)
+                print(1e3*sV)
 
-    fig, AX = plt.subplots(3, 5, figsize=(15,10))
-
-    # plotting all points in all plots so that they have the same boundaries !!
-    for EXP in SET_OF_EXPS:
-        for y, i in zip([EXP['muV_exp'], EXP['sV_exp'], EXP['Tv_exp']], list(range(3))):
-            for ax in AX[i,:]:
-                ax.plot(-0.+0*y, 1.1*y, 'wD', lw=0, alpha=0.)
-                ax.plot(-0.+0*y, .9*y, 'wD', lw=0, alpha=0.)
-
-    YTICKS = [[-70,-60,-50], [3,5,7], [12, 20, 28]]
-    YLIM = [[-75,-40], [1.9,8.], [9,31]]
-    
-    for EXP, ii in zip(SET_OF_EXPS, list(range(len(SET_OF_EXPS)))):
-        
-        SHTN_INPUT =  {'synchrony':EXP['synchrony'],
-                        'fe_prox':EXP['fe_prox'], 'fi_prox':EXP['fi_prox'],
-                        'fe_dist':EXP['fe_dist'], 'fi_dist':EXP['fi_dist']}
-        
-        muV_th, sV_th, Tv_th, muG_th = get_the_fluct_prop_at_soma(SHTN_INPUT, params, soma, stick)
-        for ax, x, y, yticks, ylim in zip(AX[:,ii], [1e3*muV_th, 1e3*sV_th, 1e3*Tm0*Tv_th],\
-                                          [EXP['muV_exp'], EXP['sV_exp'], EXP['Tv_exp']],\
-                                          YTICKS, YLIM):
-            ax.errorbar(np.linspace(-.2,.2,len(y)), np.array(y).mean(axis=1),\
-                        yerr=np.array(y).std(axis=1), marker='D', color='k')
-            ax.plot(np.linspace(-.2,.2,len(x)), x, '-', color='lightgray', lw=3)
-            if (ax==AX[-1,0]):
-                set_plot(ax, xticks=np.linspace(-.2,.2,len(x)), xlim=[-.3,.3],\
-                         xlabel=EXP['label'], yticks=yticks, ylim=ylim,
-                         xticks_labels=[str(round(EXP['xticks'][i],2)) for i in range(N_POINTS)])
-            elif (ax==AX[-1,ii]):
-                set_plot(ax, xticks=np.linspace(-.2,.2,len(x)), yticks_labels=[], xlim=[-.3,.3],\
-                         xlabel=EXP['label'], yticks=yticks, ylim=ylim, 
-                         xticks_labels=[str(round(EXP['xticks'][i],2)) for i in range(N_POINTS)])
-            elif ax in AX[:,0]:
-                set_plot(ax, xticks=np.linspace(-.2,.2,len(x)),\
-                         xticks_labels=[], xlim=[-.3,.3], yticks=yticks, ylim=ylim)
-            else:
-                set_plot(ax, xticks=np.linspace(-.2,.2,len(x)), yticks_labels=[],\
-                         xlim=[-.3,.3], xticks_labels=[], yticks=yticks, ylim=ylim)
+            print(synch,np.array([(sexp-sth)**2 for sexp, sth in zip(SV_EXP, SV_TH)]).sum())
+            return np.array([(sexp-sth)**2 for sexp, sth in zip(SV_EXP, SV_TH)]).sum()
+        res = minimize(to_minimize, 0.2, options={'maxiter': 5})
+        print(res)
+        SET_OF_EXPS_TH = create_set_of_exps_th(args)
+        SV_TH = []
+        for EXP in SET_OF_EXPS_TH:
+            SHTN_INPUT =  {'synchrony':EXP['synchrony']+res.x[0],
+                           'fe_prox':EXP['fe_prox'], 'fi_prox':EXP['fi_prox'],
+                           'fe_dist':EXP['fe_dist'], 'fi_dist':EXP['fi_dist']}
+            _, sV, _, _ = get_the_fluct_prop_at_soma(SHTN_INPUT, params, soma, stick)
+            SV_TH.append(1e3*sV)
+        # then save the copy to be plotted
+        np.save('data/data_minim.npy', SV_TH)
             
-    for ax, ylabel in zip(AX[:,0], ['$\mu_V$ (mV)', '$\sigma_V$ (mV)', '$\\tau_V$ (ms)']):
-        ax.set_ylabel(ylabel)
+    else: # theoretical evaluation
+        SET_OF_EXPS_TH = create_set_of_exps_th(args)
+        Tm0 = get_membrane_time_constants(soma, stick, params)
+        ii=0
+        for EXP in SET_OF_EXPS_TH:
+            SHTN_INPUT =  {'synchrony':EXP['synchrony'],
+                            'fe_prox':EXP['fe_prox'], 'fi_prox':EXP['fi_prox'],
+                            'fe_dist':EXP['fe_dist'], 'fi_dist':EXP['fi_dist']}
+            print(SHTN_INPUT)
+            muV, sV, Tv, _ = get_the_fluct_prop_at_soma(SHTN_INPUT, params, soma, stick)
+            print(1e3*muV, 1e3*sV, 1e3*Tm0*Tv)
+            np.save(args.filename+str(ii)+'_th.npy', [1e3*muV, 1e3*sV, 1e3*Tm0*Tv])
+            ii+=1
 
-    plt.show()
-    
         
