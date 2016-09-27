@@ -147,7 +147,7 @@ fig, AX = plt.subplots(3, 5, figsize=(10,8))
 plt.subplots_adjust(left=.25, bottom=.25, wspace=.4, hspace=.4)
 # plotting all points in all plots so that they have the same boundaries !!
 YTICKS = [[-70,-60,-50], [3,5,7], [12, 20, 28], [0,15,30]]
-YLIM = [[-75,-30], [1.9,10.], [9,45], [-2,40]]
+YLIM = [[-75,-40], [1.9,8.], [9,31]]
 SV_MINIM = np.load('data/data_minim.npy')
 for EXP, EXP_TH, sv_min, ii in zip(SET_OF_EXPS, SET_OF_EXPS_TH, SV_MINIM, list(range(len(SET_OF_EXPS)))):
     X = EXP['xticks']
@@ -163,8 +163,9 @@ for EXP, EXP_TH, sv_min, ii in zip(SET_OF_EXPS, SET_OF_EXPS_TH, SV_MINIM, list(r
             ax.plot(XTH, sv_min, '--', color='gray', lw=3)
         ax.plot(np.ones(2)*X[1], ylim, 'wD', lw=0, alpha=0., ms=0.01)
         ax.plot(XTH, y2, '-', color='gray', lw=3)
+        ax.plot(X, np.array(y1).mean(axis=1), 'ko-', color='k', alpha=.2)
         ax.errorbar(X, np.array(y1).mean(axis=1),\
-                    yerr=np.array(y1).std(axis=1), color='k', fmt='o', mfc='white')
+                    yerr=np.array(y1).std(axis=1), color='k', fmt='o', mfc='none')
         if (ax in AX[:,-1]):
             ax.set_xscale("log")
             XLIM = [0.005,0.5]
@@ -275,7 +276,7 @@ if __name__=='__main__':
 
             print(synch,np.array([(sexp-sth)**2 for sexp, sth in zip(SV_EXP, SV_TH)]).sum())
             return np.array([(sexp-sth)**2 for sexp, sth in zip(SV_EXP, SV_TH)]).sum()
-        res = minimize(to_minimize, 0.2, options={'maxiter': 5})
+        res = minimize(to_minimize, [0.18], method='TNC', bounds=[(0.15,0.25)])
         print(res)
         SET_OF_EXPS_TH = create_set_of_exps_th(args)
         SV_TH = []
