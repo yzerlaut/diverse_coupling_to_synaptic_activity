@@ -41,7 +41,6 @@ RA = np.linspace(10., 90., N)*1e-2
 #### MODEL PROPERTIES ###############################
 #### ================================================== ##
 
-
 def get_input_imped(soma, stick, params):
     # branching properties
     params_for_cable_theory(stick, params) # setting cable membrane constants
