@@ -269,11 +269,11 @@ the details of the study. \rm
    We adressed this concern in details in Part A.
 
 5) \it Data extraction. It is not clear how the 4 cells have been selected
-   out of the 27 cells. The 4 cells represent 4 cell types. How are
+   out of the 30 cells. The 4 cells represent 4 cell types. How are
    these cell types specified? The paper does not give an answer on
    that. \rm
 
-   The 4 cells represent 4 different cells out of the n=27 cells
+   The 4 cells represent 4 different cells out of the n=30 cells
    recorded in our previous study [[cite:Zerlaut2016]]. The criteria to
    choose those 4 cells was that they should somehow represent
    different behaviors while still being representative. See in Figure
@@ -560,7 +560,9 @@ that match the theoretical constraints.. \rm
   missing (This allows also a generalization of the results to other
   cell types. Now only Fig S2 gives a hint about variability). \rm
 
-  *TO BE DONE*
+#+NAME: fig:var-morpho
+#+CAPTION: *Varying morphology.*
+[[./figs/var_morph.png]]
 
 - \it There's no reference to any other model than [[citetext:Kuhn2004]],
   on which the approach is based. Relate the model to recent work on
@@ -618,7 +620,7 @@ re-submission.
   [[citetext:Zerlaut2016]] and 387.3 \(\pm\) 197.2 M\(\Omega\) for the
   "input impedance dataset", see Methods.
 
-  We have updated figure 2C with the mention of "n=27cells" for the
+  We have updated figure 2C with the mention of "n=30cells" for the
   "firing rate dataset", then it highlights the difference with the
   dataset of input impedance labeled "n=13cells" and makes it more
   clear to the reader.
@@ -712,7 +714,10 @@ re-submission.
   many different trees with similar fit performance that result in
   different couplings to presynaptic activity? \rm
 
-  *TO BE DONE*
+#+NAME: fig:fitting
+#+CAPTION: *Fitting.*
+[[./figs/fitting.png]]
+
  
 * References
 \small
