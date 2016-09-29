@@ -213,11 +213,11 @@ the details of the study. \rm
    more than the individual excitability that determines the firing
    behavior, but this seems to contradict the previous statement. \rm
 
-   We agree with the reviewer that the formulation "only [...] except
-   [...]" might be misleading, we adapted the abstract to remove this
-   source of confusion. Now it reads: \bf "but trivially, the _main_
-   significant contribution to the various firing response was the
-   different levels of cellular excitability [...]". \rm
+   We agree and have reworded the abstract and discussion to better
+   highlight our main finding and better explicit what we mean by
+   "diverse coupling". We also removed the formulation "only [...]
+   except [...]" that might be misleading. We hope it is now more
+   clear.
 
 #+NAME: fig:1
 #+CAPTION: *Changing the ratio of the proximal/distal separation.* *(A)* Configuration of the main text, the proximal part occupies the first 87.5% of the dendritic morphology. *(B)* Now the proximal part occupies only the first 12.5% of the dendritic morphology. This importantly reduces the number of available synapses (the morphology has only one branch in the first 12.5% part). Provided this loss of synapses is compensated by an increase of activity, there is _no qualitative change between the 12.5% and the 87.5% setting for the proximal activity: non-monotonic \(\sigma_V\) variations, strong decrease in \(\tau_V / \tau_m^0 \)_. On the other hand, this change would have important qualitative consequences for the "distal activity" regime, if the last 87.5% of the morphology are "distal", many synapses are electrotonically close (what is rather irrealistic for distal synapses), they will thus stronly interact through conductance shunting and thus produce fluctuations close to the "proximal activity" setting of the main text.
@@ -560,8 +560,12 @@ that match the theoretical constraints.. \rm
   missing (This allows also a generalization of the results to other
   cell types. Now only Fig S2 gives a hint about variability). \rm
 
+  We performed this systematic analysis, the results are shown in
+  Figure [[fig:var-morpho]]. We adapted the supplemetary figure S2 in the
+  manuscript, to include those results.
+
 #+NAME: fig:var-morpho
-#+CAPTION: *Varying morphology.*
+#+CAPTION: *Dependency of the fluctuations properties as a function of the morphology parameters* (all parameters are varied of -70% and +70% around those of the mean model, one parameter is varied while all others are fixed to those of the mean model, see Table 1). We fixed the presynaptic stimulation to a level of \(\nu_e^p=\nu_e^d\)=0.2Hz, \(\nu_i^p=\nu_i^d\)=1.2Hz and s=0.05. (the baseline level). Globally, the mean polarization  is poorly affected by the morphology, given the balanced nature of the input and the homogenous spread of synapses on the membrane. On the other hand, the morphology parameters strongly affect the properties of the amplitude and speed of the fluctuations. (i) Dependency on the branching number. Because the branching number has an impact on the area, the number of synapses increases with the number of branches, then the amplitude of the fluctuations strongly decreases with the number of branches because of the law of large numbers. (ii) Dependency on the tree length. The same argument as in (i) holds. The length of the tree increases the number of synapses so that it reduces the amplitude of synapses. (iii) Dependency on the tree diameter. The same argument as in (i) holds again. The diameter of the tree increases the number of synapses so that it reduces the amplitude of synapses. (iv) Dependency on the size of the soma. Here, this increases only the number of inhibitory synapses at the soma. Within this range this has very weak effects on the fluctuations. (v) Dependency on the leak conductance. The leak conductance sets the amplitude and low pass filtering of individual post-synaptic events (because \(\tau_m \sim C_m / G_L\), though see correction introduced by the ongoing activity in the main text). An increasing leak conductance will “shunt” post-synaptic events. This lowers the amplitude of the fluctuations and lowers the autocorrelation time of the fluctuations. (vi) Dependency on the specific capacitance. Again because \(\tau_m \sim C_m / G_L\), an increasing capacitance renders the fluctuations much slower (increasing \(\tau_V\) ). Also because PSP events are much slower they lead to reduced amplitude of the fluctuations . (vii) Dependency on the intracellular resistivity. This has a moderate effect within this range.*
 [[./figs/var_morph.png]]
 
 - \it There's no reference to any other model than [[citetext:Kuhn2004]],
@@ -633,7 +637,14 @@ re-submission.
 - \it Fig 3AB: Please comment on the inconsistency between data and model
   for > 100 Hz. There seems to be a flip in vertical order. \rm
 
-  *TO BE DONE*
+  We now comment on the flip in vertical order (line 138): \bf In
+  particular, it strongly underestimates the variations of phase
+  shifts at medium and high frequencies (f>20Hz) and the relationship
+  between size and modulus at high frequencies (f>100Hz) is poorly
+  captured. Those discrepancies are likely to be due to the details of
+  dendritic arborescence that are not captured by the strong
+  constraints of our dendritic model (symmetric branching, diameter
+  rules, number of branches, etc...). \rm
 
 \it Section: "An analytical approximation ...":
 
@@ -702,7 +713,8 @@ re-submission.
 - \it Not all variables are properly defined, e.g. Qe, Qi, lp. \rm
 
   Indeed, thanks. We updated the Methods section. Also the densities
-  of synapses were not properly introduced.
+  of synapses and some cable theory parameters have been properly
+  introduced.
 
 - \it "it constitutes an extension of the approach proposed in Kuhn et
   al.": Please, state what extension. \rm
@@ -714,11 +726,23 @@ re-submission.
   many different trees with similar fit performance that result in
   different couplings to presynaptic activity? \rm
 
+  To get different couplings, the new tree would need to break the
+  relationship between presynaptic quantities and fluctuations
+  properties (the relationship from fluctuations to spikes is
+  independent). We thus studied the properties of the fluctuations for
+  the trees that had similar goodness to fit with respect to the "mean
+  model" of the main text. We present those results in Figure
+  [[fig:fitting]]. Despite some differences, the fluctuations had similar
+  trends than those discussed within the main text, in particular they
+  all showed the crucial ingredient of this study: the very strong
+  increase in fluctuations speed as a function of proximal activity.
+
+#+ATTR_LATEX: :width .8\linewidth
 #+NAME: fig:fitting
-#+CAPTION: *Fitting.*
+#+CAPTION: *Fluctuations properties for the morphologies with similar goodness to fit.* *(A)* Fluctuation propertis for two randomly choosen cells within the high goodness to fit (<1e-3). *(B)* Profile of the goodness to fit over the grid of scanned morphology parameters. Shown with two randomly picked examples in different range of goodness to fit.
 [[./figs/fitting.png]]
 
- 
+
 * References
 \small
 

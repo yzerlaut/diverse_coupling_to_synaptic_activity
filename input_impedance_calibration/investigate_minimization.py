@@ -144,17 +144,20 @@ def find_minimum_with_distance():
         DISTANCE.append(dist)
     return np.array(DISTANCE), np.array(ERROR)
 
-def plot_traces_of_intervals(I1=[1e-9,0.002], I2=[0.01,0.1], I3=[0.1,1.], I4=[1,10.], number=2):
-    VALUE_PSD, VALUE_PHASE = np.load('data_minim.npy')
-    ERROR = VALUE_PSD/VALUE_PSD.mean()*VALUE_PHASE/VALUE_PHASE.mean()
+def plot_traces_of_intervals(I1=[1e-9,0.0003], I2=[0.01,0.2], I3=[0.2,1.], I4=[1.,100.], number=2):
+    DISTANCE, ERROR = find_minimum_with_distance()
 
     FIGS = []
-    for I in [I1, I2, I3, I4]:
+    VAR = np.zeros(4)
+    for I,ii in zip([I1, I2, I3, I4], range(4)):
         sample = np.argwhere((ERROR>I[0]) & (ERROR<I[1]))
+        if I==I4:
+            print(sample)
+        VAR[ii] = np.std(DISTANCE[sample])
         for ii in np.random.randint(len(sample), size=number):
             fig = make_experimental_fig(sample[ii])
             FIGS.append(fig)
-    return FIGS
+    return FIGS, VAR
 
 def make_first_fig():
     DISTANCE, ERROR = find_minimum_with_distance()
@@ -218,9 +221,8 @@ if __name__=='__main__':
         fig = make_second_fig()
         fig.savefig('fig.svg')
     else:
-        FIGS = plot_traces_of_intervals()
-        ii=0
-        for fig in FIGS:
-            fig.savefig('fig'+str(ii)+'.svg')
-            ii+=1
-    # plt.show()
+        FIGS, VAR = plot_traces_of_intervals()
+        # ii=0
+        # for fig in FIGS:
+        #     fig.savefig('fig'+str(ii)+'.svg')
+        #     ii+=1
