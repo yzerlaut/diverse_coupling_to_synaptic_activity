@@ -9,12 +9,15 @@
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    version="1.1"
-   width="21cm"
-   height="29.7cm"
+   width="7.9644008cm"
+   height="6.8209815cm"
    viewbox="0 0 21cm 29.7cm"
    id="svg2"
    inkscape:version="0.91 r13725"
-   sodipodi:docname="two_extremes_cells.svg">
+   sodipodi:docname="figS1.svg"
+   inkscape:export-filename="/Users/yzerlaut/work/diverse_coupling_to_synaptic_activity/figures/figS1.png"
+   inkscape:export-xdpi="1500"
+   inkscape:export-ydpi="1500">
   <metadata
      id="metadata404">
     <rdf:RDF>
@@ -23,6 +26,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -31,44 +35,47 @@
     <marker
        inkscape:stockid="Arrow1Mend"
        orient="auto"
-       refY="0.0"
-       refX="0.0"
+       refY="0"
+       refX="0"
        id="Arrow1Mend"
-       style="overflow:visible;"
+       style="overflow:visible;stroke-linecap:butt;stroke-linejoin:round"
        inkscape:isstock="true">
       <path
          id="path7529"
-         d="M 0.0,0.0 L 5.0,-5.0 L -12.5,0.0 L 5.0,5.0 L 0.0,0.0 z "
-         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;stroke-opacity:1;fill:#000000;fill-opacity:1"
-         transform="scale(0.4) rotate(180) translate(10,0)" />
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 Z"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1pt;stroke-linecap:butt;stroke-linejoin:round;stroke-opacity:1"
+         transform="matrix(-0.4,0,0,-0.4,-4,0)"
+         inkscape:connector-curvature="0" />
     </marker>
     <marker
        inkscape:stockid="Arrow1Lend"
        orient="auto"
-       refY="0.0"
-       refX="0.0"
+       refY="0"
+       refX="0"
        id="Arrow1Lend"
-       style="overflow:visible;"
+       style="overflow:visible;stroke-linecap:butt;stroke-linejoin:round"
        inkscape:isstock="true">
       <path
          id="path7523"
-         d="M 0.0,0.0 L 5.0,-5.0 L -12.5,0.0 L 5.0,5.0 L 0.0,0.0 z "
-         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;stroke-opacity:1;fill:#000000;fill-opacity:1"
-         transform="scale(0.8) rotate(180) translate(12.5,0)" />
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 Z"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1pt;stroke-linecap:butt;stroke-linejoin:round;stroke-opacity:1"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)"
+         inkscape:connector-curvature="0" />
     </marker>
     <marker
        inkscape:stockid="Arrow1Mstart"
        orient="auto"
-       refY="0.0"
-       refX="0.0"
+       refY="0"
+       refX="0"
        id="Arrow1Mstart"
        style="overflow:visible"
        inkscape:isstock="true">
       <path
          id="path7526"
-         d="M 0.0,0.0 L 5.0,-5.0 L -12.5,0.0 L 5.0,5.0 L 0.0,0.0 z "
-         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;stroke-opacity:1;fill:#000000;fill-opacity:1"
-         transform="scale(0.4) translate(10,0)" />
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 Z"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1pt;stroke-linecap:butt;stroke-linejoin:round;stroke-opacity:1"
+         transform="matrix(0.4,0,0,0.4,4,0)"
+         inkscape:connector-curvature="0" />
     </marker>
     <defs
        id="defs194"
@@ -117,139 +124,169 @@
       </clipPath>
     </defs>
     <clipPath
-       id="p9fec11aa80">
+       id="p9fec11aa80"
+       style="stroke-linecap:butt;stroke-linejoin:round">
       <rect
          height="87.887756"
          width="162"
          x="129.60001"
          y="57.419998"
-         id="rect4237" />
+         id="rect4237"
+         style="stroke-linecap:butt;stroke-linejoin:round" />
     </clipPath>
     <clipPath
-       id="clipPath4253">
+       id="clipPath4253"
+       style="stroke-linecap:butt;stroke-linejoin:round">
       <rect
          height="87.887756"
          width="162"
          x="129.60001"
          y="57.419998"
-         id="rect4255" />
+         id="rect4255"
+         style="stroke-linecap:butt;stroke-linejoin:round" />
     </clipPath>
     <clipPath
-       id="clipPath4257">
+       id="clipPath4257"
+       style="stroke-linecap:butt;stroke-linejoin:round">
       <rect
          height="87.887756"
          width="162"
          x="129.60001"
          y="57.419998"
-         id="rect4259" />
+         id="rect4259"
+         style="stroke-linecap:butt;stroke-linejoin:round" />
     </clipPath>
     <clipPath
-       id="clipPath4261">
+       id="clipPath4261"
+       style="stroke-linecap:butt;stroke-linejoin:round">
       <rect
          height="87.887756"
          width="162"
          x="129.60001"
          y="57.419998"
-         id="rect4263" />
+         id="rect4263"
+         style="stroke-linecap:butt;stroke-linejoin:round" />
     </clipPath>
     <clipPath
-       id="clipPath4265">
+       id="clipPath4265"
+       style="stroke-linecap:butt;stroke-linejoin:round">
       <rect
          height="87.887756"
          width="162"
          x="129.60001"
          y="57.419998"
-         id="rect4267" />
+         id="rect4267"
+         style="stroke-linecap:butt;stroke-linejoin:round" />
     </clipPath>
     <clipPath
-       id="clipPath4269">
+       id="clipPath4269"
+       style="stroke-linecap:butt;stroke-linejoin:round">
       <rect
          height="87.887756"
          width="162"
          x="129.60001"
          y="57.419998"
-         id="rect4271" />
+         id="rect4271"
+         style="stroke-linecap:butt;stroke-linejoin:round" />
     </clipPath>
     <clipPath
-       id="clipPath4273">
+       id="clipPath4273"
+       style="stroke-linecap:butt;stroke-linejoin:round">
       <rect
          height="87.887756"
          width="162"
          x="129.60001"
          y="57.419998"
-         id="rect4275" />
+         id="rect4275"
+         style="stroke-linecap:butt;stroke-linejoin:round" />
     </clipPath>
     <clipPath
-       id="clipPath4277">
+       id="clipPath4277"
+       style="stroke-linecap:butt;stroke-linejoin:round">
       <rect
          height="87.887756"
          width="162"
          x="129.60001"
          y="57.419998"
-         id="rect4279" />
+         id="rect4279"
+         style="stroke-linecap:butt;stroke-linejoin:round" />
     </clipPath>
     <clipPath
-       id="clipPath4281">
+       id="clipPath4281"
+       style="stroke-linecap:butt;stroke-linejoin:round">
       <rect
          height="87.887756"
          width="162"
          x="129.60001"
          y="57.419998"
-         id="rect4283" />
+         id="rect4283"
+         style="stroke-linecap:butt;stroke-linejoin:round" />
     </clipPath>
     <clipPath
-       id="p08b6f56d1d">
+       id="p08b6f56d1d"
+       style="stroke-linecap:butt;stroke-linejoin:round">
       <rect
          height="87.887756"
          width="162"
          x="129.60001"
          y="171.67409"
-         id="rect4234" />
+         id="rect4234"
+         style="stroke-linecap:butt;stroke-linejoin:round" />
     </clipPath>
     <clipPath
-       id="clipPath4287">
+       id="clipPath4287"
+       style="stroke-linecap:butt;stroke-linejoin:round">
       <rect
          height="87.887756"
          width="162"
          x="129.60001"
          y="171.67409"
-         id="rect4289" />
+         id="rect4289"
+         style="stroke-linecap:butt;stroke-linejoin:round" />
     </clipPath>
     <clipPath
-       id="p8c2c8cf290">
+       id="p8c2c8cf290"
+       style="stroke-linecap:butt;stroke-linejoin:round">
       <rect
          height="87.887756"
          width="162"
          x="129.60001"
          y="285.92816"
-         id="rect4231" />
+         id="rect4231"
+         style="stroke-linecap:butt;stroke-linejoin:round" />
     </clipPath>
     <clipPath
-       id="clipPath4293">
+       id="clipPath4293"
+       style="stroke-linecap:butt;stroke-linejoin:round">
       <rect
          height="87.887756"
          width="162"
          x="129.60001"
          y="285.92816"
-         id="rect4295" />
+         id="rect4295"
+         style="stroke-linecap:butt;stroke-linejoin:round" />
     </clipPath>
     <clipPath
-       id="pb2a5df2b8b">
+       id="pb2a5df2b8b"
+       style="stroke-linecap:butt;stroke-linejoin:round">
       <rect
          height="87.887756"
          width="162"
          x="129.60001"
          y="400.18225"
-         id="rect4228" />
+         id="rect4228"
+         style="stroke-linecap:butt;stroke-linejoin:round" />
     </clipPath>
     <clipPath
-       id="clipPath4299">
+       id="clipPath4299"
+       style="stroke-linecap:butt;stroke-linejoin:round">
       <rect
          height="87.887756"
          width="162"
          x="129.60001"
          y="400.18225"
-         id="rect4301" />
+         id="rect4301"
+         style="stroke-linecap:butt;stroke-linejoin:round" />
     </clipPath>
     <marker
        inkscape:stockid="Arrow1Mend"
@@ -257,13 +294,13 @@
        refY="0"
        refX="0"
        id="Arrow1Mend-0"
-       style="overflow:visible"
+       style="overflow:visible;stroke-linecap:butt;stroke-linejoin:round"
        inkscape:isstock="true">
       <path
          inkscape:connector-curvature="0"
          id="path7529-1"
          d="M 0,0 5,-5 -12.5,0 5,5 0,0 Z"
-         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1pt;stroke-opacity:1"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1pt;stroke-linecap:butt;stroke-linejoin:round;stroke-opacity:1"
          transform="matrix(-0.4,0,0,-0.4,-4,0)" />
     </marker>
   </defs>
@@ -274,240 +311,244 @@
      objecttolerance="10"
      gridtolerance="10"
      guidetolerance="10"
-     inkscape:pageopacity="0"
+     inkscape:pageopacity="1"
      inkscape:pageshadow="2"
-     inkscape:window-width="1920"
-     inkscape:window-height="1057"
+     inkscape:window-width="931"
+     inkscape:window-height="702"
      id="namedview400"
      showgrid="false"
-     inkscape:zoom="0.22425738"
-     inkscape:cx="1335.3925"
-     inkscape:cy="1079.5905"
-     inkscape:window-x="-8"
-     inkscape:window-y="-8"
-     inkscape:window-maximized="1"
-     inkscape:current-layer="svg2" />
+     inkscape:zoom="0.89702952"
+     inkscape:cx="122.60876"
+     inkscape:cy="64.589738"
+     inkscape:window-x="0"
+     inkscape:window-y="1"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg2"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0" />
   <path
      inkscape:connector-curvature="0"
      id="path18"
      style="stroke:#000000;stroke-linecap:butt;stroke-linejoin:round"
      d="m 54.999,124.113 5.022,0 0,-49.6881 -5.022,0 z"
      clip-path="url(#p68abb7da3e)"
-     transform="matrix(1.0004754,0,0,1.3417092,96.890362,68.819364)" />
+     transform="matrix(0.62822355,0,0,0.84249281,-32.542737,-62.248084)" />
   <path
      inkscape:connector-curvature="0"
      id="path20"
      style="stroke:#000000;stroke-linecap:butt;stroke-linejoin:round"
      d="m 65.043,124.113 5.022,0 0,-49.6881 -5.022,0 z"
      clip-path="url(#p68abb7da3e)"
-     transform="matrix(1.0004754,0,0,1.3417092,96.890362,68.819364)" />
+     transform="matrix(0.62822355,0,0,0.84249281,-32.542737,-62.248084)" />
   <path
      inkscape:connector-curvature="0"
      id="path22"
      style="stroke:#000000;stroke-linecap:butt;stroke-linejoin:round"
      d="m 75.087,124.113 5.022,0 0,-49.6881 -5.022,0 z"
      clip-path="url(#p68abb7da3e)"
-     transform="matrix(1.0004754,0,0,1.3417092,96.890362,68.819364)" />
+     transform="matrix(0.62822355,0,0,0.84249281,-32.542737,-62.248084)" />
   <path
      inkscape:connector-curvature="0"
      id="path24"
      style="stroke:#000000;stroke-linecap:butt;stroke-linejoin:round"
      d="m 85.131,124.113 5.022,0 0,-49.6881 -5.022,0 z"
      clip-path="url(#p68abb7da3e)"
-     transform="matrix(1.0004754,0,0,1.3417092,96.890362,68.819364)" />
+     transform="matrix(0.62822355,0,0,0.84249281,-32.542737,-62.248084)" />
   <path
      inkscape:connector-curvature="0"
      id="path26"
      style="stroke:#000000;stroke-linecap:butt;stroke-linejoin:round"
      d="m 95.175,124.113 5.022,0 0,-49.6881 -5.022,0 z"
      clip-path="url(#p68abb7da3e)"
-     transform="matrix(1.0004754,0,0,1.3417092,96.890362,68.819364)" />
+     transform="matrix(0.62822355,0,0,0.84249281,-32.542737,-62.248084)" />
   <path
      inkscape:connector-curvature="0"
      id="path28"
      style="stroke:#000000;stroke-linecap:butt;stroke-linejoin:round"
      d="m 105.219,124.113 5.022,0 0,-49.6881 -5.022,0 z"
      clip-path="url(#p68abb7da3e)"
-     transform="matrix(1.0004754,0,0,1.3417092,96.890362,68.819364)" />
+     transform="matrix(0.62822355,0,0,0.84249281,-32.542737,-62.248084)" />
   <path
      inkscape:connector-curvature="0"
      id="path30"
      style="stroke:#000000;stroke-linecap:butt;stroke-linejoin:round"
      d="m 115.263,124.113 5.022,0 0,-49.6881 -5.022,0 z"
      clip-path="url(#p68abb7da3e)"
-     transform="matrix(1.0004754,0,0,1.3417092,96.890362,68.819364)" />
+     transform="matrix(0.62822355,0,0,0.84249281,-32.542737,-62.248084)" />
   <path
      inkscape:connector-curvature="0"
      id="path32"
      style="stroke:#000000;stroke-linecap:butt;stroke-linejoin:round"
      d="m 125.307,124.113 5.022,0 0,-49.6881 -5.022,0 z"
      clip-path="url(#p68abb7da3e)"
-     transform="matrix(1.0004754,0,0,1.3417092,96.890362,68.819364)" />
+     transform="matrix(0.62822355,0,0,0.84249281,-32.542737,-62.248084)" />
   <path
      inkscape:connector-curvature="0"
      id="path34"
      style="stroke:#000000;stroke-linecap:butt;stroke-linejoin:round"
      d="m 135.351,124.113 5.022,0 0,-49.6881 -5.022,0 z"
      clip-path="url(#p68abb7da3e)"
-     transform="matrix(1.0004754,0,0,1.3417092,96.890362,68.819364)" />
+     transform="matrix(0.62822355,0,0,0.84249281,-32.542737,-62.248084)" />
   <path
      inkscape:connector-curvature="0"
      id="path36"
      style="stroke:#000000;stroke-linecap:butt;stroke-linejoin:round"
      d="m 145.395,124.113 5.022,0 0,-49.6881 -5.022,0 z"
      clip-path="url(#p68abb7da3e)"
-     transform="matrix(1.0004754,0,0,1.3417092,96.890362,68.819364)" />
+     transform="matrix(0.62822355,0,0,0.84249281,-32.542737,-62.248084)" />
   <path
      inkscape:connector-curvature="0"
      id="path38"
      style="stroke:#000000;stroke-linecap:butt;stroke-linejoin:round"
      d="m 155.439,124.113 5.022,0 0,-49.6881 -5.022,0 z"
      clip-path="url(#p68abb7da3e)"
-     transform="matrix(1.0004754,0,0,1.3417092,96.890362,68.819364)" />
+     transform="matrix(0.62822355,0,0,0.84249281,-32.542737,-62.248084)" />
   <path
      inkscape:connector-curvature="0"
      id="path40"
      style="stroke:#000000;stroke-linecap:butt;stroke-linejoin:round"
      d="m 165.483,124.113 5.022,0 0,-49.6881 -5.022,0 z"
      clip-path="url(#p68abb7da3e)"
-     transform="matrix(1.0004754,0,0,1.3417092,96.890362,68.819364)" />
+     transform="matrix(0.62822355,0,0,0.84249281,-32.542737,-62.248084)" />
   <path
      inkscape:connector-curvature="0"
      id="path42"
      style="stroke:#000000;stroke-linecap:butt;stroke-linejoin:round"
      d="m 175.527,124.113 5.022,0 0,-49.6881 -5.022,0 z"
      clip-path="url(#p68abb7da3e)"
-     transform="matrix(1.0004754,0,0,1.3417092,96.890362,68.819364)" />
+     transform="matrix(0.62822355,0,0,0.84249281,-32.542737,-62.248084)" />
   <path
      inkscape:connector-curvature="0"
      id="path44"
      style="stroke:#000000;stroke-linecap:butt;stroke-linejoin:round"
      d="m 185.571,124.113 5.022,0 0,-49.6881 -5.022,0 z"
      clip-path="url(#p68abb7da3e)"
-     transform="matrix(1.0004754,0,0,1.3417092,96.890362,68.819364)" />
+     transform="matrix(0.62822355,0,0,0.84249281,-32.542737,-62.248084)" />
   <path
      inkscape:connector-curvature="0"
      id="path46"
      style="stroke:#000000;stroke-linecap:butt;stroke-linejoin:round"
      d="m 195.615,124.113 5.022,0 0,-49.6881 -5.022,0 z"
      clip-path="url(#p68abb7da3e)"
-     transform="matrix(1.0004754,0,0,1.3417092,96.890362,68.819364)" />
+     transform="matrix(0.62822355,0,0,0.84249281,-32.542737,-62.248084)" />
   <path
      inkscape:connector-curvature="0"
      id="path48"
      style="stroke:#000000;stroke-linecap:butt;stroke-linejoin:round"
      d="m 205.659,124.113 5.022,0 0,-49.6881 -5.022,0 z"
      clip-path="url(#p68abb7da3e)"
-     transform="matrix(1.0004754,0,0,1.3417092,96.890362,68.819364)" />
+     transform="matrix(0.62822355,0,0,0.84249281,-32.542737,-62.248084)" />
   <path
      inkscape:connector-curvature="0"
      id="path50"
      style="stroke:#000000;stroke-linecap:butt;stroke-linejoin:round"
      d="m 58.546,177.942 7.972,0 0,-49.688 -7.972,0 z"
      clip-path="url(#p68abb7da3e)"
-     transform="matrix(1.0004754,0,0,1.3417092,96.890362,68.819364)" />
+     transform="matrix(0.62822355,0,0,0.84249281,-32.542737,-62.248084)" />
   <path
      inkscape:connector-curvature="0"
      id="path52"
      style="stroke:#000000;stroke-linecap:butt;stroke-linejoin:round"
      d="m 78.634,177.942 7.972,0 0,-49.688 -7.972,0 z"
      clip-path="url(#p68abb7da3e)"
-     transform="matrix(1.0004754,0,0,1.3417092,96.890362,68.819364)" />
+     transform="matrix(0.62822355,0,0,0.84249281,-32.542737,-62.248084)" />
   <path
      inkscape:connector-curvature="0"
      id="path54"
      style="stroke:#000000;stroke-linecap:butt;stroke-linejoin:round"
      d="m 98.722,177.942 7.972,0 0,-49.688 -7.972,0 z"
      clip-path="url(#p68abb7da3e)"
-     transform="matrix(1.0004754,0,0,1.3417092,96.890362,68.819364)" />
+     transform="matrix(0.62822355,0,0,0.84249281,-32.542737,-62.248084)" />
   <path
      inkscape:connector-curvature="0"
      id="path56"
      style="stroke:#000000;stroke-linecap:butt;stroke-linejoin:round"
      d="m 118.81,177.942 7.972,0 0,-49.688 -7.972,0 z"
      clip-path="url(#p68abb7da3e)"
-     transform="matrix(1.0004754,0,0,1.3417092,96.890362,68.819364)" />
+     transform="matrix(0.62822355,0,0,0.84249281,-32.542737,-62.248084)" />
   <path
      inkscape:connector-curvature="0"
      id="path58"
      style="stroke:#000000;stroke-linecap:butt;stroke-linejoin:round"
      d="m 138.898,177.942 7.972,0 0,-49.688 -7.972,0 z"
      clip-path="url(#p68abb7da3e)"
-     transform="matrix(1.0004754,0,0,1.3417092,96.890362,68.819364)" />
+     transform="matrix(0.62822355,0,0,0.84249281,-32.542737,-62.248084)" />
   <path
      inkscape:connector-curvature="0"
      id="path60"
      style="stroke:#000000;stroke-linecap:butt;stroke-linejoin:round"
      d="m 158.986,177.942 7.972,0 0,-49.688 -7.972,0 z"
      clip-path="url(#p68abb7da3e)"
-     transform="matrix(1.0004754,0,0,1.3417092,96.890362,68.819364)" />
+     transform="matrix(0.62822355,0,0,0.84249281,-32.542737,-62.248084)" />
   <path
      inkscape:connector-curvature="0"
      id="path62"
      style="stroke:#000000;stroke-linecap:butt;stroke-linejoin:round"
      d="m 179.074,177.942 7.972,0 0,-49.688 -7.972,0 z"
      clip-path="url(#p68abb7da3e)"
-     transform="matrix(1.0004754,0,0,1.3417092,96.890362,68.819364)" />
+     transform="matrix(0.62822355,0,0,0.84249281,-32.542737,-62.248084)" />
   <path
      inkscape:connector-curvature="0"
      id="path64"
      style="stroke:#000000;stroke-linecap:butt;stroke-linejoin:round"
      d="m 199.162,177.942 7.972,0 0,-49.688 -7.972,0 z"
      clip-path="url(#p68abb7da3e)"
-     transform="matrix(1.0004754,0,0,1.3417092,96.890362,68.819364)" />
+     transform="matrix(0.62822355,0,0,0.84249281,-32.542737,-62.248084)" />
   <path
      inkscape:connector-curvature="0"
      id="path66"
      style="stroke:#000000;stroke-linecap:butt;stroke-linejoin:round"
      d="m 66.2487,231.771 12.6546,0 0,-49.688 -12.6546,0 z"
      clip-path="url(#p68abb7da3e)"
-     transform="matrix(1.0004754,0,0,1.3417092,96.890362,68.819364)" />
+     transform="matrix(0.62822355,0,0,0.84249281,-32.542737,-62.248084)" />
   <path
      inkscape:connector-curvature="0"
      id="path68"
      style="stroke:#000000;stroke-linecap:butt;stroke-linejoin:round"
      d="m 106.425,231.771 12.654,0 0,-49.688 -12.654,0 z"
      clip-path="url(#p68abb7da3e)"
-     transform="matrix(1.0004754,0,0,1.3417092,96.890362,68.819364)" />
+     transform="matrix(0.62822355,0,0,0.84249281,-32.542737,-62.248084)" />
   <path
      inkscape:connector-curvature="0"
      id="path70"
      style="stroke:#000000;stroke-linecap:butt;stroke-linejoin:round"
      d="m 146.601,231.771 12.654,0 0,-49.688 -12.654,0 z"
      clip-path="url(#p68abb7da3e)"
-     transform="matrix(1.0004754,0,0,1.3417092,96.890362,68.819364)" />
+     transform="matrix(0.62822355,0,0,0.84249281,-32.542737,-62.248084)" />
   <path
      inkscape:connector-curvature="0"
      id="path72"
      style="stroke:#000000;stroke-linecap:butt;stroke-linejoin:round"
      d="m 186.777,231.771 12.654,0 0,-49.688 -12.654,0 z"
      clip-path="url(#p68abb7da3e)"
-     transform="matrix(1.0004754,0,0,1.3417092,96.890362,68.819364)" />
+     transform="matrix(0.62822355,0,0,0.84249281,-32.542737,-62.248084)" />
   <path
      inkscape:connector-curvature="0"
      id="path74"
      style="stroke:#000000;stroke-linecap:butt;stroke-linejoin:round"
      d="m 82.62,285.6 20.088,0 0,-49.689 -20.088,0 z"
      clip-path="url(#p68abb7da3e)"
-     transform="matrix(1.0004754,0,0,1.3417092,96.890362,68.819364)" />
+     transform="matrix(0.62822355,0,0,0.84249281,-32.542737,-62.248084)" />
   <path
      inkscape:connector-curvature="0"
      id="path76"
      style="stroke:#000000;stroke-linecap:butt;stroke-linejoin:round"
      d="m 162.972,285.6 20.088,0 0,-49.689 -20.088,0 z"
      clip-path="url(#p68abb7da3e)"
-     transform="matrix(1.0004754,0,0,1.3417092,96.890362,68.819364)" />
+     transform="matrix(0.62822355,0,0,0.84249281,-32.542737,-62.248084)" />
   <path
      inkscape:connector-curvature="0"
      id="path78"
      style="stroke:#000000;stroke-linecap:butt;stroke-linejoin:round"
      d="m 116.896,339.429 31.888,0 0,-49.689 -31.888,0 z"
      clip-path="url(#p68abb7da3e)"
-     transform="matrix(1.0004754,0,0,1.3417092,96.890362,68.819364)" />
+     transform="matrix(0.62822355,0,0,0.84249281,-32.542737,-62.248084)" />
   <g
      id="PatchCollection_2"
      style="stroke-linecap:butt;stroke-linejoin:round"
-     transform="matrix(1.0004754,0,0,1.3417092,96.890362,68.819364)">
+     transform="matrix(0.62822355,0,0,0.84249281,-32.542737,-62.248084)">
     <path
        clip-path="url(#p68abb7da3e)"
        d="m 57.51,124.113 10.044,0"
@@ -698,7 +739,7 @@
   <g
      id="line2d_1"
      style="stroke-linecap:butt;stroke-linejoin:round"
-     transform="matrix(1.0004754,0,0,1.3417092,96.890362,68.819364)">
+     transform="matrix(0.62822355,0,0,0.84249281,-32.542737,-62.248084)">
     <path
        clip-path="url(#p68abb7da3e)"
        d="M 52.488,355.991 213.192,90.9876"
@@ -709,7 +750,7 @@
   <g
      id="line2d_2"
      style="stroke-linecap:butt;stroke-linejoin:round"
-     transform="matrix(1.707172,0,0,1.7134032,3.1522622,-59.005086)">
+     transform="matrix(1.071976,0,0,1.0758888,-91.403238,-142.51224)">
     <defs
        id="defs151">
       <path
@@ -738,235 +779,235 @@
      style="stroke:#000000;stroke-linecap:butt;stroke-linejoin:round"
      d="m 54.999,93.2077 5.022,0 0,-59.3521 -5.022,0 z"
      clip-path="url(#p68abb7da3e)"
-     transform="matrix(0.33325707,0,0,0.41790032,441.79786,149.89905)" />
+     transform="matrix(0.20926046,0,0,0.26241009,184.03332,-11.336116)" />
   <path
      inkscape:connector-curvature="0"
      id="path210"
      style="stroke:#000000;stroke-linecap:butt;stroke-linejoin:round"
      d="m 65.043,93.2077 5.022,0 0,-59.3521 -5.022,0 z"
      clip-path="url(#p68abb7da3e)"
-     transform="matrix(0.33325707,0,0,0.41790032,441.79786,149.89905)" />
+     transform="matrix(0.20926046,0,0,0.26241009,184.03332,-11.336116)" />
   <path
      inkscape:connector-curvature="0"
      id="path212"
      style="stroke:#000000;stroke-linecap:butt;stroke-linejoin:round"
      d="m 75.087,93.2077 5.022,0 0,-59.3521 -5.022,0 z"
      clip-path="url(#p68abb7da3e)"
-     transform="matrix(0.33325707,0,0,0.41790032,441.79786,149.89905)" />
+     transform="matrix(0.20926046,0,0,0.26241009,184.03332,-11.336116)" />
   <path
      inkscape:connector-curvature="0"
      id="path214"
      style="stroke:#000000;stroke-linecap:butt;stroke-linejoin:round"
      d="m 85.131,93.2077 5.022,0 0,-59.3521 -5.022,0 z"
      clip-path="url(#p68abb7da3e)"
-     transform="matrix(0.33325707,0,0,0.41790032,441.79786,149.89905)" />
+     transform="matrix(0.20926046,0,0,0.26241009,184.03332,-11.336116)" />
   <path
      inkscape:connector-curvature="0"
      id="path216"
      style="stroke:#000000;stroke-linecap:butt;stroke-linejoin:round"
      d="m 95.175,93.2077 5.022,0 0,-59.3521 -5.022,0 z"
      clip-path="url(#p68abb7da3e)"
-     transform="matrix(0.33325707,0,0,0.41790032,441.79786,149.89905)" />
+     transform="matrix(0.20926046,0,0,0.26241009,184.03332,-11.336116)" />
   <path
      inkscape:connector-curvature="0"
      id="path218"
      style="stroke:#000000;stroke-linecap:butt;stroke-linejoin:round"
      d="m 105.219,93.2077 5.022,0 0,-59.3521 -5.022,0 z"
      clip-path="url(#p68abb7da3e)"
-     transform="matrix(0.33325707,0,0,0.41790032,441.79786,149.89905)" />
+     transform="matrix(0.20926046,0,0,0.26241009,184.03332,-11.336116)" />
   <path
      inkscape:connector-curvature="0"
      id="path220"
      style="stroke:#000000;stroke-linecap:butt;stroke-linejoin:round"
      d="m 115.263,93.2077 5.022,0 0,-59.3521 -5.022,0 z"
      clip-path="url(#p68abb7da3e)"
-     transform="matrix(0.33325707,0,0,0.41790032,441.79786,149.89905)" />
+     transform="matrix(0.20926046,0,0,0.26241009,184.03332,-11.336116)" />
   <path
      inkscape:connector-curvature="0"
      id="path222"
      style="stroke:#000000;stroke-linecap:butt;stroke-linejoin:round"
      d="m 125.307,93.2077 5.022,0 0,-59.3521 -5.022,0 z"
      clip-path="url(#p68abb7da3e)"
-     transform="matrix(0.33325707,0,0,0.41790032,441.79786,149.89905)" />
+     transform="matrix(0.20926046,0,0,0.26241009,184.03332,-11.336116)" />
   <path
      inkscape:connector-curvature="0"
      id="path224"
      style="stroke:#000000;stroke-linecap:butt;stroke-linejoin:round"
      d="m 135.351,93.2077 5.022,0 0,-59.3521 -5.022,0 z"
      clip-path="url(#p68abb7da3e)"
-     transform="matrix(0.33325707,0,0,0.41790032,441.79786,149.89905)" />
+     transform="matrix(0.20926046,0,0,0.26241009,184.03332,-11.336116)" />
   <path
      inkscape:connector-curvature="0"
      id="path226"
      style="stroke:#000000;stroke-linecap:butt;stroke-linejoin:round"
      d="m 145.395,93.2077 5.022,0 0,-59.3521 -5.022,0 z"
      clip-path="url(#p68abb7da3e)"
-     transform="matrix(0.33325707,0,0,0.41790032,441.79786,149.89905)" />
+     transform="matrix(0.20926046,0,0,0.26241009,184.03332,-11.336116)" />
   <path
      inkscape:connector-curvature="0"
      id="path228"
      style="stroke:#000000;stroke-linecap:butt;stroke-linejoin:round"
      d="m 155.439,93.2077 5.022,0 0,-59.3521 -5.022,0 z"
      clip-path="url(#p68abb7da3e)"
-     transform="matrix(0.33325707,0,0,0.41790032,441.79786,149.89905)" />
+     transform="matrix(0.20926046,0,0,0.26241009,184.03332,-11.336116)" />
   <path
      inkscape:connector-curvature="0"
      id="path230"
      style="stroke:#000000;stroke-linecap:butt;stroke-linejoin:round"
      d="m 165.483,93.2077 5.022,0 0,-59.3521 -5.022,0 z"
      clip-path="url(#p68abb7da3e)"
-     transform="matrix(0.33325707,0,0,0.41790032,441.79786,149.89905)" />
+     transform="matrix(0.20926046,0,0,0.26241009,184.03332,-11.336116)" />
   <path
      inkscape:connector-curvature="0"
      id="path232"
      style="stroke:#000000;stroke-linecap:butt;stroke-linejoin:round"
      d="m 175.527,93.2077 5.022,0 0,-59.3521 -5.022,0 z"
      clip-path="url(#p68abb7da3e)"
-     transform="matrix(0.33325707,0,0,0.41790032,441.79786,149.89905)" />
+     transform="matrix(0.20926046,0,0,0.26241009,184.03332,-11.336116)" />
   <path
      inkscape:connector-curvature="0"
      id="path234"
      style="stroke:#000000;stroke-linecap:butt;stroke-linejoin:round"
      d="m 185.571,93.2077 5.022,0 0,-59.3521 -5.022,0 z"
      clip-path="url(#p68abb7da3e)"
-     transform="matrix(0.33325707,0,0,0.41790032,441.79786,149.89905)" />
+     transform="matrix(0.20926046,0,0,0.26241009,184.03332,-11.336116)" />
   <path
      inkscape:connector-curvature="0"
      id="path236"
      style="stroke:#000000;stroke-linecap:butt;stroke-linejoin:round"
      d="m 195.615,93.2077 5.022,0 0,-59.3521 -5.022,0 z"
      clip-path="url(#p68abb7da3e)"
-     transform="matrix(0.33325707,0,0,0.41790032,441.79786,149.89905)" />
+     transform="matrix(0.20926046,0,0,0.26241009,184.03332,-11.336116)" />
   <path
      inkscape:connector-curvature="0"
      id="path238"
      style="stroke:#000000;stroke-linecap:butt;stroke-linejoin:round"
      d="m 205.659,93.2077 5.022,0 0,-59.3521 -5.022,0 z"
      clip-path="url(#p68abb7da3e)"
-     transform="matrix(0.33325707,0,0,0.41790032,441.79786,149.89905)" />
+     transform="matrix(0.20926046,0,0,0.26241009,184.03332,-11.336116)" />
   <path
      inkscape:connector-curvature="0"
      id="path240"
      style="stroke:#000000;stroke-linecap:butt;stroke-linejoin:round"
      d="m 58.546,157.506 7.972,0 0,-59.3523 -7.972,0 z"
      clip-path="url(#p68abb7da3e)"
-     transform="matrix(0.33325707,0,0,0.41790032,441.79786,149.89905)" />
+     transform="matrix(0.20926046,0,0,0.26241009,184.03332,-11.336116)" />
   <path
      inkscape:connector-curvature="0"
      id="path242"
      style="stroke:#000000;stroke-linecap:butt;stroke-linejoin:round"
      d="m 78.634,157.506 7.972,0 0,-59.3523 -7.972,0 z"
      clip-path="url(#p68abb7da3e)"
-     transform="matrix(0.33325707,0,0,0.41790032,441.79786,149.89905)" />
+     transform="matrix(0.20926046,0,0,0.26241009,184.03332,-11.336116)" />
   <path
      inkscape:connector-curvature="0"
      id="path244"
      style="stroke:#000000;stroke-linecap:butt;stroke-linejoin:round"
      d="m 98.722,157.506 7.972,0 0,-59.3523 -7.972,0 z"
      clip-path="url(#p68abb7da3e)"
-     transform="matrix(0.33325707,0,0,0.41790032,441.79786,149.89905)" />
+     transform="matrix(0.20926046,0,0,0.26241009,184.03332,-11.336116)" />
   <path
      inkscape:connector-curvature="0"
      id="path246"
      style="stroke:#000000;stroke-linecap:butt;stroke-linejoin:round"
      d="m 118.81,157.506 7.972,0 0,-59.3523 -7.972,0 z"
      clip-path="url(#p68abb7da3e)"
-     transform="matrix(0.33325707,0,0,0.41790032,441.79786,149.89905)" />
+     transform="matrix(0.20926046,0,0,0.26241009,184.03332,-11.336116)" />
   <path
      inkscape:connector-curvature="0"
      id="path248"
      style="stroke:#000000;stroke-linecap:butt;stroke-linejoin:round"
      d="m 138.898,157.506 7.972,0 0,-59.3523 -7.972,0 z"
      clip-path="url(#p68abb7da3e)"
-     transform="matrix(0.33325707,0,0,0.41790032,441.79786,149.89905)" />
+     transform="matrix(0.20926046,0,0,0.26241009,184.03332,-11.336116)" />
   <path
      inkscape:connector-curvature="0"
      id="path250"
      style="stroke:#000000;stroke-linecap:butt;stroke-linejoin:round"
      d="m 158.986,157.506 7.972,0 0,-59.3523 -7.972,0 z"
      clip-path="url(#p68abb7da3e)"
-     transform="matrix(0.33325707,0,0,0.41790032,441.79786,149.89905)" />
+     transform="matrix(0.20926046,0,0,0.26241009,184.03332,-11.336116)" />
   <path
      inkscape:connector-curvature="0"
      id="path252"
      style="stroke:#000000;stroke-linecap:butt;stroke-linejoin:round"
      d="m 179.074,157.506 7.972,0 0,-59.3523 -7.972,0 z"
      clip-path="url(#p68abb7da3e)"
-     transform="matrix(0.33325707,0,0,0.41790032,441.79786,149.89905)" />
+     transform="matrix(0.20926046,0,0,0.26241009,184.03332,-11.336116)" />
   <path
      inkscape:connector-curvature="0"
      id="path254"
      style="stroke:#000000;stroke-linecap:butt;stroke-linejoin:round"
      d="m 199.162,157.506 7.972,0 0,-59.3523 -7.972,0 z"
      clip-path="url(#p68abb7da3e)"
-     transform="matrix(0.33325707,0,0,0.41790032,441.79786,149.89905)" />
+     transform="matrix(0.20926046,0,0,0.26241009,184.03332,-11.336116)" />
   <path
      inkscape:connector-curvature="0"
      id="path256"
      style="stroke:#000000;stroke-linecap:butt;stroke-linejoin:round"
      d="m 66.2487,221.804 12.6546,0 0,-59.352 -12.6546,0 z"
      clip-path="url(#p68abb7da3e)"
-     transform="matrix(0.33325707,0,0,0.41790032,441.79786,149.89905)" />
+     transform="matrix(0.20926046,0,0,0.26241009,184.03332,-11.336116)" />
   <path
      inkscape:connector-curvature="0"
      id="path258"
      style="stroke:#000000;stroke-linecap:butt;stroke-linejoin:round"
      d="m 106.425,221.804 12.654,0 0,-59.352 -12.654,0 z"
      clip-path="url(#p68abb7da3e)"
-     transform="matrix(0.33325707,0,0,0.41790032,441.79786,149.89905)" />
+     transform="matrix(0.20926046,0,0,0.26241009,184.03332,-11.336116)" />
   <path
      inkscape:connector-curvature="0"
      id="path260"
      style="stroke:#000000;stroke-linecap:butt;stroke-linejoin:round"
      d="m 146.601,221.804 12.654,0 0,-59.352 -12.654,0 z"
      clip-path="url(#p68abb7da3e)"
-     transform="matrix(0.33325707,0,0,0.41790032,441.79786,149.89905)" />
+     transform="matrix(0.20926046,0,0,0.26241009,184.03332,-11.336116)" />
   <path
      inkscape:connector-curvature="0"
      id="path262"
      style="stroke:#000000;stroke-linecap:butt;stroke-linejoin:round"
      d="m 186.777,221.804 12.654,0 0,-59.352 -12.654,0 z"
      clip-path="url(#p68abb7da3e)"
-     transform="matrix(0.33325707,0,0,0.41790032,441.79786,149.89905)" />
+     transform="matrix(0.20926046,0,0,0.26241009,184.03332,-11.336116)" />
   <path
      inkscape:connector-curvature="0"
      id="path264"
      style="stroke:#000000;stroke-linecap:butt;stroke-linejoin:round"
      d="m 82.62,286.102 20.088,0 0,-59.352 -20.088,0 z"
      clip-path="url(#p68abb7da3e)"
-     transform="matrix(0.33325707,0,0,0.41790032,441.79786,149.89905)" />
+     transform="matrix(0.20926046,0,0,0.26241009,184.03332,-11.336116)" />
   <path
      inkscape:connector-curvature="0"
      id="path266"
      style="stroke:#000000;stroke-linecap:butt;stroke-linejoin:round"
      d="m 162.972,286.102 20.088,0 0,-59.352 -20.088,0 z"
      clip-path="url(#p68abb7da3e)"
-     transform="matrix(0.33325707,0,0,0.41790032,441.79786,149.89905)" />
+     transform="matrix(0.20926046,0,0,0.26241009,184.03332,-11.336116)" />
   <path
      inkscape:connector-curvature="0"
      id="path268"
      style="stroke:#000000;stroke-linecap:butt;stroke-linejoin:round"
      d="m 116.896,350.4 31.888,0 0,-59.352 -31.888,0 z"
      clip-path="url(#p68abb7da3e)"
-     transform="matrix(0.33325707,0,0,0.41790032,441.79786,149.89905)" />
+     transform="matrix(0.20926046,0,0,0.26241009,184.03332,-11.336116)" />
   <path
      inkscape:connector-curvature="0"
      id="path270"
      style="stroke:#000000;stroke-linecap:butt;stroke-linejoin:round"
      d="m 143.745,360.292 23.149,0 0,-4.946 -23.149,0 z"
      clip-path="url(#p68abb7da3e)"
-     transform="matrix(0.32851575,0,0,0.70829497,310.59286,-7.8276457)" />
+     transform="matrix(0.20628328,0,0,0.44475615,101.64641,-110.37666)" />
   <path
      inkscape:connector-curvature="0"
      id="path272"
      style="stroke:#000000;stroke-linecap:butt;stroke-linejoin:round"
      d="m 166.894,360.292 2.511,0 0,-38.4 -2.511,0 z"
      clip-path="url(#p68abb7da3e)"
-     transform="matrix(1.1033765,0,0,0.4097137,181.52096,99.661744)" />
+     transform="matrix(0.69283774,0,0,0.2572695,20.598933,-42.88138)" />
   <g
      id="g274"
      style="stroke-linecap:butt;stroke-linejoin:round"
-     transform="matrix(0.33325707,0,0,0.41790032,441.79786,149.89905)">
+     transform="matrix(0.20926046,0,0,0.26241009,184.03332,-11.336116)">
     <path
        clip-path="url(#p68abb7da3e)"
        d="m 57.51,93.2077 10.044,0"
@@ -1157,7 +1198,7 @@
   <g
      id="g338"
      style="stroke-linecap:butt;stroke-linejoin:round"
-     transform="matrix(0.33325707,0,0,0.41790032,441.79786,149.89905)">
+     transform="matrix(0.20926046,0,0,0.26241009,184.03332,-11.336116)">
     <path
        clip-path="url(#p68abb7da3e)"
        d="M 52.488,370.184 213.192,53.6396"
@@ -1168,7 +1209,7 @@
   <g
      id="g342"
      style="stroke-linecap:butt;stroke-linejoin:round"
-     transform="matrix(0.33325707,0,0,0.41790032,441.79786,149.89905)">
+     transform="matrix(0.20926046,0,0,0.26241009,184.03332,-11.336116)">
     <defs
        id="defs344">
       <path
@@ -1194,7 +1235,7 @@
   <g
      id="g352"
      style="stroke-linecap:butt;stroke-linejoin:round"
-     transform="translate(196.44776,-109.67741)">
+     transform="matrix(0.62792505,0,0,0.62792505,29.971845,-174.33067)">
     <!-- 1$\mu$m -->
     <defs
        id="defs354">
@@ -1238,7 +1279,7 @@
   <g
      id="g370"
      style="stroke-linecap:butt;stroke-linejoin:round"
-     transform="translate(184.29716,-78.248796)">
+     transform="matrix(0.62792505,0,0,0.62792505,22.342179,-154.59586)">
     <!-- 50$\mu$m -->
     <defs
        id="defs372">
@@ -1282,7 +1323,7 @@
   <g
      id="patch_3"
      style="stroke-linecap:butt;stroke-linejoin:round"
-     transform="matrix(1.25,0,0,1.25,181.58326,264.81959)">
+     transform="matrix(0.7849063,0,0,0.7849063,20.638053,60.82537)">
     <path
        inkscape:connector-curvature="0"
        clip-path="url(#p9fec11aa80)"
@@ -1293,7 +1334,7 @@
   <g
      id="patch_4"
      style="stroke-linecap:butt;stroke-linejoin:round"
-     transform="matrix(1.25,0,0,1.25,181.58326,264.81959)">
+     transform="matrix(0.7849063,0,0,0.7849063,20.638053,60.82537)">
     <path
        inkscape:connector-curvature="0"
        clip-path="url(#p9fec11aa80)"
@@ -1304,7 +1345,7 @@
   <g
      id="patch_5"
      style="stroke-linecap:butt;stroke-linejoin:round"
-     transform="matrix(1.25,0,0,1.25,181.58326,264.81959)">
+     transform="matrix(0.7849063,0,0,0.7849063,20.638053,60.82537)">
     <path
        inkscape:connector-curvature="0"
        clip-path="url(#p9fec11aa80)"
@@ -1315,7 +1356,7 @@
   <g
      id="patch_6"
      style="stroke-linecap:butt;stroke-linejoin:round"
-     transform="matrix(1.25,0,0,1.25,181.58326,264.81959)">
+     transform="matrix(0.7849063,0,0,0.7849063,20.638053,60.82537)">
     <path
        inkscape:connector-curvature="0"
        clip-path="url(#p9fec11aa80)"
@@ -1326,7 +1367,7 @@
   <g
      id="patch_7"
      style="stroke-linecap:butt;stroke-linejoin:round"
-     transform="matrix(1.25,0,0,1.25,181.58326,264.81959)">
+     transform="matrix(0.7849063,0,0,0.7849063,20.638053,60.82537)">
     <path
        inkscape:connector-curvature="0"
        clip-path="url(#p9fec11aa80)"
@@ -1337,7 +1378,7 @@
   <g
      id="patch_8"
      style="stroke-linecap:butt;stroke-linejoin:round"
-     transform="matrix(1.25,0,0,1.25,181.58326,264.81959)">
+     transform="matrix(0.7849063,0,0,0.7849063,20.638053,60.82537)">
     <path
        inkscape:connector-curvature="0"
        clip-path="url(#p9fec11aa80)"
@@ -1348,7 +1389,7 @@
   <g
      id="patch_9"
      style="stroke-linecap:butt;stroke-linejoin:round"
-     transform="matrix(1.25,0,0,1.25,181.58326,264.81959)">
+     transform="matrix(0.7849063,0,0,0.7849063,20.638053,60.82537)">
     <path
        inkscape:connector-curvature="0"
        clip-path="url(#p9fec11aa80)"
@@ -1359,7 +1400,7 @@
   <g
      id="patch_10"
      style="stroke-linecap:butt;stroke-linejoin:round"
-     transform="matrix(1.25,0,0,1.25,181.58326,264.81959)">
+     transform="matrix(0.7849063,0,0,0.7849063,20.638053,60.82537)">
     <path
        inkscape:connector-curvature="0"
        clip-path="url(#p9fec11aa80)"
@@ -1370,7 +1411,7 @@
   <g
      id="patch_12"
      style="stroke-linecap:butt;stroke-linejoin:round"
-     transform="matrix(1.25,0,0,1.25,181.58326,264.81959)">
+     transform="matrix(0.7849063,0,0,0.7849063,20.638053,60.82537)">
     <path
        inkscape:connector-curvature="0"
        d="m 129.6,57.42 162,0"
@@ -1380,7 +1421,7 @@
   <g
      id="patch_14"
      style="stroke-linecap:butt;stroke-linejoin:round"
-     transform="matrix(1.25,0,0,1.25,181.58326,264.81959)">
+     transform="matrix(0.7849063,0,0,0.7849063,20.638053,60.82537)">
     <path
        inkscape:connector-curvature="0"
        d="m 129.6,145.308 162,0"
@@ -1390,7 +1431,7 @@
   <g
      id="patch_15"
      style="stroke-linecap:butt;stroke-linejoin:round"
-     transform="matrix(1.25,0,0,1.25,375.58326,264.81959)">
+     transform="matrix(0.7849063,0,0,0.7849063,142.45553,60.82537)">
     <path
        inkscape:connector-curvature="0"
        d="m 124.6,143.618 0,-84.5079"
@@ -1400,11 +1441,11 @@
   <g
      id="matplotlib.axis_1"
      style="stroke-linecap:butt;stroke-linejoin:round"
-     transform="matrix(1.25,0,0,1.25,488.818,-34.091461)" />
+     transform="matrix(1.25,0,0,1.25,425.94068,-128.5285)" />
   <g
      id="line2d_1-5"
      style="stroke-linecap:butt;stroke-linejoin:round"
-     transform="matrix(1.25,0,0,1.25,369.58326,264.81959)">
+     transform="matrix(0.7849063,0,0,0.7849063,138.68797,60.82537)">
     <defs
        id="defs3564">
       <path
@@ -1429,7 +1470,7 @@
   <g
      id="text_1"
      style="stroke-linecap:butt;stroke-linejoin:round"
-     transform="matrix(1.25,0,0,1.25,415.58326,264.81959)">
+     transform="matrix(0.7849063,0,0,0.7849063,167.57252,60.82537)">
     <!-- 0.0 -->
     <defs
        id="defs3572">
@@ -1477,7 +1518,7 @@
   <g
      id="line2d_2-3"
      style="stroke-linecap:butt;stroke-linejoin:round"
-     transform="matrix(1.25,0,0,1.25,369.58326,264.81959)">
+     transform="matrix(0.7849063,0,0,0.7849063,138.68797,60.82537)">
     <g
        id="g3586"
        style="stroke-linecap:butt;stroke-linejoin:round">
@@ -1494,7 +1535,7 @@
   <g
      id="text_2"
      style="stroke-linecap:butt;stroke-linejoin:round"
-     transform="matrix(1.25,0,0,1.25,415.58326,264.81959)">
+     transform="matrix(0.7849063,0,0,0.7849063,167.57252,60.82537)">
     <!-- 2.5 -->
     <defs
        id="defs3591">
@@ -1542,7 +1583,7 @@
   <g
      id="line2d_3"
      style="stroke-linecap:butt;stroke-linejoin:round"
-     transform="matrix(1.25,0,0,1.25,369.58326,264.81959)">
+     transform="matrix(0.7849063,0,0,0.7849063,138.68797,60.82537)">
     <g
        id="g3605"
        style="stroke-linecap:butt;stroke-linejoin:round">
@@ -1559,7 +1600,7 @@
   <g
      id="text_3"
      style="stroke-linecap:butt;stroke-linejoin:round"
-     transform="matrix(1.25,0,0,1.25,415.58326,264.81959)">
+     transform="matrix(0.7849063,0,0,0.7849063,167.57252,60.82537)">
     <!-- 5.0 -->
     <g
        transform="matrix(0.2,0,0,-0.2,96.859375,101.66902)"
@@ -1594,7 +1635,7 @@
   <g
      id="line2d_4"
      style="stroke-linecap:butt;stroke-linejoin:round"
-     transform="matrix(1.25,0,0,1.25,369.58326,264.81959)">
+     transform="matrix(0.7849063,0,0,0.7849063,138.68797,60.82537)">
     <g
        id="g3620"
        style="stroke-linecap:butt;stroke-linejoin:round">
@@ -1611,7 +1652,7 @@
   <g
      id="text_4"
      style="stroke-linecap:butt;stroke-linejoin:round"
-     transform="matrix(1.25,0,0,1.25,415.58326,264.81959)">
+     transform="matrix(0.7849063,0,0,0.7849063,167.57252,60.82537)">
     <!-- 7.5 -->
     <defs
        id="defs3625">
@@ -1654,7 +1695,7 @@
   <g
      style="stroke-linecap:butt;stroke-linejoin:round"
      id="text_5"
-     transform="matrix(1.25,0,0,1.25,483.58326,264.81959)">
+     transform="matrix(0.7849063,0,0,0.7849063,210.27142,60.82537)">
     <!-- cell # -->
     <defs
        id="defs3637">
@@ -1741,7 +1782,7 @@
   <g
      id="patch_29"
      style="stroke-linecap:butt;stroke-linejoin:round"
-     transform="matrix(1.25,0,0,1.25,181.58326,-157.18041)">
+     transform="matrix(0.7849063,0,0,0.7849063,20.638053,-204.159)">
     <path
        inkscape:connector-curvature="0"
        d="m 137.311,493.07 133.982,0"
@@ -1751,7 +1792,7 @@
   <g
      id="matplotlib.axis_7"
      style="stroke-linecap:butt;stroke-linejoin:round"
-     transform="matrix(1.25,0,0,1.25,181.58326,-157.18041)">
+     transform="matrix(0.7849063,0,0,0.7849063,20.638053,-204.159)">
     <g
        id="xtick_1"
        style="stroke-linecap:butt;stroke-linejoin:round">
@@ -2155,14 +2196,14 @@
     </g>
   </g>
   <path
-     style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2.11447453;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow1Mend)"
-     d="m 349.15706,410.4101 c 0.7975,-0.81892 -36.5022,-32.27414 -36.9195,-32.59528"
+     style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1.32773161;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow1Mend)"
+     d="m 125.86184,152.2453 c 0.50078,-0.51422 -22.92065,-20.26574 -23.18268,-20.46739"
      id="path6714"
      inkscape:connector-curvature="0"
      sodipodi:nodetypes="cc" />
   <path
-     style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2.11447453;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow1Mend-0)"
-     d="m 500.77356,419.027 c 0.7975,-0.81892 10.7944,-72.47621 3.2827,-118.51736"
+     style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1.32773161;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow1Mend-0)"
+     d="m 221.06564,157.65608 c 0.50077,-0.51424 6.77807,-45.50964 2.06128,-74.420032"
      id="path6714-0"
      inkscape:connector-curvature="0"
      sodipodi:nodetypes="cc" />

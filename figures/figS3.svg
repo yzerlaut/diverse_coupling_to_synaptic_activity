@@ -10,13 +10,16 @@
    xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   height="2160pt"
+   height="297mm"
    version="1.1"
-   viewBox="0 0 1584 2160"
-   width="1584pt"
+   viewBox="0 0 595.27562 841.88973"
+   width="210mm"
    id="svg2"
    inkscape:version="0.91 r13725"
-   sodipodi:docname="all_coupling_correlations.svg">
+   sodipodi:docname="figS3.svg"
+   inkscape:export-filename="/Users/yzerlaut/work/diverse_coupling_to_synaptic_activity/figures/figS3.png"
+   inkscape:export-xdpi="1000"
+   inkscape:export-ydpi="1000">
   <metadata
      id="metadata6970">
     <rdf:RDF>
@@ -25,6 +28,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -35,21 +39,27 @@
      objecttolerance="10"
      gridtolerance="10"
      guidetolerance="10"
-     inkscape:pageopacity="0"
+     inkscape:pageopacity="1"
      inkscape:pageshadow="2"
-     inkscape:window-width="1920"
-     inkscape:window-height="1057"
+     inkscape:window-width="999"
+     inkscape:window-height="968"
      id="namedview6968"
      showgrid="false"
-     inkscape:zoom="0.34962963"
-     inkscape:cx="1440.514"
-     inkscape:cy="1494.9485"
-     inkscape:window-x="-8"
-     inkscape:window-y="-8"
-     inkscape:window-maximized="1"
-     inkscape:current-layer="svg2" />
+     inkscape:zoom="0.49445098"
+     inkscape:cx="391.57266"
+     inkscape:cy="588.04003"
+     inkscape:window-x="0"
+     inkscape:window-y="1"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg2"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0"
+     units="mm" />
   <defs
-     id="defs4">
+     id="defs4"
+     style="stroke-linecap:butt;stroke-linejoin:round">
     <style
        type="text/css"
        id="style6">
@@ -58,7 +68,10 @@
   </defs>
   <g
      style="stroke-linecap:butt;stroke-linejoin:round"
-     id="axes_1">
+     id="axes_1"
+     transform="matrix(0.36237133,0,0,0.36237133,1.3763844,65.098505)"
+     inkscape:export-xdpi="1500"
+     inkscape:export-ydpi="1500">
     <g
        style="stroke-linecap:butt;stroke-linejoin:round"
        id="patch_2">
@@ -930,7 +943,10 @@
   </g>
   <g
      style="stroke-linecap:butt;stroke-linejoin:round"
-     id="axes_2">
+     id="axes_2"
+     transform="matrix(0.36237133,0,0,0.36237133,1.3763844,65.098505)"
+     inkscape:export-xdpi="1500"
+     inkscape:export-ydpi="1500">
     <g
        style="stroke-linecap:butt;stroke-linejoin:round"
        id="patch_15">
@@ -1856,7 +1872,10 @@
   </g>
   <g
      style="stroke-linecap:butt;stroke-linejoin:round"
-     id="axes_3">
+     id="axes_3"
+     transform="matrix(0.36237133,0,0,0.36237133,1.3763844,65.098505)"
+     inkscape:export-xdpi="1500"
+     inkscape:export-ydpi="1500">
     <g
        style="stroke-linecap:butt;stroke-linejoin:round"
        id="patch_20">
@@ -2536,7 +2555,10 @@
   </g>
   <g
      style="stroke-linecap:butt;stroke-linejoin:round"
-     id="axes_4">
+     id="axes_4"
+     transform="matrix(0.36237133,0,0,0.36237133,1.3763844,65.098505)"
+     inkscape:export-xdpi="1500"
+     inkscape:export-ydpi="1500">
     <g
        style="stroke-linecap:butt;stroke-linejoin:round"
        id="patch_25">
@@ -3198,7 +3220,10 @@
   </g>
   <g
      style="stroke-linecap:butt;stroke-linejoin:round"
-     id="axes_5">
+     id="axes_5"
+     transform="matrix(0.36237133,0,0,0.36237133,1.3763844,65.098505)"
+     inkscape:export-xdpi="1500"
+     inkscape:export-ydpi="1500">
     <g
        style="stroke-linecap:butt;stroke-linejoin:round"
        id="patch_30">
@@ -3880,7 +3905,10 @@
   </g>
   <g
      style="stroke-linecap:butt;stroke-linejoin:round"
-     id="axes_6">
+     id="axes_6"
+     transform="matrix(0.36237133,0,0,0.36237133,1.3763844,65.098505)"
+     inkscape:export-xdpi="1500"
+     inkscape:export-ydpi="1500">
     <g
        style="stroke-linecap:butt;stroke-linejoin:round"
        id="patch_35">
@@ -4761,7 +4789,10 @@
   </g>
   <g
      style="stroke-linecap:butt;stroke-linejoin:round"
-     id="axes_7">
+     id="axes_7"
+     transform="matrix(0.36237133,0,0,0.36237133,1.3763844,65.098505)"
+     inkscape:export-xdpi="1500"
+     inkscape:export-ydpi="1500">
     <g
        style="stroke-linecap:butt;stroke-linejoin:round"
        id="patch_47">
@@ -5628,7 +5659,10 @@
   </g>
   <g
      style="stroke-linecap:butt;stroke-linejoin:round"
-     id="axes_8">
+     id="axes_8"
+     transform="matrix(0.36237133,0,0,0.36237133,1.3763844,65.098505)"
+     inkscape:export-xdpi="1500"
+     inkscape:export-ydpi="1500">
     <g
        style="stroke-linecap:butt;stroke-linejoin:round"
        id="patch_52">
@@ -6282,7 +6316,10 @@
   </g>
   <g
      style="stroke-linecap:butt;stroke-linejoin:round"
-     id="axes_9">
+     id="axes_9"
+     transform="matrix(0.36237133,0,0,0.36237133,1.3763844,65.098505)"
+     inkscape:export-xdpi="1500"
+     inkscape:export-ydpi="1500">
     <g
        style="stroke-linecap:butt;stroke-linejoin:round"
        id="patch_57">
@@ -6936,7 +6973,10 @@
   </g>
   <g
      style="stroke-linecap:butt;stroke-linejoin:round"
-     id="axes_10">
+     id="axes_10"
+     transform="matrix(0.36237133,0,0,0.36237133,1.3763844,65.098505)"
+     inkscape:export-xdpi="1500"
+     inkscape:export-ydpi="1500">
     <g
        style="stroke-linecap:butt;stroke-linejoin:round"
        id="patch_62">
@@ -7610,7 +7650,10 @@
   </g>
   <g
      style="stroke-linecap:butt;stroke-linejoin:round"
-     id="axes_11">
+     id="axes_11"
+     transform="matrix(0.36237133,0,0,0.36237133,1.3763844,65.098505)"
+     inkscape:export-xdpi="1500"
+     inkscape:export-ydpi="1500">
     <g
        style="stroke-linecap:butt;stroke-linejoin:round"
        id="patch_67">
@@ -8509,7 +8552,10 @@
   </g>
   <g
      style="stroke-linecap:butt;stroke-linejoin:round"
-     id="axes_12">
+     id="axes_12"
+     transform="matrix(0.36237133,0,0,0.36237133,1.3763844,65.098505)"
+     inkscape:export-xdpi="1500"
+     inkscape:export-ydpi="1500">
     <g
        style="stroke-linecap:butt;stroke-linejoin:round"
        id="patch_82">
@@ -9380,7 +9426,10 @@
   </g>
   <g
      style="stroke-linecap:butt;stroke-linejoin:round"
-     id="axes_13">
+     id="axes_13"
+     transform="matrix(0.36237133,0,0,0.36237133,1.3763844,65.098505)"
+     inkscape:export-xdpi="1500"
+     inkscape:export-ydpi="1500">
     <g
        style="stroke-linecap:butt;stroke-linejoin:round"
        id="patch_87">
@@ -10022,7 +10071,10 @@
   </g>
   <g
      style="stroke-linecap:butt;stroke-linejoin:round"
-     id="axes_14">
+     id="axes_14"
+     transform="matrix(0.36237133,0,0,0.36237133,1.3763844,65.098505)"
+     inkscape:export-xdpi="1500"
+     inkscape:export-ydpi="1500">
     <g
        style="stroke-linecap:butt;stroke-linejoin:round"
        id="patch_92">
@@ -10664,7 +10716,10 @@
   </g>
   <g
      style="stroke-linecap:butt;stroke-linejoin:round"
-     id="axes_15">
+     id="axes_15"
+     transform="matrix(0.36237133,0,0,0.36237133,1.3763844,65.098505)"
+     inkscape:export-xdpi="1500"
+     inkscape:export-ydpi="1500">
     <g
        style="stroke-linecap:butt;stroke-linejoin:round"
        id="patch_97">
@@ -11326,7 +11381,10 @@
   </g>
   <g
      style="stroke-linecap:butt;stroke-linejoin:round"
-     id="axes_16">
+     id="axes_16"
+     transform="matrix(0.36237133,0,0,0.36237133,1.3763844,65.098505)"
+     inkscape:export-xdpi="1500"
+     inkscape:export-ydpi="1500">
     <g
        style="stroke-linecap:butt;stroke-linejoin:round"
        id="patch_102">
@@ -12194,7 +12252,10 @@
   </g>
   <g
      style="stroke-linecap:butt;stroke-linejoin:round"
-     id="axes_17">
+     id="axes_17"
+     transform="matrix(0.36237133,0,0,0.36237133,1.3763844,65.098505)"
+     inkscape:export-xdpi="1500"
+     inkscape:export-ydpi="1500">
     <g
        style="stroke-linecap:butt;stroke-linejoin:round"
        id="patch_116">
@@ -13070,7 +13131,10 @@
   </g>
   <g
      style="stroke-linecap:butt;stroke-linejoin:round"
-     id="axes_18">
+     id="axes_18"
+     transform="matrix(0.36237133,0,0,0.36237133,1.3763844,65.098505)"
+     inkscape:export-xdpi="1500"
+     inkscape:export-ydpi="1500">
     <g
        style="stroke-linecap:butt;stroke-linejoin:round"
        id="patch_121">
@@ -13732,7 +13796,10 @@
   </g>
   <g
      style="stroke-linecap:butt;stroke-linejoin:round"
-     id="axes_19">
+     id="axes_19"
+     transform="matrix(0.36237133,0,0,0.36237133,1.3763844,65.098505)"
+     inkscape:export-xdpi="1500"
+     inkscape:export-ydpi="1500">
     <g
        style="stroke-linecap:butt;stroke-linejoin:round"
        id="patch_126">
@@ -14378,7 +14445,10 @@
   </g>
   <g
      style="stroke-linecap:butt;stroke-linejoin:round"
-     id="axes_20">
+     id="axes_20"
+     transform="matrix(0.36237133,0,0,0.36237133,1.3763844,65.098505)"
+     inkscape:export-xdpi="1500"
+     inkscape:export-ydpi="1500">
     <g
        style="stroke-linecap:butt;stroke-linejoin:round"
        id="patch_131">
@@ -15052,7 +15122,10 @@
   </g>
   <g
      style="stroke-linecap:butt;stroke-linejoin:round"
-     id="axes_21">
+     id="axes_21"
+     transform="matrix(0.36237133,0,0,0.36237133,1.3763844,65.098505)"
+     inkscape:export-xdpi="1500"
+     inkscape:export-ydpi="1500">
     <g
        style="stroke-linecap:butt;stroke-linejoin:round"
        id="patch_136">
@@ -15870,7 +15943,10 @@
   </g>
   <g
      style="stroke-linecap:butt;stroke-linejoin:round"
-     id="axes_22">
+     id="axes_22"
+     transform="matrix(0.36237133,0,0,0.36237133,1.3763844,65.098505)"
+     inkscape:export-xdpi="1500"
+     inkscape:export-ydpi="1500">
     <g
        style="stroke-linecap:butt;stroke-linejoin:round"
        id="patch_150">
@@ -17044,7 +17120,10 @@
   </g>
   <g
      style="stroke-linecap:butt;stroke-linejoin:round"
-     id="axes_23">
+     id="axes_23"
+     transform="matrix(0.36237133,0,0,0.36237133,1.3763844,65.098505)"
+     inkscape:export-xdpi="1500"
+     inkscape:export-ydpi="1500">
     <g
        style="stroke-linecap:butt;stroke-linejoin:round"
        id="patch_155">
@@ -17955,7 +18034,10 @@
   </g>
   <g
      style="stroke-linecap:butt;stroke-linejoin:round"
-     id="axes_24">
+     id="axes_24"
+     transform="matrix(0.36237133,0,0,0.36237133,1.3763844,65.098505)"
+     inkscape:export-xdpi="1500"
+     inkscape:export-ydpi="1500">
     <g
        style="stroke-linecap:butt;stroke-linejoin:round"
        id="patch_160">
@@ -18816,7 +18898,10 @@
   </g>
   <g
      style="stroke-linecap:butt;stroke-linejoin:round"
-     id="axes_25">
+     id="axes_25"
+     transform="matrix(0.36237133,0,0,0.36237133,1.3763844,65.098505)"
+     inkscape:export-xdpi="1500"
+     inkscape:export-ydpi="1500">
     <g
        style="stroke-linecap:butt;stroke-linejoin:round"
        id="patch_165">
@@ -19785,264 +19870,324 @@
   <defs
      id="defs6891">
     <clipPath
-       id="p63ecf4d736">
+       id="p63ecf4d736"
+       style="stroke-linecap:butt;stroke-linejoin:round">
       <rect
-         height="157.090909091"
-         width="165.891891892"
-         x="994.281081081"
-         y="530.181818182"
-         id="rect6894" />
+         height="157.09091"
+         width="165.89189"
+         x="994.28107"
+         y="530.18182"
+         id="rect6894"
+         style="stroke-linecap:butt;stroke-linejoin:round" />
     </clipPath>
     <clipPath
-       id="p24b952a18c">
+       id="p24b952a18c"
+       style="stroke-linecap:butt;stroke-linejoin:round">
       <rect
-         height="157.090909091"
-         width="165.891891892"
-         x="728.854054054"
-         y="216.0"
-         id="rect6897" />
+         height="157.09091"
+         width="165.89189"
+         x="728.85406"
+         y="216"
+         id="rect6897"
+         style="stroke-linecap:butt;stroke-linejoin:round" />
     </clipPath>
     <clipPath
-       id="p09c421af66">
+       id="p09c421af66"
+       style="stroke-linecap:butt;stroke-linejoin:round">
       <rect
-         height="157.090909091"
-         width="165.891891892"
-         x="198.0"
-         y="844.363636364"
-         id="rect6900" />
+         height="157.09091"
+         width="165.89189"
+         x="198"
+         y="844.36365"
+         id="rect6900"
+         style="stroke-linecap:butt;stroke-linejoin:round" />
     </clipPath>
     <clipPath
-       id="p94c72803e1">
+       id="p94c72803e1"
+       style="stroke-linecap:butt;stroke-linejoin:round">
       <rect
-         height="157.090909091"
-         width="165.891891892"
-         x="728.854054054"
-         y="844.363636364"
-         id="rect6903" />
+         height="157.09091"
+         width="165.89189"
+         x="728.85406"
+         y="844.36365"
+         id="rect6903"
+         style="stroke-linecap:butt;stroke-linejoin:round" />
     </clipPath>
     <clipPath
-       id="p57249e9505">
+       id="p57249e9505"
+       style="stroke-linecap:butt;stroke-linejoin:round">
       <rect
-         height="157.090909091"
-         width="165.891891892"
-         x="198.0"
-         y="530.181818182"
-         id="rect6906" />
+         height="157.09091"
+         width="165.89189"
+         x="198"
+         y="530.18182"
+         id="rect6906"
+         style="stroke-linecap:butt;stroke-linejoin:round" />
     </clipPath>
     <clipPath
-       id="p1bb2ce49a6">
+       id="p1bb2ce49a6"
+       style="stroke-linecap:butt;stroke-linejoin:round">
       <rect
-         height="157.090909091"
-         width="165.891891892"
-         x="463.427027027"
-         y="844.363636364"
-         id="rect6909" />
+         height="157.09091"
+         width="165.89189"
+         x="463.42703"
+         y="844.36365"
+         id="rect6909"
+         style="stroke-linecap:butt;stroke-linejoin:round" />
     </clipPath>
     <clipPath
-       id="p975c60ff63">
+       id="p975c60ff63"
+       style="stroke-linecap:butt;stroke-linejoin:round">
       <rect
-         height="157.090909091"
-         width="165.891891892"
-         x="1259.70810811"
-         y="1158.54545455"
-         id="rect6912" />
+         height="157.09091"
+         width="165.89189"
+         x="1259.7081"
+         y="1158.5454"
+         id="rect6912"
+         style="stroke-linecap:butt;stroke-linejoin:round" />
     </clipPath>
     <clipPath
-       id="p6651297d28">
+       id="p6651297d28"
+       style="stroke-linecap:butt;stroke-linejoin:round">
       <rect
-         height="157.090909091"
-         width="165.891891892"
-         x="198.0"
-         y="1158.54545455"
-         id="rect6915" />
+         height="157.09091"
+         width="165.89189"
+         x="198"
+         y="1158.5454"
+         id="rect6915"
+         style="stroke-linecap:butt;stroke-linejoin:round" />
     </clipPath>
     <clipPath
-       id="padc95a1074">
+       id="padc95a1074"
+       style="stroke-linecap:butt;stroke-linejoin:round">
       <rect
-         height="157.090909091"
-         width="165.891891892"
-         x="463.427027027"
-         y="530.181818182"
-         id="rect6918" />
+         height="157.09091"
+         width="165.89189"
+         x="463.42703"
+         y="530.18182"
+         id="rect6918"
+         style="stroke-linecap:butt;stroke-linejoin:round" />
     </clipPath>
     <clipPath
-       id="p983b814eaf">
+       id="p983b814eaf"
+       style="stroke-linecap:butt;stroke-linejoin:round">
       <rect
-         height="157.090909091"
-         width="165.891891892"
-         x="728.854054054"
-         y="530.181818182"
-         id="rect6921" />
+         height="157.09091"
+         width="165.89189"
+         x="728.85406"
+         y="530.18182"
+         id="rect6921"
+         style="stroke-linecap:butt;stroke-linejoin:round" />
     </clipPath>
     <clipPath
-       id="p734b57d999">
+       id="p734b57d999"
+       style="stroke-linecap:butt;stroke-linejoin:round">
       <rect
-         height="157.090909091"
-         width="165.891891892"
-         x="463.427027027"
-         y="1472.72727273"
-         id="rect6924" />
+         height="157.09091"
+         width="165.89189"
+         x="463.42703"
+         y="1472.7273"
+         id="rect6924"
+         style="stroke-linecap:butt;stroke-linejoin:round" />
     </clipPath>
     <clipPath
-       id="p531cb0af66">
+       id="p531cb0af66"
+       style="stroke-linecap:butt;stroke-linejoin:round">
       <rect
-         height="157.090909091"
-         width="165.891891892"
-         x="198.0"
-         y="216.0"
-         id="rect6927" />
+         height="157.09091"
+         width="165.89189"
+         x="198"
+         y="216"
+         id="rect6927"
+         style="stroke-linecap:butt;stroke-linejoin:round" />
     </clipPath>
     <clipPath
-       id="p1cd2b42f2d">
+       id="p1cd2b42f2d"
+       style="stroke-linecap:butt;stroke-linejoin:round">
       <rect
-         height="157.090909091"
-         width="165.891891892"
-         x="1259.70810811"
-         y="844.363636364"
-         id="rect6930" />
+         height="157.09091"
+         width="165.89189"
+         x="1259.7081"
+         y="844.36365"
+         id="rect6930"
+         style="stroke-linecap:butt;stroke-linejoin:round" />
     </clipPath>
     <clipPath
-       id="p52f1466c52">
+       id="p52f1466c52"
+       style="stroke-linecap:butt;stroke-linejoin:round">
       <rect
-         height="157.090909091"
-         width="165.891891892"
-         x="994.281081081"
-         y="1472.72727273"
-         id="rect6933" />
+         height="157.09091"
+         width="165.89189"
+         x="994.28107"
+         y="1472.7273"
+         id="rect6933"
+         style="stroke-linecap:butt;stroke-linejoin:round" />
     </clipPath>
     <clipPath
-       id="p1b73332a80">
+       id="p1b73332a80"
+       style="stroke-linecap:butt;stroke-linejoin:round">
       <rect
-         height="157.090909091"
-         width="165.891891892"
-         x="463.427027027"
-         y="1158.54545455"
-         id="rect6936" />
+         height="157.09091"
+         width="165.89189"
+         x="463.42703"
+         y="1158.5454"
+         id="rect6936"
+         style="stroke-linecap:butt;stroke-linejoin:round" />
     </clipPath>
     <clipPath
-       id="p7f97a072ad">
+       id="p7f97a072ad"
+       style="stroke-linecap:butt;stroke-linejoin:round">
       <rect
-         height="157.090909091"
-         width="165.891891892"
-         x="1259.70810811"
-         y="1472.72727273"
-         id="rect6939" />
+         height="157.09091"
+         width="165.89189"
+         x="1259.7081"
+         y="1472.7273"
+         id="rect6939"
+         style="stroke-linecap:butt;stroke-linejoin:round" />
     </clipPath>
     <clipPath
-       id="p5b8a86ba76">
+       id="p5b8a86ba76"
+       style="stroke-linecap:butt;stroke-linejoin:round">
       <rect
-         height="157.090909091"
-         width="165.891891892"
-         x="198.0"
-         y="1472.72727273"
-         id="rect6942" />
+         height="157.09091"
+         width="165.89189"
+         x="198"
+         y="1472.7273"
+         id="rect6942"
+         style="stroke-linecap:butt;stroke-linejoin:round" />
     </clipPath>
     <clipPath
-       id="p82daac39b1">
+       id="p82daac39b1"
+       style="stroke-linecap:butt;stroke-linejoin:round">
       <rect
-         height="157.090909091"
-         width="165.891891892"
-         x="728.854054054"
-         y="1158.54545455"
-         id="rect6945" />
+         height="157.09091"
+         width="165.89189"
+         x="728.85406"
+         y="1158.5454"
+         id="rect6945"
+         style="stroke-linecap:butt;stroke-linejoin:round" />
     </clipPath>
     <clipPath
-       id="pde9b383858">
+       id="pde9b383858"
+       style="stroke-linecap:butt;stroke-linejoin:round">
       <rect
-         height="157.090909091"
-         width="165.891891892"
-         x="1259.70810811"
-         y="530.181818182"
-         id="rect6948" />
+         height="157.09091"
+         width="165.89189"
+         x="1259.7081"
+         y="530.18182"
+         id="rect6948"
+         style="stroke-linecap:butt;stroke-linejoin:round" />
     </clipPath>
     <clipPath
-       id="p0ca7ac4de6">
+       id="p0ca7ac4de6"
+       style="stroke-linecap:butt;stroke-linejoin:round">
       <rect
-         height="157.090909091"
-         width="165.891891892"
-         x="1259.70810811"
-         y="216.0"
-         id="rect6951" />
+         height="157.09091"
+         width="165.89189"
+         x="1259.7081"
+         y="216"
+         id="rect6951"
+         style="stroke-linecap:butt;stroke-linejoin:round" />
     </clipPath>
     <clipPath
-       id="pb9c4366e8b">
+       id="pb9c4366e8b"
+       style="stroke-linecap:butt;stroke-linejoin:round">
       <rect
-         height="157.090909091"
-         width="165.891891892"
-         x="994.281081081"
-         y="844.363636364"
-         id="rect6954" />
+         height="157.09091"
+         width="165.89189"
+         x="994.28107"
+         y="844.36365"
+         id="rect6954"
+         style="stroke-linecap:butt;stroke-linejoin:round" />
     </clipPath>
     <clipPath
-       id="pf3855d740a">
+       id="pf3855d740a"
+       style="stroke-linecap:butt;stroke-linejoin:round">
       <rect
-         height="157.090909091"
-         width="165.891891892"
-         x="994.281081081"
-         y="216.0"
-         id="rect6957" />
+         height="157.09091"
+         width="165.89189"
+         x="994.28107"
+         y="216"
+         id="rect6957"
+         style="stroke-linecap:butt;stroke-linejoin:round" />
     </clipPath>
     <clipPath
-       id="p4fcd881e95">
+       id="p4fcd881e95"
+       style="stroke-linecap:butt;stroke-linejoin:round">
       <rect
-         height="157.090909091"
-         width="165.891891892"
-         x="728.854054054"
-         y="1472.72727273"
-         id="rect6960" />
+         height="157.09091"
+         width="165.89189"
+         x="728.85406"
+         y="1472.7273"
+         id="rect6960"
+         style="stroke-linecap:butt;stroke-linejoin:round" />
     </clipPath>
     <clipPath
-       id="p53c9b5d3ff">
+       id="p53c9b5d3ff"
+       style="stroke-linecap:butt;stroke-linejoin:round">
       <rect
-         height="157.090909091"
-         width="165.891891892"
-         x="994.281081081"
-         y="1158.54545455"
-         id="rect6963" />
+         height="157.09091"
+         width="165.89189"
+         x="994.28107"
+         y="1158.5454"
+         id="rect6963"
+         style="stroke-linecap:butt;stroke-linejoin:round" />
     </clipPath>
     <clipPath
-       id="pc6acba31a9">
+       id="pc6acba31a9"
+       style="stroke-linecap:butt;stroke-linejoin:round">
       <rect
-         height="157.090909091"
-         width="165.891891892"
-         x="463.427027027"
-         y="216.0"
-         id="rect6966" />
+         height="157.09091"
+         width="165.89189"
+         x="463.42703"
+         y="216"
+         id="rect6966"
+         style="stroke-linecap:butt;stroke-linejoin:round" />
     </clipPath>
   </defs>
   <text
      font-size="14"
      font-weight="bold"
-     x="104.55845"
-     y="209.66275"
+     x="39.265373"
+     y="141.07426"
      id="text4016-6-6"
-     style="font-weight:bold;font-size:48.94816589px;font-family:Verdana;stroke-linecap:butt;stroke-linejoin:round">A</text>
+     style="font-weight:bold;font-size:17.73741341px;font-family:Verdana;stroke-linecap:butt;stroke-linejoin:round"
+     inkscape:export-xdpi="1500"
+     inkscape:export-ydpi="1500">A</text>
   <text
      font-size="14"
      font-weight="bold"
-     x="103.79356"
-     y="543.38232"
+     x="38.988197"
+     y="262.00467"
      id="text4018-4-5"
-     style="font-weight:bold;font-size:48.94816589px;font-family:Verdana;stroke-linecap:butt;stroke-linejoin:round">B</text>
+     style="font-weight:bold;font-size:17.73741341px;font-family:Verdana;stroke-linecap:butt;stroke-linejoin:round"
+     inkscape:export-xdpi="1500"
+     inkscape:export-ydpi="1500">B</text>
   <text
      font-size="14"
      font-weight="bold"
-     x="105.71763"
-     y="864.58258"
+     x="39.685417"
+     y="378.39844"
      id="text4020-0-0"
-     style="font-weight:bold;font-size:48.94816589px;font-family:Verdana;stroke-linecap:butt;stroke-linejoin:round">C</text>
+     style="font-weight:bold;font-size:17.73741341px;font-family:Verdana;stroke-linecap:butt;stroke-linejoin:round"
+     inkscape:export-xdpi="1500"
+     inkscape:export-ydpi="1500">C</text>
   <text
      font-size="14"
      font-weight="bold"
-     x="102.20421"
-     y="1172.9651"
+     x="38.412262"
+     y="490.14743"
      id="text4022-0-9"
-     style="font-weight:bold;font-size:48.94816589px;font-family:Verdana;stroke-linecap:butt;stroke-linejoin:round">D</text>
+     style="font-weight:bold;font-size:17.73741341px;font-family:Verdana;stroke-linecap:butt;stroke-linejoin:round"
+     inkscape:export-xdpi="1500"
+     inkscape:export-ydpi="1500">D</text>
   <text
      font-size="14"
      font-weight="bold"
-     x="106.14781"
-     y="1486.942"
+     x="39.841309"
+     y="603.92365"
      id="text4024-6-0"
-     style="font-weight:bold;font-size:48.94816589px;font-family:Verdana;stroke-linecap:butt;stroke-linejoin:round">E</text>
+     style="font-weight:bold;font-size:17.73741341px;font-family:Verdana;stroke-linecap:butt;stroke-linejoin:round"
+     inkscape:export-xdpi="1500"
+     inkscape:export-ydpi="1500">E</text>
 </svg>
